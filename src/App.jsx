@@ -13,6 +13,7 @@ const App = () => {
   const [loading, setLoading] = useState(false);
   const [playerData, setPlayerData] = useState(null);
   const [error, setError] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
   const [filterYear, setFilterYear] = useState(null);
 
   useEffect(() => {
@@ -34,6 +35,7 @@ const App = () => {
 
     setLoading(true);
     setError("");
+    setSuggestions([]);
 
     try {
       const result = await apiService.searchPlayer(
@@ -46,8 +48,10 @@ const App = () => {
 
       setPlayerData(result);
       setError("");
+      setSuggestions([]);
     } catch (err) {
       setError(err.message);
+      setSuggestions(err.suggestions || []);
       setPlayerData(null);
     } finally {
       setLoading(false);
@@ -69,6 +73,7 @@ const App = () => {
     
     setLoading(true);
     setError("");
+    setSuggestions([]);
 
     try {
       const result = await apiService.searchPlayer(
@@ -81,8 +86,10 @@ const App = () => {
 
       setPlayerData(result);
       setError("");
+      setSuggestions([]);
     } catch (err) {
       setError(err.message);
+      setSuggestions(err.suggestions || []);
       setPlayerData(null);
     } finally {
       setLoading(false);
@@ -112,6 +119,33 @@ const App = () => {
           onSearch={handleSearch}
           loading={loading}
           error={error}
+          suggestions={suggestions}
+          onSuggestionClick={async (suggestionName) => {
+            setPlayerName(suggestionName);
+            setLoading(true);
+            setError("");
+            setSuggestions([]);
+
+            try {
+              const result = await apiService.searchPlayer(
+                suggestionName,
+                season,
+                position,
+                7,
+                filterYear,
+              );
+
+              setPlayerData(result);
+              setError("");
+              setSuggestions([]);
+            } catch (err) {
+              setError(err.message);
+              setSuggestions(err.suggestions || []);
+              setPlayerData(null);
+            } finally {
+              setLoading(false);
+            }
+          }}
         />
 
         {playerData && (
@@ -143,6 +177,7 @@ const App = () => {
                 if (playerName) {
                   setLoading(true);
                   setError("");
+                  setSuggestions([]);
                   try {
                     const result = await apiService.searchPlayer(
                       playerName,
@@ -153,8 +188,10 @@ const App = () => {
                     );
                     setPlayerData(result);
                     setError("");
+                    setSuggestions([]);
                   } catch (err) {
                     setError(err.message);
+                    setSuggestions(err.suggestions || []);
                     setPlayerData(null);
                   } finally {
                     setLoading(false);

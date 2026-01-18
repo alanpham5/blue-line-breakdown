@@ -9,13 +9,11 @@ export const SimilarPlayersSection = ({ players, onPlayerClick, filterYear, onFi
   const prevPlayersRef = useRef(null);
 
   useEffect(() => {
-    // Create a signature of the current players list
     const currentPlayersSignature = players
       .map(p => `${p.playerId}-${p.season}`)
       .sort()
       .join(',');
 
-    // Create a signature of the previous players list
     const prevPlayersSignature = prevPlayersRef.current
       ? prevPlayersRef.current
           .map(p => `${p.playerId}-${p.season}`)
@@ -23,12 +21,10 @@ export const SimilarPlayersSection = ({ players, onPlayerClick, filterYear, onFi
           .join(',')
       : null;
 
-    // Only animate if the players list actually changed
     if (prevPlayersSignature !== null && currentPlayersSignature !== prevPlayersSignature) {
       setAnimationKey(prev => prev + 1);
     }
 
-    // Update the ref with the current players
     prevPlayersRef.current = players;
   }, [players]);
 

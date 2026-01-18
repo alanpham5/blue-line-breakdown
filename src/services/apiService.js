@@ -34,7 +34,9 @@ export const apiService = {
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.error || "Search failed");
+      const errorObj = new Error(error.error || "Search failed");
+      errorObj.suggestions = error.suggestions || null;
+      throw errorObj;
     }
 
     return response.json();

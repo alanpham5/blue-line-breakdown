@@ -7,14 +7,12 @@ export const SimilarPlayerCard = ({ player, onClick, animationKey }) => {
   const isInitialMount = useRef(true);
 
   useEffect(() => {
-    // Skip animation on initial mount
     if (isInitialMount.current) {
       isInitialMount.current = false;
       prevAnimationKeyRef.current = animationKey;
       return;
     }
 
-    // Only animate if animationKey actually changed
     if (prevAnimationKeyRef.current !== animationKey) {
       setShouldAnimate(true);
       prevAnimationKeyRef.current = animationKey;
