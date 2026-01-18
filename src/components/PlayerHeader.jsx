@@ -1,11 +1,13 @@
 import React from "react";
 import { Ruler, Scale } from "lucide-react";
 import { playerUtils } from "../utils/playerUtils";
+import { ArchetypeBadge } from "./ArchetypeBadge";
 
 export const PlayerHeader = ({ player, biometrics }) => {
   const teamLogoUrl = player.team
     ? playerUtils.getTeamLogoUrl(player.team, player.season)
     : null;
+  const archetypes = player.archetypes || [];
   return (
     <div className="liquid-glass-strong rounded-2xl p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
@@ -69,6 +71,13 @@ export const PlayerHeader = ({ player, biometrics }) => {
                     </span>
                   </div>
                 )}
+              </div>
+            )}
+            {archetypes.length > 0 && (
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mt-3">
+                {archetypes.map((archetype, idx) => (
+                  <ArchetypeBadge key={idx} archetype={archetype} />
+                ))}
               </div>
             )}
           </div>

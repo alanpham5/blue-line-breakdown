@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { PercentileBar } from "./PercentileBar";
 import { playerUtils } from "../utils/playerUtils";
+import { Info } from "lucide-react";
 
 export const StatsCard = ({
   title,
@@ -9,6 +10,7 @@ export const StatsCard = ({
   allPercentiles,
   type = "offensive",
 }) => {
+  const [showTooltip, setShowTooltip] = useState(false);
   const topStats =
     type === "offensive"
       ? playerUtils.getOffensiveStats(stats, allPercentiles)
@@ -43,9 +45,36 @@ export const StatsCard = ({
           </div>
           <h3 className="text-xl sm:text-2xl font-bold">{title}</h3>
         </div>
-        <span className="text-sm text-gray-300 whitespace-nowrap">
-          percentile vs. league
-        </span>
+        <div className="relative flex items-center gap-2">
+          <span className="text-sm text-gray-300 whitespace-nowrap">
+            percentile vs. league
+          </span>
+          <button
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+            onClick={() => setShowTooltip(!showTooltip)}
+            className="shrink-0 text-gray-400 hover:text-gray-200 transition-colors"
+            aria-label="Info about percentile calculation"
+          >
+            <Info size={16} />
+          </button>
+          {showTooltip && (
+            <div className="absolute right-0 top-full mt-2 w-64 sm:w-72 p-3 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-lg text-xs text-gray-200 z-10 shadow-lg pointer-events-none">
+              <div className="space-y-2">
+                <div>
+                  <span className="font-semibold text-cyan-400">Percentile Adjusted:</span>{" "}
+                  Values are normalized to show where this player ranks compared
+                  to all NHL players (0-100th percentile).
+                </div>
+                <div>
+                  <span className="font-semibold text-cyan-400">Ice Time Adjusted:</span>{" "}
+                  Statistics are adjusted for ice time to provide fair comparisons
+                  across players with different usage.
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       <div>
         {topStats.map((stat, idx) => (
