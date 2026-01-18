@@ -41,6 +41,7 @@ export const StatsCard = ({ title, icon: Icon, stats, allPercentiles, type = "of
             label={stat.name}
             value={stat.value}
             type={type}
+            statKey={stat.key}
           />
         ))}
       </div>

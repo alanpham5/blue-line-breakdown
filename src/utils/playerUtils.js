@@ -36,11 +36,21 @@ export const playerUtils = {
     return statNames[statKey] || statKey;
   },
 
+  isInvertedStat(statKey) {
+    const invertedStats = [
+      'I_F_giveaways',
+      'OnIce_A_xGoals',
+      'OnIce_A_goals',
+    ];
+    return invertedStats.includes(statKey);
+  },
+
   getTopStats(stats, count = 6) {
     return Object.entries(stats)
       .sort(([, a], [, b]) => b - a)
       .slice(0, count)
       .map(([key, value]) => ({
+        key,
         name: this.formatStatName(key),
         value,
       }));
@@ -52,8 +62,8 @@ export const playerUtils = {
       'I_F_xGoals',
       'I_F_primaryAssists',
       'I_F_points',
-      'I_F_giveaways',
-      'OnIce_F_xGoals'
+      'OnIce_F_xGoals',
+      'I_F_giveaways'
     ];
 
     return statKeys
@@ -71,6 +81,7 @@ export const playerUtils = {
         
         if (value !== undefined) {
           return {
+            key,
             name: this.formatStatName(key),
             value: value,
           };
