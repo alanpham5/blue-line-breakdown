@@ -74,7 +74,7 @@ export const playerUtils = {
         { start: 2002, end: 2009, url: 'LAK_20022003-20092010_dark.svg' },
         { start: 2010, end: 2010, url: 'LAK_20102011_dark.svg' },
         { start: 2011, end: 2018, url: 'LAK_20112012-20182019_dark.svg' },
-        { start: 2019, end: 2024, url: 'LAK_20202021-20232024_dark.svg' },
+        { start: 2019, end: 2024, url: 'LAK_20192020-20232024_dark.svg' },
       ],
       'BOS': [
         { start: 2008, end: 2024, url: 'BOS_20082009-20222023_dark.svg' }  
