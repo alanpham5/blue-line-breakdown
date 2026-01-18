@@ -91,6 +91,9 @@ export const playerUtils = {
         }
       }
     }
+    if (teamCodeUpper === 'WSH') {
+      return 'https://assets.nhle.com/logos/nhl/svg/WSH_secondary_dark.svg';
+    }
 
     return `https://assets.nhle.com/logos/nhl/svg/${teamCodeUpper}_dark.svg`;
   },

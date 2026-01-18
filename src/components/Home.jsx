@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Target, Shield, Loader2 } from "lucide-react";
 import { apiService } from "../services/apiService";
@@ -19,9 +19,13 @@ export const Home = () => {
   const [error, setError] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [filterYear, setFilterYear] = useState(null);
+  const [initInProgress, setInitInProgress] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
+  const initInProgressRef = useRef(false);
 
   useEffect(() => {
     checkHealth();
+    initializeCacheInBackground();
   }, []);
 
   const checkHealth = async () => {
@@ -31,9 +35,46 @@ export const Home = () => {
     }
   };
 
-  const ensureCacheInitialized = async () => {
-    const cacheStatus = await apiService.checkCacheStatus();
-    if (!cacheStatus.dataLoaded) {
+  const initializeCacheInBackground = async () => {
+    try {
+      setInitInProgress(true);
+      initInProgressRef.current = true;
+      const cacheStatus = await apiService.checkCacheStatus();
+      if (!cacheStatus.dataLoaded) {
+        const initResponse = await apiService.initializeCache();
+        
+        if (initResponse.status === 'loading') {
+          let timeoutId;
+          await new Promise((resolve) => {
+            const checkStatus = async () => {
+              const status = await apiService.checkCacheStatus();
+              if (status.dataLoaded) {
+                if (timeoutId) clearTimeout(timeoutId);
+                setInitInProgress(false);
+                initInProgressRef.current = false;
+                resolve();
+              } else {
+                timeoutId = setTimeout(checkStatus, 30000);
+              }
+            };
+            checkStatus();
+          });
+        } else {
+          setInitInProgress(false);
+          initInProgressRef.current = false;
+        }
+      } else {
+        setInitInProgress(false);
+        initInProgressRef.current = false;
+      }
+    } catch (err) {
+      setInitInProgress(false);
+      initInProgressRef.current = false;
+    }
+  };
+
+  const ensureCacheInitialized = async (showLoading = false) => {
+    if (initInProgressRef.current && showLoading) {
       setInitializingCache(true);
       const messages = [
         "Hold on, we need to refresh the data...",
@@ -55,33 +96,77 @@ export const Home = () => {
           messageIndex = 0;
           setLoadingMessage(messages[0]);
         }
-      }, 10000);
+      }, 6000);
       
-      try {
-        const initResponse = await apiService.initializeCache();
+      while (initInProgressRef.current) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+      
+      clearInterval(messageInterval);
+      setInitializingCache(false);
+      setLoadingMessage("Searching...");
+      return;
+    }
+
+    if (!hasSearched) {
+      const cacheStatus = await apiService.checkCacheStatus();
+      if (!cacheStatus.dataLoaded && !cacheStatus.cacheExists) {
+        setInitializingCache(true);
+        const messages = [
+          "Hold on, we need to refresh the data...",
+          "Turning on the lights...",
+          "Zamboni resurfacing the ice...",
+          "Players warming up...",
+          "Coaches reviewing the game plan...",
+          "Referees checking the lines...",
+          "Almost ready..."
+        ];
         
-        if (initResponse.status === 'loading') {
-          let timeoutId;
-          await new Promise((resolve) => {
-            const checkStatus = async () => {
-              const status = await apiService.checkCacheStatus();
-              if (status.dataLoaded) {
-                if (timeoutId) clearTimeout(timeoutId);
-                clearInterval(messageInterval);
-                setInitializingCache(false);
-                setLoadingMessage("Searching...");
-                resolve();
-              } else {
-                timeoutId = setTimeout(checkStatus, 30000);
-              }
-            };
-            checkStatus();
-          });
+        setLoadingMessage(messages[0]);
+        let messageIndex = 0;
+        const messageInterval = setInterval(() => {
+          if (messageIndex < messages.length - 1) {
+            messageIndex++;
+            setLoadingMessage(messages[messageIndex]);
+          } else {
+            messageIndex = 0;
+            setLoadingMessage(messages[0]);
+          }
+        }, 6000);
+        
+        try {
+          setInitInProgress(true);
+          initInProgressRef.current = true;
+          const initResponse = await apiService.initializeCache();
+          
+          if (initResponse.status === 'loading') {
+            let timeoutId;
+            await new Promise((resolve) => {
+              const checkStatus = async () => {
+                const status = await apiService.checkCacheStatus();
+                if (status.dataLoaded) {
+                  if (timeoutId) clearTimeout(timeoutId);
+                  clearInterval(messageInterval);
+                  setInitializingCache(false);
+                  setLoadingMessage("Searching...");
+                  setInitInProgress(false);
+                  initInProgressRef.current = false;
+                  resolve();
+                } else {
+                  timeoutId = setTimeout(checkStatus, 30000);
+                }
+              };
+              checkStatus();
+            });
+          } else {
+            setInitInProgress(false);
+            initInProgressRef.current = false;
+          }
+        } finally {
+          clearInterval(messageInterval);
+          setInitializingCache(false);
+          setLoadingMessage("Searching...");
         }
-      } finally {
-        clearInterval(messageInterval);
-        setInitializingCache(false);
-        setLoadingMessage("Searching...");
       }
     }
   };
@@ -97,7 +182,7 @@ export const Home = () => {
     setSuggestions([]);
 
     try {
-      await ensureCacheInitialized();
+      await ensureCacheInitialized(initInProgressRef.current);
 
       const result = await apiService.searchPlayer(
         playerName,
@@ -110,6 +195,7 @@ export const Home = () => {
       setPlayerData(result);
       setError("");
       setSuggestions([]);
+      setHasSearched(true);
     } catch (err) {
       setError(err.message);
       setSuggestions(err.suggestions || []);
@@ -137,7 +223,7 @@ export const Home = () => {
     setSuggestions([]);
 
     try {
-      await ensureCacheInitialized();
+      await ensureCacheInitialized(initInProgressRef.current);
 
       const result = await apiService.searchPlayer(
         player.name,
@@ -150,6 +236,7 @@ export const Home = () => {
       setPlayerData(result);
       setError("");
       setSuggestions([]);
+      setHasSearched(true);
     } catch (err) {
       setError(err.message);
       setSuggestions(err.suggestions || []);
@@ -214,7 +301,7 @@ export const Home = () => {
             setSuggestions([]);
 
             try {
-              await ensureCacheInitialized();
+              await ensureCacheInitialized(initInProgressRef.current);
 
               const result = await apiService.searchPlayer(
                 suggestionName,
@@ -227,6 +314,7 @@ export const Home = () => {
               setPlayerData(result);
               setError("");
               setSuggestions([]);
+              setHasSearched(true);
             } catch (err) {
               setError(err.message);
               setSuggestions(err.suggestions || []);
@@ -268,7 +356,7 @@ export const Home = () => {
                   setError("");
                   setSuggestions([]);
                   try {
-                    await ensureCacheInitialized();
+                    await ensureCacheInitialized(initInProgressRef.current);
 
                     const result = await apiService.searchPlayer(
                       playerName,
@@ -280,6 +368,7 @@ export const Home = () => {
                     setPlayerData(result);
                     setError("");
                     setSuggestions([]);
+                    setHasSearched(true);
                   } catch (err) {
                     setError(err.message);
                     setSuggestions(err.suggestions || []);
