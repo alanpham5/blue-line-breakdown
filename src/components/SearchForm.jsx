@@ -1,5 +1,5 @@
 import React from "react";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 
 export const SearchForm = ({
   playerName,
@@ -32,14 +32,25 @@ export const SearchForm = ({
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Player Name
           </label>
-          <input
-            type="text"
-            value={playerName}
-            onChange={(e) => setPlayerName(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="e.g., Connor McDavid"
-            className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white placeholder-gray-400 transition-all duration-300"
-          />
+          <div className="relative">
+            <input
+              type="text"
+              value={playerName}
+              onChange={(e) => setPlayerName(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="e.g., Connor McDavid"
+              className="w-full px-4 py-3 pr-10 sm:pr-4 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white placeholder-gray-400 transition-all duration-300"
+            />
+            {playerName && (
+              <button
+                onClick={() => setPlayerName("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 sm:hidden text-gray-400 hover:text-white transition-colors p-1"
+                aria-label="Clear input"
+              >
+                <X size={18} />
+              </button>
+            )}
+          </div>
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
