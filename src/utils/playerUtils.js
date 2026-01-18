@@ -48,7 +48,7 @@ export const playerUtils = {
         { start: 2007, end: 2019, url: 'OTT_20072008-20192020_dark.svg' }
       ],
       'NYI': [
-        { start: 2008, end: 2009, url: 'NYI_20072008-20092010_dark.svg' }
+        { start: 2008, end: 2009, url: 'NYI_19971998-20092010_dark.svg' }
       ],
       'TBL': [
         { start: 2008, end: 2010, url: 'TBL_20072008-20102011_dark.svg' }
