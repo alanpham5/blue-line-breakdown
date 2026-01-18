@@ -90,8 +90,8 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 text-white p-4 sm:p-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen ice-background text-white p-4 sm:p-6">
+      <div className="max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent flex items-center justify-center gap-3">
             <img src="/blb-dark.png" alt="Blue Line Breakdown" className="w-16 h-16" />
