@@ -3,26 +3,37 @@ import { Users, Filter } from "lucide-react";
 import { SimilarPlayerCard } from "./SimilarPlayerCard";
 import { playerUtils } from "../utils/playerUtils";
 
-export const SimilarPlayersSection = ({ players, onPlayerClick, filterYear, onFilterYearChange }) => {
-  const years = Array.from({ length: 2025 - 2008 + 1 }, (_, i) => 2008 + i).reverse();
+export const SimilarPlayersSection = ({
+  players,
+  onPlayerClick,
+  filterYear,
+  onFilterYearChange,
+}) => {
+  const years = Array.from(
+    { length: 2025 - 2008 + 1 },
+    (_, i) => 2008 + i
+  ).reverse();
   const [animationKey, setAnimationKey] = useState(0);
   const prevPlayersRef = useRef(null);
 
   useEffect(() => {
     const currentPlayersSignature = players
-      .map(p => `${p.playerId}-${p.season}`)
+      .map((p) => `${p.playerId}-${p.season}`)
       .sort()
-      .join(',');
+      .join(",");
 
     const prevPlayersSignature = prevPlayersRef.current
       ? prevPlayersRef.current
-          .map(p => `${p.playerId}-${p.season}`)
+          .map((p) => `${p.playerId}-${p.season}`)
           .sort()
-          .join(',')
+          .join(",")
       : null;
 
-    if (prevPlayersSignature !== null && currentPlayersSignature !== prevPlayersSignature) {
-      setAnimationKey(prev => prev + 1);
+    if (
+      prevPlayersSignature !== null &&
+      currentPlayersSignature !== prevPlayersSignature
+    ) {
+      setAnimationKey((prev) => prev + 1);
     }
 
     prevPlayersRef.current = players;
@@ -35,7 +46,9 @@ export const SimilarPlayersSection = ({ players, onPlayerClick, filterYear, onFi
           <div className="p-2 bg-purple-500/20 rounded-lg shrink-0 backdrop-blur-sm border border-purple-400/20">
             <Users className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
           </div>
-          <h3 className="text-xl sm:text-2xl font-bold">Most Similar Players</h3>
+          <h3 className="text-xl sm:text-2xl font-bold">
+            Most Similar Players
+          </h3>
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <Filter className="w-5 h-5 text-gray-400 shrink-0" />

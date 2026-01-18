@@ -20,9 +20,12 @@ export const SearchForm = ({
     }
   };
 
-  const nameMatchesSuggestion = suggestions && suggestions.length > 0 && 
-    suggestions.some(suggestion => 
-      suggestion.toLowerCase().trim() === playerName.toLowerCase().trim()
+  const nameMatchesSuggestion =
+    suggestions &&
+    suggestions.length > 0 &&
+    suggestions.some(
+      (suggestion) =>
+        suggestion.toLowerCase().trim() === playerName.toLowerCase().trim()
     );
 
   return (
@@ -61,7 +64,10 @@ export const SearchForm = ({
             onChange={(e) => setSeason(e.target.value)}
             className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300"
           >
-            {Array.from({ length: (new Date().getFullYear() - 1) - 2008 + 1 }, (_, i) => 2008 + i)
+            {Array.from(
+              { length: new Date().getFullYear() - 1 - 2008 + 1 },
+              (_, i) => 2008 + i
+            )
               .reverse()
               .map((year) => {
                 const nextYear = year + 1;
@@ -102,7 +108,7 @@ export const SearchForm = ({
           <div className="p-3 bg-red-900/20 backdrop-blur-sm border border-red-500/30 rounded-lg text-red-300 text-sm liquid-glass">
             {error}
           </div>
-          
+
           {nameMatchesSuggestion ? (
             <div className="p-4 bg-amber-900/20 backdrop-blur-sm border border-amber-500/30 rounded-lg liquid-glass">
               <p className="text-sm font-medium text-amber-300 mb-2">
@@ -112,21 +118,26 @@ export const SearchForm = ({
                 Try selecting a different season from the dropdown above.
               </p>
             </div>
-          ) : suggestions && suggestions.length > 0 && (
-            <div className="p-4 bg-blue-900/20 backdrop-blur-sm border border-blue-500/30 rounded-lg liquid-glass">
-              <p className="text-sm font-medium text-blue-300 mb-3">Did you mean?</p>
-              <div className="flex flex-wrap gap-2">
-                {suggestions.map((suggestion, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => onSuggestionClick?.(suggestion)}
-                    className="px-3 py-1.5 text-sm font-medium text-blue-200 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-400/30 rounded-full transition-all duration-200 hover:border-blue-400/50 hover:scale-105 touch-manipulation"
-                  >
-                    {suggestion}
-                  </button>
-                ))}
+          ) : (
+            suggestions &&
+            suggestions.length > 0 && (
+              <div className="p-4 bg-blue-900/20 backdrop-blur-sm border border-blue-500/30 rounded-lg liquid-glass">
+                <p className="text-sm font-medium text-blue-300 mb-3">
+                  Did you mean?
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {suggestions.map((suggestion, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => onSuggestionClick?.(suggestion)}
+                      className="px-3 py-1.5 text-sm font-medium text-blue-200 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-400/30 rounded-full transition-all duration-200 hover:border-blue-400/50 hover:scale-105 touch-manipulation"
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )
           )}
         </div>
       )}

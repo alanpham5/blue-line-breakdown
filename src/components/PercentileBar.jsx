@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { Info } from "lucide-react";
 import { playerUtils } from "../utils/playerUtils";
 
-export const PercentileBar = ({ label, value, type = "offensive", statKey }) => {
+export const PercentileBar = ({
+  label,
+  value,
+  type = "offensive",
+  statKey,
+}) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const isInverted = statKey && playerUtils.isInvertedStat(statKey);
   const color =
@@ -14,7 +19,9 @@ export const PercentileBar = ({ label, value, type = "offensive", statKey }) => 
     <div className="mb-3 sm:mb-4 percentile-bar-container">
       <div className="flex justify-between items-center mb-1 gap-2">
         <div className="flex items-center gap-1.5 min-w-0 flex-1">
-          <span className="text-xs sm:text-sm font-medium text-gray-300 truncate">{label}</span>
+          <span className="text-xs sm:text-sm font-medium text-gray-300 truncate">
+            {label}
+          </span>
           {isInverted && (
             <div className="relative">
               <button
@@ -28,13 +35,16 @@ export const PercentileBar = ({ label, value, type = "offensive", statKey }) => 
               </button>
               {showTooltip && (
                 <div className="absolute left-0 bottom-full mb-2 w-56 sm:w-64 p-2 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-lg text-xs text-gray-200 z-10 shadow-lg pointer-events-none">
-                  {statKey === 'I_F_giveaways' ? (
+                  {statKey === "I_F_giveaways" ? (
                     <>
-                      A high percentile means giveaways occur less frequently. However, this stat may be misleading since players who handle the puck more tend to have more giveaways.
+                      A high percentile means giveaways occur less frequently.
+                      However, this stat may be misleading since players who
+                      handle the puck more tend to have more giveaways.
                     </>
                   ) : (
                     <>
-                      A high percentile means these events occur less frequently, which is better for this stat.
+                      A high percentile means these events occur less
+                      frequently, which is better for this stat.
                     </>
                   )}
                 </div>
@@ -42,7 +52,9 @@ export const PercentileBar = ({ label, value, type = "offensive", statKey }) => 
             </div>
           )}
         </div>
-        <span className="text-xs sm:text-sm font-bold text-white shrink-0">{value}%</span>
+        <span className="text-xs sm:text-sm font-bold text-white shrink-0">
+          {value}%
+        </span>
       </div>
       <div className="w-full bg-gray-800/40 backdrop-blur-sm rounded-full h-2 sm:h-2.5 overflow-hidden border border-gray-700/30">
         <div

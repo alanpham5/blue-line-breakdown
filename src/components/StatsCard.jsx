@@ -2,10 +2,17 @@ import React from "react";
 import { PercentileBar } from "./PercentileBar";
 import { playerUtils } from "../utils/playerUtils";
 
-export const StatsCard = ({ title, icon: Icon, stats, allPercentiles, type = "offensive" }) => {
-  const topStats = type === "offensive" 
-    ? playerUtils.getOffensiveStats(stats, allPercentiles)
-    : playerUtils.getTopStats(stats, 6);
+export const StatsCard = ({
+  title,
+  icon: Icon,
+  stats,
+  allPercentiles,
+  type = "offensive",
+}) => {
+  const topStats =
+    type === "offensive"
+      ? playerUtils.getOffensiveStats(stats, allPercentiles)
+      : playerUtils.getTopStats(stats, 6);
   const colorClasses =
     type === "offensive"
       ? {
@@ -27,12 +34,18 @@ export const StatsCard = ({ title, icon: Icon, stats, allPercentiles, type = "of
     >
       <div className="flex items-center justify-between mb-4 sm:mb-6">
         <div className="flex items-center gap-3">
-          <div className={`p-2 ${colorClasses.iconBg} rounded-lg shrink-0 backdrop-blur-sm border ${type === "offensive" ? "border-cyan-400/20" : "border-red-400/20"}`}>
-            <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${colorClasses.iconColor}`} />
+          <div
+            className={`p-2 ${colorClasses.iconBg} rounded-lg shrink-0 backdrop-blur-sm border ${type === "offensive" ? "border-cyan-400/20" : "border-red-400/20"}`}
+          >
+            <Icon
+              className={`w-5 h-5 sm:w-6 sm:h-6 ${colorClasses.iconColor}`}
+            />
           </div>
           <h3 className="text-xl sm:text-2xl font-bold">{title}</h3>
         </div>
-        <span className="text-sm text-gray-300 whitespace-nowrap">percentile vs. league</span>
+        <span className="text-sm text-gray-300 whitespace-nowrap">
+          percentile vs. league
+        </span>
       </div>
       <div>
         {topStats.map((stat, idx) => (

@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Target, Shield, Loader2 } from "lucide-react";
 import { apiService } from "../services/apiService";
 import { SearchForm } from "./SearchForm";
 import { PlayerHeader } from "./PlayerHeader";
 import { StatsCard } from "./StatsCard";
 import { SimilarPlayersSection } from "./SimilarPlayersSection";
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/react";
 
 export const Home = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [playerName, setPlayerName] = useState("");
-  const [season, setSeason] = useState((new Date().getFullYear() - 1).toString());
+  const [season, setSeason] = useState(
+    (new Date().getFullYear() - 1).toString()
+  );
   const [position, setPosition] = useState("F");
   const [loading, setLoading] = useState(false);
   const [initializingCache, setInitializingCache] = useState(false);
@@ -22,17 +25,60 @@ export const Home = () => {
   const [initInProgress, setInitInProgress] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const initInProgressRef = useRef(false);
+  const isUpdatingFromUrlRef = useRef(false);
+  const lastSearchParamsRef = useRef("");
 
   useEffect(() => {
     checkHealth();
     initializeCacheInBackground();
   }, []);
 
+  useEffect(() => {
+    const currentParamsString = searchParams.toString();
+
+    if (currentParamsString === lastSearchParamsRef.current) {
+      return;
+    }
+
+    lastSearchParamsRef.current = currentParamsString;
+
+    const urlPlayerName = searchParams.get("player");
+    const urlSeason = searchParams.get("season");
+    const urlPosition = searchParams.get("position");
+    const urlFilterYear = searchParams.get("filterYear");
+
+    if (isUpdatingFromUrlRef.current) {
+      isUpdatingFromUrlRef.current = false;
+      return;
+    }
+
+    const defaultSeason = (new Date().getFullYear() - 1).toString();
+    const defaultPosition = "F";
+
+    if (urlPlayerName && urlPlayerName !== playerName)
+      setPlayerName(urlPlayerName);
+    if (urlSeason && urlSeason !== season) setSeason(urlSeason);
+    if (urlPosition && urlPosition !== position) setPosition(urlPosition);
+    if (urlFilterYear !== (filterYear || null)) {
+      setFilterYear(urlFilterYear || null);
+    }
+
+    if (urlPlayerName) {
+      performSearch(
+        urlPlayerName,
+        urlSeason || season || defaultSeason,
+        urlPosition || position || defaultPosition,
+        urlFilterYear || null
+      );
+    } else {
+      setPlayerData(null);
+    }
+  }, [searchParams]);
+
   const checkHealth = async () => {
     try {
       await apiService.healthCheck();
-    } catch (err) {
-    }
+    } catch (err) {}
   };
 
   const initializeCacheInBackground = async () => {
@@ -42,8 +88,8 @@ export const Home = () => {
       const cacheStatus = await apiService.checkCacheStatus();
       if (!cacheStatus.dataLoaded) {
         const initResponse = await apiService.initializeCache();
-        
-        if (initResponse.status === 'loading') {
+
+        if (initResponse.status === "loading") {
           let timeoutId;
           await new Promise((resolve) => {
             const checkStatus = async () => {
@@ -83,9 +129,9 @@ export const Home = () => {
         "Players warming up...",
         "Coaches reviewing the game plan...",
         "Referees checking the lines...",
-        "Almost ready..."
+        "Almost ready...",
       ];
-      
+
       setLoadingMessage(messages[0]);
       let messageIndex = 0;
       const messageInterval = setInterval(() => {
@@ -97,11 +143,11 @@ export const Home = () => {
           setLoadingMessage(messages[0]);
         }
       }, 6000);
-      
+
       while (initInProgressRef.current) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
-      
+
       clearInterval(messageInterval);
       setInitializingCache(false);
       setLoadingMessage("Searching...");
@@ -119,9 +165,9 @@ export const Home = () => {
           "Players warming up...",
           "Coaches reviewing the game plan...",
           "Referees checking the lines...",
-          "Almost ready..."
+          "Almost ready...",
         ];
-        
+
         setLoadingMessage(messages[0]);
         let messageIndex = 0;
         const messageInterval = setInterval(() => {
@@ -133,13 +179,13 @@ export const Home = () => {
             setLoadingMessage(messages[0]);
           }
         }, 6000);
-        
+
         try {
           setInitInProgress(true);
           initInProgressRef.current = true;
           const initResponse = await apiService.initializeCache();
-          
-          if (initResponse.status === 'loading') {
+
+          if (initResponse.status === "loading") {
             let timeoutId;
             await new Promise((resolve) => {
               const checkStatus = async () => {
@@ -171,79 +217,96 @@ export const Home = () => {
     }
   };
 
+  const performSearch = async (
+    name,
+    seasonValue,
+    positionValue,
+    filterYearValue
+  ) => {
+    setLoading(true);
+    setError("");
+    setSuggestions([]);
+
+    try {
+      await ensureCacheInitialized(initInProgressRef.current);
+
+      const result = await apiService.searchPlayer(
+        name,
+        seasonValue,
+        positionValue,
+        9,
+        filterYearValue
+      );
+
+      setPlayerData(result);
+      setError("");
+      setSuggestions([]);
+      setHasSearched(true);
+    } catch (err) {
+      setError(err.message);
+      setSuggestions(err.suggestions || []);
+      setPlayerData(null);
+    } finally {
+      setLoading(false);
+      isUpdatingFromUrlRef.current = false;
+    }
+  };
+
+  const updateSearchParams = (
+    name,
+    seasonValue,
+    positionValue,
+    filterYearValue
+  ) => {
+    const params = new URLSearchParams();
+    if (name) params.set("player", name);
+    if (seasonValue) params.set("season", seasonValue);
+    if (positionValue) params.set("position", positionValue);
+    if (filterYearValue) params.set("filterYear", filterYearValue);
+
+    const paramsString = params.toString();
+    if (paramsString !== lastSearchParamsRef.current) {
+      isUpdatingFromUrlRef.current = true;
+      lastSearchParamsRef.current = paramsString;
+      setSearchParams(params, { replace: false });
+    }
+  };
+
   const handleSearch = async () => {
     if (!playerName.trim()) {
       setError("Please enter a player name");
       return;
     }
 
-    setLoading(true);
-    setError("");
-    setSuggestions([]);
-
-    try {
-      await ensureCacheInitialized(initInProgressRef.current);
-
-      const result = await apiService.searchPlayer(
-        playerName,
-        season,
-        position,
-        9,
-        filterYear,
-      );
-
-      setPlayerData(result);
-      setError("");
-      setSuggestions([]);
-      setHasSearched(true);
-    } catch (err) {
-      setError(err.message);
-      setSuggestions(err.suggestions || []);
-      setPlayerData(null);
-    } finally {
-      setLoading(false);
-    }
+    updateSearchParams(playerName, season, position, filterYear);
+    await performSearch(playerName, season, position, filterYear);
   };
 
   const handleSimilarPlayerClick = async (player) => {
-    let normalizedPosition = 'F';
+    let normalizedPosition = "F";
     if (player.position) {
-      normalizedPosition = player.position.toUpperCase() === 'D' ? 'D' : 'F';
+      normalizedPosition = player.position.toUpperCase() === "D" ? "D" : "F";
     } else if (position) {
       normalizedPosition = position;
     }
-    
+
     setPlayerName(player.name);
     setSeason(player.season.toString());
     setPosition(normalizedPosition);
     setFilterYear(null);
-    
-    setLoading(true);
-    setError("");
-    setSuggestions([]);
 
-    try {
-      await ensureCacheInitialized(initInProgressRef.current);
-
-      const result = await apiService.searchPlayer(
-        player.name,
-        player.season.toString(),
-        normalizedPosition,
-        9,
-        null,
-      );
-
-      setPlayerData(result);
-      setError("");
-      setSuggestions([]);
-      setHasSearched(true);
-    } catch (err) {
-      setError(err.message);
-      setSuggestions(err.suggestions || []);
-      setPlayerData(null);
-    } finally {
-      setLoading(false);
-    }
+    updateSearchParams(
+      player.name,
+      player.season.toString(),
+      normalizedPosition,
+      null
+    );
+    await performSearch(
+      player.name,
+      player.season.toString(),
+      normalizedPosition,
+      null
+    );
   };
 
   return (
@@ -272,12 +335,17 @@ export const Home = () => {
               className="inline-block hover:opacity-80 transition-opacity"
             >
               <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent flex items-center justify-center gap-3 cursor-pointer">
-                <img src="/blb-dark.png" alt="Blue Line Breakdown" className="w-16 h-16" />
+                <img
+                  src="/blb-dark.png"
+                  alt="Blue Line Breakdown"
+                  className="w-16 h-16"
+                />
                 <span>Blue Line Breakdown</span>
               </h1>
             </Link>
             <p className="text-gray-400 text-sm sm:text-base">
-              Using player metrics to break down styles and uncover true on-ice comparisons.
+              Using player metrics to break down styles and uncover true on-ice
+              comparisons.
             </p>
           </div>
         </div>
@@ -296,38 +364,17 @@ export const Home = () => {
           suggestions={suggestions}
           onSuggestionClick={async (suggestionName) => {
             setPlayerName(suggestionName);
-            setLoading(true);
-            setError("");
-            setSuggestions([]);
-
-            try {
-              await ensureCacheInitialized(initInProgressRef.current);
-
-              const result = await apiService.searchPlayer(
-                suggestionName,
-                season,
-                position,
-                9,
-                filterYear,
-              );
-
-              setPlayerData(result);
-              setError("");
-              setSuggestions([]);
-              setHasSearched(true);
-            } catch (err) {
-              setError(err.message);
-              setSuggestions(err.suggestions || []);
-              setPlayerData(null);
-            } finally {
-              setLoading(false);
-            }
+            updateSearchParams(suggestionName, season, position, filterYear);
+            await performSearch(suggestionName, season, position, filterYear);
           }}
         />
 
         {playerData && (
           <div className="space-y-4 sm:space-y-6">
-            <PlayerHeader player={playerData.player} biometrics={playerData.biometrics} />
+            <PlayerHeader
+              player={playerData.player}
+              biometrics={playerData.biometrics}
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <StatsCard
@@ -352,30 +399,18 @@ export const Home = () => {
               onFilterYearChange={async (year) => {
                 setFilterYear(year);
                 if (playerName) {
-                  setLoading(true);
-                  setError("");
-                  setSuggestions([]);
-                  try {
-                    await ensureCacheInitialized(initInProgressRef.current);
-
-                    const result = await apiService.searchPlayer(
-                      playerName,
-                      season,
-                      position,
-                      9,
-                      year || null,
-                    );
-                    setPlayerData(result);
-                    setError("");
-                    setSuggestions([]);
-                    setHasSearched(true);
-                  } catch (err) {
-                    setError(err.message);
-                    setSuggestions(err.suggestions || []);
-                    setPlayerData(null);
-                  } finally {
-                    setLoading(false);
-                  }
+                  updateSearchParams(
+                    playerName,
+                    season,
+                    position,
+                    year || null
+                  );
+                  await performSearch(
+                    playerName,
+                    season,
+                    position,
+                    year || null
+                  );
                 }
               }}
             />
@@ -384,9 +419,12 @@ export const Home = () => {
 
         {!playerData && !loading && (
           <div className="text-center text-gray-400 mt-8 sm:mt-12 px-2">
-            <p className="text-base sm:text-lg mb-2">Enter a player name to get started</p>
+            <p className="text-base sm:text-lg mb-2">
+              Enter a player name to get started
+            </p>
             <p className="text-xs sm:text-sm">
-              Using advanced analytics from Moneypuck data (2008-{new Date().getFullYear() - 1})
+              Using advanced analytics from Moneypuck data (2008-
+              {new Date().getFullYear() - 1})
             </p>
           </div>
         )}
