@@ -51,11 +51,33 @@ export const Home = () => {
         if (messageIndex < messages.length - 1) {
           messageIndex++;
           setLoadingMessage(messages[messageIndex]);
+        } else {
+          messageIndex = 0;
+          setLoadingMessage(messages[0]);
         }
-      }, 2000);
+      }, 10000);
       
       try {
-        await apiService.initializeCache();
+        const initResponse = await apiService.initializeCache();
+        
+        if (initResponse.status === 'loading') {
+          let timeoutId;
+          await new Promise((resolve) => {
+            const checkStatus = async () => {
+              const status = await apiService.checkCacheStatus();
+              if (status.dataLoaded) {
+                if (timeoutId) clearTimeout(timeoutId);
+                clearInterval(messageInterval);
+                setInitializingCache(false);
+                setLoadingMessage("Searching...");
+                resolve();
+              } else {
+                timeoutId = setTimeout(checkStatus, 30000);
+              }
+            };
+            checkStatus();
+          });
+        }
       } finally {
         clearInterval(messageInterval);
         setInitializingCache(false);
