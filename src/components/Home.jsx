@@ -13,6 +13,8 @@ export const Home = () => {
   const [season, setSeason] = useState((new Date().getFullYear() - 1).toString());
   const [position, setPosition] = useState("F");
   const [loading, setLoading] = useState(false);
+  const [initializingCache, setInitializingCache] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("Searching...");
   const [playerData, setPlayerData] = useState(null);
   const [error, setError] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -32,7 +34,33 @@ export const Home = () => {
   const ensureCacheInitialized = async () => {
     const cacheStatus = await apiService.checkCacheStatus();
     if (!cacheStatus.dataLoaded) {
-      await apiService.initializeCache();
+      setInitializingCache(true);
+      const messages = [
+        "Hold on, we need to refresh the data...",
+        "Turning on the lights...",
+        "Zamboni resurfacing the ice...",
+        "Players warming up...",
+        "Coaches reviewing the game plan...",
+        "Referees checking the lines...",
+        "Almost ready..."
+      ];
+      
+      setLoadingMessage(messages[0]);
+      let messageIndex = 0;
+      const messageInterval = setInterval(() => {
+        if (messageIndex < messages.length - 1) {
+          messageIndex++;
+          setLoadingMessage(messages[messageIndex]);
+        }
+      }, 2000);
+      
+      try {
+        await apiService.initializeCache();
+      } finally {
+        clearInterval(messageInterval);
+        setInitializingCache(false);
+        setLoadingMessage("Searching...");
+      }
     }
   };
 
@@ -115,7 +143,7 @@ export const Home = () => {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center">
           <div className="liquid-glass rounded-2xl p-8 flex flex-col items-center gap-4">
             <Loader2 className="w-12 h-12 text-cyan-400 animate-spin" />
-            <p className="text-white text-lg font-medium">Searching...</p>
+            <p className="text-white text-lg font-medium">{loadingMessage}</p>
           </div>
         </div>
       )}

@@ -31,6 +31,7 @@ export const playerUtils = {
       OnIce_F_goals: "On-Ice Goals For",
       OnIce_A_xGoals: "On-Ice xG Against",
       OnIce_A_goals: "On-Ice Goals Against",
+      onIce_corsiPercentage: "Corsi Percentage",
     };
     return statNames[statKey] || statKey;
   },
