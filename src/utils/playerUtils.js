@@ -26,6 +26,7 @@ export const playerUtils = {
       I_F_hits: "Hits",
       I_F_takeaways: "Takeaways",
       I_F_giveaways: "Giveaways",
+      shotsBlockedByPlayer: "Shots Blocked",
       OnIce_F_xGoals: "On-Ice Expected Goals %",
       OnIce_F_goals: "On-Ice Goals For",
       OnIce_A_xGoals: "On-Ice xG Against",

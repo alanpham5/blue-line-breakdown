@@ -29,6 +29,13 @@ export const Home = () => {
     }
   };
 
+  const ensureCacheInitialized = async () => {
+    const cacheStatus = await apiService.checkCacheStatus();
+    if (!cacheStatus.cacheExists) {
+      await apiService.initializeCache();
+    }
+  };
+
   const handleSearch = async () => {
     if (!playerName.trim()) {
       setError("Please enter a player name");
@@ -40,6 +47,8 @@ export const Home = () => {
     setSuggestions([]);
 
     try {
+      await ensureCacheInitialized();
+
       const result = await apiService.searchPlayer(
         playerName,
         season,
@@ -78,6 +87,8 @@ export const Home = () => {
     setSuggestions([]);
 
     try {
+      await ensureCacheInitialized();
+
       const result = await apiService.searchPlayer(
         player.name,
         player.season.toString(),
@@ -145,6 +156,8 @@ export const Home = () => {
             setSuggestions([]);
 
             try {
+              await ensureCacheInitialized();
+
               const result = await apiService.searchPlayer(
                 suggestionName,
                 season,
@@ -197,6 +210,8 @@ export const Home = () => {
                   setError("");
                   setSuggestions([]);
                   try {
+                    await ensureCacheInitialized();
+
                     const result = await apiService.searchPlayer(
                       playerName,
                       season,
