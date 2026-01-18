@@ -5,6 +5,7 @@ import { SearchForm } from "./components/SearchForm";
 import { PlayerHeader } from "./components/PlayerHeader";
 import { StatsCard } from "./components/StatsCard";
 import { SimilarPlayersSection } from "./components/SimilarPlayersSection";
+import { Analytics } from "@vercel/analytics/react"
 
 const App = () => {
   const [playerName, setPlayerName] = useState("");
@@ -108,6 +109,7 @@ const App = () => {
           Using player metrics to break down styles and uncover true on-ice comparisons.
           </p>
         </div>
+        <Analytics />
 
         <SearchForm
           playerName={playerName}
