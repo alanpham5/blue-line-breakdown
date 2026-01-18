@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Target, Shield } from "lucide-react";
+import { Target, Shield, Loader2 } from "lucide-react";
 import { apiService } from "../services/apiService";
 import { SearchForm } from "./SearchForm";
 import { PlayerHeader } from "./PlayerHeader";
@@ -31,7 +31,7 @@ export const Home = () => {
 
   const ensureCacheInitialized = async () => {
     const cacheStatus = await apiService.checkCacheStatus();
-    if (!cacheStatus.cacheExists) {
+    if (!cacheStatus.dataLoaded) {
       await apiService.initializeCache();
     }
   };
@@ -111,6 +111,14 @@ export const Home = () => {
 
   return (
     <div className="min-h-screen ice-background text-white p-4 sm:p-6">
+      {loading && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="liquid-glass rounded-2xl p-8 flex flex-col items-center gap-4">
+            <Loader2 className="w-12 h-12 text-cyan-400 animate-spin" />
+            <p className="text-white text-lg font-medium">Searching...</p>
+          </div>
+        </div>
+      )}
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="mb-6 sm:mb-8">
           <div className="flex justify-end mb-4 sm:mb-0 sm:absolute sm:top-0 sm:right-0 relative">
