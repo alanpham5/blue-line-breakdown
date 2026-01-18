@@ -26,10 +26,10 @@ export const SimilarPlayerCard = ({ player, onClick, animationKey }) => {
       className={`flex flex-col items-center group cursor-pointer touch-manipulation min-w-0 ${shouldAnimate ? 'player-card-enter' : ''}`}
       onClick={() => onClick?.(player)}
     >
-      <div className="relative mb-1 sm:mb-2 transition-transform duration-300 group-hover:scale-110 group-active:scale-105">
-        <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 sm:border-4 border-gray-600/40 group-hover:border-cyan-400/80 transition-all duration-300 backdrop-blur-sm shadow-lg group-hover:shadow-cyan-500/30">
+      <div className="relative mb-1 sm:mb-2 transition-transform duration-300 sm:group-hover:scale-110 group-active:scale-105">
+        <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 sm:border-4 border-gray-600/40 sm:group-hover:border-cyan-400/80 transition-all duration-300 backdrop-blur-sm shadow-lg sm:group-hover:shadow-cyan-500/30">
           <img
-            src={playerUtils.getPlayerHeadshot(player.playerId)}
+            src={playerUtils.getPlayerHeadshot(player.playerId, player.team, player.season)}
             alt={player.name}
             className="w-full h-full object-cover"
             onError={(e) => {
