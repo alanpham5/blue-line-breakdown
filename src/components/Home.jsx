@@ -53,7 +53,7 @@ export const Home = () => {
         playerName,
         season,
         position,
-        7,
+        9,
         filterYear,
       );
 
@@ -93,7 +93,7 @@ export const Home = () => {
         player.name,
         player.season.toString(),
         normalizedPosition,
-        7,
+        9,
         null,
       );
 
@@ -170,7 +170,7 @@ export const Home = () => {
                 suggestionName,
                 season,
                 position,
-                7,
+                9,
                 filterYear,
               );
 
@@ -224,7 +224,7 @@ export const Home = () => {
                       playerName,
                       season,
                       position,
-                      7,
+                      9,
                       year || null,
                     );
                     setPlayerData(result);

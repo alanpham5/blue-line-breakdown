@@ -1,11 +1,18 @@
 const getApiBaseUrl = () => {
+  const isLocalhost = typeof window !== 'undefined' && 
+    (window.location.hostname === 'localhost' || 
+     window.location.hostname === '127.0.0.1' ||
+     window.location.hostname === '');
+  
+  if (isLocalhost || process.env.NODE_ENV === 'development') {
+    return 'http://localhost:5001';
+  }
+  
   if (process.env.REACT_APP_API_URL) {
     return process.env.REACT_APP_API_URL;
   }
-  if (process.env.NODE_ENV === 'development') {
-    return 'http://localhost:5001';
-  }
-  return process.env.REACT_APP_API_URL || '';
+  
+  return '';
 };
 
 const API_BASE_URL = getApiBaseUrl();
@@ -15,7 +22,7 @@ export const apiService = {
     playerName,
     season,
     position,
-    numNeighbors = 7,
+    numNeighbors = 9,
     filterSeason = null,
   ) {
     const response = await fetch(`${API_BASE_URL}/search`, {

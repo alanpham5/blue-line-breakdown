@@ -53,14 +53,18 @@ export const SimilarPlayersSection = ({ players, onPlayerClick, filterYear, onFi
           </select>
         </div>
       </div>
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-3 sm:gap-4">
+      <div className="grid grid-cols-3 gap-3 sm:gap-4 md:flex md:flex-wrap md:justify-center md:gap-4">
         {players.map((player, idx) => (
-          <SimilarPlayerCard
+          <div
             key={`${player.playerId}-${player.season}`}
-            player={player}
-            onClick={onPlayerClick}
-            animationKey={animationKey}
-          />
+            className="md:w-[calc((100%-4rem)/5)]"
+          >
+            <SimilarPlayerCard
+              player={player}
+              onClick={onPlayerClick}
+              animationKey={animationKey}
+            />
+          </div>
         ))}
       </div>
     </div>
