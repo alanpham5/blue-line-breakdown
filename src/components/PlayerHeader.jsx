@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Ruler, Scale } from "lucide-react";
 import { playerUtils } from "../utils/playerUtils";
 import { ArchetypeBadge } from "./ArchetypeBadge";
@@ -27,16 +28,19 @@ export const PlayerHeader = ({ player, biometrics }) => {
             />
           </div>
           {teamLogoUrl && (
-            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 sm:hidden w-14 h-14 flex items-center justify-center z-10">
+            <Link
+              to={`/teams?season=${player.season}&team=${player.team}&position=${player.position}`}
+              className="absolute -bottom-6 left-1/2 -translate-x-1/2 sm:hidden w-14 h-14 flex items-center justify-center z-10 hover:opacity-80 transition-opacity"
+            >
               <img
                 src={teamLogoUrl}
                 alt={`${player.team} logo`}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain cursor-pointer"
                 onError={(e) => {
                   e.target.style.display = "none";
                 }}
               />
-            </div>
+            </Link>
           )}
         </div>
         <div className="flex-1 min-w-0 text-center sm:text-left">
@@ -83,16 +87,19 @@ export const PlayerHeader = ({ player, biometrics }) => {
           </div>
         </div>
         {teamLogoUrl && (
-          <div className="hidden sm:flex shrink-0 w-24 h-24 md:w-28 md:h-28 items-center justify-center">
+          <Link
+            to={`/teams?season=${player.season}&team=${player.team}&position=${player.position}`}
+            className="hidden sm:flex shrink-0 w-24 h-24 md:w-28 md:h-28 items-center justify-center hover:opacity-80 transition-opacity"
+          >
             <img
               src={teamLogoUrl}
               alt={`${player.team} logo`}
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain cursor-pointer"
               onError={(e) => {
                 e.target.style.display = "none";
               }}
             />
-          </div>
+          </Link>
         )}
       </div>
     </div>

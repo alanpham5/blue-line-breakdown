@@ -4,7 +4,11 @@ export const playerUtils = {
       const seasonYear = parseInt(season);
       const nextYear = seasonYear + 1;
       const yearRange = `${seasonYear}${nextYear}`;
-      const teamCode = team.toUpperCase();
+      const teamCode =
+        team.toUpperCase() == "ARI" && seasonYear < 2013
+          ? "PHX"
+          : team.toUpperCase();
+
       return `https://assets.nhle.com/mugs/nhl/${yearRange}/${teamCode}/${playerId}.png`;
     }
     return `https://assets.nhle.com/mugs/nhl/latest/${playerId}.png`;
@@ -107,56 +111,56 @@ export const playerUtils = {
 
   getStatExplanation(statKey) {
     const explanations = {
-      I_F_goals:
-        "How often the player scores goals.",
-    
+      I_F_goals: "How often the player scores goals.",
+
       I_F_primaryAssists:
         "How often the player directly sets up a goal with the key pass.",
-    
+
       I_F_secondaryAssists:
         "How often the player contributes earlier in a scoring play.",
-    
-      I_F_points:
-        "How often the player records a goal or an assist.",
-    
+
+      I_F_points: "How often the player records a goal or an assist.",
+
       I_F_shotsOnGoal:
         "How often the player gets shots on the net that force a save or result in a goal.",
-    
+
       I_F_shotAttempts:
         "How often the player tries to shoot the puck, whether it reaches the net or not.",
-    
+
       I_F_xGoals:
         "How often the player gets chances from dangerous areas or good positions to score.",
-    
-      I_F_hits:
-        "How often the player delivers body checks.",
-    
+
+      I_F_hits: "How often the player delivers body checks.",
+
       I_F_takeaways:
         "How often the player takes the puck away from the opposition.",
-    
+
       I_F_giveaways:
         "How often the player loses the puck to the opposition. A lower percentile means the player loses the puck more frequently.\nHowever, players who handle the puck frequently may naturally have more of these.",
-    
+
       shotsBlockedByPlayer:
         "How often the player blocks shots to prevent them from reaching the net.",
-    
+
       OnIce_F_xGoals:
         "How often the player’s team creates good scoring chances when they are on the ice.",
-    
+
       OnIce_F_goals:
         "How often the player’s team scores goals while the player is on the ice.",
-    
+
       OnIce_A_xGoals:
         "How often the opposition creates good scoring chances when the player is on the ice. A lower percentile means scoring chances are more frequent by the opposition when the player is on the ice.",
-    
+
       OnIce_A_goals:
         "How often the opposition scores when the player is on the ice. A lower percentile means more goals are scored by the opposition when the player is on the ice.",
-    
+
       onIce_corsiPercentage:
         "How often the player’s team controls play and spends time attacking versus defending when the player is on the ice.",
     };
-    
-    return explanations[statKey] || "Player performance metric compared to league average.";
+
+    return (
+      explanations[statKey] ||
+      "Player performance metric compared to league average."
+    );
   },
 
   getTopStats(stats, count = 6) {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Target, Shield, Loader2 } from "lucide-react";
 import { apiService } from "../services/apiService";
 import { SearchForm } from "./SearchForm";
@@ -7,6 +7,7 @@ import { PlayerHeader } from "./PlayerHeader";
 import { StatsCard } from "./StatsCard";
 import { SimilarPlayersSection } from "./SimilarPlayersSection";
 import { WarPercentileCard } from "./WarPercentileCard";
+import { Header } from "./Header";
 import { Analytics } from "@vercel/analytics/react";
 
 export const Home = () => {
@@ -321,35 +322,7 @@ export const Home = () => {
         </div>
       )}
       <div className="max-w-6xl mx-auto relative z-10">
-        <div className="mb-6 sm:mb-8">
-          <div className="flex justify-end mb-4 sm:mb-0 sm:absolute sm:top-0 sm:right-0 relative">
-            <Link
-              to="/about"
-              className="bg-gradient-to-r from-cyan-500/90 to-blue-600/90 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-2 px-4 sm:py-2.5 sm:px-5 rounded-full transition-all duration-300 backdrop-blur-sm border border-cyan-400/30 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 text-sm sm:text-base"
-            >
-              About
-            </Link>
-          </div>
-          <div className="text-center">
-            <Link
-              to="/"
-              className="inline-block hover:opacity-80 transition-opacity"
-            >
-              <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent flex items-center justify-center gap-3 cursor-pointer">
-                <img
-                  src="/blb-dark.png"
-                  alt="Blue Line Breakdown"
-                  className="w-16 h-16"
-                />
-                <span>Blue Line Breakdown</span>
-              </h1>
-            </Link>
-            <p className="text-gray-400 text-sm sm:text-base">
-              Using player metrics to break down styles and uncover true on-ice
-              comparisons.
-            </p>
-          </div>
-        </div>
+        <Header />
         <Analytics />
 
         <SearchForm

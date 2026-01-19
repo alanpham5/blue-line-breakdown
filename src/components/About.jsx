@@ -1,25 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Header } from "./Header";
 
 export const About = () => {
   return (
     <div className="min-h-screen ice-background text-white p-4 sm:p-6">
       <div className="max-w-4xl mx-auto relative z-10">
-        <div className="text-center mb-8 sm:mb-12">
-          <Link
-            to="/"
-            className="inline-block hover:opacity-80 transition-opacity"
-          >
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent flex items-center justify-center gap-3 cursor-pointer">
-              <img
-                src="/blb-dark.png"
-                alt="Blue Line Breakdown"
-                className="w-16 h-16 sm:w-20 sm:h-20"
-              />
-              <span>About Blue Line Breakdown</span>
-            </h1>
-          </Link>
-        </div>
+        <Header />
 
         <div className="liquid-glass rounded-2xl p-6 sm:p-8 space-y-6">
           <section>

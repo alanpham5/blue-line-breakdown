@@ -75,4 +75,22 @@ export const apiService = {
     }
     return response.json();
   },
+
+  async fetchTeams(year) {
+    const response = await fetch(`${API_BASE_URL}/teams?year=${year}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch teams");
+    }
+    return response.json();
+  },
+
+  async fetchRosters(year, team, position) {
+    const response = await fetch(
+      `${API_BASE_URL}/rosters?year=${year}&team=${team}&position=${position}`
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch rosters");
+    }
+    return response.json();
+  },
 };
