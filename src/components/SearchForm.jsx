@@ -1,5 +1,9 @@
-import React from "react";
+import { useEffect } from "react";
 import { Search, X } from "lucide-react";
+import {
+  enableLiquidGlassSheenOnScroll,
+  disableLiquidGlassSheenOnScroll,
+} from "../utils/liquidGlassSheenScroll";
 
 export const SearchForm = ({
   playerName,
@@ -19,7 +23,10 @@ export const SearchForm = ({
       onSearch();
     }
   };
-
+  useEffect(() => {
+    enableLiquidGlassSheenOnScroll();
+    return () => disableLiquidGlassSheenOnScroll();
+  }, []);
   const nameMatchesSuggestion =
     suggestions &&
     suggestions.length > 0 &&

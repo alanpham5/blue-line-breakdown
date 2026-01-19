@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { Ruler, Scale } from "lucide-react";
 import { playerUtils } from "../utils/playerUtils";

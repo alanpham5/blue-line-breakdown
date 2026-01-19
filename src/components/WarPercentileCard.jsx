@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Info, Trophy } from "lucide-react";
 
 export const WarPercentileCard = ({ warPercentile }) => {
@@ -23,7 +23,10 @@ export const WarPercentileCard = ({ warPercentile }) => {
   const dashOffset = circumference * (1 - clampedPercent / 100);
 
   return (
-    <div className="liquid-glass-strong rounded-2xl h-full flex p-4 sm:p-5 border-cyan-400/30">
+    <div
+      className="liquid-glass-strong rounded-2xl h-full flex p-4 sm:p-5 border-cyan-400/30"
+      style={{ position: "static", overflow: "visible" }}
+    >
       <div className="flex items-center justify-between gap-3 w-full">
         <div className="flex items-center gap-3 min-w-0 flex-1">
           <div className="p-2 bg-cyan-500/20 rounded-lg shrink-0 backdrop-blur-sm border border-cyan-400/20">
@@ -32,7 +35,10 @@ export const WarPercentileCard = ({ warPercentile }) => {
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="text-xl font-bold">WAR</h3>
-              <div className="relative">
+              <div
+                className="relative z-[10000]"
+                style={{ overflow: "visible" }}
+              >
                 <button
                   onMouseEnter={() => setShowTooltip(true)}
                   onMouseLeave={() => setShowTooltip(false)}
@@ -43,7 +49,10 @@ export const WarPercentileCard = ({ warPercentile }) => {
                   <Info size={16} />
                 </button>
                 {showTooltip && (
-                  <div className="absolute left-0 bottom-full mb-2 w-56 max-w-xs p-3 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-lg text-xs text-gray-200 z-50 shadow-lg pointer-events-none">
+                  <div
+                    className="absolute left-0 bottom-full mb-2 w-56 max-w-xs p-3 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-lg text-xs text-gray-200 z-[9999] shadow-lg"
+                    style={{ pointerEvents: "none" }}
+                  >
                     <div className="space-y-2">
                       <div className="font-semibold text-cyan-400">
                         Wins Above Replacement (WAR)

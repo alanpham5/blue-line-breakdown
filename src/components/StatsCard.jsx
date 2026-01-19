@@ -62,14 +62,18 @@ export const StatsCard = ({
             <div className="absolute right-0 top-full mt-2 w-64 sm:w-72 p-3 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-lg text-xs text-gray-200 z-10 shadow-lg pointer-events-none">
               <div className="space-y-2">
                 <div>
-                  <span className="font-semibold text-cyan-400">Percentile Adjusted:</span>{" "}
+                  <span className="font-semibold text-cyan-400">
+                    Percentile Adjusted:
+                  </span>{" "}
                   Values are normalized to show where this player ranks compared
                   to all NHL players (0-100th percentile).
                 </div>
                 <div>
-                  <span className="font-semibold text-cyan-400">Ice Time Adjusted:</span>{" "}
-                  Statistics are adjusted for ice time to provide fair comparisons
-                  across players with different usage.
+                  <span className="font-semibold text-cyan-400">
+                    Ice Time Adjusted:
+                  </span>{" "}
+                  Statistics are adjusted for ice time to provide fair
+                  comparisons across players with different usage.
                 </div>
               </div>
             </div>

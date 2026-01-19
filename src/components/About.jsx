@@ -1,8 +1,16 @@
-import React from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Header } from "./Header";
+import {
+  enableLiquidGlassSheenOnScroll,
+  disableLiquidGlassSheenOnScroll,
+} from "../utils/liquidGlassSheenScroll";
 
 export const About = () => {
+  useEffect(() => {
+    enableLiquidGlassSheenOnScroll();
+    return () => disableLiquidGlassSheenOnScroll();
+  }, []);
   return (
     <div className="min-h-screen ice-background text-white p-4 sm:p-6">
       <div className="max-w-4xl mx-auto relative z-10">

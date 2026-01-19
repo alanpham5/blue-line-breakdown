@@ -26,6 +26,7 @@ export const Home = () => {
   const [filterYear, setFilterYear] = useState(null);
   const [initInProgress, setInitInProgress] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+  const [animateGlass, setAnimateGlass] = useState(false);
   const initInProgressRef = useRef(false);
   const isUpdatingFromUrlRef = useRef(false);
   const lastSearchParamsRef = useRef("");
@@ -279,8 +280,9 @@ export const Home = () => {
       setError("Please enter a player name");
       return;
     }
-
     updateSearchParams(playerName, season, position, filterYear);
+    setAnimateGlass(false);
+    setTimeout(() => setAnimateGlass(true), 10);
     await performSearch(playerName, season, position, filterYear);
   };
 
@@ -324,93 +326,96 @@ export const Home = () => {
       <div className="max-w-6xl mx-auto relative z-10">
         <Header />
         <Analytics />
+        <div
+          className={`space-y-4 sm:space-y-6${animateGlass ? " liquid-glass-animate" : ""}`}
+        >
+          <SearchForm
+            playerName={playerName}
+            setPlayerName={setPlayerName}
+            season={season}
+            setSeason={setSeason}
+            position={position}
+            setPosition={setPosition}
+            onSearch={handleSearch}
+            loading={loading}
+            error={error}
+            suggestions={suggestions}
+            onSuggestionClick={async (suggestionName) => {
+              setPlayerName(suggestionName);
+              updateSearchParams(suggestionName, season, position, filterYear);
+              await performSearch(suggestionName, season, position, filterYear);
+            }}
+          />
 
-        <SearchForm
-          playerName={playerName}
-          setPlayerName={setPlayerName}
-          season={season}
-          setSeason={setSeason}
-          position={position}
-          setPosition={setPosition}
-          onSearch={handleSearch}
-          loading={loading}
-          error={error}
-          suggestions={suggestions}
-          onSuggestionClick={async (suggestionName) => {
-            setPlayerName(suggestionName);
-            updateSearchParams(suggestionName, season, position, filterYear);
-            await performSearch(suggestionName, season, position, filterYear);
-          }}
-        />
+          {playerData && (
+            <div className="space-y-4 sm:space-y-6">
+              <div className="flex flex-col md:flex-row md:items-stretch gap-4 sm:gap-6">
+                <div className="w-full md:flex-1">
+                  <PlayerHeader
+                    player={playerData.player}
+                    biometrics={playerData.biometrics}
+                  />
+                </div>
+                <div className="w-full md:w-72 lg:w-80 shrink-0">
+                  <WarPercentileCard
+                    warPercentile={playerData.player.warPercentile}
+                  />
+                </div>
+              </div>
 
-        {playerData && (
-          <div className="space-y-4 sm:space-y-6">
-            <div className="flex flex-col md:flex-row md:items-stretch gap-4 sm:gap-6">
-              <div className="w-full md:flex-1">
-                <PlayerHeader
-                  player={playerData.player}
-                  biometrics={playerData.biometrics}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <StatsCard
+                  title="Offensive Metrics"
+                  icon={Target}
+                  stats={playerData.percentiles.offensive}
+                  allPercentiles={playerData.percentiles}
+                  type="offensive"
+                />
+                <StatsCard
+                  title="Defensive Metrics"
+                  icon={Shield}
+                  stats={playerData.percentiles.defensive}
+                  type="defensive"
                 />
               </div>
-              <div className="w-full md:w-72 lg:w-80 shrink-0">
-                <WarPercentileCard
-                  warPercentile={playerData.player.warPercentile}
-                />
-              </div>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              <StatsCard
-                title="Offensive Metrics"
-                icon={Target}
-                stats={playerData.percentiles.offensive}
-                allPercentiles={playerData.percentiles}
-                type="offensive"
+              <SimilarPlayersSection
+                players={playerData.similarPlayers}
+                onPlayerClick={handleSimilarPlayerClick}
+                filterYear={filterYear}
+                onFilterYearChange={async (year) => {
+                  setFilterYear(year);
+                  if (playerName) {
+                    updateSearchParams(
+                      playerName,
+                      season,
+                      position,
+                      year || null
+                    );
+                    await performSearch(
+                      playerName,
+                      season,
+                      position,
+                      year || null
+                    );
+                  }
+                }}
               />
-              <StatsCard
-                title="Defensive Metrics"
-                icon={Shield}
-                stats={playerData.percentiles.defensive}
-                type="defensive"
-              />
             </div>
+          )}
 
-            <SimilarPlayersSection
-              players={playerData.similarPlayers}
-              onPlayerClick={handleSimilarPlayerClick}
-              filterYear={filterYear}
-              onFilterYearChange={async (year) => {
-                setFilterYear(year);
-                if (playerName) {
-                  updateSearchParams(
-                    playerName,
-                    season,
-                    position,
-                    year || null
-                  );
-                  await performSearch(
-                    playerName,
-                    season,
-                    position,
-                    year || null
-                  );
-                }
-              }}
-            />
-          </div>
-        )}
-
-        {!playerData && !loading && (
-          <div className="text-center text-gray-400 mt-8 sm:mt-12 px-2">
-            <p className="text-base sm:text-lg mb-2">
-              Enter a player name to get started
-            </p>
-            <p className="text-xs sm:text-sm">
-              Using advanced analytics from Moneypuck data (2008-
-              {new Date().getFullYear() - 1})
-            </p>
-          </div>
-        )}
+          {!playerData && !loading && (
+            <div className="text-center text-gray-400 mt-8 sm:mt-12 px-2">
+              <p className="text-base sm:text-lg mb-2">
+                Enter a player name to get started
+              </p>
+              <p className="text-xs sm:text-sm">
+                Using advanced analytics from Moneypuck data (2008-
+                {new Date().getFullYear() - 1})
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

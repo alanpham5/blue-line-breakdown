@@ -128,7 +128,7 @@ code {
 
 @keyframes iceGlow {
   0% {
-    opacity: 0.5;
+    opacity: 0.3;
   }
   100% {
     opacity: 1;
@@ -136,23 +136,146 @@ code {
 }
 
 .liquid-glass {
-  background: rgba(30, 41, 59, 0.4);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.02) 35%,
+      rgba(0, 0, 0, 0.06) 100%
+    ),
+    rgba(30, 41, 59, 0.38);
+  backdrop-filter: blur(22px) saturate(190%);
+  -webkit-backdrop-filter: blur(22px) saturate(190%);
+  border: 1px solid rgba(148, 163, 184, 0.22);
   box-shadow:
     0 8px 32px 0 rgba(0, 0, 0, 0.37),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.18);
+  transform: translateZ(0);
+  transition:
+    background 300ms ease,
+    border-color 300ms ease,
+    box-shadow 300ms ease,
+    backdrop-filter 300ms ease;
+  animation: glassAppear 0.45s ease-out;
 }
 
 .liquid-glass-strong {
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(148, 163, 184, 0.3);
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      120% 140% at 10% 10%,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0.03) 45%,
+      rgba(0, 0, 0, 0.12) 100%
+    ),
+    rgba(15, 23, 42, 0.56);
+  backdrop-filter: blur(26px) saturate(200%);
+  -webkit-backdrop-filter: blur(26px) saturate(200%);
+  border: 1px solid rgba(148, 163, 184, 0.32);
   box-shadow:
     0 8px 32px 0 rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22);
+  transform: translateZ(0);
+  transition:
+    background 300ms ease,
+    border-color 300ms ease,
+    box-shadow 300ms ease,
+    backdrop-filter 300ms ease;
+  animation: glassAppear 0.45s ease-out;
+}
+
+.liquid-glass::before,
+.liquid-glass-strong::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      70% 55% at 18% 12%,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.03) 35%,
+      rgba(255, 255, 255, 0) 70%
+    ),
+    radial-gradient(
+      55% 45% at 85% 20%,
+      rgba(56, 189, 248, 0.04) 0%,
+      rgba(56, 189, 248, 0) 60%
+    );
+  opacity: 0.28;
+  mix-blend-mode: screen;
+}
+
+.liquid-glass::after,
+.liquid-glass-strong::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      110deg,
+      rgba(255, 255, 255, 0) 32%,
+      rgba(255, 255, 255, 0.04) 45%,
+      rgba(255, 255, 255, 0) 60%
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.005) 0px,
+      rgba(255, 255, 255, 0.005) 1px,
+      rgba(255, 255, 255, 0) 2px,
+      rgba(255, 255, 255, 0) 6px
+    );
+  opacity: 0.18;
+  transform: translateX(-30%) rotate(8deg);
+  animation: liquidSheen 14s ease-in-out infinite;
+  mix-blend-mode: overlay;
+}
+
+.liquid-glass:hover,
+.liquid-glass-strong:hover {
+  border-color: rgba(148, 163, 184, 0.45);
+  box-shadow:
+    0 12px 44px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(28px) saturate(220%);
+  -webkit-backdrop-filter: blur(28px) saturate(220%);
+}
+
+@keyframes liquidSheen {
+  0%,
+  100% {
+    transform: translateX(-35%) rotate(8deg);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateX(35%) rotate(8deg);
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-glass::after,
+  .liquid-glass-strong::after {
+    animation: none;
+  }
+}
+
+@keyframes glassAppear {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @keyframes barFill {
@@ -265,4 +388,9 @@ code {
 }
 .player-card-enter:nth-child(10) {
   animation-delay: 0.5s;
+}
+
+/* --- Liquid glass appear animation for all glass elements --- */
+.liquid-glass-animate {
+  animation: glassAppear 0.55s cubic-bezier(0.33, 1, 0.68, 1) both;
 }

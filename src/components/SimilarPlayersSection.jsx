@@ -16,7 +16,6 @@ export const SimilarPlayersSection = ({
   const [animationKey, setAnimationKey] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);
   const prevPlayersRef = useRef(null);
-
   useEffect(() => {
     const currentPlayersSignature = players
       .map((p) => `${p.playerId}-${p.season}`)

@@ -66,6 +66,7 @@ export const Teams = () => {
   const [loadingMessage, setLoadingMessage] = useState("Initializing...");
   const [initInProgress, setInitInProgress] = useState(false);
   const [showTeamsOverlay, setShowTeamsOverlay] = useState(false);
+  const [animateGlass, setAnimateGlass] = useState(false);
 
   const initInProgressRef = useRef(false);
 
@@ -221,6 +222,8 @@ export const Teams = () => {
       { season: tempSeason, team: tempTeam, position: tempPosition },
       { replace: false }
     );
+    setAnimateGlass(false);
+    setTimeout(() => setAnimateGlass(true), 10);
   };
 
   const handlePlayerClick = (player) => {
@@ -244,8 +247,9 @@ export const Teams = () => {
 
       <div className="max-w-6xl mx-auto">
         <Header />
-
-        <div className="liquid-glass rounded-2xl p-6 mb-8">
+        <div
+          className={`liquid-glass rounded-2xl p-6 mb-8${animateGlass ? " liquid-glass-animate" : ""}`}
+        >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">

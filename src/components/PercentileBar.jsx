@@ -58,7 +58,8 @@ export const PercentileBar = ({
                           Inverted Stat:
                         </span>
                         <span className="text-gray-300">
-                        A lower percentile means this happens more often, which is unfavorable.
+                          A lower percentile means this happens more often,
+                          which is unfavorable.
                         </span>
                       </div>
                     )}
