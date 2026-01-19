@@ -65,6 +65,7 @@ export const Teams = () => {
   const [initializingCache, setInitializingCache] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("Initializing...");
   const [initInProgress, setInitInProgress] = useState(false);
+  const [showTeamsOverlay, setShowTeamsOverlay] = useState(false);
 
   const initInProgressRef = useRef(false);
 
@@ -150,6 +151,7 @@ export const Teams = () => {
 
   const fetchTeams = async () => {
     setLoadingTeams(true);
+    let overlayTimeout = setTimeout(() => setShowTeamsOverlay(true), 3000);
     try {
       const data = await apiService.fetchTeams(season);
       setTeams(data.teams || []);
@@ -160,6 +162,8 @@ export const Teams = () => {
     } catch (err) {
       console.error("Error fetching teams:", err);
     } finally {
+      clearTimeout(overlayTimeout);
+      setShowTeamsOverlay(false);
       setLoadingTeams(false);
     }
   };
@@ -229,7 +233,7 @@ export const Teams = () => {
 
   return (
     <div className="min-h-screen ice-background text-white p-4 sm:p-6">
-      {initializingCache && (
+      {(initializingCache || showTeamsOverlay) && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-gray-800 rounded-2xl p-8 text-center">
             <Loader2 className="w-12 h-12 animate-spin text-cyan-400 mx-auto mb-4" />
