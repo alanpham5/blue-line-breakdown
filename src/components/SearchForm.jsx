@@ -16,6 +16,7 @@ export const SearchForm = ({
 }) => {
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
+      e.target.blur();
       onSearch();
     }
   };
