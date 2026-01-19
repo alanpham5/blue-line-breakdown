@@ -24,16 +24,14 @@ export const WarPercentileCard = ({ warPercentile }) => {
 
   return (
     <div className="liquid-glass-strong rounded-2xl h-full flex p-4 sm:p-5 border-cyan-400/30">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-3 w-full">
         <div className="flex items-center gap-3 min-w-0 flex-1">
           <div className="p-2 bg-cyan-500/20 rounded-lg shrink-0 backdrop-blur-sm border border-cyan-400/20">
             <Trophy className="w-5 h-5 text-cyan-400" />
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-xl font-bold">
-                WAR
-              </h3>
+              <h3 className="text-xl font-bold">WAR</h3>
               <div className="relative">
                 <button
                   onMouseEnter={() => setShowTooltip(true)}
@@ -61,10 +59,12 @@ export const WarPercentileCard = ({ warPercentile }) => {
                 )}
               </div>
             </div>
-            <div className="text-xs text-gray-300 mt-1">percentile vs. league</div>
+            <div className="text-xs text-gray-300 mt-1">
+              percentile vs. league
+            </div>
           </div>
         </div>
-        <div className="text-right shrink-0 relative">
+        <div className="text-right shrink-0 relative self-end sm:self-auto">
           <div className="relative inline-flex items-center justify-center">
             <svg
               className="w-20 h-20 sm:w-24 sm:h-24 transform -rotate-90"
@@ -103,4 +103,3 @@ export const WarPercentileCard = ({ warPercentile }) => {
     </div>
   );
 };
-

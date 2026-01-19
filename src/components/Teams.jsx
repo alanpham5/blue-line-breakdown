@@ -52,6 +52,11 @@ export const Teams = () => {
   const [team, setTeam] = useState("");
   const [position, setPosition] = useState("F");
 
+  // Temp states for form editing
+  const [tempSeason, setTempSeason] = useState(defaultSeason);
+  const [tempTeam, setTempTeam] = useState("");
+  const [tempPosition, setTempPosition] = useState("F");
+
   const [teams, setTeams] = useState([]);
   const [players, setPlayers] = useState([]);
 
@@ -96,6 +101,12 @@ export const Teams = () => {
 
     performSearch(urlSeason, urlTeam, urlPosition);
   }, [searchParams]);
+
+  useEffect(() => {
+    setTempSeason(season);
+    setTempTeam(team);
+    setTempPosition(position);
+  }, [season, team, position]);
 
   const checkHealth = async () => {
     try {
@@ -143,11 +154,8 @@ export const Teams = () => {
       const data = await apiService.fetchTeams(season);
       setTeams(data.teams || []);
 
-      const urlTeam = searchParams.get("team");
-      if (urlTeam && data.teams?.includes(urlTeam)) {
-        setTeam(urlTeam);
-      } else if (!team && data.teams?.length) {
-        setTeam(data.teams[0]);
+      if (!tempTeam && data.teams?.length) {
+        setTempTeam(data.teams[0]);
       }
     } catch (err) {
       console.error("Error fetching teams:", err);
@@ -199,10 +207,16 @@ export const Teams = () => {
     }
   };
 
+  // Update handleSearchClick to set main state and searchParams
   const handleSearchClick = () => {
-    if (!season || !team || !position) return;
-
-    setSearchParams({ season, team, position }, { replace: false });
+    if (!tempSeason || !tempTeam || !tempPosition) return;
+    setSeason(tempSeason);
+    setTeam(tempTeam);
+    setPosition(tempPosition);
+    setSearchParams(
+      { season: tempSeason, team: tempTeam, position: tempPosition },
+      { replace: false }
+    );
   };
 
   const handlePlayerClick = (player) => {
@@ -229,69 +243,57 @@ export const Teams = () => {
 
         <div className="liquid-glass rounded-2xl p-6 mb-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
-            {" "}
             <div>
-              {" "}
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                {" "}
-                Season{" "}
-              </label>{" "}
+                Season
+              </label>
               <select
-                value={season}
-                onChange={(e) => setSeason(e.target.value)}
+                value={tempSeason}
+                onChange={(e) => setTempSeason(e.target.value)}
                 className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300"
               >
-                {" "}
                 {seasons.map((s) => (
                   <option key={s} value={s}>
-                    {" "}
-                    {getSeasonName(s)}{" "}
+                    {getSeasonName(s)}
                   </option>
-                ))}{" "}
-              </select>{" "}
-            </div>{" "}
+                ))}
+              </select>
+            </div>
             <div>
-              {" "}
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                {" "}
-                Team{" "}
-              </label>{" "}
+                Team
+              </label>
               <select
-                value={team}
-                onChange={(e) => setTeam(e.target.value)}
+                value={tempTeam}
+                onChange={(e) => setTempTeam(e.target.value)}
                 disabled={loadingTeams}
                 className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {" "}
                 {loadingTeams ? (
                   <option>Loading...</option>
                 ) : (
                   teams.map((team) => (
                     <option key={team} value={team}>
-                      {" "}
-                      {team}{" "}
+                      {team}
                     </option>
                   ))
-                )}{" "}
-              </select>{" "}
-            </div>{" "}
+                )}
+              </select>
+            </div>
             <div>
-              {" "}
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                {" "}
-                Position{" "}
-              </label>{" "}
+                Position
+              </label>
               <select
-                value={position}
-                onChange={(e) => setPosition(e.target.value)}
+                value={tempPosition}
+                onChange={(e) => setTempPosition(e.target.value)}
                 className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300"
               >
-                {" "}
-                <option value="F">Forwards</option>{" "}
-                <option value="D">Defensemen</option>{" "}
-              </select>{" "}
-            </div>{" "}
-          </div>{" "}
+                <option value="F">Forwards</option>
+                <option value="D">Defensemen</option>
+              </select>
+            </div>
+          </div>
           <button
             onClick={handleSearchClick}
             disabled={loading}
@@ -299,12 +301,11 @@ export const Teams = () => {
           >
             {loading ? (
               <>
-                {" "}
-                <Loader2 className="w-4 h-4 animate-spin" /> Searching...{" "}
+                <Loader2 className="w-4 h-4 animate-spin" /> Searching...
               </>
             ) : (
               "Search Roster"
-            )}{" "}
+            )}
           </button>
           {players.length > 0 && (
             <>
