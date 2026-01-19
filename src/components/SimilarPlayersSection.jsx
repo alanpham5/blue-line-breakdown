@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Users, Filter } from "lucide-react";
+import { Users, Filter, Info } from "lucide-react";
 import { SimilarPlayerCard } from "./SimilarPlayerCard";
 import { playerUtils } from "../utils/playerUtils";
 
@@ -14,6 +14,7 @@ export const SimilarPlayersSection = ({
     (_, i) => 2008 + i
   ).reverse();
   const [animationKey, setAnimationKey] = useState(0);
+  const [showTooltip, setShowTooltip] = useState(false);
   const prevPlayersRef = useRef(null);
 
   useEffect(() => {
@@ -46,9 +47,38 @@ export const SimilarPlayersSection = ({
           <div className="p-2 bg-purple-500/20 rounded-lg shrink-0 backdrop-blur-sm border border-purple-400/20">
             <Users className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
           </div>
-          <h3 className="text-xl sm:text-2xl font-bold">
-            Most Similar Players
-          </h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-xl sm:text-2xl font-bold">
+              Most Similar Players
+            </h3>
+            <div className="relative">
+              <button
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+                onClick={() => setShowTooltip(!showTooltip)}
+                className="shrink-0 text-gray-400 hover:text-gray-200 transition-colors"
+                aria-label="Info about player similarity"
+              >
+                <Info size={16} />
+              </button>
+              {showTooltip && (
+                <div className="absolute left-0 top-full mt-2 w-64 sm:w-72 p-3 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-lg text-xs text-gray-200 z-10 shadow-lg pointer-events-none">
+                  <div className="space-y-2">
+                    <div className="font-semibold text-purple-400 mb-1">
+                      Player Similarity
+                    </div>
+                    <div>
+                      Players are compared using normalized on-ice, physical,
+                      and performance stats. Similarity scores are relative and
+                      based on how close players are statistically, not raw
+                      totals. Changing the season filter changes the comparison
+                      pool, which can shift both rankings and scores.
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <Filter className="w-5 h-5 text-gray-400 shrink-0" />

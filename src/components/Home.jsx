@@ -6,6 +6,7 @@ import { SearchForm } from "./SearchForm";
 import { PlayerHeader } from "./PlayerHeader";
 import { StatsCard } from "./StatsCard";
 import { SimilarPlayersSection } from "./SimilarPlayersSection";
+import { WarPercentileCard } from "./WarPercentileCard";
 import { Analytics } from "@vercel/analytics/react";
 
 export const Home = () => {
@@ -371,10 +372,19 @@ export const Home = () => {
 
         {playerData && (
           <div className="space-y-4 sm:space-y-6">
-            <PlayerHeader
-              player={playerData.player}
-              biometrics={playerData.biometrics}
-            />
+            <div className="flex flex-col md:flex-row md:items-stretch gap-4 sm:gap-6">
+              <div className="w-full md:flex-1">
+                <PlayerHeader
+                  player={playerData.player}
+                  biometrics={playerData.biometrics}
+                />
+              </div>
+              <div className="w-full md:w-72 lg:w-80 shrink-0">
+                <WarPercentileCard
+                  warPercentile={playerData.player.warPercentile}
+                />
+              </div>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <StatsCard
