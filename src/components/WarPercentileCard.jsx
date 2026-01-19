@@ -43,7 +43,7 @@ export const WarPercentileCard = ({ warPercentile }) => {
                   <Info size={16} />
                 </button>
                 {showTooltip && (
-                  <div className="absolute left-0 bottom-full mb-2 w-72 sm:w-80 p-3 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-lg text-xs text-gray-200 z-50 shadow-lg pointer-events-none">
+                  <div className="absolute left-0 bottom-full mb-2 w-56 max-w-xs p-3 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-lg text-xs text-gray-200 z-50 shadow-lg pointer-events-none">
                     <div className="space-y-2">
                       <div className="font-semibold text-cyan-400">
                         Wins Above Replacement (WAR)
