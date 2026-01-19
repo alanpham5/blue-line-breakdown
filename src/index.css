@@ -144,7 +144,6 @@ code {
 
 .liquid-glass {
   position: relative;
-  overflow: hidden;
   background:
     linear-gradient(
       135deg,
@@ -166,7 +165,6 @@ code {
 
 .liquid-glass-strong {
   position: relative;
-  overflow: hidden;
   background:
     radial-gradient(
       120% 140% at 10% 10%,

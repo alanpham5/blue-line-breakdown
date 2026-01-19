@@ -61,7 +61,7 @@ export const SimilarPlayersSection = ({
                 <Info size={16} />
               </button>
               {showTooltip && (
-                <div className="absolute left-0 top-full mt-2 w-64 sm:w-72 p-3 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-lg text-xs text-gray-200 z-10 shadow-lg pointer-events-none">
+                <div className="absolute left-0 top-full mt-2 w-56 sm:w-72 p-3 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-lg text-xs text-gray-200 z-10 shadow-lg pointer-events-none">
                   <div className="space-y-2">
                     <div className="font-semibold text-purple-400 mb-1">
                       Player Similarity
