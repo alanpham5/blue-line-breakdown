@@ -10,7 +10,7 @@ import { WarPercentileCard } from "./WarPercentileCard";
 import { Header } from "./Header";
 import { Analytics } from "@vercel/analytics/react";
 
-export const Home = () => {
+export const Home = ({ enablePageLoadAnimations = true }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [playerName, setPlayerName] = useState("");
   const [season, setSeason] = useState(
@@ -26,7 +26,7 @@ export const Home = () => {
   const [filterYear, setFilterYear] = useState(null);
   const [initInProgress, setInitInProgress] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
-  const [animateGlass, setAnimateGlass] = useState(false);
+  const [renderKey, setRenderKey] = useState(0);
   const initInProgressRef = useRef(false);
   const isUpdatingFromUrlRef = useRef(false);
   const lastSearchParamsRef = useRef("");
@@ -245,6 +245,7 @@ export const Home = () => {
       setError("");
       setSuggestions([]);
       setHasSearched(true);
+      setRenderKey((prev) => prev + 1);
     } catch (err) {
       setError(err.message);
       setSuggestions(err.suggestions || []);
@@ -281,8 +282,6 @@ export const Home = () => {
       return;
     }
     updateSearchParams(playerName, season, position, filterYear);
-    setAnimateGlass(false);
-    setTimeout(() => setAnimateGlass(true), 10);
     await performSearch(playerName, season, position, filterYear);
   };
 
@@ -326,9 +325,7 @@ export const Home = () => {
       <div className="max-w-6xl mx-auto relative z-10">
         <Header />
         <Analytics />
-        <div
-          className={`space-y-4 sm:space-y-6${animateGlass ? " liquid-glass-animate" : ""}`}
-        >
+        <div className="space-y-4 sm:space-y-6">
           <SearchForm
             playerName={playerName}
             setPlayerName={setPlayerName}
@@ -340,6 +337,7 @@ export const Home = () => {
             loading={loading}
             error={error}
             suggestions={suggestions}
+            enablePageLoadAnimation={enablePageLoadAnimations}
             onSuggestionClick={async (suggestionName) => {
               setPlayerName(suggestionName);
               updateSearchParams(suggestionName, season, position, filterYear);
@@ -348,7 +346,7 @@ export const Home = () => {
           />
 
           {playerData && (
-            <div className="space-y-4 sm:space-y-6">
+            <div className="space-y-4 sm:space-y-6" key={renderKey}>
               <div className="flex flex-col md:flex-row md:items-stretch gap-4 sm:gap-6">
                 <div className="w-full md:flex-1">
                   <PlayerHeader

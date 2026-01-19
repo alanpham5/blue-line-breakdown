@@ -24,7 +24,7 @@ export const WarPercentileCard = ({ warPercentile }) => {
 
   return (
     <div
-      className="liquid-glass-strong rounded-2xl h-full flex p-4 sm:p-5 border-cyan-400/30"
+      className="liquid-glass-strong rounded-2xl h-full flex p-4 sm:p-5 border-cyan-400/30 liquid-glass-animate"
       style={{ position: "static", overflow: "visible" }}
     >
       <div className="flex items-center justify-between gap-3 w-full">

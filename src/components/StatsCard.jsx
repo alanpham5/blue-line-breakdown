@@ -32,7 +32,7 @@ export const StatsCard = ({
 
   return (
     <div
-      className={`liquid-glass-strong rounded-2xl p-4 sm:p-6 ${type === "offensive" ? "border-cyan-400/30" : "border-red-400/30"}`}
+      className={`liquid-glass-strong rounded-2xl p-4 sm:p-6 liquid-glass-animate ${type === "offensive" ? "border-cyan-400/30" : "border-red-400/30"}`}
     >
       <div className="flex items-center justify-between mb-4 sm:mb-6">
         <div className="flex items-center gap-3">

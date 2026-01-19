@@ -155,6 +155,9 @@ export const playerUtils = {
 
       onIce_corsiPercentage:
         "How often the player’s team controls play and spends time attacking versus defending when the player is on the ice.",
+
+      winShare:
+        "The percentile ranke of the player's contribution to team wins compared to other players on the team in the same position.",
     };
 
     return (

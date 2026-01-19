@@ -9,7 +9,7 @@ export const PlayerHeader = ({ player, biometrics }) => {
     : null;
   const archetypes = player.archetypes || [];
   return (
-    <div className="liquid-glass-strong rounded-2xl p-4 sm:p-6">
+    <div className="liquid-glass-strong rounded-2xl p-4 sm:p-6 liquid-glass-animate">
       <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
         <div className="relative shrink-0">
           <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-cyan-400/60 shadow-lg shadow-cyan-500/40 backdrop-blur-sm">

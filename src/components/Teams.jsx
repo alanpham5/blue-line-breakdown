@@ -12,7 +12,7 @@ const PlayerCard = ({ player, team, season, onPlayerClick }) => {
 
   return (
     <div
-      className="liquid-glass rounded-2xl p-4 cursor-pointer hover:bg-white/5 transition-colors"
+      className="liquid-glass rounded-2xl p-4 cursor-pointer hover:bg-white/5 transition-colors liquid-glass-animate"
       onClick={() => onPlayerClick(player)}
     >
       <div className="flex items-center gap-4 mb-3">
@@ -36,7 +36,7 @@ const PlayerCard = ({ player, team, season, onPlayerClick }) => {
         </div>
         <div className="w-full bg-gray-700 rounded-full h-2">
           <div
-            className="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full transition-all duration-300"
+            className="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full transition-all duration-300 gauge-fill"
             style={{ width: `${gaugeWidth}%` }}
           />
         </div>
@@ -45,7 +45,7 @@ const PlayerCard = ({ player, team, season, onPlayerClick }) => {
   );
 };
 
-export const Teams = () => {
+export const Teams = ({ enablePageLoadAnimations = true }) => {
   const defaultSeason = (new Date().getFullYear() - 1).toString();
 
   const [season, setSeason] = useState(defaultSeason);
@@ -66,7 +66,7 @@ export const Teams = () => {
   const [loadingMessage, setLoadingMessage] = useState("Initializing...");
   const [initInProgress, setInitInProgress] = useState(false);
   const [showTeamsOverlay, setShowTeamsOverlay] = useState(false);
-  const [animateGlass, setAnimateGlass] = useState(false);
+  const [renderKey, setRenderKey] = useState(0);
 
   const initInProgressRef = useRef(false);
 
@@ -204,6 +204,7 @@ export const Teams = () => {
     try {
       const data = await apiService.fetchRosters(s, t, p);
       setPlayers(data.players || []);
+      setRenderKey((prev) => prev + 1);
     } catch (err) {
       console.error("Error fetching rosters:", err);
       setPlayers([]);
@@ -222,8 +223,6 @@ export const Teams = () => {
       { season: tempSeason, team: tempTeam, position: tempPosition },
       { replace: false }
     );
-    setAnimateGlass(false);
-    setTimeout(() => setAnimateGlass(true), 10);
   };
 
   const handlePlayerClick = (player) => {
@@ -248,7 +247,7 @@ export const Teams = () => {
       <div className="max-w-6xl mx-auto">
         <Header />
         <div
-          className={`liquid-glass rounded-2xl p-6 mb-8${animateGlass ? " liquid-glass-animate" : ""}`}
+          className={`liquid-glass rounded-2xl p-6 mb-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
             <div>
@@ -318,24 +317,36 @@ export const Teams = () => {
           {players.length > 0 && (
             <>
               <h2 className="text-center text-2xl font-bold mt-8 mb-6">
-                <img
-                  src={getTeamLogoUrl(team, season)}
-                  alt={team}
-                  className="w-28 mx-auto mb-2"
-                />
-                {position === "F" ? "Forwards" : "Defensemen"} •{" "}
-                {getSeasonName(season)}
+                <div className="flex items-center justify-center gap-4 mt-8 mb-6">
+                  <img
+                    src={getTeamLogoUrl(team, season)}
+                    alt={team}
+                    className="w-24 shrink-0"
+                  />
+                  <h2 className="text-center text-2xl font-bold">
+                    {position === "F" ? "Forwards" : "Defensemen"}
+                    <br />
+                    {getSeasonName(season)}
+                  </h2>
+                </div>
               </h2>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {players.map((p) => (
-                  <PlayerCard
+              <div
+                className="grid md:grid-cols-2 lg:grid-cols-3 gap-4"
+                key={renderKey}
+              >
+                {players.map((p, idx) => (
+                  <div
                     key={p.playerId}
-                    player={p}
-                    team={team}
-                    season={season}
-                    onPlayerClick={handlePlayerClick}
-                  />
+                    style={{ animationDelay: `${idx * 0.05}s` }}
+                  >
+                    <PlayerCard
+                      player={p}
+                      team={team}
+                      season={season}
+                      onPlayerClick={handlePlayerClick}
+                    />
+                  </div>
                 ))}
               </div>
             </>

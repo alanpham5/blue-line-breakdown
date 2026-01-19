@@ -1,9 +1,4 @@
-import { useEffect } from "react";
 import { Search, X } from "lucide-react";
-import {
-  enableLiquidGlassSheenOnScroll,
-  disableLiquidGlassSheenOnScroll,
-} from "../utils/liquidGlassSheenScroll";
 
 export const SearchForm = ({
   playerName,
@@ -17,16 +12,13 @@ export const SearchForm = ({
   error,
   suggestions = [],
   onSuggestionClick,
+  enablePageLoadAnimation = true,
 }) => {
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       onSearch();
     }
   };
-  useEffect(() => {
-    enableLiquidGlassSheenOnScroll();
-    return () => disableLiquidGlassSheenOnScroll();
-  }, []);
   const nameMatchesSuggestion =
     suggestions &&
     suggestions.length > 0 &&
@@ -36,7 +28,9 @@ export const SearchForm = ({
     );
 
   return (
-    <div className="liquid-glass rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8">
+    <div
+      className={`liquid-glass rounded-2xl p-4 sm:p-6 mb-6 sm:mb-8 ${enablePageLoadAnimation ? "liquid-glass-animate" : ""}`}
+    >
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3 sm:gap-4">
         <div className="md:col-span-2">
           <label className="block text-sm font-medium text-gray-300 mb-2">
