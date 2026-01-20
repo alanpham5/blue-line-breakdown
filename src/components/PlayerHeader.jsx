@@ -10,7 +10,7 @@ export const PlayerHeader = ({ player, biometrics }) => {
   const archetypes = player.archetypes || [];
   return (
     <div className="liquid-glass-strong rounded-2xl p-4 lg:p-6 liquid-glass-animate">
-      <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-6">
+      <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-6">
         <div className="relative shrink-0">
           <div className="w-24 h-24 lg:w-32 lg:h-32 rounded-full overflow-hidden border-4 border-cyan-400/60 shadow-lg shadow-cyan-500/40 backdrop-blur-sm">
             <img
@@ -42,7 +42,7 @@ export const PlayerHeader = ({ player, biometrics }) => {
             </Link>
           )}
         </div>
-        <div className="flex-1 min-w-0 text-center lg:text-left">
+        <div className="xl:flex-1 min-w-0 text-center lg:text-left">
           <h2 className="text-2xl lg:text-3xl lg:text-4xl font-bold mb-2 lg:mb-3 truncate">
             {player.name}
           </h2>

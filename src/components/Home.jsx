@@ -45,7 +45,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
         100;
       window.scrollTo({ top: y, behavior: "smooth" });
     }
-  }, [playerData?.player?.name]);
+  }, [playerData?.player?.name, playerData?.player?.season]);
 
   useEffect(() => {
     const currentParamsString = searchParams.toString();
