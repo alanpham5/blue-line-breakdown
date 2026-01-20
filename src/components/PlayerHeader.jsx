@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Ruler, Scale } from "lucide-react";
+import { Ruler, Scale, Calendar } from "lucide-react";
 import { playerUtils } from "../utils/playerUtils";
 import { ArchetypeBadge } from "./ArchetypeBadge";
 
@@ -56,7 +56,7 @@ export const PlayerHeader = ({ player, biometrics }) => {
                 {player.position === "F" ? "Forward" : "Defense"}
               </span>
             </div>
-            {(biometrics?.height || biometrics?.weight) && (
+            {(biometrics?.height || biometrics?.weight || player?.age) && (
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-4">
                 {biometrics?.height && (
                   <div className="flex items-center gap-1.5 text-gray-300">
@@ -71,6 +71,14 @@ export const PlayerHeader = ({ player, biometrics }) => {
                     <Scale className="w-4 h-4 text-cyan-400" />
                     <span className="text-sm sm:text-base">
                       {Math.round(biometrics.weight)} lbs
+                    </span>
+                  </div>
+                )}
+                {player?.age && (
+                  <div className="flex items-center gap-1.5 text-gray-300">
+                    <Calendar className="w-4 h-4 text-cyan-400" />
+                    <span className="text-sm sm:text-base">
+                      Age {player.age}
                     </span>
                   </div>
                 )}

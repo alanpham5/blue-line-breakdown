@@ -11,10 +11,7 @@ export const StatsCard = ({
   type = "offensive",
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
-  const topStats =
-    type === "offensive"
-      ? playerUtils.getOffensiveStats(stats, allPercentiles)
-      : playerUtils.getTopStats(stats, 6);
+  const topStats = playerUtils.getTopStats(stats, 6);
   const colorClasses =
     type === "offensive"
       ? {

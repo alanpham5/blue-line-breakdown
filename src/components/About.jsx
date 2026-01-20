@@ -1,13 +1,15 @@
 import { Link } from "react-router-dom";
 import { Header } from "./Header";
 
-export const About = () => {
+export const About = ({ enablePageLoadAnimations = true }) => {
   return (
     <div className="min-h-screen ice-background text-white p-4 sm:p-6">
       <div className="max-w-4xl mx-auto relative z-10">
         <Header />
 
-        <div className="liquid-glass rounded-2xl p-6 sm:p-8 space-y-6">
+        <div
+          className={`liquid-glass rounded-2xl p-6 sm:p-8 space-y-6 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
+        >
           <section>
             <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-cyan-400">
               About the Platform
