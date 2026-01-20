@@ -31,7 +31,7 @@ export const About = ({ enablePageLoadAnimations = true }) => {
               continues to change while staying familiar.
             </p>
             <p className="text-gray-300 text-base sm:text-lg leading-relaxed mt-4">
-              All data is sourced from{" "}
+              Powered by{" "}
               <a
                 href="https://moneypuck.com"
                 target="_blank"
@@ -39,8 +39,9 @@ export const About = ({ enablePageLoadAnimations = true }) => {
                 className="text-cyan-400 hover:text-cyan-300 underline"
               >
                 MoneyPuck
-              </a>
-              , covering NHL seasons from 2008 to the present.
+              </a>{" "}
+              data, with in-house metrics and analysis, covering NHL seasons
+              from 2008 to the present.
             </p>
           </section>
 
