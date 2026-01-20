@@ -5,47 +5,7 @@ import { apiService } from "../services/apiService";
 import { Header } from "./Header";
 import { playerUtils } from "../utils/playerUtils";
 
-const PlayerCard = ({ player, team, season, onPlayerClick }) => {
-  const maxWinShare = 100;
-  const gaugeWidth = Math.min(Math.abs(player.winShare), maxWinShare);
-  const { getPlayerHeadshot } = playerUtils;
-
-  return (
-    <div
-      className="liquid-glass rounded-2xl p-4 cursor-pointer hover:bg-white/5 transition-colors liquid-glass-animate"
-      onClick={() => onPlayerClick(player)}
-    >
-      <div className="flex items-center gap-4 mb-3">
-        <img
-          src={getPlayerHeadshot(player.playerId, team, season)}
-          alt={player.name}
-          className="w-12 h-12 rounded-full object-cover"
-          onError={(e) => {
-            e.target.src = "/mobile-icon.png";
-          }}
-        />
-        <h3 className="font-bold text-white">{player.name}</h3>
-      </div>
-
-      <div className="space-y-2">
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-300">Win Share</span>
-          <span
-            className={`${player.winShare >= 0 ? "text-cyan-400" : "text-red-400"} font-bold`}
-          >
-            {player.winShare.toFixed(1)}
-          </span>
-        </div>
-        <div className="w-full bg-gray-700 rounded-full h-2">
-          <div
-            className={`bg-gradient-to-r ${player.winShare >= 0 ? "from-cyan-500 to-blue-500" : "from-red-500 to-orange-500"} h-2 rounded-full transition-all duration-300 gauge-fill`}
-            style={{ width: `${gaugeWidth}%` }}
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
+import { PlayerCard } from "./PlayerCard";
 
 export const Teams = ({ enablePageLoadAnimations = true }) => {
   const defaultSeason = (new Date().getFullYear() - 1).toString();
@@ -73,6 +33,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
   const [renderKey, setRenderKey] = useState(0);
 
   const initInProgressRef = useRef(false);
+  const hasInitializedFromURL = useRef(false);
   const teamHeaderRef = useRef(null);
 
   const navigate = useNavigate();
@@ -92,8 +53,9 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
   }, []);
 
   useEffect(() => {
+    if (!hasInitializedFromURL.current && searchParams.get("season")) return;
     fetchTeams();
-  }, [tempSeason]);
+  }, [tempSeason, searchParams]);
 
   useEffect(() => {
     if (teamHeaderRef.current) {
@@ -116,6 +78,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
     setTeam(urlTeam);
     setPosition(urlPosition);
 
+    hasInitializedFromURL.current = true;
     performSearch(urlSeason, urlTeam, urlPosition);
   }, [searchParams]);
 
@@ -172,8 +135,12 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
       const data = await apiService.fetchTeams(tempSeason);
       setTeams(data.teams || []);
 
-      if (!tempTeam && data.teams?.length) {
-        setTempTeam(data.teams[0]);
+      if (data.teams?.length) {
+        if (data.teams.includes(team)) {
+          setTempTeam(team);
+        } else {
+          setTempTeam(data.teams[0]);
+        }
       }
     } catch (err) {
       console.error("Error fetching teams:", err);
@@ -249,7 +216,6 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
     }
   };
 
-  // Update handleSearchClick to set main state and searchParams
   const handleSearchClick = () => {
     if (!tempSeason || !tempTeam || !tempPosition) return;
     setSeason(tempSeason);
@@ -295,7 +261,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
                 onChange={(e) => setTempSeason(e.target.value)}
                 className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300"
               >
-                {seasons.map((s) => (
+                {seasons.reverse().map((s) => (
                   <option key={s} value={s}>
                     {getSeasonName(s)}
                   </option>
