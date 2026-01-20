@@ -7,6 +7,7 @@ import {
   Dumbbell,
   Wand,
   ShieldCheck,
+  Home,
 } from "lucide-react";
 
 const archetypeIcons = {
@@ -18,7 +19,9 @@ const archetypeIcons = {
   Grinder: Dumbbell,
   "Point Shooter": Crosshair,
   "Offensive Puck-Mover": Wand,
+  Quarterback: Wand,
   "Shot Blocker": Shield,
+  "Stay-at-Home": Home,
 };
 
 export const ArchetypeBadge = ({ archetype }) => {
