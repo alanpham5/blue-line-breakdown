@@ -124,7 +124,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
   useEffect(() => {
     if (!hasInitializedFromURL.current && searchParams.get("team")) return;
     fetchTeams();
-  }, [hasInitializedFromURL.current, searchParams]);
+  }, [hasInitializedFromURL.current, tempSeason, searchParams]);
 
   useEffect(() => {
     if (teamHeaderRef.current) {
