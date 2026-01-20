@@ -4,7 +4,6 @@ import { Loader2 } from "lucide-react";
 import { apiService } from "../services/apiService";
 import { Header } from "./Header";
 import { playerUtils } from "../utils/playerUtils";
-
 import { PlayerCard } from "./PlayerCard";
 
 export const Teams = ({ enablePageLoadAnimations = true }) => {
