@@ -7,7 +7,7 @@ import { playerUtils } from "../utils/playerUtils";
 
 const PlayerCard = ({ player, team, season, onPlayerClick }) => {
   const maxWinShare = 100;
-  const gaugeWidth = (player.winShare / maxWinShare) * 100;
+  const gaugeWidth = Math.min(Math.abs(player.winShare), maxWinShare);
   const { getPlayerHeadshot } = playerUtils;
 
   return (
@@ -30,13 +30,15 @@ const PlayerCard = ({ player, team, season, onPlayerClick }) => {
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
           <span className="text-gray-300">Win Share</span>
-          <span className="text-cyan-400 font-bold">
+          <span
+            className={`${player.winShare >= 0 ? "text-cyan-400" : "text-red-400"} font-bold`}
+          >
             {player.winShare.toFixed(1)}
           </span>
         </div>
         <div className="w-full bg-gray-700 rounded-full h-2">
           <div
-            className="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full transition-all duration-300 gauge-fill"
+            className={`bg-gradient-to-r ${player.winShare >= 0 ? "from-cyan-500 to-blue-500" : "from-red-500 to-orange-500"} h-2 rounded-full transition-all duration-300 gauge-fill`}
             style={{ width: `${gaugeWidth}%` }}
           />
         </div>
@@ -66,6 +68,8 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
   const [loadingMessage, setLoadingMessage] = useState("Initializing...");
   const [initInProgress, setInitInProgress] = useState(false);
   const [showTeamsOverlay, setShowTeamsOverlay] = useState(false);
+  const [teamRecord, setTeamRecord] = useState(null);
+  const [teamClinchStatus, setTeamClinchStatus] = useState(null);
   const [renderKey, setRenderKey] = useState(0);
 
   const initInProgressRef = useRef(false);
@@ -214,6 +218,27 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
     setLoading(true);
     try {
       const data = await apiService.fetchRosters(s, t, p);
+      const teamStatus = await apiService.getNhlTeamStatus(
+        s < 2014 && t == "ARI" ? "PHX" : t,
+        s
+      );
+      if (!teamStatus.record) {
+        setTeamRecord(null);
+        setTeamClinchStatus(null);
+      } else {
+        setTeamRecord(
+          `${teamStatus.record.wins}-${teamStatus.record.losses}-${teamStatus.record.otl}`
+        );
+        if (teamStatus.clincher === "x")
+          setTeamClinchStatus("Clinched Playoffs");
+        else if (teamStatus.clincher === "y")
+          setTeamClinchStatus("Clinched Division");
+        else if (teamStatus.clincher === "z")
+          setTeamClinchStatus("Clinched Conference");
+        else if (teamStatus.clincher === "*")
+          setTeamClinchStatus("President's Trophy");
+        else setTeamClinchStatus(null);
+      }
       setPlayers(data.players || []);
       setRenderKey((prev) => prev + 1);
     } catch (err) {
@@ -332,18 +357,28 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
                 className="text-center font-bold mt-8 mb-6"
               >
                 <div className="flex items-center justify-center gap-4 mt-8 mb-6">
-                  <h2 className="hidden md:flex text-center text-3xl font-bold">
-                    {playerUtils.getFullTeamName(team, season)}
-                  </h2>
                   <img
                     src={getTeamLogoUrl(team, season)}
                     alt={team}
                     className="w-24 shrink-0"
                   />
+
                   <h2 className="text-center text-2xl font-bold">
-                    {position === "F" ? "Forwards" : "Defensemen"}
-                    <br />
+                    <h2 className="hidden md:flex text-center items-end text-3xl font-bold">
+                      {playerUtils.getFullTeamName(team, season)}
+                      {teamRecord && (
+                        <span className="text-lg font-normal ml-2 text-gray-300">
+                          ({teamRecord}
+                          {teamClinchStatus ? `, ${teamClinchStatus}` : ""})
+                        </span>
+                      )}
+                    </h2>
+                    {position === "F" ? "Forwards" : "Defensemen"} •
                     {getSeasonName(season)}
+                    <div className="md:hidden text-lg font-normal ml-2 text-gray-300">
+                      ({teamRecord}
+                      {teamClinchStatus ? `, ${teamClinchStatus}` : ""})
+                    </div>
                   </h2>
                 </div>
               </h2>

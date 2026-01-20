@@ -18,6 +18,12 @@ const getApiBaseUrl = () => {
 
 const API_BASE_URL = getApiBaseUrl();
 
+const NHL_TO_ESPN_TEAM_MAP = {
+  LAK: "LA",
+  SJS: "SJ",
+  TBL: "TB",
+  NJD: "NJ",
+};
 export const apiService = {
   async searchPlayer(
     playerName,
@@ -92,5 +98,74 @@ export const apiService = {
       throw new Error("Failed to fetch rosters");
     }
     return response.json();
+  },
+
+  async getNhlTeamStatus(teamAbbr, season) {
+    try {
+      const fetchSeason = parseInt(season) + 1;
+      const url = `https://site.api.espn.com/apis/v2/sports/hockey/nhl/standings?season=${fetchSeason}`;
+      const res = await fetch(url);
+
+      if (!res.ok) throw new Error("Fetch failed");
+
+      const data = await res.json();
+      let entries = [];
+      if (data?.standings?.entries) {
+        entries = data.standings.entries;
+      } else if (data?.children) {
+        // For conferences/divisions
+        data.children.forEach((child) => {
+          if (child.standings?.entries) {
+            entries = entries.concat(child.standings.entries);
+          }
+        });
+      }
+
+      const teamEntry = entries.find(
+        (entry) =>
+          entry.team?.abbreviation ===
+          (NHL_TO_ESPN_TEAM_MAP[teamAbbr] || teamAbbr)
+      );
+
+      if (!teamEntry) {
+        console.log(
+          "Available teams:",
+          entries.map((e) => e.team?.abbreviation).join(", ")
+        );
+        throw new Error("Team not found");
+      }
+
+      const stats = teamEntry.stats ?? [];
+
+      const wins = stats.find((s) => s.type === "wins")?.value ?? null;
+      const losses = stats.find((s) => s.type === "losses")?.value ?? null;
+
+      const otl =
+        stats.find((s) => s.type === "overtimelosses")?.value ??
+        stats.find((s) => s.type === "otlosses")?.value ??
+        null;
+
+      const clincher =
+        stats.find((s) => s.type === "clincher")?.displayValue ?? null;
+
+      return {
+        team: teamAbbr,
+        record:
+          wins !== null
+            ? {
+                wins,
+                losses,
+                otl,
+              }
+            : null,
+        clincher,
+      };
+    } catch (error) {
+      return {
+        team: null,
+        record: null,
+        clincher: null,
+      };
+    }
   },
 };

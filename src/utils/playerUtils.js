@@ -32,6 +32,7 @@ export const playerUtils = {
       BOS: "Boston Bruins",
       BUF: "Buffalo Sabres",
       CGY: "Calgary Flames",
+      CHI: "Chicago Blackhawks",
       CAR: "Carolina Hurricanes",
       COL: "Colorado Avalanche",
       CBJ: "Columbus Blue Jackets",
