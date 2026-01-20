@@ -42,7 +42,8 @@ export const SearchForm = ({
           </label>
           <div className="relative">
             <input
-              type="text"
+              type="search"
+              inputMode="search"
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
               onKeyPress={(e) => handleKeyPress(e, onSearch)}
