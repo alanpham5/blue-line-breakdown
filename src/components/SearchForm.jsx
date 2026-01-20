@@ -47,7 +47,12 @@ export const SearchForm = ({
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
               onKeyPress={(e) => handleKeyPress(e, onSearch)}
-              placeholder="e.g., Connor McDavid"
+              autocomplete="off"
+              placeholder={
+                position === "F"
+                  ? "e.g., Macklin Celebrini"
+                  : "e.g., Cale Makar"
+              }
               className="w-full px-4 py-3 pr-10 sm:pr-4 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white placeholder-gray-400 transition-all duration-300"
             />
             {playerName && (
