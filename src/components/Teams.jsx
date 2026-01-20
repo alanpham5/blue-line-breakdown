@@ -124,7 +124,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
   useEffect(() => {
     if (!hasInitializedFromURL.current && searchParams.get("team")) return;
     fetchTeams();
-  }, [tempSeason, searchParams]);
+  }, [hasInitializedFromURL.current, tempSeason, searchParams]);
 
   useEffect(() => {
     if (teamHeaderRef.current) {
@@ -201,6 +201,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
     let overlayTimeout = setTimeout(() => setShowTeamsOverlay(true), 3000);
     try {
       const data = await apiService.fetchTeams(tempSeason);
+      console.log(data.teams);
       setTeams(data.teams || []);
       const urlTeam = searchParams.get("team");
 
