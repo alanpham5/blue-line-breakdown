@@ -25,6 +25,19 @@ const archetypeIcons = {
   "Stay-at-Home": Home,
 };
 
+const archetypeDefinitions = {
+  Sniper: "Scores goals with quick, accurate shots.",
+  Playmaker: "Sets up teammates with smart passes.",
+  "Power Forward": "Uses strength to score and control space.",
+  "Defensive Forward": "Known more for defensive play and hounding opponents.",
+  "Two-Way": "Helps the team on both offense and defense.",
+  Grinder:
+    "High-energy player known for hard work, physical play, and toughness.",
+  "Point Shooter": "Known for shooting, usually from the blue line.",
+  Quarterback: "Contributes on offense with passing and decision-making.",
+  "Shot Blocker": "Puts their body on the line to stop shots.",
+  "Stay-at-Home": "Focuses on defense and protecting the goal area.",
+};
 export const ArchetypeBadge = ({ archetype }) => {
   const Icon = archetypeIcons[archetype] || null;
   const [showTooltip, setShowTooltip] = useState(false);
