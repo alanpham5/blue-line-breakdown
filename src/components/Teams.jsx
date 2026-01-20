@@ -201,6 +201,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
     let overlayTimeout = setTimeout(() => setShowTeamsOverlay(true), 3000);
     try {
       const data = await apiService.fetchTeams(tempSeason);
+      console.log(data.teams);
       setTeams(data.teams || []);
       const urlTeam = searchParams.get("team");
 
