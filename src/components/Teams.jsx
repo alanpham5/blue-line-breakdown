@@ -88,7 +88,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
 
   useEffect(() => {
     fetchTeams();
-  }, [season]);
+  }, [tempSeason]);
 
   useEffect(() => {
     const urlSeason = searchParams.get("season");
@@ -154,7 +154,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
     setLoadingTeams(true);
     let overlayTimeout = setTimeout(() => setShowTeamsOverlay(true), 3000);
     try {
-      const data = await apiService.fetchTeams(season);
+      const data = await apiService.fetchTeams(tempSeason);
       setTeams(data.teams || []);
 
       if (!tempTeam && data.teams?.length) {
@@ -281,7 +281,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
                 ) : (
                   teams.map((team) => (
                     <option key={team} value={team}>
-                      {team}
+                      {tempSeason <= 2013 && team === "ARI" ? "PHX" : team}
                     </option>
                   ))
                 )}
@@ -316,8 +316,11 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
           </button>
           {players.length > 0 && (
             <>
-              <h2 className="text-center text-2xl font-bold mt-8 mb-6">
+              <h2 className="text-center font-bold mt-8 mb-6">
                 <div className="flex items-center justify-center gap-4 mt-8 mb-6">
+                  <h2 className="hidden md:flex text-center text-3xl font-bold">
+                    {playerUtils.getFullTeamName(team, season)}
+                  </h2>
                   <img
                     src={getTeamLogoUrl(team, season)}
                     alt={team}

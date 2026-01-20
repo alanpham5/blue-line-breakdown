@@ -9,10 +9,10 @@ export const PlayerHeader = ({ player, biometrics }) => {
     : null;
   const archetypes = player.archetypes || [];
   return (
-    <div className="liquid-glass-strong rounded-2xl p-4 sm:p-6 liquid-glass-animate">
-      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
+    <div className="liquid-glass-strong rounded-2xl p-4 lg:p-6 liquid-glass-animate">
+      <div className="flex flex-col lg:flex-row items-center gap-4 lg:gap-6">
         <div className="relative shrink-0">
-          <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-cyan-400/60 shadow-lg shadow-cyan-500/40 backdrop-blur-sm">
+          <div className="w-24 h-24 lg:w-32 lg:h-32 rounded-full overflow-hidden border-4 border-cyan-400/60 shadow-lg shadow-cyan-500/40 backdrop-blur-sm">
             <img
               src={playerUtils.getPlayerHeadshot(
                 player.playerId,
@@ -29,7 +29,7 @@ export const PlayerHeader = ({ player, biometrics }) => {
           {teamLogoUrl && (
             <Link
               to={`/teams?season=${player.season}&team=${player.team}&position=${player.position}`}
-              className="absolute -bottom-6 left-1/2 -translate-x-1/2 sm:hidden w-14 h-14 flex items-center justify-center z-10 hover:opacity-80 transition-opacity"
+              className="absolute -bottom-6 left-1/2 -translate-x-1/2 xl:hidden w-14 h-14 flex items-center justify-center z-10 hover:opacity-80 transition-opacity"
             >
               <img
                 src={teamLogoUrl}
@@ -42,26 +42,30 @@ export const PlayerHeader = ({ player, biometrics }) => {
             </Link>
           )}
         </div>
-        <div className="flex-1 min-w-0 text-center sm:text-left">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-3 truncate">
+        <div className="flex-1 min-w-0 text-center lg:text-left">
+          <h2 className="text-2xl lg:text-3xl lg:text-4xl font-bold mb-2 lg:mb-3 truncate">
             {player.name}
           </h2>
           <div className="space-y-2">
-            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3 text-gray-300">
-              <span className="text-sm sm:text-base">
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 lg:gap-3 text-gray-300">
+              <span className="text-sm lg:text-base">
+                {playerUtils.getFullTeamName(player.team, player.season)}
+              </span>
+              <span className="text-gray-500">•</span>
+              <span className="text-sm lg:text-base">
                 {playerUtils.formatSeason(player.season)}
               </span>
               <span className="text-gray-500">•</span>
-              <span className="text-sm sm:text-base">
+              <span className="text-sm lg:text-base">
                 {player.position === "F" ? "Forward" : "Defense"}
               </span>
             </div>
             {(biometrics?.height || biometrics?.weight || player?.age) && (
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-4">
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 lg:gap-4">
                 {biometrics?.height && (
                   <div className="flex items-center gap-1.5 text-gray-300">
                     <Ruler className="w-4 h-4 text-cyan-400" />
-                    <span className="text-sm sm:text-base">
+                    <span className="text-sm lg:text-base">
                       {biometrics.height}
                     </span>
                   </div>
@@ -69,7 +73,7 @@ export const PlayerHeader = ({ player, biometrics }) => {
                 {biometrics?.weight && (
                   <div className="flex items-center gap-1.5 text-gray-300">
                     <Scale className="w-4 h-4 text-cyan-400" />
-                    <span className="text-sm sm:text-base">
+                    <span className="text-sm lg:text-base">
                       {Math.round(biometrics.weight)} lbs
                     </span>
                   </div>
@@ -77,7 +81,7 @@ export const PlayerHeader = ({ player, biometrics }) => {
                 {player?.age && (
                   <div className="flex items-center gap-1.5 text-gray-300">
                     <Calendar className="w-4 h-4 text-cyan-400" />
-                    <span className="text-sm sm:text-base">
+                    <span className="text-sm lg:text-base">
                       Age {player.age}
                     </span>
                   </div>
@@ -85,7 +89,7 @@ export const PlayerHeader = ({ player, biometrics }) => {
               </div>
             )}
             {archetypes.length > 0 && (
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mt-3">
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mt-3">
                 {archetypes.map((archetype, idx) => (
                   <ArchetypeBadge key={idx} archetype={archetype} />
                 ))}
@@ -96,7 +100,7 @@ export const PlayerHeader = ({ player, biometrics }) => {
         {teamLogoUrl && (
           <Link
             to={`/teams?season=${player.season}&team=${player.team}&position=${player.position}`}
-            className="hidden sm:flex shrink-0 w-24 h-24 md:w-28 md:h-28 items-center justify-center hover:opacity-80 transition-opacity"
+            className="hidden xl:flex shrink-0 w-40 lg:h-40 items-center justify-center hover:opacity-80 transition-opacity"
           >
             <img
               src={teamLogoUrl}

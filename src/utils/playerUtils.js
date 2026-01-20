@@ -5,7 +5,7 @@ export const playerUtils = {
       const nextYear = seasonYear + 1;
       const yearRange = `${seasonYear}${nextYear}`;
       const teamCode =
-        team.toUpperCase() == "ARI" && seasonYear < 2013
+        team.toUpperCase() == "ARI" && seasonYear <= 2013
           ? "PHX"
           : team.toUpperCase();
 
@@ -18,10 +18,60 @@ export const playerUtils = {
     return "https://assets.nhle.com/mugs/nhl/default-skater.png";
   },
 
+  getFullTeamName(teamCode, season = null) {
+    if (teamCode.toUpperCase() === "ARI" && season <= 2013) {
+      return "Phoenix Coyotes";
+    }
+    if (teamCode.toUpperCase() === "UTA" && season < 2025) {
+      return "Utah Hockey Club";
+    }
+    const teamNames = {
+      ANA: "Anaheim Ducks",
+      ARI: "Arizona Coyotes",
+      ATL: "Atlanta Thrashers",
+      BOS: "Boston Bruins",
+      BUF: "Buffalo Sabres",
+      CGY: "Calgary Flames",
+      CAR: "Carolina Hurricanes",
+      COL: "Colorado Avalanche",
+      CBJ: "Columbus Blue Jackets",
+      DAL: "Dallas Stars",
+      DET: "Detroit Red Wings",
+      EDM: "Edmonton Oilers",
+      FLA: "Florida Panthers",
+      LAK: "Los Angeles Kings",
+      MIN: "Minnesota Wild",
+      MTL: "Montreal Canadiens",
+      NJD: "New Jersey Devils",
+      NSH: "Nashville Predators",
+      NYI: "New York Islanders",
+      NYR: "New York Rangers",
+      OTT: "Ottawa Senators",
+      PHI: "Philadelphia Flyers",
+      PIT: "Pittsburgh Penguins",
+      SEA: "Seattle Kraken",
+      SJS: "San Jose Sharks",
+      STL: "St. Louis Blues",
+      TBL: "Tampa Bay Lightning",
+      TOR: "Toronto Maple Leafs",
+      UTA: "Utah Mammoth",
+      VAN: "Vancouver Canucks",
+      VGK: "Vegas Golden Knights",
+      WSH: "Washington Capitals",
+      WPG: "Winnipeg Jets",
+    };
+
+    return teamNames[teamCode.toUpperCase()] || teamCode.toUpperCase();
+  },
+
   getTeamLogoUrl(teamCode, season = null) {
     if (!teamCode) return null;
 
     const teamCodeUpper = teamCode.toUpperCase();
+
+    if (teamCodeUpper === "WSH") {
+      return "https://assets.nhle.com/logos/nhl/svg/WSH_secondary_dark.svg";
+    }
 
     if (!season) {
       if (teamCodeUpper === "ATL") {
@@ -37,17 +87,16 @@ export const playerUtils = {
 
     const logoEras = {
       ATL: [{ start: 1999, end: 2010, url: "ATL_19992000-20102011_dark.svg" }],
-      PHX: [{ start: 2003, end: 13, url: "PHX_20032004-20132014_dark.svg" }],
       ARI: [{ start: 2003, end: 2020, url: "PHX_20032004-20132014_dark.svg" }],
-      BUF: [{ start: 2006, end: 2009, url: "BUF_20062007-20092010_dark.svg" }],
+      BUF: [
+        { start: 2006, end: 2009, url: "BUF_20062007-20092010_dark.svg" },
+        { start: 2010, end: 2019, url: "BUF_20102011-20192020_dark.svg" },
+      ],
       OTT: [{ start: 2007, end: 2019, url: "OTT_20072008-20192020_dark.svg" }],
       NYI: [{ start: 2008, end: 2009, url: "NYI_19971998-20092010_dark.svg" }],
       TBL: [{ start: 2008, end: 2010, url: "TBL_20072008-20102011_dark.svg" }],
       NSH: [{ start: 1998, end: 2010, url: "NSH_19981999-20102011_dark.svg" }],
-      ANA: [
-        { start: 2006, end: 2012, url: "ANA_20062007-20122013_dark.svg" },
-        { start: 2013, end: 2023, url: "ANA_20132014-20232024_dark.svg" },
-      ],
+      ANA: [{ start: 2006, end: 2023, url: "ANA_20132014-20232024_dark.svg" }],
       DAL: [{ start: 1994, end: 2012, url: "DAL_19941995-20122013_dark.svg" }],
       FLA: [{ start: 1999, end: 2015, url: "FLA_19992000-20152016_dark.svg" }],
       PIT: [{ start: 2006, end: 2015, url: "PIT_20062007-20152016_dark.svg" }],
@@ -59,6 +108,8 @@ export const playerUtils = {
       ],
       BOS: [{ start: 2008, end: 2024, url: "BOS_20082009-20222023_dark.svg" }],
       TOR: [{ start: 1987, end: 2015, url: "TOR_19871988-20152016_dark.svg" }],
+      STL: [{ start: 2008, end: 2024, url: "STL_20082009-20242025_light.svg" }],
+      UTA: [{ start: 2024, end: 2024, url: "UTA_20242025-20242025_dark.svg" }],
     };
 
     if (logoEras[teamCodeUpper]) {
@@ -67,9 +118,6 @@ export const playerUtils = {
           return `https://assets.nhle.com/logos/nhl/svg/${era.url}`;
         }
       }
-    }
-    if (teamCodeUpper === "WSH") {
-      return "https://assets.nhle.com/logos/nhl/svg/WSH_secondary_dark.svg";
     }
 
     return `https://assets.nhle.com/logos/nhl/svg/${teamCodeUpper}_dark.svg`;
