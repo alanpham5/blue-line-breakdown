@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Info, Trophy } from "lucide-react";
 
 export const WarPercentileCard = ({ warPercentile }) => {
   const [showTooltip, setShowTooltip] = useState(false);
+  const [isAnimated, setIsAnimated] = useState(false);
+
+  useEffect(() => {
+    setIsAnimated(true);
+  }, []);
 
   if (warPercentile === null || warPercentile === undefined) return null;
 
@@ -92,10 +97,10 @@ export const WarPercentileCard = ({ warPercentile }) => {
                 cy="22"
                 r={radius}
                 fill="none"
-                className="stroke-cyan-400"
+                className="stroke-cyan-400 transition-all duration-[1200ms] ease-out"
                 strokeWidth="3"
                 strokeDasharray={circumference}
-                strokeDashoffset={dashOffset}
+                strokeDashoffset={isAnimated ? dashOffset : circumference}
                 strokeLinecap="round"
               />
             </svg>
