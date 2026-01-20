@@ -69,6 +69,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
   const [renderKey, setRenderKey] = useState(0);
 
   const initInProgressRef = useRef(false);
+  const teamHeaderRef = useRef(null);
 
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -89,6 +90,16 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
   useEffect(() => {
     fetchTeams();
   }, [tempSeason]);
+
+  useEffect(() => {
+    if (teamHeaderRef.current) {
+      const y =
+        teamHeaderRef.current.getBoundingClientRect().top +
+        window.pageYOffset -
+        100;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  }, [players]);
 
   useEffect(() => {
     const urlSeason = searchParams.get("season");
@@ -316,7 +327,10 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
           </button>
           {players.length > 0 && (
             <>
-              <h2 className="text-center font-bold mt-8 mb-6">
+              <h2
+                ref={teamHeaderRef}
+                className="text-center font-bold mt-8 mb-6"
+              >
                 <div className="flex items-center justify-center gap-4 mt-8 mb-6">
                   <h2 className="hidden md:flex text-center text-3xl font-bold">
                     {playerUtils.getFullTeamName(team, season)}

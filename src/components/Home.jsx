@@ -30,11 +30,22 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
   const initInProgressRef = useRef(false);
   const isUpdatingFromUrlRef = useRef(false);
   const lastSearchParamsRef = useRef("");
+  const playerHeaderRef = useRef(null);
 
   useEffect(() => {
     checkHealth();
     initializeCacheInBackground();
   }, []);
+
+  useEffect(() => {
+    if (playerHeaderRef.current) {
+      const y =
+        playerHeaderRef.current.getBoundingClientRect().top +
+        window.pageYOffset -
+        100;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  }, [playerData?.player?.name]);
 
   useEffect(() => {
     const currentParamsString = searchParams.toString();
@@ -346,7 +357,11 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
           />
 
           {playerData && (
-            <div className="space-y-4 sm:space-y-6" key={renderKey}>
+            <div
+              className="space-y-4 sm:space-y-6"
+              ref={playerHeaderRef}
+              key={renderKey}
+            >
               <div className="flex flex-col md:flex-row md:items-stretch gap-4 sm:gap-6">
                 <div className="w-full md:flex-1">
                   <PlayerHeader

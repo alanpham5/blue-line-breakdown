@@ -102,7 +102,7 @@ export const WarPercentileCard = ({ warPercentile }) => {
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
                 <div className="text-lg sm:text-xl font-bold text-white">
-                  {displayValue}%
+                  {displayValue}
                 </div>
               </div>
             </div>
