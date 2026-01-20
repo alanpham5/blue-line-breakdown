@@ -423,7 +423,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
                 Enter a player name to get started
               </p>
               <p className="text-xs sm:text-sm">
-                Analytics derived from Moneypuck data (2008-
+                Analytics derived from MoneyPuck data (2008-
                 {new Date().getFullYear() - 1}), with proprietary calculations
                 and metrics.
               </p>
