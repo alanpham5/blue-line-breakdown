@@ -356,11 +356,11 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
                 ref={teamHeaderRef}
                 className="text-center font-bold mt-8 mb-6"
               >
-                <div className="flex items-center justify-center gap-4 mt-8 mb-6">
+                <div className="flex items-center justify-center md:gap-4 mt-8 mb-6">
                   <img
                     src={getTeamLogoUrl(team, season)}
                     alt={team}
-                    className="w-24 shrink-0"
+                    className="w-24 lg:w-32 shrink-0"
                   />
 
                   <h2 className="text-center text-2xl font-bold">
@@ -373,9 +373,11 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
                         </span>
                       )}
                     </h2>
-                    {position === "F" ? "Forwards" : "Defensemen"} •
-                    {getSeasonName(season)}
-                    <div className="md:hidden text-lg font-normal ml-2 text-gray-300">
+                    <span className="text-xl md:text-2xl font-bold">
+                      {position === "F" ? "Forwards" : "Defensemen"} •{" "}
+                      {getSeasonName(season)}
+                    </span>
+                    <div className="md:hidden text-sm font-normal ml-2 text-gray-300">
                       ({teamRecord}
                       {teamClinchStatus ? `, ${teamClinchStatus}` : ""})
                     </div>
