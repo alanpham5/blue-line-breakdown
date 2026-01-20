@@ -3,6 +3,21 @@ import { PercentileBar } from "./PercentileBar";
 import { playerUtils } from "../utils/playerUtils";
 import { Info } from "lucide-react";
 
+const getColorClasses = (type) =>
+  type === "offensive"
+    ? {
+        gradient: "from-blue-900/30 to-cyan-900/30",
+        border: "border-blue-700/50",
+        iconBg: "bg-blue-500/20",
+        iconColor: "text-blue-400",
+      }
+    : {
+        gradient: "from-red-900/30 to-orange-900/30",
+        border: "border-red-700/50",
+        iconBg: "bg-red-500/20",
+        iconColor: "text-red-400",
+      };
+
 export const StatsCard = ({
   title,
   icon: Icon,
@@ -12,20 +27,7 @@ export const StatsCard = ({
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const topStats = playerUtils.getTopStats(stats, 6);
-  const colorClasses =
-    type === "offensive"
-      ? {
-          gradient: "from-blue-900/30 to-cyan-900/30",
-          border: "border-blue-700/50",
-          iconBg: "bg-blue-500/20",
-          iconColor: "text-blue-400",
-        }
-      : {
-          gradient: "from-red-900/30 to-orange-900/30",
-          border: "border-red-700/50",
-          iconBg: "bg-red-500/20",
-          iconColor: "text-red-400",
-        };
+  const colorClasses = getColorClasses(type);
 
   return (
     <div

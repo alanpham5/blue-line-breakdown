@@ -67,23 +67,23 @@ export const About = ({ enablePageLoadAnimations = true }) => {
               .
             </p>
           </section>
-
-          <div className="mt-8 flex justify-center">
-            <img
-              src="/dev.jpg"
-              alt="Alan Pham"
-              className="w-32 h-full sm:w-40 sm:h-full object-cover border-4 border-cyan-400/60 shadow-lg shadow-cyan-500/40 backdrop-blur-sm"
-            />
+          <div className="flex flex-col items-center gap-6 mt-4">
+            <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-full overflow-hidden border-4 border-cyan-400/60 shadow-lg shadow-cyan-500/40 backdrop-blur-sm">
+              <img
+                src="dev.png"
+                alt={"Alan Pham"}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <section className="pt-4">
+              <Link
+                to="/"
+                className="inline-block bg-gradient-to-r from-cyan-500/90 to-blue-600/90 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 backdrop-blur-sm border border-cyan-400/30 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40"
+              >
+                Back to Home
+              </Link>
+            </section>
           </div>
-
-          <section className="pt-4">
-            <Link
-              to="/"
-              className="inline-block bg-gradient-to-r from-cyan-500/90 to-blue-600/90 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 backdrop-blur-sm border border-cyan-400/30 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40"
-            >
-              Back to Home
-            </Link>
-          </section>
         </div>
       </div>
     </div>

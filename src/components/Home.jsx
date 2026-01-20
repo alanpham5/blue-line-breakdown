@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Target, Shield, Loader2 } from "lucide-react";
 import { apiService } from "../services/apiService";
@@ -11,11 +11,10 @@ import { Header } from "./Header";
 import { Analytics } from "@vercel/analytics/react";
 
 export const Home = ({ enablePageLoadAnimations = true }) => {
+  const defaultSeason = (new Date().getFullYear() - 1).toString();
   const [searchParams, setSearchParams] = useSearchParams();
   const [playerName, setPlayerName] = useState("");
-  const [season, setSeason] = useState(
-    (new Date().getFullYear() - 1).toString()
-  );
+  const [season, setSeason] = useState(defaultSeason);
   const [position, setPosition] = useState("F");
   const [loading, setLoading] = useState(false);
   const [initializingCache, setInitializingCache] = useState(false);
@@ -66,7 +65,6 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
       return;
     }
 
-    const defaultSeason = (new Date().getFullYear() - 1).toString();
     const defaultPosition = "F";
 
     if (urlPlayerName && urlPlayerName !== playerName)

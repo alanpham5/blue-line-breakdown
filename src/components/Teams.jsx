@@ -3,24 +3,97 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { apiService } from "../services/apiService";
 import { Header } from "./Header";
-import { playerUtils } from "../utils/playerUtils";
+import { TeamHeader } from "./TeamHeader";
 import { PlayerCard } from "./PlayerCard";
+
+const getSeasonName = (s) => `${s}-${(parseInt(s) + 1).toString().slice(-2)}`;
+
+const getClinchStatus = (clincher) => {
+  const statusMap = {
+    x: "Clinched Playoffs",
+    y: "Clinched Division",
+    z: "Clinched Conference",
+    "*": "President's Trophy",
+  };
+  return statusMap[clincher] || null;
+};
+
+const SearchForm = ({
+  seasons,
+  tempSeason,
+  setTempSeason,
+  tempTeam,
+  setTempTeam,
+  tempPosition,
+  setTempPosition,
+  teams,
+  loadingTeams,
+  getSeasonName,
+}) => (
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+    <div>
+      <label className="block text-sm font-medium text-gray-300 mb-2">
+        Season
+      </label>
+      <select
+        value={tempSeason}
+        onChange={(e) => setTempSeason(e.target.value)}
+        className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300"
+      >
+        {seasons.reverse().map((s) => (
+          <option key={s} value={s}>
+            {getSeasonName(s)}
+          </option>
+        ))}
+      </select>
+    </div>
+    <div>
+      <label className="block text-sm font-medium text-gray-300 mb-2">
+        Team
+      </label>
+      <select
+        value={tempTeam}
+        onChange={(e) => setTempTeam(e.target.value)}
+        disabled={loadingTeams}
+        className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {loadingTeams ? (
+          <option>Loading...</option>
+        ) : (
+          teams.map((team) => (
+            <option key={team} value={team}>
+              {tempSeason <= 2013 && team === "ARI" ? "PHX" : team}
+            </option>
+          ))
+        )}
+      </select>
+    </div>
+    <div>
+      <label className="block text-sm font-medium text-gray-300 mb-2">
+        Position
+      </label>
+      <select
+        value={tempPosition}
+        onChange={(e) => setTempPosition(e.target.value)}
+        className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300"
+      >
+        <option value="F">Forwards</option>
+        <option value="D">Defensemen</option>
+      </select>
+    </div>
+  </div>
+);
 
 export const Teams = ({ enablePageLoadAnimations = true }) => {
   const defaultSeason = (new Date().getFullYear() - 1).toString();
-
   const [season, setSeason] = useState(defaultSeason);
   const [team, setTeam] = useState("");
   const [position, setPosition] = useState("F");
-
-  // Temp states for form editing
   const [tempSeason, setTempSeason] = useState(defaultSeason);
   const [tempTeam, setTempTeam] = useState("");
   const [tempPosition, setTempPosition] = useState("F");
-
   const [teams, setTeams] = useState([]);
   const [players, setPlayers] = useState([]);
-
   const [loading, setLoading] = useState(false);
   const [loadingTeams, setLoadingTeams] = useState(false);
   const [initializingCache, setInitializingCache] = useState(false);
@@ -37,14 +110,11 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
 
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { getTeamLogoUrl } = playerUtils;
 
   const seasons = Array.from(
     { length: new Date().getFullYear() - 1 - 2007 },
     (_, i) => (2008 + i).toString()
   );
-
-  const getSeasonName = (s) => `${s}-${(parseInt(s) + 1).toString().slice(-2)}`;
 
   useEffect(() => {
     checkHealth();
@@ -52,7 +122,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
   }, []);
 
   useEffect(() => {
-    if (!hasInitializedFromURL.current && searchParams.get("season")) return;
+    if (!hasInitializedFromURL.current && searchParams.get("team")) return;
     fetchTeams();
   }, [tempSeason, searchParams]);
 
@@ -76,7 +146,6 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
     setSeason(urlSeason);
     setTeam(urlTeam);
     setPosition(urlPosition);
-
     hasInitializedFromURL.current = true;
     performSearch(urlSeason, urlTeam, urlPosition);
   }, [searchParams]);
@@ -133,16 +202,18 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
     try {
       const data = await apiService.fetchTeams(tempSeason);
       setTeams(data.teams || []);
+      const urlTeam = searchParams.get("team");
 
       if (data.teams?.length) {
-        if (data.teams.includes(team)) {
-          setTempTeam(team);
+        if (tempTeam && data.teams.includes(tempTeam)) {
+          setTempTeam(tempTeam);
+        } else if (data.teams.includes(urlTeam)) {
+          setTempTeam(urlTeam);
         } else {
           setTempTeam(data.teams[0]);
         }
       }
-    } catch (err) {
-      console.error("Error fetching teams:", err);
+    } catch {
     } finally {
       clearTimeout(overlayTimeout);
       setShowTeamsOverlay(false);
@@ -185,7 +256,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
     try {
       const data = await apiService.fetchRosters(s, t, p);
       const teamStatus = await apiService.getNhlTeamStatus(
-        s < 2014 && t == "ARI" ? "PHX" : t,
+        s < 2014 && t === "ARI" ? "PHX" : t,
         s
       );
       if (!teamStatus.record) {
@@ -195,20 +266,11 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
         setTeamRecord(
           `${teamStatus.record.wins}-${teamStatus.record.losses}-${teamStatus.record.otl}`
         );
-        if (teamStatus.clincher === "x")
-          setTeamClinchStatus("Clinched Playoffs");
-        else if (teamStatus.clincher === "y")
-          setTeamClinchStatus("Clinched Division");
-        else if (teamStatus.clincher === "z")
-          setTeamClinchStatus("Clinched Conference");
-        else if (teamStatus.clincher === "*")
-          setTeamClinchStatus("President's Trophy");
-        else setTeamClinchStatus(null);
+        setTeamClinchStatus(getClinchStatus(teamStatus.clincher));
       }
       setPlayers(data.players || []);
       setRenderKey((prev) => prev + 1);
-    } catch (err) {
-      console.error("Error fetching rosters:", err);
+    } catch {
       setPlayers([]);
     } finally {
       setLoading(false);
@@ -250,58 +312,18 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
         <div
           className={`liquid-glass rounded-2xl p-6 mb-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
         >
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Season
-              </label>
-              <select
-                value={tempSeason}
-                onChange={(e) => setTempSeason(e.target.value)}
-                className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300"
-              >
-                {seasons.reverse().map((s) => (
-                  <option key={s} value={s}>
-                    {getSeasonName(s)}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Team
-              </label>
-              <select
-                value={tempTeam}
-                onChange={(e) => setTempTeam(e.target.value)}
-                disabled={loadingTeams}
-                className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loadingTeams ? (
-                  <option>Loading...</option>
-                ) : (
-                  teams.map((team) => (
-                    <option key={team} value={team}>
-                      {tempSeason <= 2013 && team === "ARI" ? "PHX" : team}
-                    </option>
-                  ))
-                )}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Position
-              </label>
-              <select
-                value={tempPosition}
-                onChange={(e) => setTempPosition(e.target.value)}
-                className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300"
-              >
-                <option value="F">Forwards</option>
-                <option value="D">Defensemen</option>
-              </select>
-            </div>
-          </div>
+          <SearchForm
+            seasons={seasons}
+            tempSeason={tempSeason}
+            setTempSeason={setTempSeason}
+            tempTeam={tempTeam}
+            setTempTeam={setTempTeam}
+            tempPosition={tempPosition}
+            setTempPosition={setTempPosition}
+            teams={teams}
+            loadingTeams={loadingTeams}
+            getSeasonName={getSeasonName}
+          />
           <button
             onClick={handleSearchClick}
             disabled={loading}
@@ -317,39 +339,13 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
           </button>
           {players.length > 0 && (
             <>
-              <h2
-                ref={teamHeaderRef}
-                className="text-center font-bold mt-8 mb-6"
-              >
-                <div className="flex items-center justify-center md:gap-4 mt-8 mb-6">
-                  <img
-                    src={getTeamLogoUrl(team, season)}
-                    alt={team}
-                    className="w-24 lg:w-32 shrink-0"
-                  />
-
-                  <h2 className="text-center text-2xl font-bold">
-                    <h2 className="hidden md:flex text-center items-end text-3xl font-bold">
-                      {playerUtils.getFullTeamName(team, season)}
-                      {teamRecord && (
-                        <span className="text-lg font-normal ml-2 text-gray-300">
-                          ({teamRecord}
-                          {teamClinchStatus ? `, ${teamClinchStatus}` : ""})
-                        </span>
-                      )}
-                    </h2>
-                    <span className="text-xl md:text-2xl font-bold">
-                      {position === "F" ? "Forwards" : "Defensemen"} •{" "}
-                      {getSeasonName(season)}
-                    </span>
-                    <div className="md:hidden text-sm font-normal ml-2 text-gray-300">
-                      ({teamRecord}
-                      {teamClinchStatus ? `, ${teamClinchStatus}` : ""})
-                    </div>
-                  </h2>
-                </div>
-              </h2>
-
+              <TeamHeader
+                team={team}
+                season={season}
+                position={position}
+                teamRecord={teamRecord}
+                teamClinchStatus={teamClinchStatus}
+              />
               <div
                 className="grid md:grid-cols-2 lg:grid-cols-3 gap-4"
                 key={renderKey}

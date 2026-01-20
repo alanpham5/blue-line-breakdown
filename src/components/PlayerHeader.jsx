@@ -3,11 +3,36 @@ import { Ruler, Scale, Calendar } from "lucide-react";
 import { playerUtils } from "../utils/playerUtils";
 import { ArchetypeBadge } from "./ArchetypeBadge";
 
+const BiometricItem = ({ icon: Icon, value, label }) => (
+  <div className="flex items-center gap-1.5 text-gray-300">
+    <Icon className="w-4 h-4 text-cyan-400" />
+    <span className="text-sm lg:text-base">{value}</span>
+  </div>
+);
+
+const TeamLogoLink = ({ teamLogoUrl, player, className }) =>
+  teamLogoUrl ? (
+    <Link
+      to={`/teams?season=${player.season}&team=${player.team}&position=${player.position}`}
+      className={className}
+    >
+      <img
+        src={teamLogoUrl}
+        alt={`${player.team} logo`}
+        className="w-full h-full object-contain cursor-pointer"
+        onError={(e) => {
+          e.target.style.display = "none";
+        }}
+      />
+    </Link>
+  ) : null;
+
 export const PlayerHeader = ({ player, biometrics }) => {
   const teamLogoUrl = player.team
     ? playerUtils.getTeamLogoUrl(player.team, player.season)
     : null;
   const archetypes = player.archetypes || [];
+
   return (
     <div className="liquid-glass-strong rounded-2xl p-4 lg:p-6 liquid-glass-animate">
       <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-6">
@@ -26,21 +51,11 @@ export const PlayerHeader = ({ player, biometrics }) => {
               }}
             />
           </div>
-          {teamLogoUrl && (
-            <Link
-              to={`/teams?season=${player.season}&team=${player.team}&position=${player.position}`}
-              className="absolute -bottom-6 left-1/2 -translate-x-1/2 xl:hidden w-14 h-14 flex items-center justify-center z-10 hover:opacity-80 transition-opacity"
-            >
-              <img
-                src={teamLogoUrl}
-                alt={`${player.team} logo`}
-                className="w-full h-full object-contain cursor-pointer"
-                onError={(e) => {
-                  e.target.style.display = "none";
-                }}
-              />
-            </Link>
-          )}
+          <TeamLogoLink
+            teamLogoUrl={teamLogoUrl}
+            player={player}
+            className="absolute -bottom-6 left-1/2 -translate-x-1/2 xl:hidden w-14 h-14 flex items-center justify-center z-10 hover:opacity-80 transition-opacity"
+          />
         </div>
         <div className="xl:flex-1 min-w-0 text-center lg:text-left">
           <h2 className="text-2xl lg:text-3xl lg:text-4xl font-bold mb-2 lg:mb-3 truncate">
@@ -63,28 +78,22 @@ export const PlayerHeader = ({ player, biometrics }) => {
             {(biometrics?.height || biometrics?.weight || player?.age) && (
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 lg:gap-4">
                 {biometrics?.height && (
-                  <div className="flex items-center gap-1.5 text-gray-300">
-                    <Ruler className="w-4 h-4 text-cyan-400" />
-                    <span className="text-sm lg:text-base">
-                      {biometrics.height}
-                    </span>
-                  </div>
+                  <BiometricItem
+                    icon={Ruler}
+                    value={biometrics.height}
+                  />
                 )}
                 {biometrics?.weight && (
-                  <div className="flex items-center gap-1.5 text-gray-300">
-                    <Scale className="w-4 h-4 text-cyan-400" />
-                    <span className="text-sm lg:text-base">
-                      {Math.round(biometrics.weight)} lbs
-                    </span>
-                  </div>
+                  <BiometricItem
+                    icon={Scale}
+                    value={`${Math.round(biometrics.weight)} lbs`}
+                  />
                 )}
                 {player?.age && (
-                  <div className="flex items-center gap-1.5 text-gray-300">
-                    <Calendar className="w-4 h-4 text-cyan-400" />
-                    <span className="text-sm lg:text-base">
-                      Age {player.age}
-                    </span>
-                  </div>
+                  <BiometricItem
+                    icon={Calendar}
+                    value={`Age ${player.age}`}
+                  />
                 )}
               </div>
             )}
@@ -97,21 +106,11 @@ export const PlayerHeader = ({ player, biometrics }) => {
             )}
           </div>
         </div>
-        {teamLogoUrl && (
-          <Link
-            to={`/teams?season=${player.season}&team=${player.team}&position=${player.position}`}
-            className="hidden xl:flex shrink-0 w-40 lg:h-40 items-center justify-center hover:opacity-80 transition-opacity"
-          >
-            <img
-              src={teamLogoUrl}
-              alt={`${player.team} logo`}
-              className="w-full h-full object-contain cursor-pointer"
-              onError={(e) => {
-                e.target.style.display = "none";
-              }}
-            />
-          </Link>
-        )}
+        <TeamLogoLink
+          teamLogoUrl={teamLogoUrl}
+          player={player}
+          className="hidden xl:flex shrink-0 w-40 lg:h-40 items-center justify-center hover:opacity-80 transition-opacity"
+        />
       </div>
     </div>
   );

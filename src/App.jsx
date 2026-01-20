@@ -9,7 +9,6 @@ const App = () => {
     useState(true);
 
   useEffect(() => {
-    // Enable animations on initial page load
     setEnablePageLoadAnimations(true);
   }, []);
 

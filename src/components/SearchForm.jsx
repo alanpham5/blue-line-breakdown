@@ -1,5 +1,20 @@
 import { Search, X } from "lucide-react";
 
+const handleKeyPress = (e, onSearch) => {
+  if (e.key === "Enter") {
+    e.target.blur();
+    onSearch();
+  }
+};
+
+const isNameMatchSuggestion = (suggestions, playerName) =>
+  suggestions &&
+  suggestions.length > 0 &&
+  suggestions.some(
+    (suggestion) =>
+      suggestion.toLowerCase().trim() === playerName.toLowerCase().trim()
+  );
+
 export const SearchForm = ({
   playerName,
   setPlayerName,
@@ -14,19 +29,7 @@ export const SearchForm = ({
   onSuggestionClick,
   enablePageLoadAnimation = true,
 }) => {
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      e.target.blur();
-      onSearch();
-    }
-  };
-  const nameMatchesSuggestion =
-    suggestions &&
-    suggestions.length > 0 &&
-    suggestions.some(
-      (suggestion) =>
-        suggestion.toLowerCase().trim() === playerName.toLowerCase().trim()
-    );
+  const nameMatchesSuggestion = isNameMatchSuggestion(suggestions, playerName);
 
   return (
     <div
@@ -42,7 +45,7 @@ export const SearchForm = ({
               type="text"
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyPress={(e) => handleKeyPress(e, onSearch)}
               placeholder="e.g., Connor McDavid"
               className="w-full px-4 py-3 pr-10 sm:pr-4 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white placeholder-gray-400 transition-all duration-300"
             />

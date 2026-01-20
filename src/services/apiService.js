@@ -113,7 +113,6 @@ export const apiService = {
       if (data?.standings?.entries) {
         entries = data.standings.entries;
       } else if (data?.children) {
-        // For conferences/divisions
         data.children.forEach((child) => {
           if (child.standings?.entries) {
             entries = entries.concat(child.standings.entries);
@@ -128,10 +127,6 @@ export const apiService = {
       );
 
       if (!teamEntry) {
-        console.log(
-          "Available teams:",
-          entries.map((e) => e.team?.abbreviation).join(", ")
-        );
         throw new Error("Team not found");
       }
 
