@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { apiService } from "../services/apiService";
 import { Header } from "./Header";
 import { TeamHeader } from "./TeamHeader";
 import { PlayerCard } from "./PlayerCard";
+import { playerUtils } from "../utils/playerUtils";
 
 const getSeasonName = (s) => `${s}-${(parseInt(s) + 1).toString().slice(-2)}`;
 
@@ -40,7 +41,7 @@ const SearchForm = ({
         onChange={(e) => setTempSeason(e.target.value)}
         className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300"
       >
-        {seasons.reverse().map((s) => (
+        {[...seasons].reverse().map((s) => (
           <option key={s} value={s}>
             {getSeasonName(s)}
           </option>
@@ -122,9 +123,10 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
   }, []);
 
   useEffect(() => {
-    if (!hasInitializedFromURL.current && searchParams.get("team")) return;
-    fetchTeams();
-  }, [hasInitializedFromURL.current, tempSeason, searchParams]);
+    if (hasInitializedFromURL.current) {
+      fetchTeams();
+    }
+  }, [tempSeason]);
 
   useEffect(() => {
     if (teamHeaderRef.current) {
@@ -141,13 +143,18 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
     const urlTeam = searchParams.get("team");
     const urlPosition = searchParams.get("position");
 
-    if (!urlSeason || !urlTeam || !urlPosition) return;
-
-    setSeason(urlSeason);
-    setTeam(urlTeam);
-    setPosition(urlPosition);
-    hasInitializedFromURL.current = true;
-    performSearch(urlSeason, urlTeam, urlPosition);
+    if (urlSeason && urlTeam && urlPosition) {
+      setSeason(urlSeason);
+      setTeam(urlTeam);
+      setPosition(urlPosition);
+      setTempSeason(urlSeason);
+      setTempTeam(urlTeam);
+      setTempPosition(urlPosition);
+      hasInitializedFromURL.current = true;
+      performSearch(urlSeason, urlTeam, urlPosition);
+    } else {
+      fetchTeams();
+    }
   }, [searchParams]);
 
   useEffect(() => {
@@ -201,7 +208,6 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
     let overlayTimeout = setTimeout(() => setShowTeamsOverlay(true), 3000);
     try {
       const data = await apiService.fetchTeams(tempSeason);
-      console.log(data.teams);
       setTeams(data.teams || []);
       const urlTeam = searchParams.get("team");
 
@@ -335,7 +341,9 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
                 <Loader2 className="w-4 h-4 animate-spin" /> Searching...
               </>
             ) : (
-              "Search Roster"
+              <>
+                <Search size={20} /> Search Roster
+              </>
             )}
           </button>
           {players.length > 0 && (
@@ -346,6 +354,14 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
                 position={position}
                 teamRecord={teamRecord}
                 teamClinchStatus={teamClinchStatus}
+              />
+              <hr
+                style={{
+                  backgroundColor: playerUtils.getTeamColor(team, season),
+                  height: 4,
+                  border: "none", // Important: removes default browser border
+                  margin: "16px 0", // Optional: adds some vertical spacing
+                }}
               />
               <div
                 className="grid md:grid-cols-2 lg:grid-cols-3 gap-4"
@@ -360,6 +376,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
                       player={p}
                       team={team}
                       season={season}
+                      stroke={playerUtils.getTeamColor(team, season)}
                       onPlayerClick={handlePlayerClick}
                     />
                   </div>

@@ -1,15 +1,36 @@
 import { playerUtils } from "../utils/playerUtils";
 
-export const PlayerCard = ({ player, team, season, onPlayerClick }) => {
+export const PlayerCard = ({ player, team, season, stroke, onPlayerClick }) => {
   const maxWinShare = 100;
   const gaugeWidth = Math.min(Math.abs(player.winShare), maxWinShare);
   const { getPlayerHeadshot } = playerUtils;
 
   return (
     <div
-      className="liquid-glass rounded-2xl p-4 cursor-pointer hover:bg-white/5 transition-colors liquid-glass-animate"
+      className="liquid-glass-strong rounded-2xl p-4 cursor-pointer hover:bg-white/5 transition-colors liquid-glass-animate"
       onClick={() => onPlayerClick(player)}
     >
+      <div className="lg:block absolute top-0 right-0 h-full w-44 overflow-hidden rounded-tr-xl rounded-br-2xl z-[-1]">
+        {/* Base diagonal */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundColor: stroke,
+            clipPath: "polygon(65% 0%, 100% 0%, 100% 100%, 35% 100%)",
+            opacity: 0.75,
+          }}
+        />
+
+        {/* Accent stripe */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundColor: "#0f172a",
+            clipPath: "polygon(70% 0%, 75% 0%, 45% 100%, 40% 100%)",
+            opacity: 0.75,
+          }}
+        />
+      </div>
       <div className="flex items-center gap-4 mb-3">
         <img
           src={getPlayerHeadshot(player.playerId, team, season)}
@@ -24,9 +45,9 @@ export const PlayerCard = ({ player, team, season, onPlayerClick }) => {
 
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span className="text-gray-300">Win Share</span>
+          <span className="text-gray-300 font-bold">Win Share</span>
           <span
-            className={`${player.winShare >= 0 ? "text-cyan-400" : "text-red-400"} font-bold`}
+            className={`${player.winShare >= 0 ? "text-cyan-300" : "text-red-300"} font-bold bg-black/50 px-2 py-0.5 rounded-full`}
           >
             {player.winShare.toFixed(1)}
           </span>

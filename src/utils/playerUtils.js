@@ -18,6 +18,61 @@ export const playerUtils = {
     return "https://assets.nhle.com/mugs/nhl/default-skater.png";
   },
 
+  getTeamColor(teamCode, season = null) {
+    const retroColors = {
+      NSH: [{ start: 1998, end: 2010, color: "#AFB7BA" }],
+      ANA: [{ start: 2006, end: 2023, color: "#B5985A" }],
+      DAL: [{ start: 1994, end: 2012, color: "#84754E" }],
+      PIT: [{ start: 2006, end: 2015, color: "#C5B358" }],
+      EDM: [{ start: 1996, end: 2010, color: "#B87333" }],
+    };
+    const teamColors = {
+      ANA: "#F47A38", // Ducks orange
+      ARI: "#8C2633", // Coyotes brick red
+      ATL: "#5C88Da", // Thrashers Light Blue
+      BOS: "#FFB81C", // Bruins gold
+      BUF: "#FFB81C", // Sabres navy
+      CGY: "#C8102E", // Flames red
+      CHI: "#CF0A2C", // Blackhawks red
+      CAR: "#CC0000", // Hurricanes red
+      COL: "#6F263D", // Avalanche burgundy
+      CBJ: "#CE1126", // Blue Jackets union blue
+      DAL: "#006847", // Stars green
+      DET: "#CE1126", // Red Wings red
+      EDM: "#FF4C00", // Oilers orange
+      FLA: "#C8102E", // Panthers red
+      LAK: "#AFB7BA", // Kings silver
+      MIN: "#154734", // Wild green
+      MTL: "#AF1E2D", // Canadiens red
+      NJD: "#CE1126", // Devils red
+      NSH: "#FFB81C", // Predators gold
+      NYI: "#F47D30", // Islanders Orange
+      NYR: "#CE1126", // Rangers Red
+      OTT: "#C52032", // Senators red
+      PHI: "#F74902", // Flyers orange
+      PIT: "#FCB514", // Penguins gold
+      SEA: "#68A2B9", // Kraken Seafoam
+      SJS: "#006D75", // Sharks teal
+      STL: "#FCB514", // Blues blue
+      TBL: "#002868", // Lightning blue
+      TOR: "#002e83", // White
+      UTA: "#6CACE3", // Mammoth blue
+      VAN: "#00843D", // Canucks green
+      VGK: "#B4975A", // Golden Knights gold
+      WSH: "#C8102E", // Capitals red
+      WPG: "#0363C2", // Jets blue
+    };
+    if (retroColors[teamCode]) {
+      const seasonYear = parseInt(season);
+      for (const era of retroColors[teamCode]) {
+        if (seasonYear >= era.start && seasonYear <= era.end) {
+          return era.color;
+        }
+      }
+    }
+    return teamColors[teamCode] || "#22d3ee"; // Default gray if team not found
+  },
+
   getFullTeamName(teamCode, season = null) {
     if (teamCode.toUpperCase() === "ARI" && season <= 2013) {
       return "Phoenix Coyotes";
@@ -93,6 +148,8 @@ export const playerUtils = {
         { start: 2006, end: 2009, url: "BUF_20062007-20092010_dark.svg" },
         { start: 2010, end: 2019, url: "BUF_20102011-20192020_dark.svg" },
       ],
+      EDM: [{ start: 1996, end: 2010, url: "EDM_19971998-20102011_dark.svg" }],
+      NYI: [{ start: 1997, end: 2009, url: "NYI_19971998-20092010_dark.svg" }],
       OTT: [{ start: 2007, end: 2019, url: "OTT_20072008-20192020_dark.svg" }],
       NYI: [{ start: 2008, end: 2009, url: "NYI_19971998-20092010_dark.svg" }],
       TBL: [{ start: 2008, end: 2010, url: "TBL_20072008-20102011_dark.svg" }],

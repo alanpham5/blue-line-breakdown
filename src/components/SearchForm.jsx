@@ -111,7 +111,7 @@ export const SearchForm = ({
         className="mt-4 w-full min-h-[44px] bg-gradient-to-r from-cyan-500/90 to-blue-600/90 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation backdrop-blur-sm border border-cyan-400/30 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40"
       >
         <Search size={20} />
-        {loading ? "Searching..." : "Search"}
+        {loading ? "Searching..." : "Search Player"}
       </button>
 
       {error && (

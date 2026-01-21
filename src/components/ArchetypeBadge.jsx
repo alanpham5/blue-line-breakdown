@@ -43,14 +43,25 @@ export const ArchetypeBadge = ({ archetype }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const badgeRef = useRef(null);
   const [position, setPosition] = useState({ left: 0, top: 0 });
+  const [isAbove, setIsAbove] = useState(true);
 
   useEffect(() => {
     if (showTooltip && badgeRef.current) {
       const rect = badgeRef.current.getBoundingClientRect();
-      setPosition({
-        left: rect.left + rect.width / 2,
-        top: rect.top,
-      });
+      const spaceAbove = rect.top;
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const tooltipHeight = 150; // approximate
+
+      if (spaceAbove > tooltipHeight && spaceAbove > spaceBelow) {
+        setPosition({ left: rect.left + rect.width / 2, top: rect.top });
+        setIsAbove(true);
+      } else if (spaceBelow > tooltipHeight) {
+        setPosition({ left: rect.left + rect.width / 2, top: rect.bottom });
+        setIsAbove(false);
+      } else {
+        setPosition({ left: rect.left + rect.width / 2, top: rect.top });
+        setIsAbove(true);
+      }
     }
   }, [showTooltip]);
 
@@ -69,7 +80,7 @@ export const ArchetypeBadge = ({ archetype }) => {
       {showTooltip &&
         createPortal(
           <div
-            className="fixed z-[10000] transform -translate-x-1/2 -translate-y-full w-56 max-w-xs p-3 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-lg text-xs text-gray-200 shadow-lg pointer-events-none"
+            className={`fixed z-[10000] transform -translate-x-1/2 ${isAbove ? "-translate-y-full" : "-translate-y-0"} w-56 max-w-xs p-3 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-lg text-xs text-gray-200 shadow-lg pointer-events-none`}
             style={{ left: position.left + "px", top: position.top + "px" }}
           >
             <h2 className="font-semibold inline-flex text-cyan-400 gap-1 mb-1">
