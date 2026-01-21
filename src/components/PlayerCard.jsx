@@ -17,7 +17,7 @@ export const PlayerCard = ({ player, team, season, stroke, onPlayerClick }) => {
           style={{
             backgroundColor: stroke,
             clipPath: "polygon(65% 0%, 100% 0%, 100% 100%, 35% 100%)",
-            opacity: 0.75,
+            opacity: 0.85,
           }}
         />
 

@@ -21,7 +21,7 @@ export const playerUtils = {
   getTeamColor(teamCode, season = null) {
     const retroColors = {
       NSH: [{ start: 1998, end: 2010, color: "#AFB7BA" }],
-      ANA: [{ start: 2006, end: 2023, color: "#B5985A" }],
+      ANA: [{ start: 2006, end: 2012, color: "#B5985A" }],
       DAL: [{ start: 1994, end: 2012, color: "#84754E" }],
       PIT: [{ start: 2006, end: 2015, color: "#C5B358" }],
       EDM: [{ start: 1996, end: 2010, color: "#B87333" }],

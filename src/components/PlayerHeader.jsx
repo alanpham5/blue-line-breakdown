@@ -66,7 +66,7 @@ export const PlayerHeader = ({ player, biometrics }) => {
               player.season
             ),
             clipPath: "polygon(60% 0%, 100% 0%, 100% 100%, 30% 100%)",
-            opacity: 0.75,
+            opacity: 0.85,
           }}
         />
 
