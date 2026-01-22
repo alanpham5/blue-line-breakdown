@@ -6,6 +6,8 @@ import { Header } from "./Header";
 import { TeamHeader } from "./TeamHeader";
 import { PlayerCard } from "./PlayerCard";
 import { playerUtils } from "../utils/playerUtils";
+import { useIsExternal } from "../hooks/useIsExternal";
+import { LoadingScreen } from "./LoadingScreen";
 
 const getSeasonName = (s) => `${s}-${(parseInt(s) + 1).toString().slice(-2)}`;
 
@@ -105,6 +107,8 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
   const [teamClinchStatus, setTeamClinchStatus] = useState(null);
   const [renderKey, setRenderKey] = useState(0);
 
+  const isExternal = useIsExternal();
+
   const initInProgressRef = useRef(false);
   const hasInitializedFromURL = useRef(false);
   const teamHeaderRef = useRef(null);
@@ -175,14 +179,14 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
       initInProgressRef.current = true;
 
       const cacheStatus = await apiService.checkCacheStatus();
-      if (!cacheStatus.dataLoaded) {
+      if (!cacheStatus.dataLoaded || !cacheStatus.cacheExists) {
         const initResponse = await apiService.initializeCache();
 
         if (initResponse.status === "loading") {
           await new Promise((resolve) => {
             const poll = async () => {
               const status = await apiService.checkCacheStatus();
-              if (status.dataLoaded) {
+              if (status.dataLoaded || status.cacheExists) {
                 initInProgressRef.current = false;
                 setInitInProgress(false);
                 resolve();
@@ -305,87 +309,93 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
 
   return (
     <div className="min-h-screen ice-background text-white p-4 sm:p-6">
-      {(initializingCache || showTeamsOverlay) && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-gray-800 rounded-2xl p-8 text-center">
-            <Loader2 className="w-12 h-12 animate-spin text-cyan-400 mx-auto mb-4" />
-            <p className="text-lg font-medium">{loadingMessage}</p>
-          </div>
-        </div>
-      )}
-
-      <div className="max-w-6xl mx-auto">
-        <Header />
-        <div
-          className={`liquid-glass rounded-2xl p-6 mb-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
-        >
-          <SearchForm
-            seasons={seasons}
-            tempSeason={tempSeason}
-            setTempSeason={setTempSeason}
-            tempTeam={tempTeam}
-            setTempTeam={setTempTeam}
-            tempPosition={tempPosition}
-            setTempPosition={setTempPosition}
-            teams={teams}
-            loadingTeams={loadingTeams}
-            getSeasonName={getSeasonName}
-          />
-          <button
-            onClick={handleSearchClick}
-            disabled={loading}
-            className="mt-4 my-5 w-full min-h-[44px] bg-gradient-to-r from-cyan-500/90 to-blue-600/90 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation backdrop-blur-sm border border-cyan-400/30 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" /> Searching...
-              </>
-            ) : (
-              <>
-                <Search size={20} /> Search Roster
-              </>
-            )}
-          </button>
-          {players.length > 0 && (
-            <>
-              <TeamHeader
-                team={team}
-                season={season}
-                position={position}
-                teamRecord={teamRecord}
-                teamClinchStatus={teamClinchStatus}
-              />
-              <hr
-                style={{
-                  backgroundColor: playerUtils.getTeamColor(team, season),
-                  height: 4,
-                  border: "none", // Important: removes default browser border
-                  margin: "16px 0", // Optional: adds some vertical spacing
-                }}
-              />
-              <div
-                className="grid md:grid-cols-2 lg:grid-cols-3 gap-4"
-                key={renderKey}
-              >
-                {players.map((p, idx) => (
-                  <div
-                    key={p.playerId}
-                    style={{ animationDelay: `${idx * 0.05}s` }}
-                  >
-                    <PlayerCard
-                      player={p}
-                      team={team}
-                      season={season}
-                      stroke={playerUtils.getTeamColor(team, season)}
-                      onPlayerClick={handlePlayerClick}
-                    />
-                  </div>
-                ))}
+      {isExternal && initInProgress ? (
+        <LoadingScreen />
+      ) : (
+        <>
+          {(initializingCache || showTeamsOverlay) && (
+            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+              <div className="bg-gray-800 rounded-2xl p-8 text-center">
+                <Loader2 className="w-12 h-12 animate-spin text-cyan-400 mx-auto mb-4" />
+                <p className="text-lg font-medium">{loadingMessage}</p>
               </div>
-            </>
+            </div>
           )}
-        </div>
-      </div>
+
+          <div className="max-w-6xl mx-auto">
+            <Header />
+            <div
+              className={`liquid-glass rounded-2xl p-6 mb-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
+            >
+              <SearchForm
+                seasons={seasons}
+                tempSeason={tempSeason}
+                setTempSeason={setTempSeason}
+                tempTeam={tempTeam}
+                setTempTeam={setTempTeam}
+                tempPosition={tempPosition}
+                setTempPosition={setTempPosition}
+                teams={teams}
+                loadingTeams={loadingTeams}
+                getSeasonName={getSeasonName}
+              />
+              <button
+                onClick={handleSearchClick}
+                disabled={loading}
+                className="mt-4 my-5 w-full min-h-[44px] bg-gradient-to-r from-cyan-500/90 to-blue-600/90 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation backdrop-blur-sm border border-cyan-400/30 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" /> Searching...
+                  </>
+                ) : (
+                  <>
+                    <Search size={20} /> Search Roster
+                  </>
+                )}
+              </button>
+              {players.length > 0 && (
+                <>
+                  <TeamHeader
+                    team={team}
+                    season={season}
+                    position={position}
+                    teamRecord={teamRecord}
+                    teamClinchStatus={teamClinchStatus}
+                  />
+                  <hr
+                    style={{
+                      backgroundColor: playerUtils.getTeamColor(team, season),
+                      height: 4,
+                      border: "none", // Important: removes default browser border
+                      margin: "16px 0", // Optional: adds some vertical spacing
+                    }}
+                  />
+                  <div
+                    className="grid md:grid-cols-2 lg:grid-cols-3 gap-4"
+                    key={renderKey}
+                  >
+                    {players.map((p, idx) => (
+                      <div
+                        key={p.playerId}
+                        style={{ animationDelay: `${idx * 0.05}s` }}
+                      >
+                        <PlayerCard
+                          player={p}
+                          team={team}
+                          season={season}
+                          stroke={playerUtils.getTeamColor(team, season)}
+                          onPlayerClick={handlePlayerClick}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
