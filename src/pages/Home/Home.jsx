@@ -327,7 +327,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
 
   return (
     <div className="min-h-screen ice-background text-white p-4 sm:p-6">
-      {isExternal && initializingCache ? (
+      {isExternal && initInProgress ? (
         <LoadingScreen />
       ) : (
         <>
