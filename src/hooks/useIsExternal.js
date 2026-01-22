@@ -13,9 +13,13 @@ export function useIsExternal() {
       document.referrer &&
       new URL(document.referrer).host === window.location.host;
     const isStandalone = window.navigator.standalone === true;
+    const isFromTutorial = document.referrer.includes("/tutorial");
 
     const externalBehavior =
-      !(spaNavigation || sameHostReload) || !hasVisited || isStandalone;
+      !(spaNavigation || sameHostReload) ||
+      !hasVisited ||
+      isStandalone ||
+      isFromTutorial;
 
     setIsExternal(externalBehavior);
 

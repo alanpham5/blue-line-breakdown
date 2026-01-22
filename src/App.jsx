@@ -1,16 +1,11 @@
-import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Home } from "./pages/Home/Home";
 import { About } from "./pages/About/About";
 import { Teams } from "./pages/Teams/Teams";
+import { Tutorial } from "./pages/Tutorial/Tutorial";
 
 const App = () => {
-  const [enablePageLoadAnimations, setEnablePageLoadAnimations] =
-    useState(true);
-
-  useEffect(() => {
-    setEnablePageLoadAnimations(true);
-  }, []);
+  const enablePageLoadAnimations = true;
 
   return (
     <BrowserRouter>
@@ -26,6 +21,12 @@ const App = () => {
           }
         />
         <Route path="/about" element={<About />} />
+        <Route
+          path="/tutorial"
+          element={
+            <Tutorial enablePageLoadAnimations={enablePageLoadAnimations} />
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
