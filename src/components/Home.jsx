@@ -7,6 +7,7 @@ import { PlayerHeader } from "./PlayerHeader";
 import { StatsCard } from "./StatsCard";
 import { SimilarPlayersSection } from "./SimilarPlayersSection";
 import { WarPercentileCard } from "./WarPercentileCard";
+import { CountingStats } from "./CountingStats";
 import { Header } from "./Header";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -372,6 +373,9 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
                     warPercentile={playerData.player.warPercentile}
                   />
                 </div>
+              </div>
+              <div className="w-full">
+                <CountingStats stats={playerData.stats} />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">

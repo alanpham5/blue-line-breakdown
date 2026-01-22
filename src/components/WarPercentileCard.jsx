@@ -18,9 +18,7 @@ export const WarPercentileCard = ({ warPercentile }) => {
 
   const displayValue =
     typeof warPercentile === "number"
-      ? Number.isInteger(warPercentile)
-        ? warPercentile.toString()
-        : warPercentile.toFixed(1)
+      ? warPercentile.toFixed(1)
       : String(warPercentile);
 
   const radius = 18;
@@ -60,10 +58,13 @@ export const WarPercentileCard = ({ warPercentile }) => {
                   >
                     <div className="space-y-2">
                       <div className="font-semibold text-cyan-400">
-                       Player Value
+                        Player Value
                       </div>
                       <div>
-                      Measures a player’s total contribution to team wins by estimating performance above a replacement-level baseline. The value is expressed as a percentile to provide a standardized comparison across all players.
+                        Measures a player’s total contribution to team wins by
+                        estimating performance above a replacement-level
+                        baseline. The value is expressed as a percentile to
+                        provide a standardized comparison across all players.
                       </div>
                     </div>
                   </div>

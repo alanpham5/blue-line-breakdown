@@ -44,7 +44,7 @@ export const PercentileBar = ({
           )}
         </div>
         <span className="text-xs sm:text-sm font-bold text-white shrink-0">
-          {value}
+          {value.toFixed(1)}
         </span>
       </div>
       <div className="w-full bg-gray-800/40 backdrop-blur-sm rounded-full h-2 sm:h-2.5 overflow-hidden border border-gray-700/30">
