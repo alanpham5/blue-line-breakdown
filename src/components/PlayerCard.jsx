@@ -45,7 +45,7 @@ export const PlayerCard = ({ player, team, season, stroke, onPlayerClick }) => {
 
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span className="text-gray-300 font-bold">Win Share</span>
+          <span className="text-gray-300 font-bold">Net Impact</span>
           <span
             className={`${player.winShare >= 0 ? "text-cyan-300" : "text-red-300"} font-bold bg-black/50 px-2 py-0.5 rounded-full`}
           >

@@ -39,7 +39,7 @@ export const WarPercentileCard = ({ warPercentile }) => {
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-xl font-bold">WAR</h3>
+              <h3 className="text-lg font-bold">Player Value</h3>
               <div
                 className="relative z-[10000]"
                 style={{ overflow: "visible" }}
@@ -60,13 +60,10 @@ export const WarPercentileCard = ({ warPercentile }) => {
                   >
                     <div className="space-y-2">
                       <div className="font-semibold text-cyan-400">
-                        Wins Above Replacement (WAR)
+                       Player Value
                       </div>
                       <div>
-                        WAR estimates the number of wins a player contributes
-                        compared to a replacement-level player. This percentile
-                        shows how the player ranks relative to the league, based
-                        on normalized and ice-time-adjusted performance.
+                      Measures a player’s total contribution to team wins by estimating performance above a replacement-level baseline. The value is expressed as a percentile to provide a standardized comparison across all players.
                       </div>
                     </div>
                   </div>

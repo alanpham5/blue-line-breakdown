@@ -360,14 +360,14 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
               ref={playerHeaderRef}
               key={renderKey}
             >
-              <div className="flex flex-col md:flex-row md:items-stretch gap-4 sm:gap-6">
-                <div className="w-full md:flex-1">
+              <div className="flex flex-col lg:flex-row lg:items-stretch gap-4 sm:gap-6">
+                <div className="w-full lg:flex-1">
                   <PlayerHeader
                     player={playerData.player}
                     biometrics={playerData.biometrics}
                   />
                 </div>
-                <div className="w-full md:w-72 lg:w-80 shrink-0">
+                <div className="w-full lg:w-96 shrink-0">
                   <WarPercentileCard
                     warPercentile={playerData.player.warPercentile}
                   />
