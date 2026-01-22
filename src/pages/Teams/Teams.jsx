@@ -322,7 +322,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
             </div>
           )}
 
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             <Header />
             <div
               className={`liquid-glass rounded-2xl p-6 mb-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
