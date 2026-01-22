@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { playerUtils } from "../utils/playerUtils";
+import { playerUtils } from "../../utils/playerUtils";
 
 export const SimilarPlayerCard = ({ player, onClick, animationKey }) => {
   const [shouldAnimate, setShouldAnimate] = useState(false);

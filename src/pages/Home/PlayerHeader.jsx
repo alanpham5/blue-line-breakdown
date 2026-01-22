@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Ruler, Scale, Calendar } from "lucide-react";
-import { playerUtils } from "../utils/playerUtils";
+import { playerUtils } from "../../utils/playerUtils";
 import { ArchetypeBadge } from "./ArchetypeBadge";
 
 const BiometricItem = ({ icon: Icon, value, label }) => (

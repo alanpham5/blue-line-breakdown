@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Loader2, Search } from "lucide-react";
-import { apiService } from "../services/apiService";
-import { Header } from "./Header";
+import { apiService } from "../../services/apiService";
+import { Header } from "../../components/Header";
 import { TeamHeader } from "./TeamHeader";
 import { PlayerCard } from "./PlayerCard";
-import { playerUtils } from "../utils/playerUtils";
-import { useIsExternal } from "../hooks/useIsExternal";
-import { LoadingScreen } from "./LoadingScreen";
+import { playerUtils } from "../../utils/playerUtils";
+import { useIsExternal } from "../../hooks/useIsExternal";
+import { LoadingScreen } from "../../components/LoadingScreen";
 
 const getSeasonName = (s) => `${s}-${(parseInt(s) + 1).toString().slice(-2)}`;
 
@@ -322,7 +322,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
             </div>
           )}
 
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <Header />
             <div
               className={`liquid-glass rounded-2xl p-6 mb-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}

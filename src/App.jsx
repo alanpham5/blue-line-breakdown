@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Home } from "./components/Home";
-import { About } from "./components/About";
-import { Teams } from "./components/Teams";
+import { Home } from "./pages/Home/Home";
+import { About } from "./pages/About/About";
+import { Teams } from "./pages/Teams/Teams";
 
 const App = () => {
   const [enablePageLoadAnimations, setEnablePageLoadAnimations] =

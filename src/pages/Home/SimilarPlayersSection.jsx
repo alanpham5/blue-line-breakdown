@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Users, Filter, Info } from "lucide-react";
 import { SimilarPlayerCard } from "./SimilarPlayerCard";
-import { playerUtils } from "../utils/playerUtils";
+import { playerUtils } from "../../utils/playerUtils";
 
 export const SimilarPlayersSection = ({
   players,

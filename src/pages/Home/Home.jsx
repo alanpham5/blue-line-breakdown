@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Target, Shield, Loader2 } from "lucide-react";
-import { apiService } from "../services/apiService";
+import { apiService } from "../../services/apiService";
 import { SearchForm } from "./SearchForm";
 import { PlayerHeader } from "./PlayerHeader";
 import { StatsCard } from "./StatsCard";
 import { SimilarPlayersSection } from "./SimilarPlayersSection";
 import { WarPercentileCard } from "./WarPercentileCard";
 import { CountingStats } from "./CountingStats";
-import { Header } from "./Header";
+import { Header } from "../../components/Header";
 import { Analytics } from "@vercel/analytics/react";
-import { useIsExternal } from "../hooks/useIsExternal";
-import { LoadingScreen } from "./LoadingScreen";
+import { useIsExternal } from "../../hooks/useIsExternal";
+import { LoadingScreen } from "../../components/LoadingScreen";
 
 export const Home = ({ enablePageLoadAnimations = true }) => {
   const defaultSeason = (new Date().getFullYear() - 1).toString();
@@ -341,7 +341,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
               </div>
             </div>
           )}
-          <div className="max-w-6xl mx-auto relative z-10">
+          <div className="max-w-7xl mx-auto relative z-10">
             <Header />
             <Analytics />
             <div className="space-y-4 sm:space-y-6">

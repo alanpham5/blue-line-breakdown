@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Info } from "lucide-react";
-import { playerUtils } from "../utils/playerUtils";
+import { playerUtils } from "../../utils/playerUtils";
 
 export const PercentileBar = ({
   label,

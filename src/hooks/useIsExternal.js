@@ -7,17 +7,17 @@ export function useIsExternal() {
 
   useEffect(() => {
     const hasVisited = sessionStorage.getItem("appVisited") === "true";
-
     const spaNavigation = navType === "PUSH" || navType === "REPLACE";
-
     const sameHostReload =
       navType === "POP" &&
       document.referrer &&
       new URL(document.referrer).host === window.location.host;
+    const isStandalone = window.navigator.standalone === true;
 
-    const firstVisit = !hasVisited;
+    const externalBehavior =
+      !(spaNavigation || sameHostReload) || !hasVisited || isStandalone;
 
-    setIsExternal(!(spaNavigation || sameHostReload) || firstVisit);
+    setIsExternal(externalBehavior);
 
     sessionStorage.setItem("appVisited", "true");
   }, [navType]);

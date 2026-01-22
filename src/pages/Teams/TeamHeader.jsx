@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { playerUtils } from "../utils/playerUtils";
+import { playerUtils } from "../../utils/playerUtils";
 
 const getSeasonName = (s) => `${s}-${(parseInt(s) + 1).toString().slice(-2)}`;
 

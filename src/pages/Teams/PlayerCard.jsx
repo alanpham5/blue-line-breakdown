@@ -1,4 +1,4 @@
-import { playerUtils } from "../utils/playerUtils";
+import { playerUtils } from "../../utils/playerUtils";
 
 export const PlayerCard = ({ player, team, season, stroke, onPlayerClick }) => {
   const maxWinShare = 100;

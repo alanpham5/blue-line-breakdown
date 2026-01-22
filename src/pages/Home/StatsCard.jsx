@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { PercentileBar } from "./PercentileBar";
-import { playerUtils } from "../utils/playerUtils";
+import { playerUtils } from "../../utils/playerUtils";
 import { Info } from "lucide-react";
 
 const getColorClasses = (type) =>
