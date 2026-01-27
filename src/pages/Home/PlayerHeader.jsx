@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { Ruler, Scale, Calendar } from "lucide-react";
+import { Link, useSearchParams } from "react-router-dom";
+import { Ruler, Scale, Calendar, Share } from "lucide-react";
 import { playerUtils } from "../../utils/playerUtils";
 import { ArchetypeBadge } from "./ArchetypeBadge";
 
@@ -49,10 +49,27 @@ const TeamLogoLink = ({
   ) : null;
 
 export const PlayerHeader = ({ player, biometrics }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const teamLogoUrl = player.team
     ? playerUtils.getTeamLogoUrl(player.team, player.season)
     : null;
   const archetypes = player.archetypes || [];
+
+  const activateShareable = () => {
+    const newSearchParams = new URLSearchParams(searchParams.toString());
+    newSearchParams.append("shareable", true);
+    setSearchParams(newSearchParams);
+  };
+
+  const isLocalhost = Boolean(
+    window.location.hostname === "localhost" ||
+    // [::1] is the IPv6 localhost address.
+    window.location.hostname === "[::1]" ||
+    // 127.0.0.1/8 is considered localhost for IPv4.
+    window.location.hostname.match(
+      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
+    )
+  );
 
   return (
     <div className="liquid-glass-strong rounded-2xl p-4 lg:p-6 liquid-glass-animate">
@@ -121,9 +138,10 @@ export const PlayerHeader = ({ player, biometrics }) => {
             className="absolute -bottom-8 left-1/2 -translate-x-1/2 xl:hidden w-16 h-16 flex items-center justify-center z-10 hover:opacity-80 transition-opacity"
           />
         </div>
-        <div className="xl:flex-1 min-w-0 py-3 text-center lg:text-left">
-          <h2 className="text-2xl lg:text-3xl lg:text-4xl font-bold mb-2 lg:mb-3 truncate">
-            {player.name}
+        <div className="xl:flex-1 min-w-0 py-3">
+          <h2 className="flex items-center justify-center lg:justify-start gap-2 text-2xl lg:text-3xl font-bold mb-2 lg:mb-3">
+            <span className="max-w-80 truncate">{player.name}</span>
+            <Share className="h-4 w-4" onClick={activateShareable} />
           </h2>
           <div className="space-y-2">
             <div className="flex flex-wrap font-semibold items-center justify-center lg:justify-start gap-2 md:gap-1 text-gray-300">
