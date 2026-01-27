@@ -10,7 +10,7 @@ export const ShareableDisplay = ({ playerData }) => {
       <div
         style={{
           width: 1200,
-          height: 675,
+          height: 900,
           backgroundColor: "#0f172a",
           display: "flex",
           alignItems: "center",
@@ -25,12 +25,12 @@ export const ShareableDisplay = ({ playerData }) => {
     );
   } else {
     const { player, biometrics, percentiles, similarPlayers } = playerData;
-    const displayPlayers = (similarPlayers || []).slice(0, 8);
+    const displayPlayers = (similarPlayers || []).slice(0, 6);
     return (
       <div
         style={{
           width: 1200,
-          height: 675,
+          height: 900,
           backgroundColor: "#0f172a",
           display: "flex",
           color: "white",
@@ -40,7 +40,7 @@ export const ShareableDisplay = ({ playerData }) => {
         {/* SIDEBAR */}
         <div
           style={{
-            width: 90,
+            width: 75,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -51,7 +51,7 @@ export const ShareableDisplay = ({ playerData }) => {
             style={{
               writingMode: "vertical-rl",
               transform: "rotate(180deg)",
-              fontSize: 40,
+              fontSize: 35,
               fontWeight: 700,
               letterSpacing: "0.12em",
               color: "#e5e7eb",
@@ -63,7 +63,7 @@ export const ShareableDisplay = ({ playerData }) => {
             <img
               src="/blb-dark.png"
               alt="Logo"
-              style={{ width: 80, height: 80, transform: "rotate(90deg)" }}
+              style={{ width: 70, height: 70, transform: "rotate(90deg)" }}
             />
             Blue Line Breakdown
           </div>
@@ -104,12 +104,12 @@ export const ShareableDisplay = ({ playerData }) => {
           <div className="liquid-glass-strong rounded-2xl p-3 border-purple-400/30">
             <div className="flex items-center gap-2 mb-2">
               <div className="p-1.5 rounded-lg bg-purple-500/20 shrink-0 backdrop-blur-sm">
-                <Users className="w-4 h-4 text-purple-400" />
+                <Users className="w-6 h-6 text-purple-400" />
               </div>
-              <h3 className="text-lg font-bold">Most Similar Players</h3>
+              <h3 className="text-2xl font-bold">Most Similar Players</h3>
             </div>
 
-            <div className="grid grid-cols-8 gap-2">
+            <div className="grid grid-cols-6 gap-1 py-2">
               {displayPlayers.map((p, i) => (
                 <div key={i} className="text-center">
                   <img
@@ -118,15 +118,13 @@ export const ShareableDisplay = ({ playerData }) => {
                       p.team,
                       p.season
                     )}
-                    className="w-16 h-16 rounded-full mx-auto mb-0.5"
+                    className="w-20 h-20 rounded-full mx-auto mb-0.5"
                     onError={(e) => {
                       e.target.src = playerUtils.getDefaultHeadshot();
                     }}
                   />
-                  <div className="text-[12px] font-semibold truncate">
-                    {p.name}
-                  </div>
-                  <div className="text-[10px] font-semibold text-gray-300">
+                  <div className="text-[17px] font-bold truncate">{p.name}</div>
+                  <div className="text-[14px] font-semibold text-gray-300">
                     {playerUtils.formatSeason(p.season)}
                   </div>
                 </div>

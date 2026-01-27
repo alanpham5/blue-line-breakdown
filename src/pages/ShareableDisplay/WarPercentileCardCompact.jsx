@@ -12,15 +12,15 @@ export const WarPercentileCardCompact = ({ warPercentile }) => {
     <div className="liquid-glass-strong rounded-2xl p-3 border-cyan-400/30 flex items-center justify-between">
       <div className="flex items-center gap-2">
         <div className="p-1.5 bg-cyan-500/20 rounded-lg">
-          <Trophy className="w-4 h-4 text-cyan-400" />
+          <Trophy className="w-6 h-6 text-cyan-400" />
         </div>
         <div>
-          <div className="text-xl font-bold text-white">Player Value</div>
+          <div className="text-2xl font-bold text-white">Player Value</div>
         </div>
       </div>
 
       {/* CIRCLE */}
-      <div className="relative w-20 h-20 flex items-center justify-center">
+      <div className="relative w-28 h-28 flex items-center justify-center">
         <svg className="absolute inset-0 -rotate-90" viewBox="0 0 44 44">
           <circle
             cx="22"
@@ -43,7 +43,7 @@ export const WarPercentileCardCompact = ({ warPercentile }) => {
           />
         </svg>
 
-        <div className="text-base font-bold text-white">
+        <div className="text-2xl font-bold text-white">
           {warPercentile.toFixed(1)}
         </div>
       </div>

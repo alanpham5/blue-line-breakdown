@@ -1,13 +1,14 @@
 import { Ruler, Scale, Calendar } from "lucide-react";
+import { ArchetypeBadge } from "../Home/ArchetypeBadge";
 import { Link } from "react-router-dom";
 import { playerUtils } from "../../utils/playerUtils";
 
 export const PlayerHeaderCompact = ({ player, biometrics }) => {
   const teamColor = playerUtils.getTeamColor(player.team, player.season);
   const teamLogoUrl = playerUtils.getTeamLogoUrl(player.team, player.season);
-
+  const archetypes = player.archetypes;
   return (
-    <div className="relative liquid-glass-strong rounded-2xl py-3 px-5 overflow-hidden border-cyan-400/30">
+    <div className="relative liquid-glass-strong rounded-2xl py-4 px-5 overflow-hidden border-cyan-400/30">
       {/* TEAM COLOR PATCH */}
       <div
         className="absolute top-0 right-0 h-full w-28"
@@ -31,7 +32,7 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
       <div className="relative flex items-center gap-4">
         {/* HEADSHOT */}
         <div
-          className="w-28 h-28 rounded-full overflow-hidden border-[3px] border-gray-300/60 shrink-0"
+          className="w-32 h-32 rounded-full overflow-hidden border-[3px] border-gray-300/60 shrink-0"
           style={{ backgroundColor: teamColor }}
         >
           <img
@@ -50,14 +51,14 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
 
         {/* INFO */}
         <div className="min-w-0 flex-1">
-          <h2 className="text-2xl font-bold truncate mb-0.5">{player.name}</h2>
+          <h2 className="text-4xl font-bold mb-0.5">{player.name}</h2>
 
-          <div className="text-base text-gray-300">
+          <div className="text-xl font-semibold text-gray-300">
             {playerUtils.getFullTeamName(player.team, player.season)} •{" "}
             {playerUtils.formatSeason(player.season)}
           </div>
 
-          <div className="flex gap-3 mt-1.5 text-sm text-gray-300">
+          <div className="flex gap-3 mt-1.5 text-lg text-gray-300">
             {biometrics?.height && (
               <span className="flex items-center gap-1">
                 <Ruler className="w-4 h-4 text-cyan-400" />
@@ -77,13 +78,20 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
               </span>
             )}
           </div>
+          {archetypes.length > 0 && (
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mt-3">
+              {archetypes.map((archetype, idx) => (
+                <ArchetypeBadge key={idx} archetype={archetype} />
+              ))}
+            </div>
+          )}
         </div>
 
         {/* TEAM LOGO */}
         {teamLogoUrl && (
           <Link
             to={`/teams?season=${player.season}&team=${player.team}`}
-            className="shrink-0 w-28 h-28"
+            className="shrink-0 w-36 h-36"
           >
             <img
               src={teamLogoUrl}

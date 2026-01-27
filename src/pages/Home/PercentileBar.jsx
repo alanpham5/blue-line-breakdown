@@ -22,7 +22,7 @@ export const PercentileBar = ({
       <div className="flex justify-between items-center mb-1 gap-2">
         <div className="flex items-center gap-1.5 min-w-0 flex-1">
           <span
-            className={`text-sm ${!compact && "lg:text-base"} font-medium text-gray-300 truncate`}
+            className={`text-sm font-medium ${!compact ? "lg:text-base" : "lg:text-xl font-semibold"}  text-gray-300 truncate`}
           >
             {label}
           </span>
@@ -48,7 +48,7 @@ export const PercentileBar = ({
           )}
         </div>
         <span
-          className={`text-sm ${!compact && "lg:text-base"} font-bold text-white shrink-0`}
+          className={`text-sm ${!compact ? "lg:text-base" : "lg:text-xl"} font-bold text-white shrink-0`}
         >
           {value.toFixed(1)}
         </span>
