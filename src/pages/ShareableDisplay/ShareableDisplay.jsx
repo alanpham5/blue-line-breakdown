@@ -37,7 +37,6 @@ export const ShareableDisplay = ({ playerData }) => {
           overflow: "hidden",
         }}
       >
-        {/* SIDEBAR */}
         <div
           style={{
             width: 75,
@@ -68,7 +67,6 @@ export const ShareableDisplay = ({ playerData }) => {
             Blue Line Breakdown
           </div>
         </div>
-        {/* MAIN */}
         <div
           style={{
             flex: 1,
@@ -78,13 +76,11 @@ export const ShareableDisplay = ({ playerData }) => {
             gap: 12,
           }}
         >
-          {/* HEADER */}
           <div className="grid grid-cols-[2fr_1fr] gap-3">
             <PlayerHeaderCompact player={player} biometrics={biometrics} />
             <WarPercentileCardCompact warPercentile={player.warPercentile} />
           </div>
 
-          {/* STATS */}
           <div className="grid grid-cols-2 gap-3">
             <StatsCardCompact
               title="Offensive Metrics"
@@ -100,7 +96,6 @@ export const ShareableDisplay = ({ playerData }) => {
             />
           </div>
 
-          {/* SIMILAR PLAYERS */}
           <div className="liquid-glass-strong rounded-2xl p-3 border-purple-400/30">
             <div className="flex items-center gap-2 mb-2">
               <div className="p-1.5 rounded-lg bg-purple-500/20 shrink-0 backdrop-blur-sm">

@@ -331,10 +331,6 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
     );
   };
 
-  const handleShareableDisplay = async () => {
-    return <ShareableDisplay playerData={playerData} />;
-  };
-
   return (
     <div className="min-h-screen ice-background text-white p-4 sm:p-6">
       {isExternal && initInProgress ? (
@@ -342,7 +338,9 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
       ) : (
         <>
           {shareable ? (
-            <ShareableDisplay playerData={playerData} />
+            <div className="flex justify-center">
+              <ShareableDisplay playerData={playerData} />
+            </div>
           ) : (
             <>
               {loading && (
