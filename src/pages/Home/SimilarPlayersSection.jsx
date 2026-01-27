@@ -6,7 +6,7 @@ import { playerUtils } from "../../utils/playerUtils";
 export const SimilarPlayersSection = ({
   players,
   onPlayerClick,
-  filterYear,
+  filterYear = null,
   onFilterYearChange,
 }) => {
   const years = Array.from(
@@ -95,11 +95,11 @@ export const SimilarPlayersSection = ({
           </select>
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-3 sm:gap-4 md:flex md:flex-wrap md:justify-center md:gap-4">
+      <div className="grid grid-cols-3 gap-3 sm:gap-4 md:flex md:flex-wrap md:justify-center">
         {players.map((player, idx) => (
           <div
             key={`${player.playerId}-${player.season}`}
-            className="md:w-[calc((100%-4rem)/5)]"
+            className="md:w-[calc((90%-4rem)/5)]"
           >
             <SimilarPlayerCard
               player={player}

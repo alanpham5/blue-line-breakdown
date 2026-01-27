@@ -6,7 +6,7 @@ const getApiBaseUrl = () => {
       window.location.hostname === "");
 
   if (isLocalhost || process.env.NODE_ENV === "development") {
-    return "http://localhost:5001";
+    return process.env.REACT_APP_API_URL || "http://localhost:5001";
   }
 
   if (process.env.REACT_APP_API_URL) {

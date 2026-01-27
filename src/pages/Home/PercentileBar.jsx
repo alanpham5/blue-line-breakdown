@@ -7,6 +7,8 @@ export const PercentileBar = ({
   value,
   type = "offensive",
   statKey,
+  showInfo = true,
+  compact = false,
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const explanation = statKey ? playerUtils.getStatExplanation(statKey) : null;
@@ -19,10 +21,12 @@ export const PercentileBar = ({
     <div className="mb-3 sm:mb-4 percentile-bar-container">
       <div className="flex justify-between items-center mb-1 gap-2">
         <div className="flex items-center gap-1.5 min-w-0 flex-1">
-          <span className="text-xs sm:text-sm font-medium text-gray-300 truncate">
+          <span
+            className={`text-sm ${!compact && "lg:text-base"} font-medium text-gray-300 truncate`}
+          >
             {label}
           </span>
-          {explanation && (
+          {explanation && showInfo && (
             <div className="relative">
               <button
                 onMouseEnter={() => setShowTooltip(true)}
@@ -43,7 +47,9 @@ export const PercentileBar = ({
             </div>
           )}
         </div>
-        <span className="text-xs sm:text-sm font-bold text-white shrink-0">
+        <span
+          className={`text-sm ${!compact && "lg:text-base"} font-bold text-white shrink-0`}
+        >
           {value.toFixed(1)}
         </span>
       </div>

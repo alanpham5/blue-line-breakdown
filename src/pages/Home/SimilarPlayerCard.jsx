@@ -59,7 +59,7 @@ export const SimilarPlayerCard = ({ player, onClick, animationKey }) => {
           {Math.round(player.similarity)}
         </div>
       </div>
-      <p className="text-[10px] sm:text-xs font-semibold text-white text-center leading-tight max-w-[80px] sm:max-w-[100px] truncate">
+      <p className="text-[10px] sm:text-xs font-semibold text-white text-center leading-tight">
         {player.name}
       </p>
       <p className="text-[10px] sm:text-xs text-gray-400">

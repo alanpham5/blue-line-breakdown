@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Info, Trophy } from "lucide-react";
 
-export const WarPercentileCard = ({ warPercentile }) => {
+export const WarPercentileCard = ({ warPercentile, showInfo = true }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [isAnimated, setIsAnimated] = useState(false);
 
@@ -38,38 +38,40 @@ export const WarPercentileCard = ({ warPercentile }) => {
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="text-lg font-bold">Player Value</h3>
-              <div
-                className="relative z-[10000]"
-                style={{ overflow: "visible" }}
-              >
-                <button
-                  onMouseEnter={() => setShowTooltip(true)}
-                  onMouseLeave={() => setShowTooltip(false)}
-                  onClick={() => setShowTooltip(!showTooltip)}
-                  className="shrink-0 text-gray-400 hover:text-gray-200 transition-colors"
-                  aria-label="Info about wins above replacement"
+              {showInfo && (
+                <div
+                  className="relative z-[10000]"
+                  style={{ overflow: "visible" }}
                 >
-                  <Info size={16} />
-                </button>
-                {showTooltip && (
-                  <div
-                    className="absolute left-0 bottom-full mb-2 w-56 max-w-xs p-3 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-lg text-xs text-gray-200 z-[9999] shadow-lg"
-                    style={{ pointerEvents: "none" }}
+                  <button
+                    onMouseEnter={() => setShowTooltip(true)}
+                    onMouseLeave={() => setShowTooltip(false)}
+                    onClick={() => setShowTooltip(!showTooltip)}
+                    className="shrink-0 text-gray-400 hover:text-gray-200 transition-colors"
+                    aria-label="Info about wins above replacement"
                   >
-                    <div className="space-y-2">
-                      <div className="font-semibold text-cyan-400">
-                        Player Value
-                      </div>
-                      <div>
-                        Measures a player’s total contribution to team wins by
-                        estimating performance above a replacement-level
-                        baseline. The value is expressed as a percentile to
-                        provide a standardized comparison across all players.
+                    <Info size={16} />
+                  </button>
+                  {showTooltip && (
+                    <div
+                      className="absolute left-0 bottom-full mb-2 w-56 max-w-xs p-3 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-lg text-xs text-gray-200 z-[9999] shadow-lg"
+                      style={{ pointerEvents: "none" }}
+                    >
+                      <div className="space-y-2">
+                        <div className="font-semibold text-cyan-400">
+                          Player Value
+                        </div>
+                        <div>
+                          Measures a player’s total contribution to team wins by
+                          estimating performance above a replacement-level
+                          baseline. The value is expressed as a percentile to
+                          provide a standardized comparison across all players.
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
+              )}
             </div>
             <div className="text-xs text-gray-300 mt-1">
               percentile vs. league
