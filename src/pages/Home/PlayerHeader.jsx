@@ -126,7 +126,7 @@ export const PlayerHeader = ({ player, biometrics }) => {
             {player.name}
           </h2>
           <div className="space-y-2">
-            <div className="flex flex-wrap font-semibold items-center justify-center lg:justify-start gap-2 lg:gap-3 text-gray-300">
+            <div className="flex flex-wrap font-semibold items-center justify-center lg:justify-start gap-2 md:gap-1 text-gray-300">
               <span className="text-sm lg:text-base">
                 {playerUtils.getFullTeamName(player.team, player.season)}
               </span>

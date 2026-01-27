@@ -118,7 +118,7 @@ export const ShareableDisplay = ({ playerData }) => {
                       p.team,
                       p.season
                     )}
-                    className="w-20 h-20 rounded-full mx-auto mb-0.5"
+                    className="w-20 h-20 rounded-full mx-auto mb-0.5 border-4 border-gray-600/40"
                     onError={(e) => {
                       e.target.src = playerUtils.getDefaultHeadshot();
                     }}
