@@ -30,7 +30,7 @@ export const ShareableDisplay = ({ playerData }) => {
       <div
         style={{
           width: 1200,
-          height: 900,
+          height: 960,
           backgroundColor: "#0f172a",
           display: "flex",
           color: "white",
@@ -104,7 +104,7 @@ export const ShareableDisplay = ({ playerData }) => {
               <h3 className="text-2xl font-bold">Most Similar Players</h3>
             </div>
 
-            <div className="grid grid-cols-6 gap-1 py-2">
+            <div className="grid grid-cols-6 gap-1 pt-2 place-items-center">
               {displayPlayers.map((p, i) => (
                 <div key={i} className="text-center">
                   <img
@@ -125,6 +125,9 @@ export const ShareableDisplay = ({ playerData }) => {
                 </div>
               ))}
             </div>
+          </div>
+          <div className="text-xl pt-4 font-bold justify-self-center">
+            Data from MoneyPuck.com and NHL.com
           </div>
         </div>
       </div>
