@@ -32,60 +32,66 @@ const SearchForm = ({
   teams,
   loadingTeams,
   getSeasonName,
-}) => (
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
-    <div>
-      <label className="block text-sm font-medium text-gray-300 mb-2">
-        Season
-      </label>
-      <select
-        value={tempSeason}
-        onChange={(e) => setTempSeason(e.target.value)}
-        className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300"
-      >
-        {[...seasons].reverse().map((s) => (
-          <option key={s} value={s}>
-            {getSeasonName(s)}
-          </option>
-        ))}
-      </select>
-    </div>
-    <div>
-      <label className="block text-sm font-medium text-gray-300 mb-2">
-        Team
-      </label>
-      <select
-        value={tempTeam}
-        onChange={(e) => setTempTeam(e.target.value)}
-        disabled={loadingTeams}
-        className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {loadingTeams ? (
-          <option>Loading...</option>
-        ) : (
-          teams.map((team) => (
-            <option key={team} value={team}>
-              {tempSeason <= 2013 && team === "ARI" ? "PHX" : team}
+}) => {
+  const getTeamLabel = (team) =>
+    tempSeason <= 2013 && team === "ARI" ? "PHX" : team;
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-300 mb-2">
+          Season
+        </label>
+        <select
+          value={tempSeason}
+          onChange={(e) => setTempSeason(e.target.value)}
+          className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300"
+        >
+          {[...seasons].reverse().map((s) => (
+            <option key={s} value={s}>
+              {getSeasonName(s)}
             </option>
-          ))
-        )}
-      </select>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-300 mb-2">
+          Team
+        </label>
+        <select
+          value={tempTeam}
+          onChange={(e) => setTempTeam(e.target.value)}
+          disabled={loadingTeams}
+          className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loadingTeams ? (
+            <option>Loading...</option>
+          ) : (
+            [...teams]
+              .sort((a, b) => getTeamLabel(a).localeCompare(getTeamLabel(b)))
+              .map((team) => (
+                <option key={team} value={team}>
+                  {getTeamLabel(team)}
+                </option>
+              ))
+          )}
+        </select>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-300 mb-2">
+          Position
+        </label>
+        <select
+          value={tempPosition}
+          onChange={(e) => setTempPosition(e.target.value)}
+          className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300"
+        >
+          <option value="F">Forwards</option>
+          <option value="D">Defensemen</option>
+        </select>
+      </div>
     </div>
-    <div>
-      <label className="block text-sm font-medium text-gray-300 mb-2">
-        Position
-      </label>
-      <select
-        value={tempPosition}
-        onChange={(e) => setTempPosition(e.target.value)}
-        className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300"
-      >
-        <option value="F">Forwards</option>
-        <option value="D">Defensemen</option>
-      </select>
-    </div>
-  </div>
-);
+  );
+};
 
 export const Teams = ({ enablePageLoadAnimations = true }) => {
   const defaultSeason = (new Date().getFullYear() - 1).toString();
@@ -106,11 +112,11 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
   const [teamRecord, setTeamRecord] = useState(null);
   const [teamClinchStatus, setTeamClinchStatus] = useState(null);
   const [renderKey, setRenderKey] = useState(0);
+  const [urlInitComplete, setUrlInitComplete] = useState(false);
 
   const isExternal = useIsExternal();
 
   const initInProgressRef = useRef(false);
-  const hasInitializedFromURL = useRef(false);
   const teamHeaderRef = useRef(null);
 
   const navigate = useNavigate();
@@ -127,10 +133,9 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
   }, []);
 
   useEffect(() => {
-    if (hasInitializedFromURL.current) {
-      fetchTeams();
-    }
-  }, [tempSeason]);
+    if (!urlInitComplete) return;
+    fetchTeams();
+  }, [tempSeason, urlInitComplete]);
 
   useEffect(() => {
     if (teamHeaderRef.current) {
@@ -151,14 +156,14 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
       setSeason(urlSeason);
       setTeam(urlTeam);
       setPosition(urlPosition);
+
       setTempSeason(urlSeason);
       setTempTeam(urlTeam);
       setTempPosition(urlPosition);
-      hasInitializedFromURL.current = true;
+
       performSearch(urlSeason, urlTeam, urlPosition);
-    } else {
-      fetchTeams();
     }
+    setUrlInitComplete(true);
   }, [searchParams]);
 
   useEffect(() => {
