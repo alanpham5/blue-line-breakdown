@@ -98,7 +98,7 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
         {/* TEAM LOGO */}
         {teamLogoUrl && (
           <Link
-            to={`/teams?season=${player.season}&team=${player.team}`}
+            to={`/teams?season=${player.season}&team=${player.team}&position=${player.position}`}
             className="shrink-0 w-36 h-36"
           >
             <img

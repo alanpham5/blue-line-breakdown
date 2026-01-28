@@ -74,7 +74,6 @@ export const PlayerHeader = ({ player, biometrics }) => {
   return (
     <div className="liquid-glass-strong rounded-2xl p-4 lg:p-6 liquid-glass-animate">
       <div className="hidden xl:block absolute top-0 right-0 h-full w-44 overflow-hidden rounded-tr-xl rounded-br-2xl z-[-1]">
-        {/* Base diagonal */}
         <div
           className="absolute inset-0"
           style={{
@@ -87,7 +86,6 @@ export const PlayerHeader = ({ player, biometrics }) => {
           }}
         />
 
-        {/* Accent stripe */}
         <div
           className="absolute inset-0"
           style={{
@@ -141,7 +139,9 @@ export const PlayerHeader = ({ player, biometrics }) => {
         <div className="xl:flex-1 min-w-0 py-3">
           <h2 className="flex items-center justify-center lg:justify-start gap-2 text-2xl lg:text-3xl font-bold mb-2 lg:mb-3">
             <span className="max-w-80 truncate">{player.name}</span>
-            <Share className="h-4 w-4" onClick={activateShareable} />
+            {isLocalhost && (
+              <Share className="h-4 w-4" onClick={activateShareable} />
+            )}
           </h2>
           <div className="space-y-2">
             <div className="flex flex-wrap font-semibold items-center justify-center lg:justify-start gap-2 md:gap-1 text-gray-300">
