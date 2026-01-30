@@ -9,17 +9,15 @@ export const WarPercentileCard = ({ warPercentile, showInfo = true }) => {
     setIsAnimated(true);
   }, []);
 
-  if (warPercentile === null || warPercentile === undefined) return null;
-
   const clampedPercent =
     typeof warPercentile === "number"
       ? Math.min(100, Math.max(0, warPercentile))
       : 0;
 
   const displayValue =
-    typeof warPercentile === "number"
+    typeof warPercentile === "number" && warPercentile
       ? warPercentile.toFixed(1)
-      : String(warPercentile);
+      : 0;
 
   const radius = 18;
   const circumference = 2 * Math.PI * radius;
@@ -37,7 +35,7 @@ export const WarPercentileCard = ({ warPercentile, showInfo = true }) => {
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-lg font-bold">Player Value</h3>
+              <h3 className="text-lg font-bold">Observed Value</h3>
               {showInfo && (
                 <div
                   className="relative z-[10000]"
@@ -59,13 +57,13 @@ export const WarPercentileCard = ({ warPercentile, showInfo = true }) => {
                     >
                       <div className="space-y-2">
                         <div className="font-semibold text-cyan-400">
-                          Player Value
+                          Season Observed Value
                         </div>
                         <div>
-                          Measures a player’s total contribution to team wins by
-                          estimating performance above a replacement-level
-                          baseline. The value is expressed as a percentile to
-                          provide a standardized comparison across all players.
+                          Measures a player’s total contribution to team wins in
+                          a given season. The value is expressed as a percentile
+                          to provide a standardized comparison across all
+                          players.
                         </div>
                       </div>
                     </div>
