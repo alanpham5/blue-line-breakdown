@@ -19,11 +19,12 @@ async function run() {
   const mapped = {};
 
   for (const row of json.data) {
-    const season = Number(row.seasonId.toString().slice(0, 4));
+    const seasonId = row.seasonId.toString();
+    const displayYear = Number(seasonId.slice(0, 4)); // ← first 4 digits = season start year
 
-    if (!seen.has(season)) {
-      seen.add(season);
-      mapped[season] = row.team.triCode;
+    if (!seen.has(displayYear)) {
+      seen.add(displayYear);
+      mapped[displayYear] = row.team.triCode;
     }
   }
 

@@ -1,6 +1,6 @@
 export const hardcodedChampions = {
-  2008: "PIT",
-  2009: "DET",
+  2008: "DET",
+  2009: "PIT",
   2010: "CHI",
   2011: "BOS",
   2012: "LAK",
@@ -14,9 +14,8 @@ export const hardcodedChampions = {
   2020: "TBL",
   2021: "TBL",
   2022: "COL",
-  2023: "VGK",
+  2023: "FLA",
   2024: "FLA",
-  2025: "FLA",
 };
 
 export const apiChampions = {};
