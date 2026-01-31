@@ -37,7 +37,7 @@ export const PlayerCard = ({ player, team, season, stroke, onPlayerClick }) => {
             e.target.src = "/mobile-icon.png";
           }}
         />
-        <h3 className="font-bold text-white light:text-gray-900">
+        <h3 className="font-bold text-white max-w-[145px] sm:max-w-full truncate light:text-gray-900">
           {player.name}
         </h3>
       </div>
