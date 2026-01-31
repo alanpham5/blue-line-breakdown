@@ -20,8 +20,9 @@ async function run() {
   const mapped = {};
 
   for (const row of json.data) {
-    const seasonId = row.seasonId.toString();
-    const displayYear = Number(seasonId.slice(0, 4));
+    const seasonId = row.seasonId;
+    const displayYear = Number(seasonId.toString().slice(0, 4));
+    if (displayYear < 2007) continue;
 
     if (!seen.has(displayYear)) {
       seen.add(displayYear);
