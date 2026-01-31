@@ -7,6 +7,16 @@ const FILE_PATH = path.resolve("src/data/stanleyCupData.js");
 const API_URL =
   "https://records.nhl.com/site/api/award-details?cayenneExp=trophyCategoryId=1%20and%20trophyId=1&include=seasonId&include=team.triCode&sort=seasonId&dir=DESC";
 
+function objectToJs(obj) {
+  return (
+    "{\n" +
+    Object.entries(obj)
+      .map(([k, v]) => `  ${k}: "${v}"`)
+      .join(",\n") +
+    "\n}"
+  );
+}
+
 async function run() {
   const res = await fetch(API_URL);
   const json = await res.json();
@@ -36,8 +46,8 @@ async function run() {
   }
 
   const fileContent = `
-export const hardcodedChampions = ${JSON.stringify(existing, null, 2)};
-export const apiChampions = ${JSON.stringify(mapped, null, 2)};
+export const hardcodedChampions = ${objectToJs(existing)};
+export const apiChampions = ${objectToJs(mapped)};
 export const stanleyCupChampions = Object.keys(apiChampions).length
   ? apiChampions
   : hardcodedChampions;
