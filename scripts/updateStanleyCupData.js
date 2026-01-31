@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import fetch from "node-fetch";
+import { hardcodedChampions as existing } from "../src/data/stanleyCupData.js";
 
 const FILE_PATH = path.resolve("src/data/stanleyCupData.js");
 const API_URL =
@@ -20,7 +21,7 @@ async function run() {
 
   for (const row of json.data) {
     const seasonId = row.seasonId.toString();
-    const displayYear = Number(seasonId.slice(0, 4)); // ← first 4 digits = season start year
+    const displayYear = Number(seasonId.slice(0, 4));
 
     if (!seen.has(displayYear)) {
       seen.add(displayYear);
@@ -33,23 +34,15 @@ async function run() {
     return;
   }
 
-  const existing = require("../src/data/stanleyCupData.js");
-
-  const file = `
-export const hardcodedChampions = ${JSON.stringify(
-    existing.hardcodedChampions,
-    null,
-    2
-  )};
-
+  const fileContent = `
+export const hardcodedChampions = ${JSON.stringify(existing, null, 2)};
 export const apiChampions = ${JSON.stringify(mapped, null, 2)};
-
 export const stanleyCupChampions = Object.keys(apiChampions).length
   ? apiChampions
   : hardcodedChampions;
 `;
 
-  fs.writeFileSync(FILE_PATH, file.trim());
+  fs.writeFileSync(FILE_PATH, fileContent.trim());
   console.log("Stanley Cup data updated.");
 }
 
