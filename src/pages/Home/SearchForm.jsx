@@ -55,7 +55,7 @@ export const SearchForm = ({
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
               onKeyPress={(e) => handleKeyPress(e, onSearch)}
-              autocomplete="off"
+              autoComplete="off"
               placeholder={
                 position === "F"
                   ? "e.g., Macklin Celebrini"

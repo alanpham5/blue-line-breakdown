@@ -102,7 +102,9 @@ export const ShareableDisplay = ({ playerData }) => {
               <div className="p-1.5 rounded-lg bg-purple-500/20 shrink-0 backdrop-blur-sm">
                 <Users className="w-6 h-6 text-purple-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white">Most Similar Players</h3>
+              <h3 className="text-2xl font-bold text-white">
+                Most Similar Players
+              </h3>
             </div>
 
             <div className="grid grid-cols-6 gap-1 pt-2 place-items-center">
@@ -119,7 +121,9 @@ export const ShareableDisplay = ({ playerData }) => {
                       e.target.src = playerUtils.getDefaultHeadshot();
                     }}
                   />
-                  <div className="text-[17px] font-bold truncate text-white">{p.name}</div>
+                  <div className="text-[17px] max-w-[145px] font-bold truncate text-white">
+                    {p.name}
+                  </div>
                   <div className="text-[14px] font-semibold text-gray-300">
                     {playerUtils.formatSeason(p.season)}
                   </div>

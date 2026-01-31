@@ -1,12 +1,15 @@
+// tailwind.config.js
+const plugin = require("tailwindcss/plugin");
+
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
-  darkMode: "media",
+  darkMode: "class",
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {},
   },
   plugins: [
-    function ({ addVariant }) {
-      addVariant("light", "@media (prefers-color-scheme: light)");
-    },
+    plugin(function ({ addVariant }) {
+      addVariant("light", "html.light &");
+    }),
   ],
 };

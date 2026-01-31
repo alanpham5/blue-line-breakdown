@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { playerUtils } from "../../utils/playerUtils";
+import { useTheme } from "../../providers/ThemeContext";
 
 const getSeasonName = (s) => `${s}-${(parseInt(s) + 1).toString().slice(-2)}`;
 
@@ -11,6 +12,7 @@ export const TeamHeader = ({
   teamClinchStatus,
 }) => {
   const teamHeaderRef = useRef(null);
+  const { actualTheme } = useTheme();
 
   useEffect(() => {
     if (teamHeaderRef.current) {
@@ -26,7 +28,7 @@ export const TeamHeader = ({
     <h2 ref={teamHeaderRef} className="text-center font-bold mt-8 mb-6">
       <div className="flex items-center justify-center md:gap-4 mt-8 mb-6">
         <img
-          src={playerUtils.getTeamLogoUrl(team, season)}
+          src={playerUtils.getTeamLogoUrl(team, season, actualTheme)}
           alt={team}
           className="w-24 lg:w-32 shrink-0 team-logo-stroke"
         />

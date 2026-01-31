@@ -2,6 +2,7 @@ import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { Ruler, Scale, Calendar, Share } from "lucide-react";
 import { playerUtils } from "../../utils/playerUtils";
 import { ArchetypeBadge } from "./ArchetypeBadge";
+import { useTheme } from "../../providers/ThemeContext";
 
 const BiometricItem = ({ icon: Icon, value, label }) => (
   <div className="flex items-center gap-1.5 text-gray-300 light:text-gray-600">
@@ -30,8 +31,10 @@ const TeamLogoLink = ({ teamLogoUrl, player, className }) =>
 export const PlayerHeader = ({ player, biometrics }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { actualTheme } = useTheme();
+
   const teamLogoUrl = player.team
-    ? playerUtils.getTeamLogoUrl(player.team, player.season)
+    ? playerUtils.getTeamLogoUrl(player.team, player.season, actualTheme)
     : null;
   const archetypes = player.archetypes || [];
 
@@ -82,7 +85,6 @@ export const PlayerHeader = ({ player, biometrics }) => {
               w-24 h-24 lg:w-32 lg:h-32
               rounded-full overflow-hidden
               border-4 border-gray-300/50 light:border-gray-400/60
-              shadow-[0_0_16px_var(--team-color)]
               shadow-[0_10px_30px_rgba(0,0,0,0.35)]
               backdrop-blur-sm
               bg-[var(--team-color)]

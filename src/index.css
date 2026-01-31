@@ -2,10 +2,79 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+
+  --glass-bg: rgba(30, 41, 59, 0.38);
+  --glass-bg-strong: rgba(15, 23, 42, 0.56);
+  --glass-border: rgba(148, 163, 184, 0.32);
+  --glass-border-hover: rgba(148, 163, 184, 0.45);
+
+  --glass-gradient-start: rgba(255, 255, 255, 0.08);
+  --glass-gradient-mid: rgba(255, 255, 255, 0.02);
+  --glass-gradient-end: rgba(0, 0, 0, 0.06);
+
+  --glass-gradient-strong-start: rgba(255, 255, 255, 0.12);
+  --glass-gradient-strong-mid: rgba(255, 255, 255, 0.03);
+  --glass-gradient-strong-end: rgba(0, 0, 0, 0.12);
+
+  --shadow-base: 0 12px 44px rgba(0, 0, 0, 0.55);
+  --shadow-hover:
+    0 12px 44px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22);
+
+  --logo-stroke: rgba(22, 32, 50, 0.35);
+
+  --ice-glow-top: rgba(59, 130, 246, 0.05);
+  --ice-glow-bottom: rgba(14, 165, 233, 0.05);
+}
+
+html.light {
+  --bg-primary: #f1f5f9;
+  --bg-secondary: #e2e8f0;
+  --bg-tertiary: #cbd5e1;
+
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-tertiary: #64748b;
+
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-bg-strong: rgba(241, 245, 249, 0.9);
+  --glass-border: rgba(148, 163, 184, 0.25);
+  --glass-border-hover: rgba(148, 163, 184, 0.4);
+
+  --glass-gradient-start: rgba(255, 255, 255, 0.9);
+  --glass-gradient-mid: rgba(255, 255, 255, 0.8);
+  --glass-gradient-end: rgba(255, 255, 255, 0.7);
+
+  --glass-gradient-strong-start: rgba(255, 255, 255, 0.95);
+  --glass-gradient-strong-mid: rgba(241, 245, 249, 0.9);
+  --glass-gradient-strong-end: rgba(241, 245, 249, 0.9);
+
+  --shadow-base: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  --logo-stroke: rgba(255, 255, 255, 0.85);
+
+  --ice-glow-top: rgba(59, 130, 246, 0.06);
+  --ice-glow-bottom: rgba(14, 165, 233, 0.06);
+}
+
 html {
   overflow-x: hidden;
   -webkit-tap-highlight-color: transparent;
-  background-color: #0f172a;
+  background-color: var(--bg-primary);
+  color-scheme: dark;
+}
+
+html.light {
+  color-scheme: light;
 }
 
 body {
@@ -16,24 +85,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  background-color: #0f172a;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
-@media (prefers-color-scheme: light) {
-  html,
-  body {
-    background-color: #f1f5f9;
-  }
-}
-
-:root {
-  --logo-stroke: rgba(22, 32, 50, 0.95);
-}
-@media (prefers-color-scheme: light) {
-  :root {
-    --logo-stroke: rgba(255, 255, 255, 0.95);
-  }
-}
 .team-logo-stroke {
   filter: drop-shadow(1px 0 0 var(--logo-stroke))
     drop-shadow(-1px 0 0 var(--logo-stroke))
@@ -56,6 +111,12 @@ code {
 
 .ice-background {
   position: relative;
+  background-size: 400% 400%;
+  animation: iceShift 20s ease infinite;
+}
+
+html.dark .ice-background,
+html:not(.light) .ice-background {
   background: linear-gradient(
     135deg,
     #0f172a 0%,
@@ -64,22 +125,17 @@ code {
     #1e293b 75%,
     #0f172a 100%
   );
-  background-size: 400% 400%;
-  animation: iceShift 20s ease infinite;
 }
 
-@media (prefers-color-scheme: light) {
-  .ice-background {
-    background: linear-gradient(
-      135deg,
-      #e2e8f0 0%,
-      #f1f5f9 25%,
-      #e2e8f0 50%,
-      #f1f5f9 75%,
-      #e2e8f0 100%
-    );
-    background-size: 400% 400%;
-  }
+html.light .ice-background {
+  background: linear-gradient(
+    135deg,
+    #e2e8f0 0%,
+    #f1f5f9 25%,
+    #e2e8f0 50%,
+    #f1f5f9 75%,
+    #e2e8f0 100%
+  );
 }
 
 @media (max-width: 640px) {
@@ -97,14 +153,10 @@ code {
   width: 100%;
   height: 100%;
   background:
-    radial-gradient(
-      ellipse at top,
-      rgba(59, 130, 246, 0.05) 0%,
-      transparent 50%
-    ),
+    radial-gradient(ellipse at top, var(--ice-glow-top) 0%, transparent 50%),
     radial-gradient(
       ellipse at bottom,
-      rgba(14, 165, 233, 0.05) 0%,
+      var(--ice-glow-bottom) 0%,
       transparent 50%
     );
   pointer-events: none;
@@ -112,19 +164,10 @@ code {
   animation: iceGlow 8s ease-in-out infinite alternate;
 }
 
-@media (prefers-color-scheme: light) {
+@media (max-width: 640px) {
   .ice-background::after {
-    background:
-      radial-gradient(
-        ellipse at top,
-        rgba(59, 130, 246, 0.06) 0%,
-        transparent 50%
-      ),
-      radial-gradient(
-        ellipse at bottom,
-        rgba(14, 165, 233, 0.06) 0%,
-        transparent 50%
-      );
+    animation: none;
+    opacity: 0.15;
   }
 }
 
@@ -147,13 +190,6 @@ code {
   }
 }
 
-@media (max-width: 640px) {
-  .ice-background::after {
-    animation: none;
-    opacity: 0.15;
-  }
-}
-
 .player-header-overlay-bg {
   background-color: #0f172a;
 }
@@ -162,23 +198,24 @@ code {
   background:
     linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.08) 0%,
-      rgba(255, 255, 255, 0.02) 35%,
-      rgba(0, 0, 0, 0.06) 100%
+      var(--glass-gradient-start) 0%,
+      var(--glass-gradient-mid) 35%,
+      var(--glass-gradient-end) 100%
     ),
-    rgba(30, 41, 59, 0.38);
-  border: 1px solid rgba(148, 163, 184, 0.32);
+    var(--glass-bg);
+  border: 1px solid var(--glass-border);
 }
+
 .shareable-display-dark .liquid-glass-strong {
   background:
     radial-gradient(
       120% 140% at 10% 10%,
-      rgba(255, 255, 255, 0.12) 0%,
-      rgba(255, 255, 255, 0.03) 45%,
-      rgba(0, 0, 0, 0.12) 100%
+      var(--glass-gradient-strong-start) 0%,
+      var(--glass-gradient-strong-mid) 45%,
+      var(--glass-gradient-strong-end) 100%
     ),
-    rgba(15, 23, 42, 0.56);
-  border: 1px solid rgba(148, 163, 184, 0.32);
+    var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
 }
 
 .liquid-glass {
@@ -186,11 +223,12 @@ code {
   background:
     linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.08) 0%,
-      rgba(255, 255, 255, 0.02) 35%,
-      rgba(0, 0, 0, 0.06) 100%
+      var(--glass-gradient-start) 0%,
+      var(--glass-gradient-mid) 35%,
+      var(--glass-gradient-end) 100%
     ),
-    rgba(30, 41, 59, 0.38);
+    var(--glass-bg);
+  border: 1px solid var(--glass-border);
 }
 
 .liquid-glass-strong {
@@ -198,66 +236,67 @@ code {
   background:
     radial-gradient(
       120% 140% at 10% 10%,
-      rgba(255, 255, 255, 0.12) 0%,
-      rgba(255, 255, 255, 0.03) 45%,
-      rgba(0, 0, 0, 0.12) 100%
+      var(--glass-gradient-strong-start) 0%,
+      var(--glass-gradient-strong-mid) 45%,
+      var(--glass-gradient-strong-end) 100%
     ),
-    rgba(15, 23, 42, 0.56);
-  border: 1px solid rgba(148, 163, 184, 0.32);
+    var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
 }
 
-@media (prefers-color-scheme: light) {
-  .liquid-glass {
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.9) 0%,
-      rgba(255, 255, 255, 0.7) 100%
-    );
-    border: 1px solid rgba(148, 163, 184, 0.25);
-  }
+html.light .liquid-glass {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
+  box-shadow: var(--shadow-base);
+}
 
-  .liquid-glass-strong {
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.95) 0%,
-      rgba(241, 245, 249, 0.9) 100%
-    );
-    border: 1px solid rgba(148, 163, 184, 0.35);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  }
+html.light .liquid-glass-strong {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(241, 245, 249, 0.9) 100%
+  );
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: var(--shadow-base);
 }
 
 .liquid-glass:hover,
 .liquid-glass-strong:hover {
-  border-color: rgba(148, 163, 184, 0.45);
+  border-color: var(--glass-border-hover);
+}
+
+html.dark .liquid-glass:hover,
+html:not(.light) .liquid-glass:hover,
+html.dark .liquid-glass-strong:hover,
+html:not(.light) .liquid-glass-strong:hover {
   box-shadow:
     0 12px 44px rgba(0, 0, 0, 0.55),
     inset 0 1px 0 rgba(255, 255, 255, 0.22),
     inset 0 -1px 0 rgba(0, 0, 0, 0.22);
 }
 
-@media (prefers-color-scheme: light) {
-  .liquid-glass:hover,
-  .liquid-glass-strong:hover {
-    border-color: rgba(148, 163, 184, 0.4);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
+html.light .liquid-glass:hover,
+html.light .liquid-glass-strong:hover {
+  box-shadow: var(--shadow-hover);
 }
 
 @media (max-width: 640px) {
-  .liquid-glass:hover,
-  .liquid-glass-strong:hover {
+  html.dark .liquid-glass:hover,
+  html:not(.light) .liquid-glass:hover,
+  html.dark .liquid-glass-strong:hover,
+  html:not(.light) .liquid-glass-strong:hover {
     border-color: rgba(148, 163, 184, 0.32);
     box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.37),
       inset 0 1px 0 rgba(255, 255, 255, 0.14),
       inset 0 -1px 0 rgba(0, 0, 0, 0.18);
   }
-}
 
-@media (prefers-color-scheme: light) and (max-width: 640px) {
-  .liquid-glass:hover,
-  .liquid-glass-strong:hover {
+  html.light .liquid-glass:hover,
+  html.light .liquid-glass-strong:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 }

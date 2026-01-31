@@ -120,13 +120,10 @@ export const playerUtils = {
     return teamNames[teamCode.toUpperCase()] || teamCode.toUpperCase();
   },
 
-  getTeamLogoUrl(teamCode, season = null) {
+  getTeamLogoUrl(teamCode, season = null, actualTheme = "dark") {
     if (!teamCode) return null;
 
-    const prefersLight =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-color-scheme: light)").matches;
-    const suffix = prefersLight ? "light" : "dark";
+    const suffix = actualTheme === "light" ? "light" : "dark";
 
     const applySuffix = (path) =>
       path.replace(/_(?:dark|light)\.svg$/i, `_${suffix}.svg`);
