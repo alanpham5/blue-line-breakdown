@@ -3,16 +3,20 @@ import { Users, Filter, Info } from "lucide-react";
 import { SimilarPlayerCard } from "./SimilarPlayerCard";
 import { playerUtils } from "../../utils/playerUtils";
 
+const d = new Date();
+const seasons = Array.from(
+  {
+    length: (d.getMonth() >= 10 ? d.getFullYear() : d.getFullYear() - 1) - 2007,
+  },
+  (_, i) => 2008 + i
+);
+
 export const SimilarPlayersSection = ({
   players,
   onPlayerClick,
   filterYear = null,
   onFilterYearChange,
 }) => {
-  const years = Array.from(
-    { length: 2025 - 2008 + 1 },
-    (_, i) => 2008 + i
-  ).reverse();
   const [animationKey, setAnimationKey] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);
   const prevPlayersRef = useRef(null);
@@ -87,7 +91,7 @@ export const SimilarPlayersSection = ({
             className="flex-1 sm:flex-initial min-w-0 liquid-glass-strong rounded-full px-3 sm:px-4 py-2 text-white text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-purple-400/50 transition-all duration-300"
           >
             <option value="">All Seasons</option>
-            {years.map((year) => (
+            {[...seasons].reverse().map((year) => (
               <option key={year} value={year}>
                 {playerUtils.formatSeason(year)}
               </option>

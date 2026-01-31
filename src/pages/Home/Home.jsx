@@ -145,6 +145,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
     if (initInProgressRef.current && showLoading) {
       setInitializingCache(true);
       const messages = [
+        "Searching...",
         "Hold on, we need to refresh the data...",
         "Turning on the lights...",
         "Zamboni resurfacing the ice...",

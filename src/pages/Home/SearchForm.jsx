@@ -15,6 +15,14 @@ const isNameMatchSuggestion = (suggestions, playerName) =>
       suggestion.toLowerCase().trim() === playerName.toLowerCase().trim()
   );
 
+const d = new Date();
+const seasons = Array.from(
+  {
+    length: (d.getMonth() >= 10 ? d.getFullYear() : d.getFullYear() - 1) - 2007,
+  },
+  (_, i) => 2008 + i
+);
+
 export const SearchForm = ({
   playerName,
   setPlayerName,
@@ -75,19 +83,14 @@ export const SearchForm = ({
             onChange={(e) => setSeason(e.target.value)}
             className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300"
           >
-            {Array.from(
-              { length: new Date().getFullYear() - 1 - 2008 + 1 },
-              (_, i) => 2008 + i
-            )
-              .reverse()
-              .map((year) => {
-                const nextYear = year + 1;
-                return (
-                  <option key={year} value={year}>
-                    {year}-{nextYear}
-                  </option>
-                );
-              })}
+            {[...seasons].reverse().map((year) => {
+              const nextYear = year + 1;
+              return (
+                <option key={year} value={year}>
+                  {year}-{nextYear}
+                </option>
+              );
+            })}
           </select>
         </div>
         <div>

@@ -6,6 +6,7 @@ export const LoadingScreen = () => {
     "Hold on, we need to refresh the data...",
     "Turning on the lights...",
     "Zamboni resurfacing the ice...",
+    "Players putting on their gear...",
     "Players warming up...",
     "Coaches reviewing the game plan...",
     "Referees checking the lines...",

@@ -15,12 +15,12 @@ export const WarPercentileCardCompact = ({ warPercentile }) => {
           <Trophy className="w-6 h-6 text-cyan-400" />
         </div>
         <div>
-          <div className="text-2xl font-bold text-white">Player Value</div>
+          <div className="text-2xl font-bold text-white">Observed Value</div>
         </div>
       </div>
 
       {/* CIRCLE */}
-      <div className="relative w-28 h-28 flex items-center justify-center">
+      <div className="relative w-24 h-24 flex items-center justify-center">
         <svg className="absolute inset-0 -rotate-90" viewBox="0 0 44 44">
           <circle
             cx="22"

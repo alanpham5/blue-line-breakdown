@@ -106,7 +106,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
   const [loading, setLoading] = useState(false);
   const [loadingTeams, setLoadingTeams] = useState(false);
   const [initializingCache, setInitializingCache] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState("Initializing...");
+  const [loadingMessage, setLoadingMessage] = useState("Searching...");
   const [initInProgress, setInitInProgress] = useState(false);
   const [showTeamsOverlay, setShowTeamsOverlay] = useState(false);
   const [teamRecord, setTeamRecord] = useState(null);
@@ -122,9 +122,13 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const d = new Date();
   const seasons = Array.from(
-    { length: new Date().getFullYear() - 1 - 2007 },
-    (_, i) => (2008 + i).toString()
+    {
+      length:
+        (d.getMonth() >= 10 ? d.getFullYear() : d.getFullYear() - 1) - 2007,
+    },
+    (_, i) => 2008 + i
   );
 
   useEffect(() => {
@@ -243,6 +247,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
     setInitializingCache(true);
 
     const messages = [
+      "Searching...",
       "Hold on, we need to refresh the data...",
       "Turning on the lights...",
       "Zamboni resurfacing the ice...",

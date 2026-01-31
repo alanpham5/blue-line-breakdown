@@ -83,7 +83,10 @@ export const Tutorial = ({ enablePageLoadAnimations = true }) => {
       <div className="mx-auto relative z-10 flex flex-col flex-1 min-h-0 w-full">
         <button
           className="fixed top-5 right-10 z-50 px-5 py-2 bg-white/20 font-semibold text-white rounded-full hover:bg-white/30 transition"
-          onClick={() => navigate(-1)}
+          onClick={() => {
+            sessionStorage.setItem("fromTutorial", "true");
+            navigate(-1);
+          }}
         >
           Back
         </button>
