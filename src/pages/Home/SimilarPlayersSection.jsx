@@ -43,7 +43,7 @@ export const SimilarPlayersSection = ({
   }, [players]);
 
   return (
-    <div className="liquid-glass-strong rounded-2xl p-4 sm:p-6 border-purple-400/30 light:border-purple-500/40 liquid-glass-animate">
+    <div className="liquid-glass-strong rounded-2xl p-4 sm:p-6 liquid-glass-animate">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-purple-500/20 rounded-lg shrink-0 backdrop-blur-sm border border-purple-400/20 light:bg-purple-400/25 light:border-purple-500/30">

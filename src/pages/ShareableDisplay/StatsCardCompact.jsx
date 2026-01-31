@@ -10,11 +10,7 @@ export const StatsCardCompact = ({
   const topStats = playerUtils.getTopStats(stats, 6);
 
   return (
-    <div
-      className={`liquid-glass-strong rounded-2xl p-5 ${
-        type === "offensive" ? "border-cyan-400/30" : "border-red-400/30"
-      }`}
-    >
+    <div className="liquid-glass-strong rounded-2xl p-5">
       <div className="flex items-center gap-2 mb-2">
         <div
           className={`p-2 rounded-lg ${

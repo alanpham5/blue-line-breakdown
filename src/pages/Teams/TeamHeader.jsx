@@ -51,7 +51,7 @@ export const TeamHeader = ({
             </span>
             {getSeasonName(season)}
           </span>
-          <div className="md:hidden text-sm font-normal ml-2 text-gray-300 light:text-gray-600">
+          <div className="md:hidden text-sm font-normal ml-2 text-gray-300 light:text-gray-600 text-nowrap">
             {teamRecord}
             {teamClinchStatus ? ` (${teamClinchStatus})` : ""}
           </div>

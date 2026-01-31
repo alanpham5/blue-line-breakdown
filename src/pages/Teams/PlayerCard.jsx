@@ -32,7 +32,10 @@ export const PlayerCard = ({ player, team, season, stroke, onPlayerClick }) => {
         <img
           src={getPlayerHeadshot(player.playerId, team, season)}
           alt={player.name}
-          className="w-12 h-12 rounded-full object-cover"
+          className="w-12 h-12 rounded-full object-cover border-2 border-gray-300/50 light:border-gray-400/60 bg-[var(--team-color)]"
+          style={{
+            "--team-color": playerUtils.getTeamColor(team, season),
+          }}
           onError={(e) => {
             e.target.src = "/mobile-icon.png";
           }}
