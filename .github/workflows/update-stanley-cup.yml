@@ -11,6 +11,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-node@v4
         with:
@@ -20,12 +22,12 @@ jobs:
 
       - run: node scripts/updateStanleyCupData.js
 
-      - name: Commit changes
+      - name: Commit & Push changes
         run: |
           git config user.name "stanley-bot"
           git config user.email "bot@github.com"
           git add src/data/stanleyCupData.js
-          git commit -m "Update Stanley Cup champions" || exit 0
-          git push
+          git diff --cached --quiet || git commit -m "Update Stanley Cup champions"
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
