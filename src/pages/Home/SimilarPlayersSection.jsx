@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Users, Filter, Info } from "lucide-react";
 import { SimilarPlayerCard } from "./SimilarPlayerCard";
 import { playerUtils } from "../../utils/playerUtils";
-
+import { Tooltip } from "../../components/Tooltip";
 const d = new Date();
 const seasons = Array.from(
   {
@@ -18,7 +18,6 @@ export const SimilarPlayersSection = ({
   onFilterYearChange,
 }) => {
   const [animationKey, setAnimationKey] = useState(0);
-  const [showTooltip, setShowTooltip] = useState(false);
   const prevPlayersRef = useRef(null);
   useEffect(() => {
     const currentPlayersSignature = players
@@ -54,33 +53,32 @@ export const SimilarPlayersSection = ({
             <h3 className="text-xl sm:text-2xl font-bold text-white light:text-gray-900">
               Most Similar Players
             </h3>
-            <div className="relative">
+            <Tooltip
+              id="similar-players"
+              position="bottom"
+              width="w-64 sm:w-72"
+              content={
+                <div className="space-y-2">
+                  <div className="font-semibold text-purple-400 light:text-purple-600 mb-1">
+                    Player Similarity
+                  </div>
+                  <div>
+                    Players are compared using normalized on-ice, physical, and
+                    performance stats. Similarity scores are relative and based
+                    on how close players are statistically, not raw totals.
+                    Changing the season filter changes the comparison pool,
+                    which can shift both rankings and scores.
+                  </div>
+                </div>
+              }
+            >
               <button
-                onMouseEnter={() => setShowTooltip(true)}
-                onMouseLeave={() => setShowTooltip(false)}
-                onClick={() => setShowTooltip(!showTooltip)}
                 className="shrink-0 text-gray-400 hover:text-gray-200 light:text-gray-500 light:hover:text-gray-700 transition-colors"
                 aria-label="Info about player similarity"
               >
                 <Info size={16} />
               </button>
-              {showTooltip && (
-                <div className="absolute right-0 top-full mt-2 w-64 sm:w-72 p-3 bg-gray-900/95 light:bg-white/95 light:border-gray-200 light:shadow-xl backdrop-blur-sm border border-gray-700/50 light:border-gray-200 rounded-lg text-xs text-gray-200 light:text-gray-700 z-10 shadow-lg pointer-events-none">
-                  <div className="space-y-2">
-                    <div className="font-semibold text-purple-400 light:text-purple-600 mb-1">
-                      Player Similarity
-                    </div>
-                    <div>
-                      Players are compared using normalized on-ice, physical,
-                      and performance stats. Similarity scores are relative and
-                      based on how close players are statistically, not raw
-                      totals. Changing the season filter changes the comparison
-                      pool, which can shift both rankings and scores.
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+            </Tooltip>
           </div>
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">

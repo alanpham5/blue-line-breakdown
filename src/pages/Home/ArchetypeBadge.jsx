@@ -1,15 +1,13 @@
-import React, { useState, useRef, useEffect } from "react";
-import { createPortal } from "react-dom";
 import {
-  Target,
-  Shield,
-  Hammer,
   Crosshair,
-  Dumbbell,
   Wand,
+  Hammer,
+  Shield,
+  Dumbbell,
   ShieldCheck,
   Home,
 } from "lucide-react";
+import { Tooltip } from "../../components/Tooltip";
 
 const archetypeIcons = {
   Sniper: Crosshair,
@@ -38,60 +36,35 @@ const archetypeDefinitions = {
   "Shot Blocker": "Puts their body on the line to stop shots.",
   "Stay-at-Home": "Focuses on defense and protecting the goal area.",
 };
+
 export const ArchetypeBadge = ({ archetype, forceDark = false }) => {
   const Icon = archetypeIcons[archetype] || null;
-  const [showTooltip, setShowTooltip] = useState(false);
-  const badgeRef = useRef(null);
-  const [position, setPosition] = useState({ left: 0, top: 0 });
-  const [isAbove, setIsAbove] = useState(true);
-
-  useEffect(() => {
-    if (showTooltip && badgeRef.current) {
-      const rect = badgeRef.current.getBoundingClientRect();
-      const spaceAbove = rect.top;
-      const spaceBelow = window.innerHeight - rect.bottom;
-      const tooltipHeight = 150; // approximate
-
-      if (spaceAbove > tooltipHeight && spaceAbove > spaceBelow) {
-        setPosition({ left: rect.left + rect.width / 2, top: rect.top });
-        setIsAbove(true);
-      } else if (spaceBelow > tooltipHeight) {
-        setPosition({ left: rect.left + rect.width / 2, top: rect.bottom });
-        setIsAbove(false);
-      } else {
-        setPosition({ left: rect.left + rect.width / 2, top: rect.top });
-        setIsAbove(true);
-      }
-    }
-  }, [showTooltip]);
 
   return (
-    <>
+    <Tooltip
+      id={archetype}
+      position="top"
+      width="w-56 max-w-xs"
+      forceDark={forceDark}
+      content={
+        <>
+          <h2
+            className={`font-semibold inline-flex text-cyan-400 gap-1 mb-1 ${forceDark ? "" : "light:text-cyan-600"}`}
+          >
+            {Icon && <Icon size={14} className="shrink-0" />} {archetype}
+          </h2>
+          <div>
+            {archetypeDefinitions[archetype] || "No description available."}
+          </div>
+        </>
+      }
+    >
       <div
-        ref={badgeRef}
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-        onClick={() => setShowTooltip(!showTooltip)}
-        className={`inline-flex items-center gap-1.5 px-2.5 py-1 bg-cyan-500/10 border border-cyan-400/30 rounded-full text-xs sm:text-sm text-cyan-300 backdrop-blur-sm ${forceDark ? "" : "light:bg-cyan-100 light:border-cyan-300/60 light:text-cyan-800"}`}
+        className={`inline-flex items-center gap-1.5 px-2.5 py-1 bg-cyan-500/10 border border-cyan-400/30 rounded-full text-xs sm:text-sm text-cyan-300 backdrop-blur-sm cursor-default ${forceDark ? "" : "light:bg-cyan-100 light:border-cyan-300/60 light:text-cyan-800"}`}
       >
         {Icon && <Icon size={14} className="shrink-0" />}
         <span className="font-medium">{archetype}</span>
       </div>
-      {showTooltip &&
-        createPortal(
-          <div
-            className={`fixed z-[10000] transform -translate-x-1/2 ${isAbove ? "-translate-y-full" : "-translate-y-0"} w-56 max-w-xs p-3 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-lg text-xs text-gray-200 shadow-lg pointer-events-none ${forceDark ? "" : "light:bg-white/95 light:border-gray-200 light:shadow-xl light:text-gray-700"}`}
-            style={{ left: position.left + "px", top: position.top + "px" }}
-          >
-            <h2 className={`font-semibold inline-flex text-cyan-400 gap-1 mb-1 ${forceDark ? "" : "light:text-cyan-600"}`}>
-              {Icon && <Icon size={14} className="shrink-0" />} {archetype}
-            </h2>
-            <div>
-              {archetypeDefinitions[archetype] || "No description available."}
-            </div>
-          </div>,
-          document.body
-        )}
-    </>
+    </Tooltip>
   );
 };

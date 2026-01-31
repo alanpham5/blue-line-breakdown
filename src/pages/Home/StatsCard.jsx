@@ -1,7 +1,7 @@
-import React, { useState } from "react";
 import { PercentileBar } from "./PercentileBar";
 import { playerUtils } from "../../utils/playerUtils";
 import { Info } from "lucide-react";
+import { Tooltip } from "../../components/Tooltip";
 
 const getColorClasses = (type) =>
   type === "offensive"
@@ -26,7 +26,6 @@ export const StatsCard = ({
   type = "offensive",
   showInfo = true,
 }) => {
-  const [showTooltip, setShowTooltip] = useState(false);
   const topStats = playerUtils.getTopStats(stats, 6);
   const colorClasses = getColorClasses(type);
 
@@ -43,44 +42,45 @@ export const StatsCard = ({
               className={`w-5 h-5 sm:w-6 sm:h-6 ${colorClasses.iconColor}`}
             />
           </div>
-          <h3 className="text-xl sm:text-2xl font-bold text-white light:text-gray-900">{title}</h3>
+          <h3 className="text-xl md:text-2xl font-bold text-white light:text-gray-900">
+            {title}
+          </h3>
         </div>
         <div className="relative flex items-center gap-2">
           <span className="text-sm text-gray-300 light:text-gray-600 whitespace-nowrap">
             percentile vs. league
           </span>
           {showInfo && (
-            <>
+            <Tooltip
+              id={type + "-stats"}
+              position="bottom"
+              width="w-64 sm:w-72"
+              content={
+                <div className="space-y-2">
+                  <div>
+                    <span className="font-semibold text-cyan-400 light:text-cyan-600">
+                      Percentile Adjusted:
+                    </span>{" "}
+                    Values are normalized to show where this player ranks
+                    compared to all NHL players (0-100th percentile).
+                  </div>
+                  <div>
+                    <span className="font-semibold text-cyan-400 light:text-cyan-600">
+                      Ice Time Adjusted:
+                    </span>{" "}
+                    Statistics are adjusted for ice time to provide fair
+                    comparisons across players with different usage.
+                  </div>
+                </div>
+              }
+            >
               <button
-                onMouseEnter={() => setShowTooltip(true)}
-                onMouseLeave={() => setShowTooltip(false)}
-                onClick={() => setShowTooltip(!showTooltip)}
                 className="shrink-0 text-gray-400 hover:text-gray-200 light:text-gray-500 light:hover:text-gray-700 transition-colors"
                 aria-label="Info about percentile calculation"
               >
                 <Info size={16} />
               </button>
-              {showTooltip && (
-                <div className="absolute right-0 top-full mt-2 w-64 sm:w-72 p-3 bg-gray-900/95 light:bg-white/95 light:border-gray-200 light:shadow-xl backdrop-blur-sm border border-gray-700/50 light:border-gray-200 rounded-lg text-xs text-gray-200 light:text-gray-700 z-10 shadow-lg pointer-events-none">
-                  <div className="space-y-2">
-                    <div>
-                      <span className="font-semibold text-cyan-400 light:text-cyan-600">
-                        Percentile Adjusted:
-                      </span>{" "}
-                      Values are normalized to show where this player ranks
-                      compared to all NHL players (0-100th percentile).
-                    </div>
-                    <div>
-                      <span className="font-semibold text-cyan-400 light:text-cyan-600">
-                        Ice Time Adjusted:
-                      </span>{" "}
-                      Statistics are adjusted for ice time to provide fair
-                      comparisons across players with different usage.
-                    </div>
-                  </div>
-                </div>
-              )}
-            </>
+            </Tooltip>
           )}
         </div>
       </div>

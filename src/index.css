@@ -61,9 +61,6 @@ html.light {
   --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.1);
 
   --logo-stroke: rgba(255, 255, 255, 0.85);
-
-  --ice-glow-top: rgba(59, 130, 246, 0.06);
-  --ice-glow-bottom: rgba(14, 165, 233, 0.06);
 }
 
 html {
@@ -194,32 +191,10 @@ html.light .ice-background {
   background-color: #0f172a;
 }
 
-.shareable-display-dark .liquid-glass {
-  background:
-    linear-gradient(
-      135deg,
-      var(--glass-gradient-start) 0%,
-      var(--glass-gradient-mid) 35%,
-      var(--glass-gradient-end) 100%
-    ),
-    var(--glass-bg);
-  border: 1px solid var(--glass-border);
-}
-
-.shareable-display-dark .liquid-glass-strong {
-  background:
-    radial-gradient(
-      120% 140% at 10% 10%,
-      var(--glass-gradient-strong-start) 0%,
-      var(--glass-gradient-strong-mid) 45%,
-      var(--glass-gradient-strong-end) 100%
-    ),
-    var(--glass-bg-strong);
-  border: 1px solid var(--glass-border);
-}
-
-.liquid-glass {
+.liquid-glass,
+.liquid-glass-strong {
   position: relative;
+  border: 1px solid var(--glass-border);
   background:
     linear-gradient(
       135deg,
@@ -228,11 +203,9 @@ html.light .ice-background {
       var(--glass-gradient-end) 100%
     ),
     var(--glass-bg);
-  border: 1px solid var(--glass-border);
 }
 
 .liquid-glass-strong {
-  position: relative;
   background:
     radial-gradient(
       120% 140% at 10% 10%,
@@ -241,31 +214,12 @@ html.light .ice-background {
       var(--glass-gradient-strong-end) 100%
     ),
     var(--glass-bg-strong);
-  border: 1px solid var(--glass-border);
-}
-
-html.light .liquid-glass {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.9) 0%,
-    rgba(255, 255, 255, 0.7) 100%
-  );
-  box-shadow: var(--shadow-base);
-}
-
-html.light .liquid-glass-strong {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(241, 245, 249, 0.9) 100%
-  );
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  box-shadow: var(--shadow-base);
 }
 
 .liquid-glass:hover,
 .liquid-glass-strong:hover {
   border-color: var(--glass-border-hover);
+  box-shadow: var(--shadow-hover);
 }
 
 html.dark .liquid-glass:hover,
@@ -278,9 +232,9 @@ html:not(.light) .liquid-glass-strong:hover {
     inset 0 -1px 0 rgba(0, 0, 0, 0.22);
 }
 
-html.light .liquid-glass:hover,
-html.light .liquid-glass-strong:hover {
-  box-shadow: var(--shadow-hover);
+html.light .liquid-glass,
+html.light .liquid-glass-strong {
+  box-shadow: var(--shadow-base);
 }
 
 @media (max-width: 640px) {
@@ -294,11 +248,51 @@ html.light .liquid-glass-strong:hover {
       inset 0 1px 0 rgba(255, 255, 255, 0.14),
       inset 0 -1px 0 rgba(0, 0, 0, 0.18);
   }
-
   html.light .liquid-glass:hover,
   html.light .liquid-glass-strong:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
+}
+
+.shareable-display-dark {
+  --glass-bg: rgba(30, 41, 59, 0.38);
+  --glass-bg-strong: rgba(15, 23, 42, 0.56);
+  --glass-border: rgba(148, 163, 184, 0.32);
+  --glass-border-hover: rgba(148, 163, 184, 0.45);
+  --glass-gradient-start: rgba(255, 255, 255, 0.08);
+  --glass-gradient-mid: rgba(255, 255, 255, 0.02);
+  --glass-gradient-end: rgba(0, 0, 0, 0.06);
+  --glass-gradient-strong-start: rgba(255, 255, 255, 0.12);
+  --glass-gradient-strong-mid: rgba(255, 255, 255, 0.03);
+  --glass-gradient-strong-end: rgba(0, 0, 0, 0.12);
+  --shadow-base: 0 12px 44px rgba(0, 0, 0, 0.55);
+  --shadow-hover:
+    0 12px 44px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22);
+}
+
+.shareable-display-dark .liquid-glass,
+.shareable-display-dark .liquid-glass-strong {
+  border: 1px solid var(--glass-border);
+  background:
+    linear-gradient(
+      135deg,
+      var(--glass-gradient-start) 0%,
+      var(--glass-gradient-mid) 35%,
+      var(--glass-gradient-end) 100%
+    ),
+    var(--glass-bg);
+}
+
+.shareable-display-dark .liquid-glass-strong {
+  background:
+    radial-gradient(
+      120% 140% at 10% 10%,
+      var(--glass-gradient-strong-start) 0%,
+      var(--glass-gradient-strong-mid) 45%,
+      var(--glass-gradient-strong-end) 100%
+    ),
+    var(--glass-bg-strong);
 }
 
 @keyframes glassAppear {
@@ -333,7 +327,6 @@ html.light .liquid-glass-strong:hover {
   animation: barFadeIn 0.6s ease-out forwards;
   opacity: 0;
 }
-
 @media (max-width: 640px) {
   .percentile-bar-container {
     animation: barFadeIn 0.3s ease-out forwards;
@@ -343,36 +336,10 @@ html.light .liquid-glass-strong:hover {
 .percentile-bar-fill {
   animation: barFill 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
-
 @media (max-width: 640px) {
   .percentile-bar-fill {
     animation: barFill 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
-}
-
-.percentile-bar-container:nth-child(1) {
-  animation-delay: 0.1s;
-}
-.percentile-bar-container:nth-child(2) {
-  animation-delay: 0.2s;
-}
-.percentile-bar-container:nth-child(3) {
-  animation-delay: 0.3s;
-}
-.percentile-bar-container:nth-child(4) {
-  animation-delay: 0.4s;
-}
-.percentile-bar-container:nth-child(5) {
-  animation-delay: 0.5s;
-}
-.percentile-bar-container:nth-child(6) {
-  animation-delay: 0.6s;
-}
-.percentile-bar-container:nth-child(7) {
-  animation-delay: 0.7s;
-}
-.percentile-bar-container:nth-child(8) {
-  animation-delay: 0.8s;
 }
 
 @keyframes playerCardFadeIn {
@@ -385,7 +352,6 @@ html.light .liquid-glass-strong:hover {
     transform: scale(1) translateY(0);
   }
 }
-
 @keyframes playerCardFadeOut {
   from {
     opacity: 1;
@@ -400,7 +366,6 @@ html.light .liquid-glass-strong:hover {
 .player-card-enter {
   animation: playerCardFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
-
 .player-card-exit {
   animation: playerCardFadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
@@ -409,11 +374,9 @@ html.light .liquid-glass-strong:hover {
   .player-card-enter {
     animation: playerCardFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
-
   .player-card-exit {
     animation: playerCardFadeOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
-
   .player-card-enter:nth-child(1) {
     animation-delay: 0.05s;
   }
@@ -455,7 +418,6 @@ html.light .liquid-glass-strong:hover {
     width: 0%;
   }
 }
-
 .gauge-fill {
   animation: gaugeFill 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
