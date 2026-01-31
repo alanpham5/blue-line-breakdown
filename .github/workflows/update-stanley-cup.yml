@@ -1,0 +1,29 @@
+name: Update Stanley Cup Data
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 1 7 *" # July 1st, 00:00 UTC
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install node-fetch
+
+      - run: node scripts/updateStanleyCupData.js
+
+      - name: Commit changes
+        run: |
+          git config user.name "stanley-bot"
+          git config user.email "bot@github.com"
+          git add src/data/stanleyCupData.js
+          git commit -m "Update Stanley Cup champions" || exit 0
+          git push
