@@ -9,7 +9,7 @@ export const TutorialForm = ({
         enablePageLoadAnimations ? "liquid-glass-animate" : ""
       } w-full flex flex-col flex-1 justify-center gap-6`}
     >
-      <h2 className="text-2xl sm:text-3xl font-bold text-white text-center">
+      <h2 className="text-2xl sm:text-3xl font-bold text-white light:text-gray-900 text-center">
         Learn About
       </h2>
 
@@ -19,7 +19,7 @@ export const TutorialForm = ({
           className={`px-6 py-2 rounded-full font-semibold transition ${
             dashboard === "players"
               ? "bg-cyan-500 text-white"
-              : "bg-white/10 text-gray-200 hover:bg-cyan-500/40"
+              : "bg-white/10 light:bg-gray-200/80 text-gray-200 light:text-gray-700 hover:bg-cyan-500/40 light:hover:bg-cyan-100"
           }`}
         >
           Player Dash
@@ -30,7 +30,7 @@ export const TutorialForm = ({
           className={`px-6 py-2 rounded-full font-semibold transition ${
             dashboard === "team"
               ? "bg-blue-500 text-white"
-              : "bg-white/10 text-gray-200 hover:bg-blue-500/40"
+              : "bg-white/10 light:bg-gray-200/80 text-gray-200 light:text-gray-700 hover:bg-blue-500/40 light:hover:bg-blue-100"
           }`}
         >
           Team Dash

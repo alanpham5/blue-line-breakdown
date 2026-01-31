@@ -3,7 +3,7 @@ import { Header } from "../../components/Header";
 
 export const About = ({ enablePageLoadAnimations = true }) => {
   return (
-    <div className="min-h-screen ice-background text-white p-4 sm:p-6">
+    <div className="min-h-screen ice-background text-white light:text-gray-900 p-4 sm:p-6">
       <div className="max-w-6xl mx-auto relative z-10">
         <Header />
 
@@ -11,10 +11,10 @@ export const About = ({ enablePageLoadAnimations = true }) => {
           className={`liquid-glass rounded-2xl p-6 sm:p-8 space-y-6 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
         >
           <section>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-cyan-400">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-cyan-400 light:text-cyan-600">
               About the Platform
             </h2>
-            <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
+            <p className="text-gray-300 light:text-gray-600 text-base sm:text-lg leading-relaxed">
               Blue Line Breakdown grew out of a simple truth: hockey keeps
               evolving. Inspired by my dad, who watched plenty of hockey in the
               2000s and mid-2010s and is now getting back into the game, this
@@ -30,13 +30,13 @@ export const About = ({ enablePageLoadAnimations = true }) => {
               they’re seeing, and a deeper appreciation for how the game
               continues to change while staying familiar.
             </p>
-            <p className="text-gray-300 text-base sm:text-lg leading-relaxed mt-4">
+            <p className="text-gray-300 light:text-gray-600 text-base sm:text-lg leading-relaxed mt-4">
               Powered by{" "}
               <a
                 href="https://moneypuck.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-cyan-400 hover:text-cyan-300 underline"
+                className="text-cyan-400 hover:text-cyan-300 light:text-cyan-600 light:hover:text-cyan-700 underline"
               >
                 MoneyPuck
               </a>{" "}
@@ -46,10 +46,10 @@ export const About = ({ enablePageLoadAnimations = true }) => {
           </section>
 
           <section>
-            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-cyan-400">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-cyan-400 light:text-cyan-600">
               Developer
             </h2>
-            <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
+            <p className="text-gray-300 light:text-gray-600 text-base sm:text-lg leading-relaxed">
               This platform was built by Alan Pham as a side project to explore
               hockey analytics and data visualization. Alan is a software
               engineer and data scientist with a passion for hockey and data
@@ -60,7 +60,7 @@ export const About = ({ enablePageLoadAnimations = true }) => {
                 href="https://alanpham.vercel.app/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-cyan-400 hover:text-cyan-300 underline font-semibold"
+                className="text-cyan-400 hover:text-cyan-300 light:text-cyan-600 light:hover:text-cyan-700 underline font-semibold"
               >
                 here
               </a>

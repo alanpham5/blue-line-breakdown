@@ -38,13 +38,13 @@ const SearchForm = ({
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="block text-sm font-medium text-gray-300 light:text-gray-600 mb-2">
           Season
         </label>
         <select
           value={tempSeason}
           onChange={(e) => setTempSeason(e.target.value)}
-          className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300"
+          className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white light:text-gray-900 transition-all duration-300"
         >
           {[...seasons].reverse().map((s) => (
             <option key={s} value={s}>
@@ -54,14 +54,14 @@ const SearchForm = ({
         </select>
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="block text-sm font-medium text-gray-300 light:text-gray-600 mb-2">
           Team
         </label>
         <select
           value={tempTeam}
           onChange={(e) => setTempTeam(e.target.value)}
           disabled={loadingTeams}
-          className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white light:text-gray-900 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loadingTeams ? (
             <option>Loading...</option>
@@ -77,13 +77,13 @@ const SearchForm = ({
         </select>
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
+        <label className="block text-sm font-medium text-gray-300 light:text-gray-600 mb-2">
           Position
         </label>
         <select
           value={tempPosition}
           onChange={(e) => setTempPosition(e.target.value)}
-          className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white transition-all duration-300"
+          className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white light:text-gray-900 transition-all duration-300"
         >
           <option value="F">Forwards</option>
           <option value="D">Defensemen</option>
@@ -318,16 +318,16 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
   };
 
   return (
-    <div className="min-h-screen ice-background text-white p-4 sm:p-6">
+    <div className="min-h-screen ice-background text-white light:text-gray-900 p-4 sm:p-6">
       {isExternal && initInProgress ? (
         <LoadingScreen />
       ) : (
         <>
           {(initializingCache || showTeamsOverlay) && (
-            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-              <div className="bg-gray-800 rounded-2xl p-8 text-center">
-                <Loader2 className="w-12 h-12 animate-spin text-cyan-400 mx-auto mb-4" />
-                <p className="text-lg font-medium">{loadingMessage}</p>
+            <div className="fixed inset-0 bg-black/70 light:bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+              <div className="bg-gray-800 light:bg-white/95 light:border light:border-gray-200 light:shadow-xl rounded-2xl p-8 text-center">
+                <Loader2 className="w-12 h-12 animate-spin text-cyan-400 light:text-cyan-600 mx-auto mb-4" />
+                <p className="text-lg font-medium text-white light:text-gray-900">{loadingMessage}</p>
               </div>
             </div>
           )}

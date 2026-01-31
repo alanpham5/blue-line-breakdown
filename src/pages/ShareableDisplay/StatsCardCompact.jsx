@@ -25,7 +25,7 @@ export const StatsCardCompact = ({
         >
           <Icon className="w-6 h-6" />
         </div>
-        <h3 className="text-2xl font-bold">{title}</h3>
+        <h3 className="text-2xl font-bold text-white">{title}</h3>
       </div>
 
       <div className="space-y-5">
@@ -37,6 +37,7 @@ export const StatsCardCompact = ({
             type={type}
             showInfo={false}
             compact
+            forceDark
           />
         ))}
       </div>

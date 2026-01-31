@@ -41,7 +41,7 @@ export const LoadingScreen = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center pb-10 justify-center h-screen text-white text-lg">
+    <div className="flex flex-col items-center pb-10 justify-center h-screen text-white light:text-gray-900 text-lg">
       <div
         className={`flex items-center mb-6 transition-opacity duration-1000 ${
           pulse ? "animate-bounce" : ""
@@ -50,25 +50,30 @@ export const LoadingScreen = () => {
         <img
           src="/blb-dark.png"
           alt="Logo"
-          className="w-12 h-12 sm:w-16 sm:h-16"
+          className="w-12 h-12 sm:w-16 sm:h-16 block light:hidden"
         />
-        <h1 className="text-xl sm:text-4xl font-bold text-white ml-2">
+        <img
+          src="/blb-light.png"
+          alt="Logo"
+          className="w-12 h-12 sm:w-16 sm:h-16 hidden light:block"
+        />
+        <h1 className="text-xl sm:text-4xl font-bold text-white light:text-gray-900 ml-2">
           Blue Line Breakdown
         </h1>
       </div>
 
       {showLoader && (
         <div className="liquid-glass-animate">
-          <Loader2 className="w-12 h-12 animate-spin text-cyan-400 mx-auto mb-4" />
-          <p className="text-lg sm:text-xl">{loadingMessage}</p>
+          <Loader2 className="w-12 h-12 animate-spin text-cyan-400 light:text-cyan-600 mx-auto mb-4" />
+          <p className="text-lg sm:text-xl text-white light:text-gray-900">{loadingMessage}</p>
         </div>
       )}
       {showTutorial && (
-        <p className="mt-6 text-center text-sm sm:text-base max-w-md liquid-glass-animate">
+        <p className="mt-6 text-center text-sm sm:text-base max-w-md liquid-glass-animate text-white light:text-gray-900">
           New here? Check out a{" "}
           <a
             href="/tutorial"
-            className="text-cyan-400 hover:text-cyan-600 font-bold"
+            className="text-cyan-400 hover:text-cyan-600 light:text-cyan-600 light:hover:text-cyan-700 font-bold"
           >
             tutorial
           </a>

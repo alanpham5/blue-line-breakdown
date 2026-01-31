@@ -123,20 +123,29 @@ export const playerUtils = {
   getTeamLogoUrl(teamCode, season = null) {
     if (!teamCode) return null;
 
+    const prefersLight =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-color-scheme: light)").matches;
+    const suffix = prefersLight ? "light" : "dark";
+
+    const applySuffix = (path) =>
+      path.replace(/_(?:dark|light)\.svg$/i, `_${suffix}.svg`);
+
+    const base = "https://assets.nhle.com/logos/nhl/svg";
     const teamCodeUpper = teamCode.toUpperCase();
 
     if (teamCodeUpper === "WSH") {
-      return "https://assets.nhle.com/logos/nhl/svg/WSH_secondary_dark.svg";
+      return `${base}/${applySuffix("WSH_secondary_dark.svg")}`;
     }
 
     if (!season) {
       if (teamCodeUpper === "ATL") {
-        return "https://assets.nhle.com/logos/nhl/svg/ATL_19992000-20102011_dark.svg";
+        return `${base}/${applySuffix("ATL_19992000-20102011_dark.svg")}`;
       }
       if (teamCodeUpper === "PHX") {
-        return "https://assets.nhle.com/logos/nhl/svg/PHX_20032004-20132014_dark.svg";
+        return `${base}/${applySuffix("PHX_20032004-20132014_dark.svg")}`;
       }
-      return `https://assets.nhle.com/logos/nhl/svg/${teamCodeUpper}_dark.svg`;
+      return `${base}/${teamCodeUpper}_${suffix}.svg`;
     }
 
     const seasonYear = parseInt(season);
@@ -151,7 +160,6 @@ export const playerUtils = {
       EDM: [{ start: 1996, end: 2010, url: "EDM_19971998-20102011_dark.svg" }],
       NYI: [{ start: 1997, end: 2009, url: "NYI_19971998-20092010_dark.svg" }],
       OTT: [{ start: 2007, end: 2019, url: "OTT_20072008-20192020_dark.svg" }],
-      NYI: [{ start: 2008, end: 2009, url: "NYI_19971998-20092010_dark.svg" }],
       TBL: [{ start: 2008, end: 2010, url: "TBL_20072008-20102011_dark.svg" }],
       NSH: [{ start: 1998, end: 2010, url: "NSH_19981999-20102011_dark.svg" }],
       ANA: [{ start: 2006, end: 2023, url: "ANA_20132014-20232024_dark.svg" }],
@@ -173,12 +181,12 @@ export const playerUtils = {
     if (logoEras[teamCodeUpper]) {
       for (const era of logoEras[teamCodeUpper]) {
         if (seasonYear >= era.start && seasonYear <= era.end) {
-          return `https://assets.nhle.com/logos/nhl/svg/${era.url}`;
+          return `${base}/${applySuffix(era.url)}`;
         }
       }
     }
 
-    return `https://assets.nhle.com/logos/nhl/svg/${teamCodeUpper}_dark.svg`;
+    return `${base}/${teamCodeUpper}_${suffix}.svg`;
   },
 
   formatSeason(year) {

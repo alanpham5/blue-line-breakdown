@@ -16,7 +16,6 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
   };
   return (
     <div className="relative liquid-glass-strong rounded-2xl py-4 px-5 overflow-hidden border-cyan-400/30">
-      {/* TEAM COLOR PATCH */}
       <div
         className="absolute top-0 right-0 h-full w-28"
         style={{
@@ -25,8 +24,6 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
           opacity: 0.9,
         }}
       />
-
-      {/* BLACK ACCENT STRIP */}
       <div
         className="absolute top-0 right-0 h-full w-28"
         style={{
@@ -37,7 +34,6 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
       />
 
       <div className="relative flex items-center gap-4">
-        {/* HEADSHOT */}
         <div
           className="w-32 h-32 rounded-full overflow-hidden border-[3px] border-gray-300/60 shrink-0"
           style={{ backgroundColor: teamColor }}
@@ -56,10 +52,10 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
             }}
           />
         </div>
-
-        {/* INFO */}
         <div className="min-w-0 flex-1">
-          <h2 className="text-4xl font-bold mb-0.5">{player.name}</h2>
+          <h2 className="text-4xl font-bold mb-0.5 text-white">
+            {player.name}
+          </h2>
 
           <div className="text-xl font-semibold text-gray-300">
             {playerUtils.getFullTeamName(player.team, player.season)} •{" "}
@@ -89,13 +85,12 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
           {archetypes.length > 0 && (
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mt-3">
               {archetypes.map((archetype, idx) => (
-                <ArchetypeBadge key={idx} archetype={archetype} />
+                <ArchetypeBadge key={idx} archetype={archetype} forceDark />
               ))}
             </div>
           )}
         </div>
 
-        {/* TEAM LOGO */}
         {teamLogoUrl && (
           <Link
             to={`/teams?season=${player.season}&team=${player.team}&position=${player.position}`}
@@ -104,7 +99,7 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
             <img
               src={teamLogoUrl}
               alt={`${player.team} logo`}
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain team-logo-stroke"
             />
           </Link>
         )}

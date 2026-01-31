@@ -16,14 +16,19 @@ export const Header = () => {
             <img
               src="/blb-dark.png"
               alt="Logo"
-              className="w-12 h-12 sm:w-16 sm:h-16"
+              className="w-12 h-12 sm:w-16 sm:h-16 block light:hidden"
             />
-            <h1 className="text-xl sm:text-4xl font-bold text-white ml-2">
+            <img
+              src="/blb-light.png"
+              alt="Logo"
+              className="w-12 h-12 sm:w-16 sm:h-16 hidden light:block"
+            />
+            <h1 className="text-xl sm:text-4xl font-bold text-white light:text-gray-900 ml-2">
               Blue Line Breakdown
             </h1>
           </Link>
           <button
-            className="sm:hidden text-white text-xl p-2"
+            className="sm:hidden text-white light:text-gray-900 text-xl p-2"
             onClick={toggleMenu}
             aria-label="Toggle menu"
           >
@@ -37,7 +42,7 @@ export const Header = () => {
             <li>
               <Link
                 to="/"
-                className="text-white hover:text-yellow-400 transition block py-2 sm:py-0 text-center sm:text-left"
+                className="text-white light:text-gray-900 hover:text-yellow-400 light:hover:text-cyan-600 transition block py-2 sm:py-0 text-center sm:text-left"
               >
                 Players
               </Link>
@@ -45,7 +50,7 @@ export const Header = () => {
             <li>
               <Link
                 to="/teams"
-                className="text-white hover:text-yellow-400 transition block py-2 sm:py-0 text-center sm:text-left"
+                className="text-white light:text-gray-900 hover:text-yellow-400 light:hover:text-cyan-600 transition block py-2 sm:py-0 text-center sm:text-left"
               >
                 Teams
               </Link>
@@ -53,7 +58,7 @@ export const Header = () => {
             <li>
               <Link
                 to="/about"
-                className="text-white hover:text-yellow-400 transition block py-2 sm:py-0 text-center sm:text-left"
+                className="text-white light:text-gray-900 hover:text-yellow-400 light:hover:text-cyan-600 transition block py-2 sm:py-0 text-center sm:text-left"
               >
                 About
               </Link>

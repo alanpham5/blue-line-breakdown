@@ -333,7 +333,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
   };
 
   return (
-    <div className="min-h-screen ice-background text-white p-4 sm:p-6">
+    <div className="min-h-screen ice-background text-white light:text-gray-900 p-4 sm:p-6">
       {isExternal && initInProgress ? (
         <LoadingScreen />
       ) : (
@@ -345,10 +345,10 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
           ) : (
             <>
               {loading && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center">
+                <div className="fixed inset-0 bg-black/60 light:bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center">
                   <div className="liquid-glass rounded-2xl p-8 flex flex-col items-center gap-4">
-                    <Loader2 className="w-12 h-12 text-cyan-400 animate-spin" />
-                    <p className="text-white text-lg font-medium">
+                    <Loader2 className="w-12 h-12 text-cyan-400 light:text-cyan-600 animate-spin" />
+                    <p className="text-white light:text-gray-900 text-lg font-medium">
                       {loadingMessage}
                     </p>
                   </div>
@@ -452,7 +452,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
                   )}
 
                   {!playerData && !loading && (
-                    <div className="text-center text-gray-400 mt-8 sm:mt-12 px-2">
+                    <div className="text-center text-gray-400 light:text-gray-500 mt-8 sm:mt-12 px-2">
                       <p className="text-base sm:text-lg mb-2">
                         Enter a player name to get started
                       </p>
