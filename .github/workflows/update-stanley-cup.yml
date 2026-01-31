@@ -23,11 +23,12 @@ jobs:
       - run: node scripts/updateStanleyCupData.js
 
       - name: Commit & Push changes
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "stanley-bot"
           git config user.email "bot@github.com"
           git add src/data/stanleyCupData.js
           git diff --cached --quiet || git commit -m "Update Stanley Cup champions"
-          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD:main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git remote set-url origin https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          git push origin HEAD:main
