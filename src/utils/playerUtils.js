@@ -193,6 +193,32 @@ export const playerUtils = {
     return `${base}/${teamCodeUpper}_${suffix}.svg`;
   },
 
+  didWinStanleyCup(team, season) {
+    const stanleyCupChampions = {
+      2008: "PIT",
+      2009: "CHI",
+      2010: "BOS",
+      2011: "LAK",
+      2012: "CHI",
+      2013: "LAK",
+      2014: "CHI",
+      2015: "PIT",
+      2016: "PIT",
+      2017: "WSH",
+      2018: "STL",
+      2019: "TBL",
+      2020: "TBL",
+      2021: "COL",
+      2022: "VGK",
+      2023: "FLA",
+      2024: "FLA",
+      2025: null,
+    };
+    return stanleyCupChampions.hasOwnProperty(season)
+      ? stanleyCupChampions[season] === team
+      : false;
+  },
+
   formatSeason(year) {
     const yearNum = parseInt(year);
     if (isNaN(yearNum)) return year;

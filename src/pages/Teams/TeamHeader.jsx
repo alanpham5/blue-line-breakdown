@@ -12,6 +12,7 @@ export const TeamHeader = ({
   teamClinchStatus,
 }) => {
   const teamHeaderRef = useRef(null);
+  const didWinStanleyCup = playerUtils.didWinStanleyCup(team, season);
   const { actualTheme } = useTheme();
 
   useEffect(() => {
@@ -27,11 +28,24 @@ export const TeamHeader = ({
   return (
     <h2 ref={teamHeaderRef} className="text-center font-bold mt-8 mb-6">
       <div className="flex items-center justify-center md:gap-4 mt-8 mb-6">
-        <img
-          src={playerUtils.getTeamLogoUrl(team, season, actualTheme)}
-          alt={team}
-          className="w-24 lg:w-32 m-2 shrink-0 team-logo-stroke"
-        />
+        <div className="relative w-24 lg:w-32 m-2 shrink-0">
+          {didWinStanleyCup && (
+            <img
+              src="/stanleycup.png"
+              alt="Stanley Cup"
+              className="absolute inset-0 scale-150 w-full h-full object-contain"
+            />
+          )}
+          <img
+            src={playerUtils.getTeamLogoUrl(team, season, actualTheme)}
+            alt={team}
+            className={`relative w-full h-full object-contain team-logo-stroke ${
+              didWinStanleyCup
+                ? `scale-75 z-10 ${actualTheme == "dark" && "team-logo-stroke-cup"}`
+                : ""
+            }`}
+          />
+        </div>
         <h2 className="text-center text-2xl font-bold text-white light:text-gray-900">
           <h2 className="hidden md:flex text-center items-end text-3xl font-bold text-white light:text-gray-900">
             {playerUtils.getFullTeamName(team, season)}

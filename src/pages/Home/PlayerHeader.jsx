@@ -11,22 +11,47 @@ const BiometricItem = ({ icon: Icon, value, label }) => (
   </div>
 );
 
-const TeamLogoLink = ({ teamLogoUrl, player, className }) =>
-  teamLogoUrl ? (
+const TeamLogoLink = ({
+  player,
+  className,
+  actualTheme = "dark",
+  showCup = false,
+}) => {
+  const wonCup =
+    playerUtils.didWinStanleyCup(player.team, player.season) && showCup;
+  const teamLogoUrl = player.team
+    ? playerUtils.getTeamLogoUrl(
+        player.team,
+        player.season,
+        wonCup ? "dark" : actualTheme
+      )
+    : null;
+
+  if (!teamLogoUrl) return null;
+
+  return (
     <Link
       to={`/teams?season=${player.season}&team=${player.team}&position=${player.position}`}
-      className={className}
+      className={wonCup ? `relative ${className}` : className}
     >
+      {wonCup && (
+        <img
+          src="/stanleycup.png"
+          alt="Stanley Cup"
+          className="absolute inset-0 w-full h-full object-contain"
+        />
+      )}
       <img
         src={teamLogoUrl}
         alt={`${player.team} logo`}
-        className="w-full h-full object-contain cursor-pointer team-logo-stroke"
+        className={`relative w-full h-full object-contain cursor-pointer team-logo-stroke ${wonCup ? "scale-75 z-10 team-logo-stroke-cup" : ""}`}
         onError={(e) => {
           e.target.style.display = "none";
         }}
       />
     </Link>
-  ) : null;
+  );
+};
 
 export const PlayerHeader = ({ player, biometrics }) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -36,6 +61,7 @@ export const PlayerHeader = ({ player, biometrics }) => {
   const teamLogoUrl = player.team
     ? playerUtils.getTeamLogoUrl(player.team, player.season, actualTheme)
     : null;
+
   const archetypes = player.archetypes || [];
 
   const activateShareable = () => {
@@ -110,7 +136,7 @@ export const PlayerHeader = ({ player, biometrics }) => {
             />
           </div>
           <TeamLogoLink
-            teamLogoUrl={teamLogoUrl}
+            actualTheme={actualTheme}
             player={player}
             className="absolute -bottom-8 left-1/2 -translate-x-1/2 xl:hidden w-16 h-16 flex items-center justify-center z-10 hover:opacity-80 transition-opacity"
           />
@@ -169,7 +195,8 @@ export const PlayerHeader = ({ player, biometrics }) => {
           </div>
         </div>
         <TeamLogoLink
-          teamLogoUrl={teamLogoUrl}
+          actualTheme={actualTheme}
+          showCup={true}
           player={player}
           className="hidden xl:flex shrink-0 w-40 lg:h-40 items-center justify-center hover:opacity-80 transition-opacity"
         />

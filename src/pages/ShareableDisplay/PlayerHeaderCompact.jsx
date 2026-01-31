@@ -6,7 +6,15 @@ import { useSearchParams } from "react-router-dom";
 
 export const PlayerHeaderCompact = ({ player, biometrics }) => {
   const teamColor = playerUtils.getTeamColor(player.team, player.season);
-  const teamLogoUrl = playerUtils.getTeamLogoUrl(player.team, player.season);
+  const didWinStanleyCup = playerUtils.didWinStanleyCup(
+    player.team,
+    player.season
+  );
+  const teamLogoUrl = playerUtils.getTeamLogoUrl(
+    player.team,
+    player.season,
+    "dark"
+  );
   const [searchParams, setSearchParams] = useSearchParams();
   const archetypes = player.archetypes;
   const onReset = () => {
@@ -94,12 +102,21 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
         {teamLogoUrl && (
           <Link
             to={`/teams?season=${player.season}&team=${player.team}&position=${player.position}`}
-            className="shrink-0 w-36 h-36"
+            className="relative shrink-0 w-36 h-36"
           >
+            {didWinStanleyCup && (
+              <img
+                src="/stanleycup.png"
+                alt="Stanley Cup"
+                className="absolute inset-0 w-full h-full object-contain"
+              />
+            )}
             <img
               src={teamLogoUrl}
               alt={`${player.team} logo`}
-              className="w-full h-full object-contain team-logo-stroke"
+              className={`relative w-full h-full object-contain team-logo-stroke ${
+                didWinStanleyCup ? "scale-75 z-10 team-logo-stroke-cup" : ""
+              }`}
             />
           </Link>
         )}
