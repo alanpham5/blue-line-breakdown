@@ -30,7 +30,7 @@ export const TeamHeader = ({
         <img
           src={playerUtils.getTeamLogoUrl(team, season, actualTheme)}
           alt={team}
-          className="w-24 lg:w-32 shrink-0 team-logo-stroke"
+          className="w-24 lg:w-32 m-2 shrink-0 team-logo-stroke"
         />
         <h2 className="text-center text-2xl font-bold text-white light:text-gray-900">
           <h2 className="hidden md:flex text-center items-end text-3xl font-bold text-white light:text-gray-900">
@@ -43,7 +43,9 @@ export const TeamHeader = ({
             )}
           </h2>
           <span className="text-xl md:text-2xl font-bold">
-            <span className="md:hidden">{position === "F" ? "F" : "D"} • </span>
+            <span className="md:hidden">
+              {position === "F" ? "FWD" : "DEF"} •{" "}
+            </span>
             <span className="hidden md:inline">
               {position === "F" ? "Forwards" : "Defensemen"} •{" "}
             </span>
