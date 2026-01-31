@@ -125,7 +125,7 @@ export const Slideshow = ({ slides, enablePageLoadAnimations = true }) => {
           <p
             key={current}
             className={`
-              text-white text-center text-base sm:text-xl leading-snug
+              text-white light:text-gray-900 text-center text-base sm:text-xl leading-snug
               transition-all duration-300 ease-out
               ${
                 isAnimating
@@ -141,7 +141,7 @@ export const Slideshow = ({ slides, enablePageLoadAnimations = true }) => {
         <div className="h-[3.25rem] flex items-center gap-4">
           <button
             onClick={() => changeSlide("prev")}
-            className="px-5 py-2 bg-white/20 text-white rounded-full hover:bg-white/30 transition"
+            className="px-5 py-2 bg-white/20 light:bg-gray-200/80 text-white light:text-gray-900 rounded-full hover:bg-white/30 light:hover:bg-gray-300 transition"
           >
             Prev
           </button>
@@ -151,7 +151,7 @@ export const Slideshow = ({ slides, enablePageLoadAnimations = true }) => {
               <span
                 key={idx}
                 className={`w-4 h-4 rounded-full transition ${
-                  current === idx ? "bg-white" : "bg-white/30"
+                  current === idx ? "bg-white light:bg-gray-800" : "bg-white/30 light:bg-gray-400"
                 }`}
               />
             ))}
@@ -159,7 +159,7 @@ export const Slideshow = ({ slides, enablePageLoadAnimations = true }) => {
 
           <button
             onClick={() => changeSlide("next")}
-            className="px-5 py-2 bg-white/20 text-white rounded-full hover:bg-white/30 transition"
+            className="px-5 py-2 bg-white/20 light:bg-gray-200/80 text-white light:text-gray-900 rounded-full hover:bg-white/30 light:hover:bg-gray-300 transition"
           >
             Next
           </button>

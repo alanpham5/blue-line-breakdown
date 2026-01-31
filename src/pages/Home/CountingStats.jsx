@@ -26,17 +26,17 @@ export const CountingStats = ({ stats }) => {
 
   return (
     <div className="liquid-glass-strong rounded-2xl p-4 sm:p-6 liquid-glass-animate">
-      <div className="grid grid-flow-col auto-cols-fr divide-x divide-white/30 text-center">
+      <div className="grid grid-flow-col auto-cols-fr divide-x divide-white/30 light:divide-gray-300 text-center">
         {statsOrder.map((statKey) => (
           <div
             key={statKey}
             className="flex flex-col items-center justify-center px-2"
           >
-            <div className="text-xs sm:text-sm text-gray-300 uppercase tracking-wide">
+            <div className="text-xs sm:text-sm text-gray-300 light:text-gray-600 uppercase tracking-wide">
               <span className="hidden lg:inline">{labels[statKey] ?? "-"}</span>
               <span className="lg:hidden">{mobileLabels[statKey] ?? "-"}</span>
             </div>
-            <div className="text-2xl sm:text-3xl font-semibold text-white leading-tight">
+            <div className="text-2xl sm:text-3xl font-semibold text-white light:text-gray-900 leading-tight">
               {stats[statKey]}
             </div>
           </div>

@@ -35,7 +35,7 @@ export const WarPercentileCard = ({ warPercentile, showInfo = true }) => {
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-lg font-bold">Observed Value</h3>
+              <h3 className="text-lg font-bold text-white light:text-gray-900">Observed Value</h3>
               {showInfo && (
                 <div
                   className="relative z-[10000]"
@@ -45,18 +45,18 @@ export const WarPercentileCard = ({ warPercentile, showInfo = true }) => {
                     onMouseEnter={() => setShowTooltip(true)}
                     onMouseLeave={() => setShowTooltip(false)}
                     onClick={() => setShowTooltip(!showTooltip)}
-                    className="shrink-0 text-gray-400 hover:text-gray-200 transition-colors"
+                    className="shrink-0 text-gray-400 hover:text-gray-200 light:text-gray-500 light:hover:text-gray-700 transition-colors"
                     aria-label="Info about wins above replacement"
                   >
                     <Info size={16} />
                   </button>
                   {showTooltip && (
                     <div
-                      className="absolute left-0 bottom-full mb-2 w-56 max-w-xs p-3 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-lg text-xs text-gray-200 z-[9999] shadow-lg"
+                      className="absolute left-0 bottom-full mb-2 w-56 max-w-xs p-3 bg-gray-900/95 light:bg-white/95 light:border-gray-200 light:shadow-xl backdrop-blur-sm border border-gray-700/50 light:border-gray-200 rounded-lg text-xs text-gray-200 light:text-gray-700 z-[9999] shadow-lg"
                       style={{ pointerEvents: "none" }}
                     >
                       <div className="space-y-2">
-                        <div className="font-semibold text-cyan-400">
+                        <div className="font-semibold text-cyan-400 light:text-cyan-600">
                           Season Observed Value
                         </div>
                         <div>
@@ -71,7 +71,7 @@ export const WarPercentileCard = ({ warPercentile, showInfo = true }) => {
                 </div>
               )}
             </div>
-            <div className="text-xs text-gray-300 mt-1">
+            <div className="text-xs text-gray-300 light:text-gray-600 mt-1">
               percentile vs. league
             </div>
           </div>
@@ -87,7 +87,7 @@ export const WarPercentileCard = ({ warPercentile, showInfo = true }) => {
                 cy="22"
                 r={radius}
                 fill="none"
-                className="stroke-gray-800/40"
+                className="stroke-gray-800/40 light:stroke-gray-300"
                 strokeWidth="3"
               />
               <circle
@@ -104,7 +104,7 @@ export const WarPercentileCard = ({ warPercentile, showInfo = true }) => {
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">
-                <div className="text-lg sm:text-xl font-bold text-white">
+                <div className="text-lg sm:text-xl font-bold text-white light:text-gray-900">
                   {displayValue}
                 </div>
               </div>

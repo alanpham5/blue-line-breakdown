@@ -19,7 +19,6 @@ export const WarPercentileCardCompact = ({ warPercentile }) => {
         </div>
       </div>
 
-      {/* CIRCLE */}
       <div className="relative w-24 h-24 flex items-center justify-center">
         <svg className="absolute inset-0 -rotate-90" viewBox="0 0 44 44">
           <circle

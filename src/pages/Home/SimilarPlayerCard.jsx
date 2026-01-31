@@ -40,7 +40,7 @@ export const SimilarPlayerCard = ({ player, onClick, animationKey }) => {
         className={`relative mb-1 sm:mb-2 ${isMobile ? "" : "transition-transform duration-300 sm:group-hover:scale-110 group-active:scale-105"}`}
       >
         <div
-          className={`w-14 h-14 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 sm:border-4 border-gray-600/40 ${isMobile ? "" : "sm:group-hover:border-cyan-400/80"} transition-all duration-300 backdrop-blur-sm shadow-lg ${isMobile ? "" : "sm:group-hover:shadow-cyan-500/30"}`}
+          className={`w-14 h-14 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 sm:border-4 border-gray-600/40 light:border-gray-400/60 ${isMobile ? "" : "sm:group-hover:border-cyan-400/80"} transition-all duration-300 backdrop-blur-sm shadow-lg ${isMobile ? "" : "sm:group-hover:shadow-cyan-500/30"}`}
         >
           <img
             src={playerUtils.getPlayerHeadshot(
@@ -55,14 +55,14 @@ export const SimilarPlayerCard = ({ player, onClick, animationKey }) => {
             }}
           />
         </div>
-        <div className="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1 bg-gradient-to-r from-cyan-500/90 to-blue-500/90 backdrop-blur-sm text-white text-[10px] sm:text-xs font-bold rounded-full w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center border-2 border-gray-900/50 shadow-lg shadow-cyan-500/30">
+        <div className="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1 bg-gradient-to-r from-cyan-500/90 to-blue-500/90 backdrop-blur-sm text-white text-[10px] sm:text-xs font-bold rounded-full w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center border-2 border-gray-900/50 light:border-white/60 shadow-lg shadow-cyan-500/30">
           {Math.round(player.similarity)}
         </div>
       </div>
-      <p className="text-[10px] sm:text-xs font-semibold text-white text-center leading-tight">
+      <p className="text-[10px] sm:text-xs font-semibold text-white light:text-gray-900 text-center leading-tight">
         {player.name}
       </p>
-      <p className="text-[10px] sm:text-xs text-gray-400">
+      <p className="text-[10px] sm:text-xs text-gray-400 light:text-gray-500">
         {playerUtils.formatSeason(player.season)}
       </p>
     </div>

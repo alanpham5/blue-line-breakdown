@@ -44,14 +44,14 @@ export const SimilarPlayersSection = ({
   }, [players]);
 
   return (
-    <div className="liquid-glass-strong rounded-2xl p-4 sm:p-6 border-purple-400/30 liquid-glass-animate">
+    <div className="liquid-glass-strong rounded-2xl p-4 sm:p-6 border-purple-400/30 light:border-purple-500/40 liquid-glass-animate">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-purple-500/20 rounded-lg shrink-0 backdrop-blur-sm border border-purple-400/20">
-            <Users className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
+          <div className="p-2 bg-purple-500/20 rounded-lg shrink-0 backdrop-blur-sm border border-purple-400/20 light:bg-purple-400/25 light:border-purple-500/30">
+            <Users className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400 light:text-purple-600" />
           </div>
           <div className="flex items-center gap-2">
-            <h3 className="text-xl sm:text-2xl font-bold">
+            <h3 className="text-xl sm:text-2xl font-bold text-white light:text-gray-900">
               Most Similar Players
             </h3>
             <div className="relative">
@@ -59,15 +59,15 @@ export const SimilarPlayersSection = ({
                 onMouseEnter={() => setShowTooltip(true)}
                 onMouseLeave={() => setShowTooltip(false)}
                 onClick={() => setShowTooltip(!showTooltip)}
-                className="shrink-0 text-gray-400 hover:text-gray-200 transition-colors"
+                className="shrink-0 text-gray-400 hover:text-gray-200 light:text-gray-500 light:hover:text-gray-700 transition-colors"
                 aria-label="Info about player similarity"
               >
                 <Info size={16} />
               </button>
               {showTooltip && (
-                <div className="absolute right-0 top-full mt-2 w-64 sm:w-72 p-3 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-lg text-xs text-gray-200 z-10 shadow-lg pointer-events-none">
+                <div className="absolute right-0 top-full mt-2 w-64 sm:w-72 p-3 bg-gray-900/95 light:bg-white/95 light:border-gray-200 light:shadow-xl backdrop-blur-sm border border-gray-700/50 light:border-gray-200 rounded-lg text-xs text-gray-200 light:text-gray-700 z-10 shadow-lg pointer-events-none">
                   <div className="space-y-2">
-                    <div className="font-semibold text-purple-400 mb-1">
+                    <div className="font-semibold text-purple-400 light:text-purple-600 mb-1">
                       Player Similarity
                     </div>
                     <div>
@@ -84,11 +84,11 @@ export const SimilarPlayersSection = ({
           </div>
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Filter className="w-5 h-5 text-gray-400 shrink-0" />
+          <Filter className="w-5 h-5 text-gray-400 light:text-gray-500 shrink-0" />
           <select
             value={filterYear || ""}
             onChange={(e) => onFilterYearChange(e.target.value || null)}
-            className="flex-1 sm:flex-initial min-w-0 liquid-glass-strong rounded-full px-3 sm:px-4 py-2 text-white text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-purple-400/50 transition-all duration-300"
+            className="flex-1 sm:flex-initial min-w-0 liquid-glass-strong rounded-full px-3 sm:px-4 py-2 text-white light:text-gray-900 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-purple-400/50 transition-all duration-300"
           >
             <option value="">All Seasons</option>
             {[...seasons].reverse().map((year) => (

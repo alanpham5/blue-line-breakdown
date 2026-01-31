@@ -28,13 +28,13 @@ export const TeamHeader = ({
         <img
           src={playerUtils.getTeamLogoUrl(team, season)}
           alt={team}
-          className="w-24 lg:w-32 shrink-0"
+          className="w-24 lg:w-32 shrink-0 team-logo-stroke"
         />
-        <h2 className="text-center text-2xl font-bold">
-          <h2 className="hidden md:flex text-center items-end text-3xl font-bold">
+        <h2 className="text-center text-2xl font-bold text-white light:text-gray-900">
+          <h2 className="hidden md:flex text-center items-end text-3xl font-bold text-white light:text-gray-900">
             {playerUtils.getFullTeamName(team, season)}
             {teamRecord && (
-              <span className="text-lg font-normal ml-2 text-gray-300">
+              <span className="text-lg font-normal ml-2 text-gray-300 light:text-gray-600">
                 {teamRecord}
                 {teamClinchStatus ? ` (${teamClinchStatus})` : ""}
               </span>
@@ -47,7 +47,7 @@ export const TeamHeader = ({
             </span>
             {getSeasonName(season)}
           </span>
-          <div className="md:hidden text-sm font-normal ml-2 text-gray-300">
+          <div className="md:hidden text-sm font-normal ml-2 text-gray-300 light:text-gray-600">
             {teamRecord}
             {teamClinchStatus ? ` (${teamClinchStatus})` : ""}
           </div>

@@ -79,10 +79,10 @@ export const Tutorial = ({ enablePageLoadAnimations = true }) => {
   };
 
   return (
-    <div className="flex flex-col h-screen mx-auto max-w-6xl text-white p-4 sm:p-6 pt-8 sm:pt-12">
+    <div className="flex flex-col h-screen mx-auto max-w-6xl text-white light:text-gray-900 p-4 sm:p-6 pt-8 sm:pt-12">
       <div className="mx-auto relative z-10 flex flex-col flex-1 min-h-0 w-full">
         <button
-          className="fixed top-5 right-10 z-50 px-5 py-2 bg-white/20 font-semibold text-white rounded-full hover:bg-white/30 transition"
+          className="fixed top-5 right-10 z-50 px-5 py-2 bg-white/20 light:bg-gray-200/80 font-semibold text-white light:text-gray-900 rounded-full hover:bg-white/30 light:hover:bg-gray-300 transition"
           onClick={() => {
             sessionStorage.setItem("fromTutorial", "true");
             navigate(-1);
@@ -92,7 +92,6 @@ export const Tutorial = ({ enablePageLoadAnimations = true }) => {
         </button>
 
         <div className="flex flex-col flex-1 min-h-0 gap-4">
-          {/* Tutorial Form wrapper */}
           <div
             className={
               dashboard
