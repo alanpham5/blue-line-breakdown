@@ -27,3 +27,5 @@ jobs:
           git add src/data/stanleyCupData.js
           git commit -m "Update Stanley Cup champions" || exit 0
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
