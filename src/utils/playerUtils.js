@@ -22,7 +22,7 @@ export const playerUtils = {
     const retroColors = {
       NSH: [{ start: 1998, end: 2010, color: "#AFB7BA" }],
       ANA: [{ start: 2006, end: 2012, color: "#B5985A" }],
-      DAL: [{ start: 1994, end: 2012, color: "#84754E" }],
+      DAL: [{ start: 1994, end: 2012, color: "#C69214" }],
       PIT: [{ start: 2006, end: 2015, color: "#C5B358" }],
       EDM: [{ start: 1996, end: 2010, color: "#B87333" }],
     };
@@ -154,6 +154,7 @@ export const playerUtils = {
         { start: 2006, end: 2009, url: "BUF_20062007-20092010_dark.svg" },
         { start: 2010, end: 2019, url: "BUF_20102011-20192020_dark.svg" },
       ],
+      CGY: [{ start: 1994, end: 2019, url: "CGY_19941995-20192020_dark.svg" }],
       EDM: [
         { start: 1996, end: 2010, url: "EDM_19971998-20102011_dark.svg" },
         { start: 2017, end: 2021, url: "EDM_20172018-20212022_light.svg" },
