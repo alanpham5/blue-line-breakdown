@@ -24,10 +24,9 @@ export const playerUtils = {
     const retroColors = {
       NSH: [{ start: 1998, end: 2010, color: "#AFB7BA" }],
       ANA: [{ start: 2006, end: 2012, color: "#B5985A" }],
-      NYR: [{ start: 2025, end: 2025, color: "#026AAA" }],
+      NYR: [{ start: 2025, end: 2025, color: "#0072CE" }],
       DAL: [{ start: 1994, end: 2012, color: "#C69214" }],
       PIT: [{ start: 2006, end: 2015, color: "#C5B358" }],
-      TOR: [{ start: 2016, end: 2016, color: "#A2AAAD" }],
       EDM: [{ start: 1996, end: 2010, color: "#B87333" }],
     };
     const teamColors = {
@@ -150,6 +149,24 @@ export const playerUtils = {
     }
 
     const seasonYear = parseInt(season);
+
+    if (teamCodeUpper === "TOR" && seasonYear == 2016) {
+      return "/leafs-100.svg";
+    }
+    if (teamCodeUpper === "MTL" && (seasonYear == 2008 || seasonYear == 2009)) {
+      return "/canadiens-100-1.svg";
+    }
+    if (teamCodeUpper === "BOS" && seasonYear == 2023) {
+      return "/bruins-100.svg";
+    }
+    if (seasonYear === 2025) {
+      if (teamCodeUpper === "NYR") return "/rangers-100.svg";
+      else if (teamCodeUpper === "DET") return "/redwings-100.svg";
+      else if (teamCodeUpper === "CHI")
+        return actualTheme == "dark"
+          ? "/blackhawks-100-dark.svg"
+          : "/blackhawks-100.svg";
+    }
 
     const logoEras = {
       ATL: [{ start: 1999, end: 2010, url: "ATL_19992000-20102011_dark.svg" }],
