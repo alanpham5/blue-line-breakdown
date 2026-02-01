@@ -20,60 +20,199 @@ export const playerUtils = {
     return "https://assets.nhle.com/mugs/nhl/default-skater.png";
   },
 
-  getTeamColor(teamCode, season = null) {
+  getTeamColor(teamCode, season = null, actualTheme = "dark") {
     const retroColors = {
-      NSH: [{ start: 1998, end: 2010, color: "#AFB7BA" }],
-      ANA: [{ start: 2006, end: 2012, color: "#B5985A" }],
-      NYR: [{ start: 2025, end: 2025, color: "#0072CE" }],
-      DAL: [{ start: 1994, end: 2012, color: "#C69214" }],
-      PIT: [{ start: 2006, end: 2015, color: "#C5B358" }],
-      EDM: [{ start: 1996, end: 2010, color: "#B87333" }],
+      NSH: [
+        {
+          start: 1998,
+          end: 2010,
+          primary: "#041E42",
+          secondary: "#AFB7BA",
+          worksOnDark: false,
+        },
+      ],
+      BUF: [
+        {
+          start: 2006,
+          end: 2019,
+          primary: "#041E42",
+          secondary: "#FFB81C",
+          worksOnDark: false,
+        },
+      ],
+      LAK: [
+        {
+          start: 1998,
+          end: 2010,
+          primary: "#250E62",
+          secondary: "#A2AAAD",
+          worksOnDark: false,
+        },
+      ],
+      ANA: [
+        {
+          start: 2006,
+          end: 2012,
+          primary: "#000000",
+          secondary: "#B5985A",
+          worksOnDark: false,
+        },
+        {
+          start: 2013,
+          end: 2023,
+          primary: "#000000",
+          secondary: "#FC4C02",
+          worksOnDark: false,
+        },
+      ],
+      NYR: [
+        {
+          start: 2025,
+          end: 2025,
+          primary: "#0072CE",
+          secondary: "#CE1126",
+          worksOnDark: true,
+        },
+      ],
+      DAL: [
+        {
+          start: 1994,
+          end: 2012,
+          primary: "#000000",
+          secondary: "#C69214",
+          worksOnDark: false,
+        },
+      ],
+      PIT: [
+        {
+          start: 2006,
+          end: 2015,
+          primary: "#000000",
+          secondary: "#C5B358",
+          worksOnDark: false,
+        },
+      ],
+      EDM: [
+        {
+          start: 1996,
+          end: 2010,
+          primary: "#041E42",
+          secondary: "#AD7C59",
+          worksOnDark: false,
+        },
+        {
+          start: 2017,
+          end: 2021,
+          primary: "#FC4C02",
+          secondary: "#041E42",
+          worksOnDark: true,
+        },
+      ],
+      FLA: [
+        {
+          start: 2003,
+          end: 2010,
+          primary: "#041E42",
+          secondary: "#C8102E",
+          worksOnDark: false,
+        },
+      ],
+      STL: [
+        {
+          start: 1995,
+          end: 2024,
+          primary: "#002F87",
+          secondary: "#FCB514",
+          worksOnDark: false,
+        },
+      ],
+      NYI: [
+        {
+          start: 1995,
+          end: 2009,
+          primary: "#041E42",
+          secondary: "#FC4C02",
+          worksOnDark: false,
+        },
+      ],
     };
-    const teamColors = {
-      ANA: "#F47A38", // Ducks orange
-      ARI: "#8C2633", // Coyotes brick red
-      ATL: "#5C88Da", // Thrashers Light Blue
-      BOS: "#FFB81C", // Bruins gold
-      BUF: "#FFB81C", // Sabres navy
-      CGY: "#C8102E", // Flames red
-      CHI: "#CF0A2C", // Blackhawks red
-      CAR: "#CC0000", // Hurricanes red
-      COL: "#6F263D", // Avalanche burgundy
-      CBJ: "#CE1126", // Blue Jackets union blue
-      DAL: "#006847", // Stars green
-      DET: "#CE1126", // Red Wings red
-      EDM: "#FF4C00", // Oilers orange
-      FLA: "#C8102E", // Panthers red
-      LAK: "#AFB7BA", // Kings silver
-      MIN: "#154734", // Wild green
-      MTL: "#AF1E2D", // Canadiens red
-      NJD: "#CE1126", // Devils red
-      NSH: "#FFB81C", // Predators gold
-      NYI: "#F47D30", // Islanders Orange
-      NYR: "#CE1126", // Rangers Red
-      OTT: "#C52032", // Senators red
-      PHI: "#F74902", // Flyers orange
-      PIT: "#FCB514", // Penguins gold
-      SEA: "#68A2B9", // Kraken Seafoam
-      SJS: "#006D75", // Sharks teal
-      STL: "#FCB514", // Blues blue
-      TBL: "#002868", // Lightning blue
-      TOR: "#002e83", // White
-      UTA: "#6CACE3", // Mammoth blue
-      VAN: "#00843D", // Canucks green
-      VGK: "#B4975A", // Golden Knights gold
-      WSH: "#C8102E", // Capitals red
-      WPG: "#0363C2", // Jets blue
+
+    const teamBrand = {
+      ANA: { primary: "#CF4520", secondary: "#000000", worksOnDark: true },
+      ARI: { primary: "#6F263D", secondary: "#862633", worksOnDark: false },
+      ATL: { primary: "#041E42", secondary: "#5C88DA", worksOnDark: false },
+      BOS: { primary: "#000000", secondary: "#FFB81C", worksOnDark: false },
+      BUF: { primary: "#003087", secondary: "#FFB81C", worksOnDark: false },
+      CGY: { primary: "#C8102E", secondary: "#F1BE48", worksOnDark: true },
+      CHI: { primary: "#CF0A2C", secondary: "#000000", worksOnDark: true },
+      CAR: { primary: "#CC0000", secondary: "#000000", worksOnDark: true },
+      COL: { primary: "#6F263D", secondary: "#236192", worksOnDark: true },
+      CBJ: { primary: "#002654", secondary: "#CE1126", worksOnDark: false },
+      DAL: { primary: "#006847", secondary: "#8F8F8C", worksOnDark: true },
+      DET: { primary: "#CE1126", secondary: "#FFFFFF", worksOnDark: true },
+      EDM: { primary: "#00205B", secondary: "#FF4C00", worksOnDark: false },
+      FLA: { primary: "#C8102E", secondary: "#041E42", worksOnDark: true },
+      LAK: { primary: "#000000", secondary: "#AFB7BA", worksOnDark: false },
+      MIN: { primary: "#154734", secondary: "#A6192E", worksOnDark: false },
+      MTL: { primary: "#AF1E2D", secondary: "#192168", worksOnDark: true },
+      NJD: { primary: "#CE1126", secondary: "#000000", worksOnDark: true },
+      NSH: { primary: "#efad1c", secondary: "#041E42", worksOnDark: true },
+      NYI: { primary: "#003087", secondary: "#FC4C02", worksOnDark: false },
+      NYR: { primary: "#0038A8", secondary: "#CE1126", worksOnDark: false },
+      OTT: { primary: "#C52032", secondary: "#D69F0F", worksOnDark: true },
+      PHI: { primary: "#F74902", secondary: "#000000", worksOnDark: true },
+      PIT: { primary: "#000000", secondary: "#ffb71cee", worksOnDark: false },
+      SEA: { primary: "#68A2B9", secondary: "#001628", worksOnDark: true },
+      SJS: { primary: "#006D75", secondary: "#000000", worksOnDark: true },
+      STL: { primary: "#0072CE", secondary: "#FCB514", worksOnDark: false },
+      TBL: { primary: "#002868", secondary: "#002c7e", worksOnDark: false },
+      TOR: { primary: "#00205B", secondary: "#002c7e", worksOnDark: false },
+      UTA: { primary: "#6CACE3", secondary: "#000000", worksOnDark: true },
+      VAN: { primary: "#00205B", secondary: "#00843D", worksOnDark: false },
+      VGK: { primary: "#B4975A", secondary: "#333F42", worksOnDark: true },
+      WSH: { primary: "#C8102E", secondary: "#041E42", worksOnDark: true },
+      WPG: { primary: "#041E42", secondary: "#0363C2", worksOnDark: false },
     };
-    if (retroColors[teamCode]) {
+
+    let brand = teamBrand[teamCode];
+
+    // --- Retro override (keeps full brand shape) ---
+    if (retroColors[teamCode] && season) {
       const seasonYear = parseInt(season);
       for (const era of retroColors[teamCode]) {
         if (seasonYear >= era.start && seasonYear <= era.end) {
-          return era.color;
+          brand = {
+            ...brand,
+            ...era, // override primary/secondary/worksOnDark
+          };
+          break;
         }
       }
     }
-    return teamColors[teamCode] || "#AFB7BA"; // Default gray if team not found
+
+    if (!brand) return "#AFB7BA";
+
+    // Light mode → always primary
+    if (actualTheme === "light") {
+      return brand.primary;
+    }
+
+    // Dark mode → keep primary if it works
+    if (brand.worksOnDark) {
+      return brand.primary;
+    }
+
+    // Otherwise use secondary if usable
+    if (
+      brand.secondary &&
+      brand.secondary !== "#FFFFFF" &&
+      brand.secondary !== "#000000"
+    ) {
+      return brand.secondary;
+    }
+
+    // Mono fallback
+    return brand.primary;
   },
 
   getFullTeamName(teamCode, season = null) {
@@ -167,6 +306,11 @@ export const playerUtils = {
           ? "/blackhawks-100-dark.svg"
           : "/blackhawks-100.svg";
     }
+    if (teamCodeUpper === "NSH" && seasonYear >= 1998 && seasonYear <= 2010) {
+      return actualTheme === "dark"
+        ? `${base}/NSH_19981999-20102011_light.svg`
+        : `${base}/NSH_19981999-20102011_dark.svg`;
+    }
 
     const logoEras = {
       ATL: [{ start: 1999, end: 2010, url: "ATL_19992000-20102011_dark.svg" }],
@@ -185,7 +329,6 @@ export const playerUtils = {
       NYI: [{ start: 1997, end: 2009, url: "NYI_19971998-20092010_dark.svg" }],
       OTT: [{ start: 2007, end: 2019, url: "OTT_20072008-20192020_dark.svg" }],
       TBL: [{ start: 2008, end: 2010, url: "TBL_20072008-20102011_dark.svg" }],
-      NSH: [{ start: 1998, end: 2010, url: "NSH_19981999-20102011_dark.svg" }],
       ANA: [{ start: 2006, end: 2023, url: "ANA_20132014-20232024_dark.svg" }],
       DAL: [{ start: 1994, end: 2012, url: "DAL_19941995-20122013_dark.svg" }],
       FLA: [{ start: 1999, end: 2015, url: "FLA_19992000-20152016_dark.svg" }],

@@ -1,9 +1,11 @@
+import { useTheme } from "../../providers/ThemeContext";
 import { playerUtils } from "../../utils/playerUtils";
 
 export const PlayerCard = ({ player, team, season, stroke, onPlayerClick }) => {
   const maxWinShare = 100;
   const gaugeWidth = Math.min(Math.abs(player.winShare), maxWinShare);
   const { getPlayerHeadshot } = playerUtils;
+  const { actualTheme } = useTheme;
 
   return (
     <div
@@ -16,7 +18,6 @@ export const PlayerCard = ({ player, team, season, stroke, onPlayerClick }) => {
           style={{
             backgroundColor: stroke,
             clipPath: "polygon(65% 0%, 100% 0%, 100% 100%, 35% 100%)",
-            opacity: 0.85,
           }}
         />
 

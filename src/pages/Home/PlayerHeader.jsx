@@ -93,10 +93,10 @@ export const PlayerHeader = ({ player, biometrics }) => {
           style={{
             backgroundColor: playerUtils.getTeamColor(
               player.team,
-              player.season
+              player.season,
+              actualTheme
             ),
             clipPath: "polygon(60% 0%, 100% 0%, 100% 100%, 30% 100%)",
-            opacity: 0.85,
           }}
         />
 
