@@ -24,8 +24,10 @@ export const playerUtils = {
     const retroColors = {
       NSH: [{ start: 1998, end: 2010, color: "#AFB7BA" }],
       ANA: [{ start: 2006, end: 2012, color: "#B5985A" }],
+      NYR: [{ start: 2025, end: 2025, color: "#026AAA" }],
       DAL: [{ start: 1994, end: 2012, color: "#C69214" }],
       PIT: [{ start: 2006, end: 2015, color: "#C5B358" }],
+      TOR: [{ start: 2016, end: 2016, color: "#A2AAAD" }],
       EDM: [{ start: 1996, end: 2010, color: "#B87333" }],
     };
     const teamColors = {
@@ -72,7 +74,7 @@ export const playerUtils = {
         }
       }
     }
-    return teamColors[teamCode] || "#22d3ee"; // Default gray if team not found
+    return teamColors[teamCode] || "#AFB7BA"; // Default gray if team not found
   },
 
   getFullTeamName(teamCode, season = null) {
@@ -128,7 +130,7 @@ export const playerUtils = {
     const suffix = actualTheme === "light" ? "light" : "dark";
 
     const applySuffix = (path) =>
-      path.replace(/_(?:dark|light)\.svg$/i, `_${suffix}.svg`);
+      path.replace(/_(?:dark)\.svg$/i, `_${suffix}.svg`);
 
     const base = "https://assets.nhle.com/logos/nhl/svg";
     const teamCodeUpper = teamCode.toUpperCase();
@@ -157,9 +159,11 @@ export const playerUtils = {
         { start: 2010, end: 2019, url: "BUF_20102011-20192020_dark.svg" },
       ],
       CGY: [{ start: 1994, end: 2019, url: "CGY_19941995-20192020_dark.svg" }],
+      CHI: [{ start: 2025, end: 2025, url: "CHI_19651966-19881989_dark.svg" }],
+      DET: [{ start: 2025, end: 2025, url: "DET_19321933-19471948_dark.svg" }],
       EDM: [
         { start: 1996, end: 2010, url: "EDM_19971998-20102011_dark.svg" },
-        { start: 2017, end: 2021, url: "EDM_20172018-20212022_light.svg" },
+        { start: 2017, end: 2021, url: "EDM_20172018-20212022_dark.svg" },
       ],
       NYI: [{ start: 1997, end: 2009, url: "NYI_19971998-20092010_dark.svg" }],
       OTT: [{ start: 2007, end: 2019, url: "OTT_20072008-20192020_dark.svg" }],
@@ -168,6 +172,8 @@ export const playerUtils = {
       ANA: [{ start: 2006, end: 2023, url: "ANA_20132014-20232024_dark.svg" }],
       DAL: [{ start: 1994, end: 2012, url: "DAL_19941995-20122013_dark.svg" }],
       FLA: [{ start: 1999, end: 2015, url: "FLA_19992000-20152016_dark.svg" }],
+      MTL: [{ start: 2009, end: 2010, url: "MTL_19171918-19181919_dark.svg" }],
+      NYR: [{ start: 2025, end: 2025, url: "NYR_19261927-19341935_dark.svg" }],
       PIT: [{ start: 2006, end: 2015, url: "PIT_20062007-20152016_dark.svg" }],
       LAK: [
         { start: 2002, end: 2009, url: "LAK_20022003-20092010_dark.svg" },
