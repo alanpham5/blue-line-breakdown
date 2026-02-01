@@ -142,7 +142,7 @@ export const PlayerHeader = ({ player, biometrics }) => {
           <TeamLogoLink
             actualTheme={actualTheme}
             player={player}
-            className="absolute -bottom-8 left-1/2 -translate-x-1/2 xl:hidden w-16 h-16 flex items-center justify-center z-10 hover:opacity-80 transition-opacity"
+            className="absolute -bottom-8 left-1/2 -translate-x-1/2 xl:hidden w-16 h-16 object-contain flex items-center justify-center z-10 hover:opacity-80 transition-opacity"
           />
         </div>
         <div className="xl:flex-1 min-w-0 py-3">

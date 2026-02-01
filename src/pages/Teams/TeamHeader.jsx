@@ -26,7 +26,7 @@ export const TeamHeader = ({
   }, [team, season, position]);
 
   return (
-    <div ref={teamHeaderRef} className="relative overflow-hidden mt-8 mb-6">
+    <div ref={teamHeaderRef} className="relative overflow-hidden mt-6">
       <div className="hidden lg:block">
         <div
           className="absolute inset-0"
@@ -45,19 +45,19 @@ export const TeamHeader = ({
         />
       </div>
       <h2 className="relative z-10 text-center font-bold">
-        <div className="flex items-center justify-center md:gap-4 py-6">
-          <div className="relative w-24 lg:w-32 m-2 shrink-0">
+        <div className="flex items-center justify-center md:gap-4 py-2">
+          <div className="relative w-28 object-contain mt-4 mx-4">
             {didWinStanleyCup && (
               <img
                 src="/stanleycup.png"
                 alt="Stanley Cup"
-                className="absolute inset-0 scale-150 w-full h-full object-contain"
+                className="absolute  inset-0 scale-150 w-full h-fit object-contain"
               />
             )}
             <img
               src={playerUtils.getTeamLogoUrl(team, season, actualTheme)}
               alt={team}
-              className={`relative w-full h-full object-contain team-logo-stroke ${
+              className={`relative h-32 object-contain team-logo-stroke ${
                 didWinStanleyCup
                   ? `scale-75 z-10 ${
                       actualTheme === "dark" && "team-logo-stroke-cup"
@@ -77,8 +77,11 @@ export const TeamHeader = ({
                 </span>
               )}
             </h2>
+            <div className="md:hidden text-xl font-bold">
+              {playerUtils.getFullTeamName(team, season)}
+            </div>
 
-            <span className="text-xl md:text-2xl font-bold">
+            <span className="text-xl font-semibold">
               <span className="md:hidden">
                 {position === "F" ? "FWD" : "DEF"} •{" "}
               </span>
