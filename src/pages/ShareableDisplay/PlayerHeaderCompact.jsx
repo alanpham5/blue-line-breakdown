@@ -37,7 +37,6 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
         style={{
           backgroundColor: "#020617",
           clipPath: "polygon(49% 0%, 57% 0%, 24% 100%, 16% 100%)",
-          opacity: 0.6,
         }}
       />
 

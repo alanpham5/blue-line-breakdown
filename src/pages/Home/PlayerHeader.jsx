@@ -62,6 +62,11 @@ export const PlayerHeader = ({ player, biometrics }) => {
     ? playerUtils.getTeamLogoUrl(player.team, player.season, actualTheme)
     : null;
 
+  const didWinStanleyCup = playerUtils.didWinStanleyCup(
+    player.team,
+    player.season
+  );
+
   const archetypes = player.archetypes || [];
 
   const activateShareable = () => {
@@ -143,6 +148,13 @@ export const PlayerHeader = ({ player, biometrics }) => {
         <div className="xl:flex-1 min-w-0 py-3">
           <h2 className="flex items-center justify-center lg:justify-start gap-2 text-2xl lg:text-3xl font-bold mb-2 lg:mb-3 text-white light:text-gray-900">
             <span className="max-w-80 truncate">{player.name}</span>
+            {didWinStanleyCup && (
+              <img
+                src="/stanleycup.png"
+                alt="Stanley Cup"
+                className="w-5 h-9 object-cover xl:hidden"
+              />
+            )}
             {isLocalhost && (
               <Share className="h-4 w-4" onClick={activateShareable} />
             )}
