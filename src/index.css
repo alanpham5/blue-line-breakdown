@@ -195,7 +195,7 @@ html.light .ice-background {
 }
 
 .player-header-overlay-bg {
-  background-color: #0f172a;
+  background-color: var(--bg-primary);
 }
 
 .liquid-glass,

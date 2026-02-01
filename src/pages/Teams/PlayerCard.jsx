@@ -24,7 +24,6 @@ export const PlayerCard = ({ player, team, season, stroke, onPlayerClick }) => {
           className="absolute inset-0 player-header-overlay-bg"
           style={{
             clipPath: "polygon(70% 0%, 75% 0%, 45% 100%, 40% 100%)",
-            opacity: 0.75,
           }}
         />
       </div>

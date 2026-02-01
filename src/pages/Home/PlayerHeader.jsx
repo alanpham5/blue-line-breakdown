@@ -99,7 +99,6 @@ export const PlayerHeader = ({ player, biometrics }) => {
           className="absolute inset-0 player-header-overlay-bg"
           style={{
             clipPath: "polygon(65% 0%, 70% 0%, 40% 100%, 35% 100%)",
-            opacity: 0.75,
           }}
         />
       </div>
