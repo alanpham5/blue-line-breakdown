@@ -31,9 +31,12 @@ export const TeamHeader = ({
         <div
           className="absolute inset-0"
           style={{
-            backgroundColor: playerUtils.getTeamColor(team, season),
+            backgroundColor: playerUtils.getTeamColor(
+              team,
+              season,
+              actualTheme
+            ),
             clipPath: "polygon(95% 0%, 100% 0%, 100% 100%, 85% 100%)",
-            opacity: 0.85,
           }}
         />
 

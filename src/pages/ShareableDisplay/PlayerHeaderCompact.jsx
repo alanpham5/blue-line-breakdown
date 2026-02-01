@@ -29,7 +29,6 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
         style={{
           backgroundColor: teamColor,
           clipPath: "polygon(40% 0%, 100% 0%, 100% 100%, 5% 100%)",
-          opacity: 0.85,
         }}
       />
       <div
