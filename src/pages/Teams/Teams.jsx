@@ -8,6 +8,7 @@ import { PlayerCard } from "./PlayerCard";
 import { playerUtils } from "../../utils/playerUtils";
 import { useIsExternal } from "../../hooks/useIsExternal";
 import { LoadingScreen } from "../../components/LoadingScreen";
+import { useTheme } from "../../providers/ThemeContext";
 
 const getSeasonName = (s) => `${s}-${(parseInt(s) + 1).toString().slice(-2)}`;
 
@@ -113,6 +114,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
   const [teamClinchStatus, setTeamClinchStatus] = useState(null);
   const [renderKey, setRenderKey] = useState(0);
   const [urlInitComplete, setUrlInitComplete] = useState(false);
+  const { actualTheme } = useTheme();
 
   const isExternal = useIsExternal();
 
@@ -377,7 +379,11 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
                   />
                   <hr
                     style={{
-                      backgroundColor: playerUtils.getTeamColor(team, season),
+                      backgroundColor: playerUtils.getTeamColor(
+                        team,
+                        season,
+                        actualTheme
+                      ),
                       height: 4,
                       border: "none", // Important: removes default browser border
                       margin: "16px 0", // Optional: adds some vertical spacing
@@ -396,7 +402,11 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
                           player={p}
                           team={team}
                           season={season}
-                          stroke={playerUtils.getTeamColor(team, season)}
+                          stroke={playerUtils.getTeamColor(
+                            team,
+                            season,
+                            actualTheme
+                          )}
                           onPlayerClick={handlePlayerClick}
                         />
                       </div>
