@@ -95,13 +95,23 @@ const SearchForm = ({
 };
 
 export const Teams = ({ enablePageLoadAnimations = true }) => {
-  const defaultSeason = (new Date().getFullYear() - 1).toString();
-  const [season, setSeason] = useState(defaultSeason);
-  const [team, setTeam] = useState("");
-  const [position, setPosition] = useState("F");
-  const [tempSeason, setTempSeason] = useState(defaultSeason);
-  const [tempTeam, setTempTeam] = useState("");
-  const [tempPosition, setTempPosition] = useState("F");
+  const now = new Date();
+  const latestSeasonYear =
+    now.getMonth() >= 10 ? now.getFullYear() : now.getFullYear() - 1;
+  const defaultSeason = latestSeasonYear.toString();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const initialSeason = searchParams.get("season") || defaultSeason;
+  const initialTeam = searchParams.get("team") || "";
+  const initialPosition = searchParams.get("position") || "F";
+
+  const [season, setSeason] = useState(initialSeason);
+  const [team, setTeam] = useState(initialTeam);
+  const [position, setPosition] = useState(initialPosition);
+  const [tempSeason, setTempSeason] = useState(initialSeason);
+  const [tempTeam, setTempTeam] = useState(initialTeam);
+  const [tempPosition, setTempPosition] = useState(initialPosition);
   const [teams, setTeams] = useState([]);
   const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -121,14 +131,11 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
   const initInProgressRef = useRef(false);
   const teamHeaderRef = useRef(null);
 
-  const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const d = new Date();
   const seasons = Array.from(
     {
       length:
-        (d.getMonth() >= 10 ? d.getFullYear() : d.getFullYear() - 1) - 2007,
+        (now.getMonth() >= 10 ? now.getFullYear() : now.getFullYear() - 1) -
+        2007,
     },
     (_, i) => 2008 + i
   );
@@ -158,15 +165,25 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
     const urlTeam = searchParams.get("team");
     const urlPosition = searchParams.get("position");
 
-    if (urlSeason && urlTeam && urlPosition) {
+    if (urlSeason) {
       setSeason(urlSeason);
-      setTeam(urlTeam);
-      setPosition(urlPosition);
-
       setTempSeason(urlSeason);
-      setTempTeam(urlTeam);
-      setTempPosition(urlPosition);
+    } else {
+      setSeason(defaultSeason);
+      setTempSeason(defaultSeason);
+    }
 
+    if (urlTeam) {
+      setTeam(urlTeam);
+      setTempTeam(urlTeam);
+    }
+
+    if (urlPosition) {
+      setPosition(urlPosition);
+      setTempPosition(urlPosition);
+    }
+
+    if (urlSeason && urlTeam && urlPosition) {
       performSearch(urlSeason, urlTeam, urlPosition);
     }
     setUrlInitComplete(true);
