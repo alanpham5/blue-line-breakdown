@@ -415,7 +415,7 @@ export const playerUtils = {
       TAKE: "How often the player takes the puck away from opponents.",
       CH_SUP: "Share of opponent scoring chances limited by the player.",
       GOAL_PREV: "Share of scoring attempts stopped by the player.",
-      // Other metrics
+
       winShare:
         "The percentile rank of the player's contribution to team wins compared to other players on the team in the same position.",
     };
