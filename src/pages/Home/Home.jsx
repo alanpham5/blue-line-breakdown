@@ -12,7 +12,9 @@ import { Header } from "../../components/Header";
 import { Analytics } from "@vercel/analytics/react";
 import { useIsExternal } from "../../hooks/useIsExternal";
 import { LoadingScreen } from "../../components/LoadingScreen";
+import { LoadingWheel } from "../../components/LoadingWheel";
 import { ShareableDisplay } from "../ShareableDisplay/ShareableDisplay";
+import { useTheme } from "../../providers/ThemeContext";
 
 export const Home = ({ enablePageLoadAnimations = true }) => {
   const defaultSeason = (new Date().getFullYear() - 1).toString();
@@ -37,6 +39,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
   const lastSearchParamsRef = useRef("");
   const playerHeaderRef = useRef(null);
   const isExternal = useIsExternal();
+  const { actualTheme } = useTheme();
 
   useEffect(() => {
     checkHealth();
@@ -347,7 +350,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
               {loading && (
                 <div className="fixed inset-0 bg-black/60 light:bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center">
                   <div className="liquid-glass rounded-2xl p-8 flex flex-col items-center gap-4">
-                    <Loader2 className="w-12 h-12 text-cyan-400 light:text-cyan-600 animate-spin" />
+                    <LoadingWheel size={75} actualTheme={actualTheme} />
                     <p className="text-white light:text-gray-900 text-lg font-medium">
                       {loadingMessage}
                     </p>

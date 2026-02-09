@@ -358,6 +358,14 @@ export const playerUtils = {
       }
     }
 
+    if (
+      teamCodeUpper === "CGY" &&
+      seasonYear >= 2020 &&
+      actualTheme === "dark"
+    ) {
+      return `${base}/CGY_hdr_dark.svg`;
+    }
+
     return `${base}/${teamCodeUpper}_${suffix}.svg`;
   },
 
