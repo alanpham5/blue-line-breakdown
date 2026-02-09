@@ -8,7 +8,6 @@ import { PlayerCard } from "./PlayerCard";
 import { playerUtils } from "../../utils/playerUtils";
 import { useIsExternal } from "../../hooks/useIsExternal";
 import { LoadingScreen } from "../../components/LoadingScreen";
-import { LoadingWheel } from "../../components/LoadingWheel";
 import { useTheme } from "../../providers/ThemeContext";
 
 const getSeasonName = (s) => `${s}-${(parseInt(s) + 1).toString().slice(-2)}`;
@@ -346,7 +345,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
           {(initializingCache || showTeamsOverlay) && (
             <div className="fixed inset-0 bg-black/70 light:bg-black/40 backdrop-blur-sm flex items-center justify-center z-[9999]">
               <div className="bg-gray-800 light:bg-white/95 light:border light:border-gray-200 light:shadow-xl rounded-2xl p-8 text-center">
-                <LoadingWheel size={75} actualTheme={actualTheme} />
+                <Loader2 className="w-12 h-12 animate-spin text-cyan-400 light:text-cyan-600 mx-auto mb-4" />
                 <p className="text-lg font-medium text-white light:text-gray-900">
                   {loadingMessage}
                 </p>
