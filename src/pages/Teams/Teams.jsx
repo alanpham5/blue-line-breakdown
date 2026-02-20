@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { track } from "@vercel/analytics";
 import { Loader2, Search } from "lucide-react";
 import { apiService } from "../../services/apiService";
 import { Header } from "../../components/Header";
@@ -326,6 +327,11 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
       { season: tempSeason, team: tempTeam, position: tempPosition },
       { replace: false }
     );
+    track("team_search", {
+      team: tempTeam,
+      season: tempSeason,
+      position: tempPosition,
+    });
   };
 
   const handlePlayerClick = (player) => {

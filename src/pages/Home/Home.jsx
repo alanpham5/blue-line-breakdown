@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Target, Shield, Loader2 } from "lucide-react";
+import { track } from "@vercel/analytics";
 import { apiService } from "../../services/apiService";
 import { SearchForm } from "./SearchForm";
 import { PlayerHeader } from "./PlayerHeader";
@@ -302,6 +303,12 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
       return;
     }
     updateSearchParams(playerName, season, position, filterYear);
+    track("player_search", {
+      player: playerName,
+      season,
+      position,
+      filterYear,
+    });
     await performSearch(playerName, season, position, filterYear);
   };
 
