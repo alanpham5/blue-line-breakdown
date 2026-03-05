@@ -20,8 +20,14 @@
       dataLayer.push(arguments);
     }
     gtag("js", new Date());
+    const isLocalhost =
+      window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1";
 
-    gtag("config", "G-JER1XC8DSZ");
+    gtag("config", "G-JER1XC8DSZ", {
+      send_page_view: false,
+      debug_mode: isLocalhost,
+    });
   </script>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

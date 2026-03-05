@@ -13,6 +13,7 @@ export const GaPageTrackContext = () => {
       page_title: document.title,
       page_location: window.location.href,
       page_path: pagePath,
+      debug_mode: process.env.NODE_ENV !== "production",
     });
   }, [location]);
 
