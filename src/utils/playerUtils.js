@@ -2,6 +2,19 @@ import { stanleyCupChampions } from "../data/stanleyCupData";
 
 export const playerUtils = {
   getPlayerHeadshot(playerId, team = null, season = null) {
+    if (playerId === 8484801 && parseInt(season) === 2025) {
+      return "celebrini-cupcake.png";
+    }
+    if (playerId === 8484227 && parseInt(season) === 2025) {
+      return "smith-cupcake.png";
+    }
+    if (playerId === 8481559 && parseInt(season) === 2025) {
+      return "hughes.png";
+    }
+    if (playerId === 8471675 && parseInt(season) === 2009) {
+      return "crosby.png";
+    }
+
     if (team && season) {
       const seasonYear = parseInt(season);
       const nextYear = seasonYear + 1;
