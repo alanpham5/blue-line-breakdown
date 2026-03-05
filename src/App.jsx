@@ -5,6 +5,8 @@ import { Teams } from "./pages/Teams/Teams";
 import { Tutorial } from "./pages/Tutorial/Tutorial";
 import { ThemeProvider } from "./providers/ThemeContext";
 import { TooltipProvider } from "./providers/TooltipContext";
+import { GaPageTrackContext } from "./providers/GaPageTrackContext";
+
 const App = () => {
   const enablePageLoadAnimations = true;
 
@@ -12,6 +14,7 @@ const App = () => {
     <ThemeProvider>
       <TooltipProvider>
         <BrowserRouter>
+          <GaPageTrackContext />
           <Routes>
             <Route
               path="/"
