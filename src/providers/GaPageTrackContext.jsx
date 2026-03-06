@@ -8,6 +8,11 @@ export const GaPageTrackContext = () => {
     if (!window.gtag) return;
 
     const pagePath = `${location.pathname}${location.search}${location.hash}`;
+    const searchParams = new URLSearchParams(location.search);
+    const normalizedPath =
+      location.pathname.length > 1 && location.pathname.endsWith("/")
+        ? location.pathname.slice(0, -1)
+        : location.pathname;
 
     window.gtag("event", "page_view", {
       page_title: document.title,
@@ -15,6 +20,34 @@ export const GaPageTrackContext = () => {
       page_path: pagePath,
       debug_mode: process.env.NODE_ENV !== "production",
     });
+
+    if (normalizedPath === "/") {
+      const player = searchParams.get("player");
+      const season = searchParams.get("season");
+
+      if (player && season) {
+        window.gtag("event", "player_view", {
+          player,
+          season,
+          debug_mode: process.env.NODE_ENV !== "production",
+        });
+      }
+    }
+
+    if (normalizedPath === "/teams") {
+      const team = searchParams.get("team");
+      const season = searchParams.get("season");
+      const position = searchParams.get("position");
+
+      if (team && season && position) {
+        window.gtag("event", "team_view", {
+          team,
+          season,
+          position,
+          debug_mode: process.env.NODE_ENV !== "production",
+        });
+      }
+    }
   }, [location]);
 
   return null;
