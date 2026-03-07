@@ -35,6 +35,7 @@ export const GaPageTrackContext = () => {
         window.gtag("event", "player_view", {
           player: capitalizeWordsRegex(player),
           season,
+          datetime: new Date().toISOString(),
           debug_mode: process.env.NODE_ENV !== "production",
         });
       }
@@ -50,6 +51,7 @@ export const GaPageTrackContext = () => {
           team,
           season,
           position,
+          datetime: new Date().toISOString(),
           debug_mode: process.env.NODE_ENV !== "production",
         });
       }
