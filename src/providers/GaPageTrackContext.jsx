@@ -22,7 +22,7 @@ export const GaPageTrackContext = () => {
     });
 
     if (normalizedPath === "/") {
-      const player = searchParams.get("player");
+      const player = searchParams.get("player")?.toUpperCase();
       const season = searchParams.get("season");
 
       if (player && season) {
