@@ -30,11 +30,13 @@ export const GaPageTrackContext = () => {
     if (normalizedPath === "/") {
       const player = searchParams.get("player");
       const season = searchParams.get("season");
+      const position = searchParams.get("position");
 
       if (player && season) {
         window.gtag("event", "player_view", {
           player: capitalizeWordsRegex(player),
           season,
+          position,
           datetime: new Date().toISOString(),
           debug_mode: process.env.NODE_ENV !== "production",
         });
