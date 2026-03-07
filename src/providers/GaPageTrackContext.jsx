@@ -1,6 +1,12 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
+function capitalizeWordsRegex(str) {
+  return str.replace(/(^|\s)\S/g, function (match) {
+    return match.toUpperCase();
+  });
+}
+
 export const GaPageTrackContext = () => {
   const location = useLocation();
 
@@ -22,12 +28,12 @@ export const GaPageTrackContext = () => {
     });
 
     if (normalizedPath === "/") {
-      const player = searchParams.get("player")?.toUpperCase();
+      const player = searchParams.get("player");
       const season = searchParams.get("season");
 
       if (player && season) {
         window.gtag("event", "player_view", {
-          player,
+          player: capitalizeWordsRegex(player),
           season,
           debug_mode: process.env.NODE_ENV !== "production",
         });
