@@ -11,7 +11,8 @@ export const ShareableDisplay = ({ playerData }) => {
         style={{
           width: 1200,
           height: 900,
-          backgroundColor: "#0f172a",
+          background:
+            "linear-gradient(180deg, #020202 0%, #070708 42%, #0b0b0d 100%)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -32,7 +33,8 @@ export const ShareableDisplay = ({ playerData }) => {
         style={{
           width: 1200,
           height: 960,
-          backgroundColor: "#0f172a",
+          background:
+            "radial-gradient(circle at 18% 0%, rgba(166, 255, 15, 0.08) 0%, rgba(166, 255, 15, 0) 26%), radial-gradient(circle at 92% 16%, rgba(18, 223, 246, 0.07) 0%, rgba(18, 223, 246, 0) 24%), radial-gradient(circle at 50% 100%, rgba(255, 55, 95, 0.05) 0%, rgba(255, 55, 95, 0) 26%), linear-gradient(180deg, #020202 0%, #070708 42%, #0b0b0d 100%)",
           display: "flex",
           color: "white",
           overflow: "hidden",
@@ -51,7 +53,7 @@ export const ShareableDisplay = ({ playerData }) => {
             style={{
               writingMode: "vertical-rl",
               transform: "rotate(180deg)",
-              fontSize: 35,
+              fontSize: 34,
               fontWeight: 700,
               letterSpacing: "0.12em",
               color: "#e5e7eb",
@@ -71,10 +73,10 @@ export const ShareableDisplay = ({ playerData }) => {
         <div
           style={{
             flex: 1,
-            padding: "18px 18px 36px",
+            padding: "20px 20px 32px",
             display: "grid",
             gridTemplateRows: "auto auto 1fr",
-            gap: 12,
+            gap: 14,
           }}
         >
           <div className="grid grid-cols-[2fr_1fr] gap-3">
@@ -97,17 +99,15 @@ export const ShareableDisplay = ({ playerData }) => {
             />
           </div>
 
-          <div className="liquid-glass-strong rounded-2xl p-3 border-purple-400/30">
+          <div className="liquid-glass-strong rounded-[28px] p-4">
             <div className="flex items-center gap-2 mb-2">
-              <div className="p-1.5 rounded-lg bg-purple-500/20 shrink-0 backdrop-blur-sm">
-                <Users className="w-6 h-6 text-purple-400" />
-              </div>
+              <Users className="h-6 w-6 shrink-0 text-amber-300" />
               <h3 className="text-2xl font-bold text-white">
                 Most Similar Players
               </h3>
             </div>
 
-            <div className="grid grid-cols-6 gap-1 pt-2 place-items-center">
+            <div className="grid grid-cols-6 gap-2 pt-2 place-items-center">
               {displayPlayers.map((p, i) => (
                 <div key={i} className="text-center">
                   <img
@@ -116,7 +116,7 @@ export const ShareableDisplay = ({ playerData }) => {
                       p.team,
                       p.season
                     )}
-                    className="w-20 h-20 rounded-full mx-auto mb-0.5 border-4 border-gray-600/40"
+                    className="w-20 h-20 rounded-full mx-auto mb-1"
                     onError={(e) => {
                       e.target.src = playerUtils.getDefaultHeadshot();
                     }}
@@ -131,7 +131,7 @@ export const ShareableDisplay = ({ playerData }) => {
               ))}
             </div>
           </div>
-          <div className="text-xl pt-4 font-bold justify-self-center text-white">
+          <div className="text-xl pt-2 font-bold justify-self-center text-white/90">
             Data from MoneyPuck.com and NHL.com
           </div>
         </div>

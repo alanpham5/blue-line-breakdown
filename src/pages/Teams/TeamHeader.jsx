@@ -14,6 +14,11 @@ export const TeamHeader = ({
   const teamHeaderRef = useRef(null);
   const didWinStanleyCup = playerUtils.didWinStanleyCup(team, season);
   const { actualTheme } = useTheme();
+  const teamCardGradient = playerUtils.getTeamCardGradient(
+    team,
+    season,
+    actualTheme
+  );
 
   useEffect(() => {
     if (teamHeaderRef.current) {
@@ -27,30 +32,13 @@ export const TeamHeader = ({
 
   return (
     <div ref={teamHeaderRef} className="relative mt-6">
-      <div className="overflow-hidden">
-        <div className="hidden lg:block">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundColor: playerUtils.getTeamColor(
-                team,
-                season,
-                actualTheme
-              ),
-              clipPath: "polygon(95% 0%, 100% 0%, 100% 100%, 85% 100%)",
-            }}
-          />
-
-          <div
-            className="absolute inset-0 player-header-overlay-bg"
-            style={{
-              clipPath: "polygon(96% 0%, 97% 0%, 87% 100%, 86% 100%)",
-            }}
-          />
-        </div>
-        <h2 className="relative z-10 text-center font-bold">
-          <div className="flex items-center justify-center md:gap-4 py-2">
-            <div className="relative justify-center w-28 h-32 mt-4 mx-4">
+      <div
+        className="team-card-surface liquid-glass rounded-[32px] overflow-hidden px-5 py-6 sm:px-6"
+        style={{ "--team-card-gradient": teamCardGradient }}
+      >
+        <div className="relative z-10 text-center font-bold">
+          <div className="flex items-center justify-center gap-3 py-2 md:gap-4">
+            <div className="relative mx-2 mt-1 h-28 w-24 justify-center md:mx-4 md:h-32 md:w-28">
               {didWinStanleyCup && (
                 <img
                   src="/stanleycup.png"
@@ -63,7 +51,7 @@ export const TeamHeader = ({
               <img
                 src={playerUtils.getTeamLogoUrl(team, season, actualTheme)}
                 alt={team}
-                className={`relative h-32 object-contain team-logo-stroke z-10 ${
+                className={`relative h-28 object-contain team-logo-stroke z-10 md:h-32 ${
                   didWinStanleyCup
                     ? `scale-75 ${
                         actualTheme === "dark" && "team-logo-stroke-cup"
@@ -78,8 +66,8 @@ export const TeamHeader = ({
               />
             </div>
 
-            <h2 className="text-center text-2xl font-bold text-white light:text-gray-900">
-              <h2 className="hidden md:flex text-center items-end text-3xl font-bold text-white light:text-gray-900">
+            <div className="text-center text-2xl font-bold text-white light:text-gray-900">
+              <div className="hidden items-end text-center text-3xl font-bold text-white light:text-gray-900 md:flex">
                 {playerUtils.getFullTeamName(team, season)}
                 {teamRecord && (
                   <span className="text-lg font-normal ml-2 text-gray-300 light:text-gray-600">
@@ -87,12 +75,12 @@ export const TeamHeader = ({
                     {teamClinchStatus ? ` (${teamClinchStatus})` : ""}
                   </span>
                 )}
-              </h2>
+              </div>
               <div className="md:hidden text-lg font-bold text-nowrap">
                 {playerUtils.getFullTeamName(team, season)}
               </div>
 
-              <span className="text-lg font-semibold">
+              <span className="text-lg font-semibold text-gray-300 light:text-gray-700">
                 <span className="md:hidden">
                   {position === "F" ? "FWD" : "DEF"} •{" "}
                 </span>
@@ -106,9 +94,9 @@ export const TeamHeader = ({
                 {teamRecord}
                 {teamClinchStatus ? ` (${teamClinchStatus})` : ""}
               </div>
-            </h2>
+            </div>
           </div>
-        </h2>
+        </div>
       </div>
     </div>
   );

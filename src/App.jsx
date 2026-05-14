@@ -3,6 +3,7 @@ import { Home } from "./pages/Home/Home";
 import { About } from "./pages/About/About";
 import { Teams } from "./pages/Teams/Teams";
 import { Tutorial } from "./pages/Tutorial/Tutorial";
+import { Loader } from "./pages/Loader/Loader";
 import { ThemeProvider } from "./providers/ThemeContext";
 import { TooltipProvider } from "./providers/TooltipContext";
 import { GaPageTrackContext } from "./providers/GaPageTrackContext";
@@ -29,6 +30,7 @@ const App = () => {
               }
             />
             <Route path="/about" element={<About />} />
+            <Route path="/loader" element={<Loader />} />
             <Route
               path="/tutorial"
               element={

@@ -38,11 +38,29 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
   const lastSearchParamsRef = useRef("");
   const playerHeaderRef = useRef(null);
   const isExternal = useIsExternal();
+  const isLocalhost = Boolean(
+    window.location.hostname === "localhost" ||
+    // [::1] is the IPv6 localhost address.
+    window.location.hostname === "[::1]" ||
+    // 127.0.0.1/8 is considered localhost for IPv4.
+    window.location.hostname.match(
+      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
+    )
+  );
 
   useEffect(() => {
     checkHealth();
     initializeCacheInBackground();
   }, []);
+
+  useEffect(() => {
+    if (isLocalhost && searchParams.toString()) {
+      console.log(
+        `https://blue-line-breakdown.vercel.app/?${searchParams.toString()}`
+      );
+    }
+  }, [isLocalhost, searchParams]);
+
   useEffect(() => {
     setShareable(searchParams.get("shareable") === "true");
   }, [searchParams]);
@@ -340,7 +358,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
   };
 
   return (
-    <div className="min-h-screen ice-background text-white light:text-gray-900 p-4 sm:p-6">
+    <div className="min-h-screen ice-background px-4 pb-10 pt-5 text-white light:text-gray-900 sm:px-6 sm:py-8">
       {isExternal && initInProgress ? (
         <LoadingScreen />
       ) : (
@@ -352,10 +370,10 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
           ) : (
             <>
               {loading && (
-                <div className="fixed inset-0 bg-black/60 light:bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center">
-                  <div className="liquid-glass rounded-2xl p-8 flex flex-col items-center gap-4">
-                    <Loader2 className="w-12 h-12 text-cyan-400 light:text-cyan-600 animate-spin" />
-                    <p className="text-white light:text-gray-900 text-lg font-medium">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/72 backdrop-blur-sm light:bg-black/30">
+                  <div className="liquid-glass-strong flex flex-col items-center gap-4 rounded-[30px] p-8">
+                    <Loader2 className="h-12 w-12 animate-spin text-sky-300 light:text-sky-600" />
+                    <p className="text-lg font-medium text-white light:text-gray-900">
                       {loadingMessage}
                     </p>
                   </div>
@@ -364,7 +382,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
               <div className="max-w-6xl mx-auto relative z-10">
                 <Header />
                 <Analytics />
-                <div className="space-y-4 sm:space-y-6">
+                <div className="space-y-5 sm:space-y-7">
                   <SearchForm
                     playerName={playerName}
                     setPlayerName={setPlayerName}
@@ -396,7 +414,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
 
                   {playerData && (
                     <div
-                      className="space-y-4 sm:space-y-6"
+                      className="space-y-5 sm:space-y-7"
                       ref={playerHeaderRef}
                       key={renderKey}
                     >
@@ -459,11 +477,11 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
                   )}
 
                   {!playerData && !loading && (
-                    <div className="text-center text-gray-400 light:text-gray-500 mt-8 sm:mt-12 px-2">
-                      <p className="text-base sm:text-lg mb-2">
+                    <div className="liquid-glass rounded-[32px] mt-4 sm:mt-6 px-5 py-10 text-center">
+                      <p className="mb-3 text-2xl font-semibold tracking-[-0.03em] text-white light:text-slate-900 sm:text-3xl">
                         Enter a player name to get started
                       </p>
-                      <p className="text-xs sm:text-sm">
+                      <p className="mx-auto max-w-2xl text-sm text-gray-400 light:text-gray-500 sm:text-base">
                         Analytics derived from MoneyPuck data (2008-
                         {new Date().getFullYear() - 1}), with proprietary
                         calculations and metrics.

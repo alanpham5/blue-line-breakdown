@@ -228,6 +228,84 @@ export const playerUtils = {
     return brand.primary;
   },
 
+  getSurfaceGradient(color, actualTheme = "dark") {
+    if (!color) return color;
+
+    const topShade =
+      actualTheme === "light"
+        ? "rgba(7, 12, 20, 0.22)"
+        : "rgba(3, 7, 14, 0.42)";
+    const midShade =
+      actualTheme === "light"
+        ? "rgba(7, 12, 20, 0.08)"
+        : "rgba(3, 7, 14, 0.14)";
+    const bottomLift =
+      actualTheme === "light"
+        ? "rgba(255, 255, 255, 0.1)"
+        : "rgba(255, 255, 255, 0.12)";
+
+    return `linear-gradient(180deg, ${topShade} 0%, ${midShade} 38%, rgba(255, 255, 255, 0.02) 72%, ${bottomLift} 100%), linear-gradient(180deg, ${color} 0%, ${color} 100%)`;
+  },
+
+  toRgba(color, alpha = 1) {
+    if (typeof color !== "string" || !color.startsWith("#")) return color;
+
+    let hex = color.slice(1);
+
+    if (hex.length === 3 || hex.length === 4) {
+      hex = hex
+        .split("")
+        .map((char) => char + char)
+        .join("");
+    }
+
+    let baseAlpha = 1;
+    if (hex.length === 8) {
+      baseAlpha = parseInt(hex.slice(6, 8), 16) / 255;
+      hex = hex.slice(0, 6);
+    }
+
+    if (hex.length !== 6) return color;
+
+    const r = parseInt(hex.slice(0, 2), 16);
+    const g = parseInt(hex.slice(2, 4), 16);
+    const b = parseInt(hex.slice(4, 6), 16);
+    const finalAlpha = Math.max(0, Math.min(1, alpha * baseAlpha));
+
+    return `rgba(${r}, ${g}, ${b}, ${finalAlpha})`;
+  },
+
+  getCardGradient(color, actualTheme = "dark") {
+    if (!color) return color;
+
+    const topTint = this.toRgba(color, actualTheme === "light" ? 0.2 : 0.26);
+    const upperTint = this.toRgba(
+      color,
+      actualTheme === "light" ? 0.11 : 0.14
+    );
+    const lowerTint = this.toRgba(
+      color,
+      actualTheme === "light" ? 0.04 : 0.05
+    );
+    const transparentTint = this.toRgba(color, 0);
+
+    return `linear-gradient(180deg, ${topTint} 0%, ${upperTint} 18%, ${lowerTint} 32%, ${transparentTint} 54%, ${transparentTint} 100%)`;
+  },
+
+  getTeamColorGradient(teamCode, season = null, actualTheme = "dark") {
+    return this.getSurfaceGradient(
+      this.getTeamColor(teamCode, season, actualTheme),
+      actualTheme
+    );
+  },
+
+  getTeamCardGradient(teamCode, season = null, actualTheme = "dark") {
+    return this.getCardGradient(
+      this.getTeamColor(teamCode, season, actualTheme),
+      actualTheme
+    );
+  },
+
   getFullTeamName(teamCode, season = null) {
     if (teamCode.toUpperCase() === "ARI" && season <= 2013) {
       return "Phoenix Coyotes";

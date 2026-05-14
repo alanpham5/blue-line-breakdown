@@ -49,7 +49,7 @@ export const ArchetypeBadge = ({ archetype, forceDark = false }) => {
       content={
         <>
           <h2
-            className={`font-semibold inline-flex text-cyan-400 gap-1 mb-1 ${forceDark ? "" : "light:text-cyan-600"}`}
+            className={`mb-1 inline-flex gap-1 font-semibold text-sky-300 ${forceDark ? "" : "light:text-sky-600"}`}
           >
             {Icon && <Icon size={14} className="shrink-0" />} {archetype}
           </h2>
@@ -60,7 +60,7 @@ export const ArchetypeBadge = ({ archetype, forceDark = false }) => {
       }
     >
       <div
-        className={`inline-flex items-center gap-1.5 px-2.5 py-1 bg-cyan-500/10 border border-cyan-400/30 rounded-full text-xs sm:text-sm text-cyan-300 backdrop-blur-sm cursor-default ${forceDark ? "" : "light:bg-cyan-100 light:border-cyan-300/60 light:text-cyan-800"}`}
+        className={`inline-flex cursor-default items-center gap-1.5 rounded-full bg-white/[0.05] px-2.5 py-1 text-xs text-sky-200 backdrop-blur-sm sm:text-sm ${forceDark ? "" : "light:bg-sky-100 light:text-sky-800"}`}
       >
         {Icon && <Icon size={14} className="shrink-0" />}
         <span className="font-medium">{archetype}</span>

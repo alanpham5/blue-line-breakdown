@@ -17,6 +17,8 @@ export const SimilarPlayersSection = ({
   filterYear = null,
   onFilterYearChange,
 }) => {
+  const sharedFieldClassName =
+    "app-field px-4 py-3.5 pr-10 text-base text-white light:text-gray-900";
   const [animationKey, setAnimationKey] = useState(0);
   const prevPlayersRef = useRef(null);
   useEffect(() => {
@@ -43,14 +45,12 @@ export const SimilarPlayersSection = ({
   }, [players]);
 
   return (
-    <div className="liquid-glass-strong rounded-2xl p-4 sm:p-6 liquid-glass-animate">
+    <div className="liquid-glass-strong liquid-glass-animate rounded-[32px] p-5 sm:p-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-purple-500/20 rounded-lg shrink-0 backdrop-blur-sm border border-purple-400/20 light:bg-purple-400/25 light:border-purple-500/30">
-            <Users className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400 light:text-purple-600" />
-          </div>
+          <Users className="h-5 w-5 shrink-0 text-amber-300 light:text-amber-600 sm:h-6 sm:w-6" />
           <div className="flex items-center gap-2">
-            <h3 className="text-xl sm:text-2xl font-bold text-white light:text-gray-900">
+            <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900">
               Most Similar Players
             </h3>
             <Tooltip
@@ -59,7 +59,7 @@ export const SimilarPlayersSection = ({
               width="w-64 sm:w-72"
               content={
                 <div className="space-y-2">
-                  <div className="font-semibold text-purple-400 light:text-purple-600 mb-1">
+                  <div className="mb-1 font-semibold text-amber-300 light:text-amber-600">
                     Player Similarity
                   </div>
                   <div>
@@ -82,11 +82,11 @@ export const SimilarPlayersSection = ({
           </div>
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Filter className="w-5 h-5 text-gray-400 light:text-gray-500 shrink-0" />
+          <Filter className="h-5 w-5 shrink-0 text-amber-300 light:text-amber-600" />
           <select
             value={filterYear || ""}
             onChange={(e) => onFilterYearChange(e.target.value || null)}
-            className="flex-1 sm:flex-initial min-w-0 liquid-glass-strong rounded-full px-3 sm:px-4 py-2 text-white light:text-gray-900 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-purple-400/50 focus:border-purple-400/50 transition-all duration-300"
+            className={`${sharedFieldClassName} min-w-0 flex-1 sm:flex-initial`}
           >
             <option value="">All Seasons</option>
             {[...seasons].reverse().map((year) => (
@@ -97,7 +97,7 @@ export const SimilarPlayersSection = ({
           </select>
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-3 sm:gap-4 md:flex md:flex-wrap md:justify-center">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3 md:flex md:flex-wrap md:justify-center md:gap-4">
         {players.map((player, idx) => (
           <div
             key={`${player.playerId}-${player.season}`}

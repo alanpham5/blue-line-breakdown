@@ -6,6 +6,12 @@ import { useSearchParams } from "react-router-dom";
 
 export const PlayerHeaderCompact = ({ player, biometrics }) => {
   const teamColor = playerUtils.getTeamColor(player.team, player.season);
+  const teamCardGradient = playerUtils.getTeamCardGradient(
+    player.team,
+    player.season,
+    "dark"
+  );
+  const teamColorGradient = playerUtils.getSurfaceGradient(teamColor, "dark");
   const didWinStanleyCup = playerUtils.didWinStanleyCup(
     player.team,
     player.season
@@ -23,26 +29,14 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
     setSearchParams(newSearchParams);
   };
   return (
-    <div className="relative liquid-glass-strong rounded-2xl py-4 px-5 overflow-hidden border-cyan-400/30">
-      <div
-        className="absolute top-0 right-0 h-full w-28"
-        style={{
-          backgroundColor: teamColor,
-          clipPath: "polygon(40% 0%, 100% 0%, 100% 100%, 5% 100%)",
-        }}
-      />
-      <div
-        className="absolute top-0 right-0 h-full w-28"
-        style={{
-          backgroundColor: "#020617",
-          clipPath: "polygon(49% 0%, 57% 0%, 24% 100%, 16% 100%)",
-        }}
-      />
-
+    <div
+      className="team-card-surface-strong relative overflow-hidden rounded-[28px] px-5 py-4 liquid-glass-strong"
+      style={{ "--team-card-gradient": teamCardGradient }}
+    >
       <div className="relative flex items-center gap-4">
         <div
-          className="w-32 h-32 rounded-full overflow-hidden border-[3px] border-gray-300/60 shrink-0"
-          style={{ backgroundColor: teamColor }}
+          className="w-32 h-32 rounded-full overflow-hidden shrink-0"
+          style={{ background: teamColorGradient }}
           onClick={onReset}
         >
           <img
@@ -71,19 +65,19 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
           <div className="flex gap-3 mt-1.5 text-lg text-gray-300">
             {biometrics?.height && (
               <span className="flex items-center gap-1">
-                <Ruler className="w-4 h-4 text-cyan-400" />
+                <Ruler className="h-4 w-4 text-sky-300" />
                 {biometrics.height}
               </span>
             )}
             {biometrics?.weight && (
               <span className="flex items-center gap-1">
-                <Scale className="w-4 h-4 text-cyan-400" />
+                <Scale className="h-4 w-4 text-sky-300" />
                 {Math.round(biometrics.weight)} lbs
               </span>
             )}
             {player?.age && (
               <span className="flex items-center gap-1">
-                <Calendar className="w-4 h-4 text-cyan-400" />
+                <Calendar className="h-4 w-4 text-sky-300" />
                 Age {player.age}
               </span>
             )}

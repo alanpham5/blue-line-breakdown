@@ -35,18 +35,20 @@ const SearchForm = ({
   loadingTeams,
   getSeasonName,
 }) => {
+  const sharedFieldClassName =
+    "app-field px-4 py-3.5 text-base text-white light:text-gray-900";
   const getTeamLabel = (team) =>
     tempSeason <= 2013 && team === "ARI" ? "PHX" : team;
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
       <div>
-        <label className="block text-sm font-medium text-gray-300 light:text-gray-600 mb-2">
+        <label className="block text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-gray-500 light:text-slate-500 mb-2">
           Season
         </label>
         <select
           value={tempSeason}
           onChange={(e) => setTempSeason(e.target.value)}
-          className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white light:text-gray-900 transition-all duration-300"
+          className={`${sharedFieldClassName} pr-10`}
         >
           {[...seasons].reverse().map((s) => (
             <option key={s} value={s}>
@@ -56,14 +58,14 @@ const SearchForm = ({
         </select>
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-300 light:text-gray-600 mb-2">
+        <label className="block text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-gray-500 light:text-slate-500 mb-2">
           Team
         </label>
         <select
           value={tempTeam}
           onChange={(e) => setTempTeam(e.target.value)}
           disabled={loadingTeams}
-          className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white light:text-gray-900 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          className={`${sharedFieldClassName} pr-10 disabled:cursor-not-allowed disabled:opacity-50`}
         >
           {loadingTeams ? (
             <option>Loading...</option>
@@ -79,13 +81,13 @@ const SearchForm = ({
         </select>
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-300 light:text-gray-600 mb-2">
+        <label className="block text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-gray-500 light:text-slate-500 mb-2">
           Position
         </label>
         <select
           value={tempPosition}
           onChange={(e) => setTempPosition(e.target.value)}
-          className="w-full px-4 py-3 liquid-glass-strong rounded-full focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 outline-none text-white light:text-gray-900 transition-all duration-300"
+          className={`${sharedFieldClassName} pr-10`}
         >
           <option value="F">Forwards</option>
           <option value="D">Defensemen</option>
@@ -343,15 +345,15 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
   };
 
   return (
-    <div className="min-h-screen ice-background text-white light:text-gray-900 p-4 sm:p-6">
+    <div className="min-h-screen ice-background px-4 pb-10 pt-5 text-white light:text-gray-900 sm:px-6 sm:py-8">
       {isExternal && initInProgress ? (
         <LoadingScreen />
       ) : (
         <>
           {(initializingCache || showTeamsOverlay) && (
-            <div className="fixed inset-0 bg-black/70 light:bg-black/40 backdrop-blur-sm flex items-center justify-center z-[9999]">
-              <div className="bg-gray-800 light:bg-white/95 light:border light:border-gray-200 light:shadow-xl rounded-2xl p-8 text-center">
-                <Loader2 className="w-12 h-12 animate-spin text-cyan-400 light:text-cyan-600 mx-auto mb-4" />
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/72 backdrop-blur-sm light:bg-black/30">
+              <div className="liquid-glass-strong rounded-[30px] p-8 text-center">
+                <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-sky-300 light:text-sky-600" />
                 <p className="text-lg font-medium text-white light:text-gray-900">
                   {loadingMessage}
                 </p>
@@ -362,8 +364,11 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
           <div className="max-w-6xl mx-auto">
             <Header />
             <div
-              className={`liquid-glass rounded-2xl p-6 mb-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
+              className={`liquid-glass-strong rounded-[32px] p-5 sm:p-6 lg:p-7 mb-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
             >
+              <div className="mb-6">
+                <h1 className="section-title text-4xl sm:text-5xl">Teams</h1>
+              </div>
               <SearchForm
                 seasons={seasons}
                 tempSeason={tempSeason}
@@ -379,7 +384,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
               <button
                 onClick={handleSearchClick}
                 disabled={loading}
-                className="mt-4 my-5 w-full min-h-[44px] bg-gradient-to-r from-cyan-500/90 to-blue-600/90 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-3 px-6 rounded-full transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation backdrop-blur-sm border border-cyan-400/30 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40"
+                className="btn-search-primary mb-1 mt-5"
               >
                 {loading ? (
                   <>
@@ -392,7 +397,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
                 )}
               </button>
               {players.length > 0 && (
-                <>
+                <div className="mt-6 space-y-6 sm:mt-7 sm:space-y-7">
                   <TeamHeader
                     team={team}
                     season={season}
@@ -400,20 +405,8 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
                     teamRecord={teamRecord}
                     teamClinchStatus={teamClinchStatus}
                   />
-                  <hr
-                    style={{
-                      backgroundColor: playerUtils.getTeamColor(
-                        team,
-                        season,
-                        actualTheme
-                      ),
-                      height: 4,
-                      border: "none", // Important: removes default browser border
-                      margin: "16px 0", // Optional: adds some vertical spacing
-                    }}
-                  />
                   <div
-                    className="grid md:grid-cols-2 lg:grid-cols-3 gap-4"
+                    className="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
                     key={renderKey}
                   >
                     {players.map((p, idx) => (
@@ -435,7 +428,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
                       </div>
                     ))}
                   </div>
-                </>
+                </div>
               )}
             </div>
           </div>

@@ -68,10 +68,10 @@ export function Tooltip({
             className={`
               fixed z-[999999]
               ${width}
-              p-3 rounded-lg text-xs shadow-lg pointer-events-none
+              pointer-events-none rounded-2xl border p-3 text-xs shadow-lg
               border backdrop-blur-sm
-              bg-gray-900/95 border-gray-700/50 text-gray-200
-              ${forceDark ? "" : "light:bg-white/95 light:border-gray-200 light:text-gray-700 light:shadow-xl"}
+              bg-[#17181b]/95 border-white/10 text-gray-200
+              ${forceDark ? "" : "light:bg-white/95 light:border-slate-200 light:text-gray-700 light:shadow-xl"}
             `}
             style={{ top: coords.top, left: coords.left }}
           >

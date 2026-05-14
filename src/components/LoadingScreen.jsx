@@ -80,7 +80,7 @@ export const LoadingScreen = () => {
           New here? Check out a{" "}
           <a
             href="/tutorial"
-            className="text-cyan-400 hover:text-cyan-600 light:text-cyan-600 light:hover:text-cyan-700 font-bold"
+            className="link-accent font-bold"
           >
             tutorial
           </a>

@@ -6,8 +6,8 @@ import { useTheme } from "../../providers/ThemeContext";
 
 const BiometricItem = ({ icon: Icon, value, label }) => (
   <div className="flex items-center gap-1.5 text-gray-300 light:text-gray-600">
-    <Icon className="w-4 h-4 text-cyan-400 light:text-cyan-600" />
-    <span className="text-sm lg:text-base">{value}</span>
+    <Icon className="h-3.5 w-3.5 shrink-0 text-sky-300 light:text-sky-600 sm:h-4 sm:w-4" />
+    <span className="text-[0.8125rem] lg:text-[0.9375rem]">{value}</span>
   </div>
 );
 
@@ -57,10 +57,11 @@ export const PlayerHeader = ({ player, biometrics }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { actualTheme } = useTheme();
-
-  const teamLogoUrl = player.team
-    ? playerUtils.getTeamLogoUrl(player.team, player.season, actualTheme)
-    : null;
+  const teamCardGradient = playerUtils.getTeamCardGradient(
+    player.team,
+    player.season,
+    actualTheme
+  );
 
   const didWinStanleyCup = playerUtils.didWinStanleyCup(
     player.team,
@@ -86,67 +87,57 @@ export const PlayerHeader = ({ player, biometrics }) => {
   );
 
   return (
-    <div className="liquid-glass-strong rounded-2xl p-4 lg:p-6 liquid-glass-animate">
-      <div className="hidden xl:block absolute top-0 right-0 h-full w-44 overflow-hidden rounded-tr-xl rounded-br-2xl z-[-1]">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundColor: playerUtils.getTeamColor(
-              player.team,
-              player.season,
-              actualTheme
-            ),
-            clipPath: "polygon(60% 0%, 100% 0%, 100% 100%, 30% 100%)",
-          }}
-        />
-
-        <div
-          className="absolute inset-0 player-header-overlay-bg"
-          style={{
-            clipPath: "polygon(65% 0%, 70% 0%, 40% 100%, 35% 100%)",
-          }}
-        />
-      </div>
-
-      <div className="flex flex-col lg:flex-row items-center justify-center gap-4 lg:gap-6">
-        <div className="relative shrink-0">
-          <div
-            className="
+    <div
+      className="team-card-surface-strong liquid-glass-strong liquid-glass-animate overflow-hidden rounded-[32px] p-5 pb-8 lg:p-6 lg:pb-8"
+      style={{ "--team-card-gradient": teamCardGradient }}
+    >
+      <div className="flex flex-col items-center gap-2 text-center lg:flex-row lg:items-center lg:gap-6 lg:text-left">
+        <div className="flex shrink-0 flex-col items-center pb-8 xl:pb-0">
+          <div className="relative shrink-0">
+            <div
+              className="
               w-24 h-24 lg:w-32 lg:h-32
               rounded-full overflow-hidden
-              border-4 border-gray-300/50 light:border-gray-400/60
-              shadow-[0_10px_30px_rgba(0,0,0,0.35)]
+              shadow-[0_18px_40px_rgba(0,0,0,0.35)]
               backdrop-blur-sm
-              bg-[var(--team-color)]
             "
-            style={{
-              "--team-color": playerUtils.getTeamColor(
-                player.team,
-                player.season
-              ),
-            }}
-          >
-            <img
-              src={playerUtils.getPlayerHeadshot(
-                player.playerId,
-                player.team,
-                player.season
-              )}
-              alt={player.name}
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                e.target.src = playerUtils.getDefaultHeadshot();
+              style={{
+                background: playerUtils.getSurfaceGradient(
+                  playerUtils.getTeamColor(player.team, player.season),
+                  "dark"
+                ),
+                boxShadow: `0 0 0 8px ${playerUtils.getTeamColor(
+                  player.team,
+                  player.season
+                )}20`,
               }}
-            />
+            >
+              <img
+                src={playerUtils.getPlayerHeadshot(
+                  player.playerId,
+                  player.team,
+                  player.season
+                )}
+                alt={player.name}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.src = playerUtils.getDefaultHeadshot();
+                }}
+              />
+            </div>
+            <div
+              className="absolute bottom-0 left-1/2 z-10 flex h-16 w-16 -translate-x-1/2 translate-y-1/2 items-center justify-center transition-transform duration-300 active:scale-105 sm:hover:scale-105 xl:hidden"
+            >
+              <TeamLogoLink
+                actualTheme={actualTheme}
+                player={player}
+                className="flex h-full w-full items-center justify-center"
+              />
+            </div>
           </div>
-          <TeamLogoLink
-            actualTheme={actualTheme}
-            player={player}
-            className="absolute -bottom-8 left-1/2 -translate-x-1/2 xl:hidden w-16 h-16 object-contain flex items-center justify-center z-10 hover:opacity-80 transition-opacity"
-          />
         </div>
-        <div className="xl:flex-1 min-w-0 py-3">
-          <h2 className="flex items-center justify-center lg:justify-start gap-2 text-2xl lg:text-3xl font-bold mb-2 lg:mb-3 text-white light:text-gray-900">
+        <div className="flex min-w-0 w-full max-w-full flex-col items-center py-1 lg:items-start xl:flex-1">
+          <h2 className="mb-3 flex flex-wrap items-center justify-center gap-2 text-[1.7rem] font-bold tracking-[-0.04em] text-white light:text-gray-900 sm:text-[1.8rem] lg:justify-start lg:text-[2.2rem]">
             <span className="max-w-80 truncate">{player.name}</span>
             {didWinStanleyCup && (
               <img
@@ -156,13 +147,20 @@ export const PlayerHeader = ({ player, biometrics }) => {
               />
             )}
             {isLocalhost && (
-              <Share className="h-4 w-4" onClick={activateShareable} />
+              <button
+                type="button"
+                onClick={activateShareable}
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:text-white light:border-slate-300 light:bg-white/80 light:text-slate-600 light:hover:text-slate-900"
+                aria-label="Open shareable view"
+              >
+                <Share className="h-4 w-4" />
+              </button>
             )}
           </h2>
-          <div className="space-y-2">
-            <div className="flex flex-wrap font-semibold items-center justify-center lg:justify-start gap-2 md:gap-1 text-gray-300 light:text-gray-600">
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center justify-center gap-2 text-[0.8125rem] font-semibold text-gray-300 light:text-gray-600 md:gap-1 lg:justify-start lg:text-[0.9375rem]">
               <span
-                className="text-sm lg:text-base cursor-pointer hover:opacity-80"
+                className="cursor-pointer hover:opacity-80"
                 onClick={() =>
                   navigate(
                     `/teams?season=${player.season}&team=${player.team}&position=${player.position}`
@@ -172,16 +170,12 @@ export const PlayerHeader = ({ player, biometrics }) => {
                 {playerUtils.getFullTeamName(player.team, player.season)}
               </span>
               <span className="text-gray-500 light:text-gray-400">•</span>
-              <span className="text-sm lg:text-base">
-                {playerUtils.formatSeason(player.season)}
-              </span>
+              <span>{playerUtils.formatSeason(player.season)}</span>
               <span className="text-gray-500 light:text-gray-400">•</span>
-              <span className="text-sm lg:text-base">
-                {player.position === "F" ? "Forward" : "Defense"}
-              </span>
+              <span>{player.position === "F" ? "Forward" : "Defense"}</span>
             </div>
             {(biometrics?.height || biometrics?.weight || player?.age) && (
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 lg:gap-4">
+              <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start lg:gap-4">
                 {biometrics?.height && (
                   <BiometricItem icon={Ruler} value={biometrics.height} />
                 )}
@@ -197,7 +191,7 @@ export const PlayerHeader = ({ player, biometrics }) => {
               </div>
             )}
             {archetypes.length > 0 && (
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mt-3">
+              <div className="mt-3 flex flex-wrap items-center justify-center gap-2 lg:justify-start">
                 {archetypes.map((archetype, idx) => (
                   <ArchetypeBadge key={idx} archetype={archetype} />
                 ))}
@@ -209,7 +203,7 @@ export const PlayerHeader = ({ player, biometrics }) => {
           actualTheme={actualTheme}
           showCup={true}
           player={player}
-          className="hidden xl:flex shrink-0 w-40 lg:h-40 items-center justify-center hover:opacity-80 transition-opacity"
+          className="hidden shrink-0 transition-transform duration-300 active:scale-105 xl:flex xl:h-44 xl:w-44 xl:items-center xl:justify-center xl:hover:-translate-y-1 xl:hover:scale-105"
         />
       </div>
     </div>

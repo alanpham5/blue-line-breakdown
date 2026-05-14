@@ -14,11 +14,20 @@ export const PercentileBar = ({
   const explanation = statKey ? playerUtils.getStatExplanation(statKey) : null;
   const color =
     type === "offensive"
-      ? "from-blue-500 to-cyan-400"
-      : "from-red-500 to-orange-400";
+      ? "from-cyan-500 to-sky-400"
+      : "from-rose-500 to-red-400";
+  const valueColor =
+    type === "offensive"
+      ? "text-cyan-300 light:text-cyan-600"
+      : "text-rose-400 light:text-rose-600";
+  /* Light: match WAR ring (slate-200). Dark: muted cyan / rose tracks—no shared green hue */
+  const trackColor =
+    type === "offensive"
+      ? "bg-[rgba(20,78,98,0.56)] light:bg-slate-200"
+      : "bg-[rgba(112,26,46,0.52)] light:bg-slate-200";
 
   return (
-    <div className="mb-3 sm:mb-4 percentile-bar-container">
+    <div className="mb-4 sm:mb-5 percentile-bar-container">
       <div className="flex justify-between items-center mb-1 gap-2">
         <div className="flex items-center gap-1.5 min-w-0 flex-1">
           <span
@@ -48,16 +57,16 @@ export const PercentileBar = ({
           )}
         </div>
         <span
-          className={`text-sm ${!compact ? "lg:text-base" : "lg:text-xl"} font-bold text-white shrink-0 ${forceDark ? "" : "light:text-gray-900"}`}
+          className={`text-sm ${!compact ? "lg:text-base" : "lg:text-xl"} font-bold shrink-0 ${valueColor} ${forceDark ? "" : ""}`}
         >
           {value.toFixed(1)}
         </span>
       </div>
       <div
-        className={`w-full bg-gray-800/40 backdrop-blur-sm rounded-full h-2 sm:h-2.5 overflow-hidden border border-gray-700/30 ${forceDark ? "" : "light:bg-gray-200/80 light:border-gray-300"}`}
+        className={`w-full h-2.5 overflow-hidden rounded-full ${trackColor} backdrop-blur-sm`}
       >
         <div
-          className={`h-2 sm:h-2.5 rounded-full bg-gradient-to-r ${color} percentile-bar-fill shadow-lg ${type === "offensive" ? "shadow-cyan-500/30" : "shadow-red-500/30"}`}
+          className={`h-2.5 rounded-full bg-gradient-to-r ${color} percentile-bar-fill ${type === "offensive" ? "shadow-[0_0_10px_rgba(18,223,246,0.16)]" : "shadow-[0_0_10px_rgba(255,55,95,0.18)]"}`}
           style={{ width: `${value}%` }}
         />
       </div>

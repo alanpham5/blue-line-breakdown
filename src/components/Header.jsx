@@ -1,78 +1,127 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import { Menu, X } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+
+const navLinkClassName = ({ isActive }) =>
+  [
+    "inline-flex min-w-[5.5rem] items-center justify-center rounded-full px-4 py-2.5 text-sm font-semibold transition-all duration-200 outline-none focus:outline-none focus-visible:outline-none",
+    isActive
+      ? "bg-sky-400/10 text-sky-300 shadow-[0_6px_16px_rgba(88,166,255,0.12)] light:bg-sky-500/10 light:text-sky-700"
+      : "text-gray-300 hover:text-white hover:bg-white/5 light:text-slate-600 light:hover:text-slate-900 light:hover:bg-slate-900/5",
+  ].join(" ");
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header>
-      <div className="flex flex-col md:flex-row md:justify-between md:items-center">
-        <div className="flex flex-row justify-between items-center p-4 w-full md:w-auto">
-          <Link to="/" className="flex items-center flex-shrink-0">
+    <header className="mb-6 sm:mb-8">
+      <div className="liquid-glass-strong rounded-[32px] px-4 py-4 sm:px-5 sm:py-5">
+        <div className="flex items-center justify-between gap-3 md:gap-4">
+          <Link
+            to="/"
+            className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3"
+          >
             <img
               src="/blb-dark.png"
               alt="Logo"
-              className="w-12 h-12 lg:w-16 lg:h-16 block light:hidden"
+              className="h-10 w-10 shrink-0 sm:h-11 sm:w-11 lg:h-14 lg:w-14 block light:hidden"
             />
             <img
               src="/blb-light.png"
               alt="Logo"
-              className="w-12 h-12 lg:w-16 lg:h-16 hidden light:block"
+              className="h-10 w-10 shrink-0 sm:h-11 sm:w-11 lg:h-14 lg:w-14 hidden light:block"
             />
-            <h1 className="text-2xl lg:text-4xl font-bold text-white light:text-gray-900 ml-2">
-              Blue Line Breakdown
-            </h1>
+            <div className="min-w-0 flex-1 overflow-hidden">
+              <h1 className="whitespace-nowrap text-[clamp(0.68rem,calc(0.52rem+5.1vw),2.8rem)] font-bold leading-none tracking-[-0.04em] text-white light:text-gray-900 sm:text-[clamp(0.88rem,calc(0.92rem+3.05vw),2.8rem)] md:text-[clamp(0.65rem,calc(0.52rem+1.55vw),2.4rem)] lg:text-[clamp(0.72rem,calc(0.6rem+1.85vw),2.65rem)] xl:text-[clamp(0.82rem,calc(0.72rem+2.2vw),2.8rem)]">
+                Blue Line Breakdown
+              </h1>
+            </div>
           </Link>
 
           <button
-            className="md:hidden text-white light:text-gray-900 text-xl p-2"
+            type="button"
+            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/5 text-white outline-none transition-colors hover:bg-white/10 focus:outline-none focus-visible:outline-none md:hidden light:bg-white/80 light:text-slate-900 light:hover:bg-white"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
+            aria-expanded={isMenuOpen}
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
-            {isMenuOpen ? "✕" : "☰"}
+            {isMenuOpen ? (
+              <X className="h-6 w-6" strokeWidth={2.25} />
+            ) : (
+              <Menu className="h-6 w-6" strokeWidth={2.25} />
+            )}
           </button>
+
+          <div className="hidden shrink-0 items-center gap-3 md:flex">
+            <nav>
+              <ul className="flex items-center gap-2">
+                <li>
+                  <NavLink to="/" end className={navLinkClassName}>
+                    Players
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/teams" className={navLinkClassName}>
+                    Teams
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/about" className={navLinkClassName}>
+                    About
+                  </NavLink>
+                </li>
+              </ul>
+            </nav>
+            <ThemeToggle showLabel={true} />
+          </div>
         </div>
 
         <nav
-          className={`${isMenuOpen ? "block" : "hidden"} md:block w-full md:w-auto z-50`}
+          className={`${isMenuOpen ? "block" : "hidden"} md:hidden mt-4 w-full z-50`}
+          aria-hidden={!isMenuOpen}
         >
-          <ul className="flex flex-col md:flex-row items-center gap-4 md:gap-6 px-4 py-3 md:p-0">
-            <li>
-              <Link
-                to="/"
-                className="text-white light:text-gray-900 hover:text-yellow-400 light:hover:text-cyan-600 transition"
-              >
-                Players
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                to="/teams"
-                className="text-white light:text-gray-900 hover:text-yellow-400 light:hover:text-cyan-600 transition"
-              >
-                Teams
-              </Link>
-            </li>
-
-            <li>
-              <Link
-                to="/about"
-                className="text-white light:text-gray-900 hover:text-yellow-400 light:hover:text-cyan-600 transition"
-              >
-                About
-              </Link>
-            </li>
-
-            <li className="flex justify-center w-full md:hidden">
-              <ThemeToggle showLabel={false} />
-            </li>
-
-            <li className="hidden md:flex">
+          <div className="liquid-glass rounded-[28px] p-3">
+            <ul className="flex flex-col items-center gap-2">
+              <li className="flex w-full max-w-xs justify-center">
+                <NavLink
+                  to="/"
+                  end
+                  className={({ isActive }) =>
+                    `${navLinkClassName({ isActive })} w-full justify-center`
+                  }
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Players
+                </NavLink>
+              </li>
+              <li className="flex w-full max-w-xs justify-center">
+                <NavLink
+                  to="/teams"
+                  className={({ isActive }) =>
+                    `${navLinkClassName({ isActive })} w-full justify-center`
+                  }
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Teams
+                </NavLink>
+              </li>
+              <li className="flex w-full max-w-xs justify-center">
+                <NavLink
+                  to="/about"
+                  className={({ isActive }) =>
+                    `${navLinkClassName({ isActive })} w-full justify-center`
+                  }
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  About
+                </NavLink>
+              </li>
+            </ul>
+            <div className="mt-3 flex justify-center">
               <ThemeToggle showLabel={true} />
-            </li>
-          </ul>
+            </div>
+          </div>
         </nav>
       </div>
     </header>

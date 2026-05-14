@@ -16,10 +16,10 @@ export const TutorialForm = ({
       <div className="flex gap-3 justify-center">
         <button
           onClick={() => setDashboard("players")}
-          className={`px-6 py-2 rounded-full font-semibold transition ${
+          className={`rounded-full px-6 py-2 font-semibold transition ${
             dashboard === "players"
-              ? "bg-cyan-500 text-white"
-              : "bg-white/10 light:bg-gray-200/80 text-gray-200 light:text-gray-700 hover:bg-cyan-500/40 light:hover:bg-cyan-100"
+              ? "bg-[linear-gradient(180deg,#4f9ef7_0%,#3d8deb_42%,#2f7fe3_100%)] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_4px_12px_rgba(32,100,190,0.22)]"
+              : "bg-white/10 text-gray-200 hover:bg-[#3d8deb]/35 light:bg-gray-200/80 light:text-gray-700 light:hover:bg-[#bdd9fb]"
           }`}
         >
           Player Dash
@@ -27,10 +27,10 @@ export const TutorialForm = ({
 
         <button
           onClick={() => setDashboard("team")}
-          className={`px-6 py-2 rounded-full font-semibold transition ${
+          className={`rounded-full px-6 py-2 font-semibold transition ${
             dashboard === "team"
-              ? "bg-blue-500 text-white"
-              : "bg-white/10 light:bg-gray-200/80 text-gray-200 light:text-gray-700 hover:bg-blue-500/40 light:hover:bg-blue-100"
+              ? "bg-[linear-gradient(180deg,#4f9ef7_0%,#3d8deb_42%,#2f7fe3_100%)] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_4px_12px_rgba(32,100,190,0.22)]"
+              : "bg-white/10 text-gray-200 hover:bg-[#3d8deb]/35 light:bg-gray-200/80 light:text-gray-700 light:hover:bg-[#bdd9fb]"
           }`}
         >
           Team Dash
