@@ -33,7 +33,7 @@ export const Header = () => {
               className="h-10 w-10 shrink-0 sm:h-11 sm:w-11 lg:h-14 lg:w-14 hidden light:block"
             />
             <div className="min-w-0 flex-1 overflow-hidden">
-              <h1 className="whitespace-nowrap text-[clamp(0.68rem,calc(0.52rem+5.1vw),2.8rem)] font-bold leading-none tracking-[-0.04em] text-white light:text-gray-900 sm:text-[clamp(0.88rem,calc(0.92rem+3.05vw),2.8rem)] md:text-[clamp(0.65rem,calc(0.52rem+1.55vw),2.4rem)] lg:text-[clamp(0.72rem,calc(0.6rem+1.85vw),2.65rem)] xl:text-[clamp(0.82rem,calc(0.72rem+2.2vw),2.8rem)]">
+              <h1 className="whitespace-nowrap text-[clamp(0.72rem,4.2vw,2.8rem)] font-bold leading-none tracking-[-0.04em] text-white light:text-gray-900 sm:text-[clamp(1rem,2.4vw,2.8rem)]">
                 Blue Line Breakdown
               </h1>
             </div>
