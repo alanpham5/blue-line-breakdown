@@ -125,9 +125,7 @@ export const PlayerHeader = ({ player, biometrics }) => {
                 }}
               />
             </div>
-            <div
-              className="absolute bottom-0 left-1/2 z-10 flex h-16 w-16 -translate-x-1/2 translate-y-1/2 items-center justify-center transition-transform duration-300 active:scale-105 sm:hover:scale-105 xl:hidden"
-            >
+            <div className="absolute bottom-0 left-1/2 z-10 flex h-16 w-16 -translate-x-1/2 translate-y-1/2 items-center justify-center transition-transform duration-300 active:scale-105 sm:hover:scale-105 xl:hidden">
               <TeamLogoLink
                 actualTheme={actualTheme}
                 player={player}

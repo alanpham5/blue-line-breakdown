@@ -11,7 +11,10 @@ export const PlayerCard = ({ player, team, season, stroke, onPlayerClick }) => {
     <div
       className="team-card-surface liquid-glass liquid-glass-animate cursor-pointer rounded-[28px] p-4 transition-all duration-300 hover:brightness-[1.03]"
       style={{
-        "--team-card-gradient": playerUtils.getCardGradient(stroke, actualTheme),
+        "--team-card-gradient": playerUtils.getCardGradient(
+          stroke,
+          actualTheme
+        ),
       }}
       onClick={() => onPlayerClick(player)}
     >

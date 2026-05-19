@@ -11,13 +11,13 @@ export const StatsCardCompact = ({
 
   return (
     <div className="liquid-glass-strong rounded-[28px] p-5">
-      <div className="flex items-center gap-2 mb-2">
+      <div className="flex items-center gap-1.5 sm:gap-2 mb-2">
         <Icon
-          className={`h-6 w-6 ${
+          className={`h-[18px] w-[18px] sm:h-6 sm:w-6 ${
             type === "offensive" ? "text-cyan-300" : "text-rose-400"
           }`}
         />
-        <h3 className="text-2xl font-bold text-white">{title}</h3>
+        <h3 className="text-base sm:text-2xl font-bold text-white">{title}</h3>
       </div>
 
       <div className="space-y-5">

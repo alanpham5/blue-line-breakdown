@@ -11,10 +11,7 @@ export const Loader = () => {
       <LoadingScreen />
       <p className="pointer-events-auto absolute bottom-6 left-0 right-0 z-10 px-4 text-center text-sm text-gray-500 light:text-slate-500">
         Preview of the initial database load screen.{" "}
-        <Link
-          to="/"
-          className="link-accent font-semibold"
-        >
+        <Link to="/" className="link-accent font-semibold">
           Back to home
         </Link>
       </p>

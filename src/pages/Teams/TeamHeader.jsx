@@ -38,7 +38,7 @@ export const TeamHeader = ({
       >
         <div className="relative z-10 text-center font-bold">
           <div className="flex items-center justify-center gap-3 py-2 md:gap-4">
-            <div className="relative mx-2 mt-1 h-28 w-24 justify-center md:mx-4 md:h-32 md:w-28">
+            <div className="relative mx-2 mt-1 h-32 w-28 justify-center md:mx-4 md:h-36 md:w-32">
               {didWinStanleyCup && (
                 <img
                   src="/stanleycup.png"
@@ -51,7 +51,7 @@ export const TeamHeader = ({
               <img
                 src={playerUtils.getTeamLogoUrl(team, season, actualTheme)}
                 alt={team}
-                className={`relative h-28 object-contain team-logo-stroke z-10 md:h-32 ${
+                className={`relative h-32 object-contain team-logo-stroke z-10 md:h-36 ${
                   didWinStanleyCup
                     ? `scale-75 ${
                         actualTheme === "dark" && "team-logo-stroke-cup"

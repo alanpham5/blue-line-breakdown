@@ -78,10 +78,7 @@ export const LoadingScreen = () => {
       {showTutorial && (
         <p className="mt-6 text-center text-sm sm:text-base max-w-md liquid-glass-animate text-white light:text-gray-900">
           New here? Check out a{" "}
-          <a
-            href="/tutorial"
-            className="link-accent font-bold"
-          >
+          <a href="/tutorial" className="link-accent font-bold">
             tutorial
           </a>
         </p>

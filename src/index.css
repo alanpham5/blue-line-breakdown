@@ -49,8 +49,7 @@
   --control-border-focus: rgba(88, 166, 255, 0.18);
   --control-focus-ring: rgba(88, 166, 255, 0.12);
   --control-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04), inset 0 -1px 0 rgba(0, 0, 0, 0.14),
     0 1px 1px rgba(0, 0, 0, 0.08);
   --control-placeholder: #787b84;
   --control-icon: #8e8d96;
@@ -300,7 +299,9 @@ html.light .ice-background {
 .app-field:focus {
   outline: none;
   border-color: var(--control-border-focus);
-  box-shadow: var(--control-shadow), 0 0 0 3px var(--control-focus-ring);
+  box-shadow:
+    var(--control-shadow),
+    0 0 0 3px var(--control-focus-ring);
 }
 
 .app-field-icon {
@@ -370,8 +371,14 @@ input.app-field[type="search"]::-webkit-search-results-decoration {
     ),
     var(--glass-bg);
   background-repeat: no-repeat, no-repeat, no-repeat;
-  background-size: 100% 52%, 100% 100%, 100% 100%;
-  background-position: top left, top left, top left;
+  background-size:
+    100% 52%,
+    100% 100%,
+    100% 100%;
+  background-position:
+    top left,
+    top left,
+    top left;
 }
 
 .team-card-surface-strong {
@@ -385,8 +392,14 @@ input.app-field[type="search"]::-webkit-search-results-decoration {
     ),
     var(--glass-bg-strong);
   background-repeat: no-repeat, no-repeat, no-repeat;
-  background-size: 100% 52%, 100% 100%, 100% 100%;
-  background-position: top left, top left, top left;
+  background-size:
+    100% 52%,
+    100% 100%,
+    100% 100%;
+  background-position:
+    top left,
+    top left,
+    top left;
 }
 
 .liquid-glass::before,
@@ -505,8 +518,14 @@ html.light .liquid-glass-strong {
     ),
     var(--glass-bg);
   background-repeat: no-repeat, no-repeat, no-repeat;
-  background-size: 100% 52%, 100% 100%, 100% 100%;
-  background-position: top left, top left, top left;
+  background-size:
+    100% 52%,
+    100% 100%,
+    100% 100%;
+  background-position:
+    top left,
+    top left,
+    top left;
 }
 
 .shareable-display-dark .team-card-surface-strong {
@@ -520,8 +539,14 @@ html.light .liquid-glass-strong {
     ),
     var(--glass-bg-strong);
   background-repeat: no-repeat, no-repeat, no-repeat;
-  background-size: 100% 52%, 100% 100%, 100% 100%;
-  background-position: top left, top left, top left;
+  background-size:
+    100% 52%,
+    100% 100%,
+    100% 100%;
+  background-position:
+    top left,
+    top left,
+    top left;
 }
 
 @keyframes glassAppear {
@@ -673,12 +698,7 @@ html.light .liquid-glass-strong {
     touch-action: manipulation;
     cursor: pointer;
     overflow: hidden;
-    background: linear-gradient(
-      180deg,
-      #4f9ef7 0%,
-      #3d8deb 38%,
-      #2f7fe3 100%
-    );
+    background: linear-gradient(180deg, #4f9ef7 0%, #3d8deb 38%, #2f7fe3 100%);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.22),
       inset 0 -1px 0 rgba(0, 35, 85, 0.1),
@@ -743,7 +763,9 @@ html.light .liquid-glass-strong {
     text-decoration-color: rgba(79, 158, 247, 0.45);
     text-underline-offset: 3px;
     color: #7ab8fc;
-    transition: color 0.15s ease, text-decoration-color 0.15s ease;
+    transition:
+      color 0.15s ease,
+      text-decoration-color 0.15s ease;
   }
 
   .link-accent:hover {

@@ -279,14 +279,8 @@ export const playerUtils = {
     if (!color) return color;
 
     const topTint = this.toRgba(color, actualTheme === "light" ? 0.2 : 0.26);
-    const upperTint = this.toRgba(
-      color,
-      actualTheme === "light" ? 0.11 : 0.14
-    );
-    const lowerTint = this.toRgba(
-      color,
-      actualTheme === "light" ? 0.04 : 0.05
-    );
+    const upperTint = this.toRgba(color, actualTheme === "light" ? 0.11 : 0.14);
+    const lowerTint = this.toRgba(color, actualTheme === "light" ? 0.04 : 0.05);
     const transparentTint = this.toRgba(color, 0);
 
     return `linear-gradient(180deg, ${topTint} 0%, ${upperTint} 18%, ${lowerTint} 32%, ${transparentTint} 54%, ${transparentTint} 100%)`;

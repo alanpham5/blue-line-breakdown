@@ -151,7 +151,9 @@ export const Slideshow = ({ slides, enablePageLoadAnimations = true }) => {
               <span
                 key={idx}
                 className={`w-4 h-4 rounded-full transition ${
-                  current === idx ? "bg-white light:bg-gray-800" : "bg-white/30 light:bg-gray-400"
+                  current === idx
+                    ? "bg-white light:bg-gray-800"
+                    : "bg-white/30 light:bg-gray-400"
                 }`}
               />
             ))}

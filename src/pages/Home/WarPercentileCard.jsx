@@ -32,7 +32,7 @@ export const WarPercentileCard = ({ warPercentile, showInfo = true }) => {
         <Trophy className="h-4 w-4 shrink-0 text-[#7dcb48] sm:h-5 sm:w-5" />
         <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:gap-2">
           <h3 className="min-w-0 shrink font-bold tracking-[-0.04em] text-white light:text-gray-900">
-            <span className="block truncate whitespace-nowrap text-[1.2rem] leading-snug sm:hidden">
+            <span className="block text-[1.2rem] leading-snug sm:hidden">
               League Percentile
             </span>
             <span className="hidden leading-[1.06] sm:block">
