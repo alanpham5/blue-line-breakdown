@@ -26,11 +26,9 @@ export const StatsCard = ({
   return (
     <div className="liquid-glass-strong liquid-glass-animate rounded-[32px] p-5 sm:p-6">
       <div className="mb-4 flex items-center justify-between gap-2 sm:mb-6 sm:gap-3">
-        <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
-          <Icon
-            className={`h-[18px] w-[18px] shrink-0 sm:h-6 sm:w-6 ${colorClasses.iconColor}`}
-          />
-          <h3 className="text-base sm:text-xl md:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900 truncate">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+          <Icon className={`h-6 w-6 shrink-0 ${colorClasses.iconColor}`} />
+          <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900 whitespace-nowrap">
             {title}
           </h3>
         </div>
