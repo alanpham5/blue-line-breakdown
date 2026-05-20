@@ -46,42 +46,41 @@ export const SimilarPlayersSection = ({
 
   return (
     <div className="relative liquid-glass-strong liquid-glass-animate rounded-[32px] p-5 sm:p-6">
-      <div className="absolute top-[22px] right-5 sm:top-[26px] sm:right-6">
-        <Tooltip
-          id="similar-players"
-          position="bottom-left"
-          width="w-64 sm:w-72"
-          content={
-            <div className="space-y-2">
-              <div className="mb-1 font-semibold text-amber-300 light:text-amber-600">
-                Player Similarity
-              </div>
-              <div className="text-xs leading-relaxed text-gray-300 light:text-gray-600">
-                Players are compared using normalized on-ice, physical, and
-                performance stats. Similarity scores are relative and based on
-                how close players are statistically, not raw totals. Changing
-                the season filter changes the comparison pool, which can shift
-                both rankings and scores.
-              </div>
-            </div>
-          }
-        >
-          <button
-            className="shrink-0 text-gray-400 hover:text-gray-200 light:text-gray-500 light:hover:text-gray-700 transition-colors"
-            aria-label="Info about player similarity"
-          >
-            <Info className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-          </button>
-        </Tooltip>
-      </div>
-
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6 sm:pr-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
         <div className="flex items-center gap-1.5 sm:gap-2">
           <Users className="h-6 w-6 shrink-0 text-amber-300 light:text-amber-600" />
           <div className="flex items-center gap-1.5 sm:gap-2">
             <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900 whitespace-nowrap">
               Most Similar Players
             </h3>
+            <div className="absolute top-[22px] right-5 sm:static sm:top-auto sm:right-auto">
+              <Tooltip
+                id="similar-players"
+                position="bottom"
+                width="w-64 sm:w-72"
+                content={
+                  <div className="space-y-2">
+                    <div className="mb-1 font-semibold text-amber-300 light:text-amber-600">
+                      Player Similarity
+                    </div>
+                    <div className="text-xs leading-relaxed text-gray-300 light:text-gray-600">
+                      Players are compared using normalized on-ice, physical,
+                      and performance stats. Similarity scores are relative and
+                      based on how close players are statistically, not raw
+                      totals. Changing the season filter changes the comparison
+                      pool, which can shift both rankings and scores.
+                    </div>
+                  </div>
+                }
+              >
+                <button
+                  className="shrink-0 text-gray-400 hover:text-gray-200 light:text-gray-500 light:hover:text-gray-700 transition-colors"
+                  aria-label="Info about player similarity"
+                >
+                  <Info className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                </button>
+              </Tooltip>
+            </div>
           </div>
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">
