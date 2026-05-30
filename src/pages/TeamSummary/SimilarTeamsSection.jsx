@@ -4,7 +4,12 @@ import { playerUtils } from "../../utils/playerUtils";
 import { Tooltip } from "../../components/Tooltip";
 import { useTheme } from "../../providers/ThemeContext";
 
-const SimilarTeamCard = ({ similarTeam, onClick, animationKey, actualTheme }) => {
+const SimilarTeamCard = ({
+  similarTeam,
+  onClick,
+  animationKey,
+  actualTheme,
+}) => {
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const prevAnimationKeyRef = useRef(animationKey);
   const isInitialMount = useRef(true);
@@ -34,14 +39,20 @@ const SimilarTeamCard = ({ similarTeam, onClick, animationKey, actualTheme }) =>
     }
   }, [animationKey, isMobile]);
 
-  const teamColor = playerUtils.getTeamColor(similarTeam.team, similarTeam.season, actualTheme);
+  const teamColor = playerUtils.getTeamColor(
+    similarTeam.team,
+    similarTeam.season,
+    actualTheme
+  );
 
   return (
     <div
       className={`group flex min-w-0 cursor-pointer flex-col items-center py-2 text-center transition-all duration-300 touch-manipulation ${shouldAnimate ? "player-card-enter" : ""} ${isMobile ? "" : "hover:-translate-y-1"}`}
       onClick={() => onClick?.(similarTeam.team, similarTeam.season)}
     >
-      <div className={`relative mb-2 ${isMobile ? "" : "transition-transform duration-300 sm:group-hover:scale-105 group-active:scale-105"}`}>
+      <div
+        className={`relative mb-2 ${isMobile ? "" : "transition-transform duration-300 sm:group-hover:scale-105 group-active:scale-105"}`}
+      >
         <div
           className="h-16 w-16 sm:h-20 sm:w-20 overflow-hidden rounded-full bg-zinc-950/55 transition-all duration-300 backdrop-blur-sm shadow-lg light:bg-slate-700/45 flex items-center justify-center p-2"
           style={{ border: `1px solid ${playerUtils.toRgba(teamColor, 0.3)}` }}
@@ -55,12 +66,13 @@ const SimilarTeamCard = ({ similarTeam, onClick, animationKey, actualTheme }) =>
             alt={similarTeam.team}
             className="w-full h-full object-contain team-logo-stroke"
             onError={(e) => {
-              e.target.src = "https://assets.nhle.com/logos/nhl/svg/NHL_dark.svg";
+              e.target.src =
+                "https://assets.nhle.com/logos/nhl/svg/NHL_dark.svg";
             }}
           />
         </div>
         <div className="absolute -bottom-0.5 -right-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-b from-[#ffe57e] to-[#ffd037] text-[10px] font-bold text-[#4f3d00] shadow-[0_4px_10px_rgba(255,208,55,0.18)] sm:-bottom-1 sm:-right-1 sm:h-8 sm:w-8 sm:text-xs">
-          {Math.round(similarTeam.similarity)}%
+          {Math.round(similarTeam.similarity)}
         </div>
       </div>
       <p className="text-xs font-semibold leading-tight text-white light:text-gray-900 sm:text-sm">
@@ -123,8 +135,9 @@ export const SimilarTeamsSection = ({ similarTeams, onTeamClick }) => {
                     Team Similarity
                   </div>
                   <div className="text-xs leading-relaxed text-gray-300 light:text-gray-600">
-                    Teams are compared using normalized offensive, defensive, and pacing
-                    statistics. Similarity scores indicate how closely their statistical profiles match in these areas.
+                    Teams are compared using normalized offensive, defensive,
+                    and pacing statistics. Similarity scores indicate how
+                    closely their statistical profiles match in these areas.
                   </div>
                 </div>
               }
