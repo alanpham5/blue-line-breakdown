@@ -45,10 +45,10 @@ export const GaPageTrackContext = () => {
 
     if (normalizedPath === "/teams") {
       const team = searchParams.get("team");
-      const season = searchParams.get("season");
-      const position = searchParams.get("position");
+      const season = searchParams.get("season") || searchParams.get("year");
+      const position = searchParams.get("position") || "summary";
 
-      if (team && season && position) {
+      if (team && season) {
         window.gtag("event", "team_view", {
           team,
           season,

@@ -1,0 +1,742 @@
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Loader2, Search, Target, Shield, Flame, Activity } from "lucide-react";
+import { track } from "@vercel/analytics";
+import { apiService } from "../../services/apiService";
+import { Header } from "../../components/Header";
+import { TeamStatBar } from "./TeamStatBar";
+import { SimilarTeamsSection } from "./SimilarTeamsSection";
+import { playerUtils } from "../../utils/playerUtils";
+import { useIsExternal } from "../../hooks/useIsExternal";
+import { LoadingScreen } from "../../components/LoadingScreen";
+import { useTheme } from "../../providers/ThemeContext";
+
+const getSeasonName = (s) => `${s}-${(parseInt(s) + 1).toString().slice(-2)}`;
+
+const getClinchStatus = (clincher) => {
+  const statusMap = {
+    x: "Clinched Playoffs",
+    y: "Clinched Division",
+    z: "Clinched Conference",
+    "*": "President's Trophy",
+  };
+  return statusMap[clincher] || null;
+};
+
+export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { actualTheme } = useTheme();
+  const isExternal = useIsExternal();
+
+  const now = new Date();
+  const latestSeasonYear =
+    now.getMonth() >= 10 ? now.getFullYear() : now.getFullYear() - 1;
+  const defaultSeason = latestSeasonYear.toString();
+
+  const initialTeam = searchParams.get("team") || null;
+  const initialSeason =
+    searchParams.get("year") || searchParams.get("season") || null;
+
+  const [team, setTeam] = useState(initialTeam);
+  const [season, setSeason] = useState(initialSeason || defaultSeason);
+  const [tempTeam, setTempTeam] = useState(initialTeam || "ANA");
+  const [tempSeason, setTempSeason] = useState(initialSeason || defaultSeason);
+  const [hasSearched, setHasSearched] = useState(
+    !!(initialTeam && initialSeason)
+  );
+
+  const [teamsList, setTeamsList] = useState([]);
+  const [loadingTeams, setLoadingTeams] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
+  const [teamSummaryData, setTeamSummaryData] = useState(null);
+  const [teamRecord, setTeamRecord] = useState(null);
+  const [teamClinchStatus, setTeamClinchStatus] = useState(null);
+  const [error, setError] = useState("");
+
+  const [initializingCache, setInitializingCache] = useState(false);
+  const [initInProgress, setInitInProgress] = useState(false);
+  const [loadingMessage, setLoadingMessage] = useState("Searching...");
+  const initInProgressRef = useRef(false);
+  const teamHeaderRef = useRef(null);
+
+  const seasonsList = Array.from(
+    {
+      length:
+        (now.getMonth() >= 10 ? now.getFullYear() : now.getFullYear() - 1) -
+        2007,
+    },
+    (_, i) => 2008 + i
+  );
+
+  useEffect(() => {
+    const checkHealth = async () => {
+      try {
+        await apiService.healthCheck();
+      } catch {}
+    };
+
+    const initializeCacheInBackground = async () => {
+      try {
+        setInitInProgress(true);
+        initInProgressRef.current = true;
+        const cacheStatus = await apiService.checkCacheStatus();
+        if (!cacheStatus.dataLoaded || !cacheStatus.cacheExists) {
+          const initResponse = await apiService.initializeCache();
+          if (initResponse.status === "loading") {
+            await new Promise((resolve) => {
+              const poll = async () => {
+                const status = await apiService.checkCacheStatus();
+                if (status.dataLoaded || status.cacheExists) {
+                  initInProgressRef.current = false;
+                  setInitInProgress(false);
+                  resolve();
+                } else {
+                  setTimeout(poll, 30000);
+                }
+              };
+              poll();
+            });
+          }
+        }
+        setInitInProgress(false);
+        initInProgressRef.current = false;
+      } catch {
+        setInitInProgress(false);
+        initInProgressRef.current = false;
+      }
+    };
+
+    checkHealth();
+    initializeCacheInBackground();
+  }, []);
+
+  useEffect(() => {
+    const fetchTeamsList = async () => {
+      setLoadingTeams(true);
+      try {
+        const data = await apiService.fetchTeams(tempSeason);
+        setTeamsList(data.teams || []);
+        if (data.teams?.length) {
+          if (!data.teams.includes(tempTeam)) {
+            setTempTeam(data.teams[0]);
+          }
+        }
+      } catch {
+        setTeamsList([]);
+      } finally {
+        setLoadingTeams(false);
+      }
+    };
+    fetchTeamsList();
+  }, [tempSeason]);
+
+  useEffect(() => {
+    const urlTeam = searchParams.get("team");
+    const urlYear = searchParams.get("year") || searchParams.get("season");
+
+    if (urlTeam) {
+      setTeam(urlTeam);
+      setTempTeam(urlTeam);
+    }
+    if (urlYear) {
+      setSeason(urlYear);
+      setTempSeason(urlYear);
+    }
+
+    if (urlTeam && urlYear) {
+      setHasSearched(true);
+      fetchTeamSummaryData(urlTeam, urlYear);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (hasSearched && teamSummaryData && !loadingData && teamHeaderRef.current) {
+      teamHeaderRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [hasSearched, teamSummaryData, loadingData]);
+
+  const ensureCacheInitialized = async () => {
+    if (!initInProgressRef.current) return;
+    setInitializingCache(true);
+    const messages = [
+      "Searching...",
+      "Hold on, we need to refresh the data...",
+      "Turning on the lights...",
+      "Zamboni resurfacing the ice...",
+      "Almost ready...",
+    ];
+    let i = 0;
+    const interval = setInterval(() => {
+      setLoadingMessage(messages[i++ % messages.length]);
+    }, 6000);
+
+    while (initInProgressRef.current) {
+      await new Promise((r) => setTimeout(r, 1000));
+    }
+    clearInterval(interval);
+    setInitializingCache(false);
+    setLoadingMessage("Initializing...");
+  };
+
+  const fetchTeamSummaryData = async (teamCode, seasonYear) => {
+    await ensureCacheInitialized();
+    setLoadingData(true);
+    setError("");
+
+    try {
+      const data = await apiService.fetchTeamSummary(teamCode, seasonYear);
+      setTeamSummaryData(data);
+
+      const espnTeamCode =
+        seasonYear < 2014 && teamCode === "ARI" ? "PHX" : teamCode;
+      const teamStatus = await apiService.getNhlTeamStatus(
+        espnTeamCode,
+        seasonYear
+      );
+
+      if (!teamStatus.record) {
+        setTeamRecord(null);
+        setTeamClinchStatus(null);
+      } else {
+        setTeamRecord(
+          `${teamStatus.record.wins}-${teamStatus.record.losses}-${teamStatus.record.otl}`
+        );
+        setTeamClinchStatus(getClinchStatus(teamStatus.clincher));
+      }
+    } catch (err) {
+      setError(err.message || "Failed to load team summary");
+      setTeamSummaryData(null);
+      setTeamRecord(null);
+      setTeamClinchStatus(null);
+    } finally {
+      setLoadingData(false);
+    }
+  };
+
+  const handleSearchClick = () => {
+    if (!tempTeam || !tempSeason) return;
+    setTeam(tempTeam);
+    setSeason(tempSeason);
+    setHasSearched(true);
+    setSearchParams({ team: tempTeam, year: tempSeason }, { replace: false });
+    track("team_summary_search", {
+      team: tempTeam,
+      season: tempSeason,
+    });
+  };
+
+  const handleSimilarTeamClick = (clickedTeam, clickedSeason) => {
+    setTempTeam(clickedTeam);
+    setTempSeason(clickedSeason.toString());
+    setSearchParams(
+      { team: clickedTeam, year: clickedSeason.toString() },
+      { replace: false }
+    );
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handlePlayerClick = (playerName, playerPosition) => {
+    navigate(
+      `/?player=${encodeURIComponent(playerName)}&season=${season}&position=${playerPosition}`
+    );
+  };
+
+  const getTeamLabel = (t) => (tempSeason <= 2013 && t === "ARI" ? "PHX" : t);
+
+  const teamColor = playerUtils.getTeamColor(team, season, actualTheme);
+  const teamCardGradient = playerUtils.getTeamCardGradient(
+    team,
+    season,
+    actualTheme
+  );
+  const didWinStanleyCup = playerUtils.didWinStanleyCup(team, season);
+
+  return (
+    <div className="min-h-screen ice-background px-4 pb-10 pt-5 text-white light:text-gray-900 sm:px-6 sm:py-8">
+      {isExternal && initInProgress ? (
+        <LoadingScreen />
+      ) : (
+        <>
+          {(initializingCache || loadingData) && (
+            <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/72 backdrop-blur-sm light:bg-black/30">
+              <div className="liquid-glass-strong rounded-[30px] p-8 text-center">
+                <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-sky-300 light:text-sky-600" />
+                <p className="text-lg font-medium text-white light:text-gray-900">
+                  {loadingMessage}
+                </p>
+              </div>
+            </div>
+          )}
+
+          <div className="max-w-6xl mx-auto">
+            <Header />
+
+
+            <div
+              className={`liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7 mb-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
+            >
+              <div className="mb-6">
+                <h1 className="section-title text-4xl sm:text-5xl">
+                  Team Summary
+                </h1>
+              </div>
+
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                <div>
+                  <label className="block text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-gray-500 light:text-slate-500 mb-2">
+                    Season
+                  </label>
+                  <select
+                    value={tempSeason}
+                    onChange={(e) => setTempSeason(e.target.value)}
+                    className="app-field px-4 py-3.5 pr-10 text-base text-white light:text-gray-900"
+                  >
+                    {[...seasonsList].reverse().map((s) => (
+                      <option key={s} value={s}>
+                        {getSeasonName(s)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-gray-500 light:text-slate-500 mb-2">
+                    Team
+                  </label>
+                  <select
+                    value={tempTeam}
+                    onChange={(e) => setTempTeam(e.target.value)}
+                    disabled={loadingTeams}
+                    className="app-field px-4 py-3.5 pr-10 text-base text-white light:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {loadingTeams ? (
+                      <option>Loading...</option>
+                    ) : (
+                      [...teamsList]
+                        .sort((a, b) =>
+                          getTeamLabel(a).localeCompare(getTeamLabel(b))
+                        )
+                        .map((t) => (
+                          <option key={t} value={t}>
+                            {getTeamLabel(t)}
+                          </option>
+                        ))
+                    )}
+                  </select>
+                </div>
+              </div>
+
+              <button
+                onClick={handleSearchClick}
+                disabled={loadingData}
+                className="btn-search-primary mb-1 mt-5"
+              >
+                {loadingData ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" /> Searching...
+                  </>
+                ) : (
+                  <>
+                    <Search size={20} /> View Team Summary
+                  </>
+                )}
+              </button>
+            </div>
+
+            {error && (
+              <div className="liquid-glass rounded-[32px] p-6 text-center text-rose-400 mb-8">
+                {error}
+              </div>
+            )}
+
+
+            {hasSearched && teamSummaryData && !loadingData && (
+              <div className="space-y-6 sm:space-y-8">
+
+                <div ref={teamHeaderRef} className="relative">
+                  <div
+                    className="team-card-surface liquid-glass rounded-[32px] overflow-hidden px-5 py-6 sm:px-6"
+                    style={{ "--team-card-gradient": teamCardGradient }}
+                  >
+                    <div className="relative z-10 text-center font-bold">
+                      <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 py-2">
+                        <div className="relative mx-2 h-28 w-28 flex justify-center items-center md:mx-4 md:h-32 md:w-32">
+                          {didWinStanleyCup && (
+                            <img
+                              src="/stanleycup.png"
+                              alt="Stanley Cup"
+                              className="absolute inset-0 w-full h-full object-contain z-0"
+                              style={{ filter: "opacity(1)" }}
+                            />
+                          )}
+                          <img
+                            src={playerUtils.getTeamLogoUrl(
+                              team,
+                              season,
+                              actualTheme
+                            )}
+                            alt={team}
+                            className={`relative h-28 object-contain team-logo-stroke z-10 md:h-32 ${
+                              didWinStanleyCup ? "scale-75" : ""
+                            }`}
+                          />
+                        </div>
+
+                        <div className="text-center md:text-left text-2xl font-bold text-white light:text-gray-900">
+                          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.04em]">
+                            {playerUtils.getFullTeamName(team, season)}
+                          </h2>
+                          <div className="mt-2 flex flex-wrap items-center justify-center md:justify-start gap-2 text-sm sm:text-base font-semibold text-gray-300 light:text-gray-600">
+                            <span>
+                              {getSeasonName(season)}
+                              <span className="hidden sm:inline"> Season</span>
+                            </span>
+                            {teamRecord && (
+                              <>
+                                <span>•</span>
+                                <span className="text-sky-300 light:text-sky-600">
+                                  {teamRecord}
+                                </span>
+                              </>
+                            )}
+                            {teamClinchStatus && (
+                              <>
+                                <span>•</span>
+                                <span className="text-emerald-300 light:text-emerald-600 whitespace-nowrap">
+                                  {teamClinchStatus}
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+
+                  <div className="liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7">
+                    <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-4 mb-5">
+                      <div className="flex items-center gap-2">
+                        <Target className="h-6 w-6 shrink-0 text-cyan-300 light:text-cyan-600" />
+                        <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900">
+                          Offensive Metrics
+                        </h3>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <div className="text-2xl sm:text-3xl font-extrabold tracking-[-0.04em] text-cyan-300 light:text-cyan-600">
+                          {teamSummaryData.stats.offense_rating.toFixed(1)}%
+                        </div>
+                        <div className="hidden sm:block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.15em] text-gray-400 light:text-slate-500">
+                          Percentile Rating
+                        </div>
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <TeamStatBar
+                        label="Goal Scoring"
+                        rawValue={teamSummaryData.stats.goals_pg}
+                        percentile={teamSummaryData.stats.goals_pg_pct}
+                        type="offensive"
+                      />
+                      <TeamStatBar
+                        label="Chance Creation"
+                        rawValue={teamSummaryData.stats.xg_pg}
+                        percentile={teamSummaryData.stats.xg_pg_pct}
+                        type="offensive"
+                      />
+                      <TeamStatBar
+                        label="Dangerous Shots"
+                        rawValue={teamSummaryData.stats.high_danger_shots_pg}
+                        percentile={
+                          teamSummaryData.stats.high_danger_shots_pg_pct
+                        }
+                        type="offensive"
+                      />
+                      <TeamStatBar
+                        label="Shots on Net"
+                        rawValue={teamSummaryData.stats.shots_on_goal_pg}
+                        percentile={teamSummaryData.stats.shots_on_goal_pg_pct}
+                        type="offensive"
+                      />
+                      <TeamStatBar
+                        label="Rebound Chances"
+                        rawValue={teamSummaryData.stats.rebound_xg_pg}
+                        percentile={teamSummaryData.stats.rebound_xg_pg_pct}
+                        type="offensive"
+                      />
+                    </div>
+                  </div>
+
+
+                  <div className="liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7">
+                    <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-4 mb-5">
+                      <div className="flex items-center gap-2">
+                        <Shield className="h-6 w-6 shrink-0 text-rose-400 light:text-rose-600" />
+                        <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900">
+                          Defensive Metrics
+                        </h3>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <div className="text-2xl sm:text-3xl font-extrabold tracking-[-0.04em] text-rose-400 light:text-rose-600">
+                          {teamSummaryData.stats.defense_rating.toFixed(1)}%
+                        </div>
+                        <div className="hidden sm:block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.15em] text-gray-400 light:text-slate-500">
+                          Percentile Rating
+                        </div>
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <TeamStatBar
+                        label="Goals Allowed"
+                        rawValue={teamSummaryData.stats.goals_against_pg}
+                        percentile={teamSummaryData.stats.goals_against_pg_pct}
+                        type="defensive"
+                      />
+                      <TeamStatBar
+                        label="Chances Allowed"
+                        rawValue={teamSummaryData.stats.xg_against_pg}
+                        percentile={teamSummaryData.stats.xg_against_pg_pct}
+                        type="defensive"
+                      />
+                      <TeamStatBar
+                        label="Dangerous Shots Allowed"
+                        rawValue={
+                          teamSummaryData.stats.high_danger_shots_against_pg
+                        }
+                        percentile={
+                          teamSummaryData.stats.high_danger_shots_against_pg_pct
+                        }
+                        type="defensive"
+                      />
+                      <TeamStatBar
+                        label="Shots Allowed"
+                        rawValue={teamSummaryData.stats.shots_against_pg}
+                        percentile={teamSummaryData.stats.shots_against_pg_pct}
+                        type="defensive"
+                      />
+                      <TeamStatBar
+                        label="Takeaways"
+                        rawValue={teamSummaryData.stats.takeaways_pg}
+                        percentile={teamSummaryData.stats.takeaways_pg_pct}
+                        type="defensive"
+                      />
+                    </div>
+                  </div>
+
+
+                  <div className="liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7">
+                    <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-4 mb-5">
+                      <div className="flex items-center gap-2">
+                        <Flame className="h-6 w-6 shrink-0 text-amber-300 light:text-amber-600" />
+                        <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900">
+                          Aggressiveness
+                        </h3>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <div className="text-2xl sm:text-3xl font-extrabold tracking-[-0.04em] text-amber-300 light:text-amber-600">
+                          {teamSummaryData.stats.aggressiveness_rating.toFixed(
+                            1
+                          )}
+                          %
+                        </div>
+                        <div className="hidden sm:block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.15em] text-gray-400 light:text-slate-500">
+                          Percentile Rating
+                        </div>
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <TeamStatBar
+                        label="Hits"
+                        rawValue={teamSummaryData.stats.hits_pg}
+                        percentile={teamSummaryData.stats.hits_pg_pct}
+                        type="aggressiveness"
+                      />
+                      <TeamStatBar
+                        label="Penalties Taken"
+                        rawValue={teamSummaryData.stats.penalties_pg}
+                        percentile={teamSummaryData.stats.penalties_pg_pct}
+                        type="aggressiveness"
+                      />
+                      <TeamStatBar
+                        label="Penalty Minutes"
+                        rawValue={teamSummaryData.stats.penalty_minutes_pg}
+                        percentile={
+                          teamSummaryData.stats.penalty_minutes_pg_pct
+                        }
+                        type="aggressiveness"
+                      />
+                      <TeamStatBar
+                        label="Shots Blocked"
+                        rawValue={teamSummaryData.stats.blocked_shots_pg}
+                        percentile={teamSummaryData.stats.blocked_shots_pg_pct}
+                        type="aggressiveness"
+                      />
+                    </div>
+                  </div>
+
+
+                  <div className="liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7">
+                    <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-4 mb-5">
+                      <div className="flex items-center gap-2">
+                        <Activity className="h-6 w-6 shrink-0 text-sky-300 light:text-sky-600" />
+                        <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900">
+                          Miscellaneous
+                        </h3>
+                      </div>
+                    </div>
+
+                    <div className="space-y-6 mt-2">
+
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-sm font-semibold uppercase tracking-[0.1em] text-gray-400 light:text-gray-500">
+                            Possession
+                          </h4>
+                        </div>
+                        <TeamStatBar
+                          label="Puck Management"
+                          rawValue={teamSummaryData.stats.possession}
+                          percentile={teamSummaryData.stats.possession_pct}
+                          type="offensive"
+                        />
+                      </div>
+
+
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between pt-2 border-t border-white/5 light:border-slate-100">
+                          <h4 className="text-sm font-semibold uppercase tracking-[0.1em] text-gray-400 light:text-gray-500">
+                            Pace
+                          </h4>
+                        </div>
+                        <TeamStatBar
+                          label="Game Pace"
+                          rawValue={teamSummaryData.stats.pace_pg}
+                          percentile={teamSummaryData.stats.pace_pg_pct}
+                          type="pace"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div className="liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7">
+                  <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900 border-b border-white/10 light:border-slate-200 pb-4 mb-5">
+                    Top Impact Players
+                  </h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+
+                    <div>
+                      <h4 className="text-md font-bold uppercase tracking-[0.1em] text-cyan-300 light:text-cyan-600 mb-4">
+                        Forwards
+                      </h4>
+                      <div className="space-y-3">
+                        {teamSummaryData.topForwards?.map((fw) => (
+                          <div
+                            key={fw.playerId}
+                            onClick={() => handlePlayerClick(fw.name, "F")}
+                            className="flex flex-col p-3 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] light:bg-gray-100/50 light:hover:bg-gray-100 border border-white/5 light:border-slate-200/50 cursor-pointer transition-all duration-200"
+                          >
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center gap-3">
+                                <img
+                                  src={playerUtils.getPlayerHeadshot(
+                                    fw.playerId,
+                                    team,
+                                    season
+                                  )}
+                                  alt={fw.name}
+                                  className="w-10 h-10 rounded-full object-cover bg-zinc-900"
+                                  onError={(e) => {
+                                    e.target.src =
+                                      playerUtils.getDefaultHeadshot();
+                                  }}
+                                />
+                                <span className="font-semibold text-sm sm:text-base text-white light:text-gray-900">
+                                  {fw.name}
+                                </span>
+                              </div>
+                              <span className="text-sm font-bold text-cyan-300 light:text-cyan-700">
+                                {fw.warPercentile.toFixed(1)}%
+                              </span>
+                            </div>
+                            <div className="w-full bg-white/[0.06] light:bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                              <div
+                                className="bg-gradient-to-r from-cyan-500 to-sky-400 h-1.5 rounded-full transition-all duration-300 gauge-fill"
+                                style={{ width: `${fw.warPercentile}%` }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+
+                    <div>
+                      <h4 className="text-md font-bold uppercase tracking-[0.1em] text-rose-400 light:text-rose-600 mb-4">
+                        Defensemen
+                      </h4>
+                      <div className="space-y-3">
+                        {teamSummaryData.topDefensemen?.map((df) => (
+                          <div
+                            key={df.playerId}
+                            onClick={() => handlePlayerClick(df.name, "D")}
+                            className="flex flex-col p-3 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] light:bg-gray-100/50 light:hover:bg-gray-100 border border-white/5 light:border-slate-200/50 cursor-pointer transition-all duration-200"
+                          >
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center gap-3">
+                                <img
+                                  src={playerUtils.getPlayerHeadshot(
+                                    df.playerId,
+                                    team,
+                                    season
+                                  )}
+                                  alt={df.name}
+                                  className="w-10 h-10 rounded-full object-cover bg-zinc-900"
+                                  onError={(e) => {
+                                    e.target.src =
+                                      playerUtils.getDefaultHeadshot();
+                                  }}
+                                />
+                                <span className="font-semibold text-sm sm:text-base text-white light:text-gray-900">
+                                  {df.name}
+                                </span>
+                              </div>
+                              <span className="text-sm font-bold text-rose-400 light:text-rose-700">
+                                {df.warPercentile.toFixed(1)}%
+                              </span>
+                            </div>
+                            <div className="w-full bg-white/[0.06] light:bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                              <div
+                                className="bg-gradient-to-r from-rose-500 to-red-400 h-1.5 rounded-full transition-all duration-300 gauge-fill"
+                                style={{ width: `${df.warPercentile}%` }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                {teamSummaryData.similarTeams && (
+                  <SimilarTeamsSection
+                    similarTeams={teamSummaryData.similarTeams}
+                    onTeamClick={handleSimilarTeamClick}
+                  />
+                )}
+              </div>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+export default TeamSummary;

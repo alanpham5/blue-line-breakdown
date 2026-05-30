@@ -1,8 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Home } from "./pages/Home/Home";
 import { About } from "./pages/About/About";
-import { Teams } from "./pages/Teams/Teams";
-import { Tutorial } from "./pages/Tutorial/Tutorial";
+import { TeamSummary } from "./pages/TeamSummary/TeamSummary";
 import { Loader } from "./pages/Loader/Loader";
 import { ThemeProvider } from "./providers/ThemeContext";
 import { TooltipProvider } from "./providers/TooltipContext";
@@ -26,17 +25,11 @@ const App = () => {
             <Route
               path="/teams"
               element={
-                <Teams enablePageLoadAnimations={enablePageLoadAnimations} />
+                <TeamSummary enablePageLoadAnimations={enablePageLoadAnimations} />
               }
             />
             <Route path="/about" element={<About />} />
             <Route path="/loader" element={<Loader />} />
-            <Route
-              path="/tutorial"
-              element={
-                <Tutorial enablePageLoadAnimations={enablePageLoadAnimations} />
-              }
-            />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

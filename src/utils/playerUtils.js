@@ -189,14 +189,13 @@ export const playerUtils = {
 
     let brand = teamBrand[teamCode];
 
-    // --- Retro override (keeps full brand shape) ---
     if (retroColors[teamCode] && season) {
       const seasonYear = parseInt(season);
       for (const era of retroColors[teamCode]) {
         if (seasonYear >= era.start && seasonYear <= era.end) {
           brand = {
             ...brand,
-            ...era, // override primary/secondary/worksOnDark
+            ...era,
           };
           break;
         }
@@ -205,17 +204,14 @@ export const playerUtils = {
 
     if (!brand) return "#AFB7BA";
 
-    // Light mode → always primary
     if (actualTheme === "light") {
       return brand.primary;
     }
 
-    // Dark mode → keep primary if it works
     if (brand.worksOnDark) {
       return brand.primary;
     }
 
-    // Otherwise use secondary if usable
     if (
       brand.secondary &&
       brand.secondary !== "#FFFFFF" &&
@@ -224,7 +220,6 @@ export const playerUtils = {
       return brand.secondary;
     }
 
-    // Mono fallback
     return brand.primary;
   },
 
@@ -469,7 +464,6 @@ export const playerUtils = {
 
   formatStatName(statKey) {
     const statNames = {
-      // Offensive metrics
       SHOT_TAL: "Shooting Talent",
       PLAY_DRV: "Play Driving",
       SHOT_FREQ: "Shooting Tendency",
@@ -477,7 +471,6 @@ export const playerUtils = {
       PP_USAGE: "Power Play Usage",
       ONICE_IMP: "On-Ice Impact",
 
-      // Defensive metrics
       POS_CTRL: "Possession Control",
       BLK: "Shot Blocking",
       HIT: "Physical Engagement",
@@ -490,7 +483,6 @@ export const playerUtils = {
 
   getStatExplanation(statKey) {
     const explanations = {
-      // Offensive metrics
       SHOT_TAL:
         "How well the player shoots and turns scoring chances into goals.",
       PLAY_DRV: "How often the player creates scoring chances for teammates.",
@@ -500,7 +492,6 @@ export const playerUtils = {
       ONICE_IMP:
         "How much offense the team creates when the player is on the ice.",
 
-      // Defensive metrics
       POS_CTRL:
         "How well the team controls possession with the player on the ice.",
       BLK: "How often the player blocks opponent shots.",
@@ -508,7 +499,6 @@ export const playerUtils = {
       TAKE: "How often the player takes the puck away from opponents.",
       CH_SUP: "Share of opponent scoring chances limited by the player.",
       GOAL_PREV: "Share of scoring attempts stopped by the player.",
-      // Other metrics
       winShare:
         "The percentile rank of the player's contribution to team wins compared to other players on the team in the same position.",
     };

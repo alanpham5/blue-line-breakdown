@@ -59,7 +59,6 @@ export const LoadingWheel = ({ size = 650, actualTheme = "dark" }) => {
       ctx.fill();
       ctx.stroke();
 
-      // Vents on blue back
       ctx.strokeStyle = "#cfe8f3";
       ctx.lineWidth = 1;
       for (let i = 0; i < 5; i++) {

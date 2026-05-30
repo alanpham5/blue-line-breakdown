@@ -20,7 +20,6 @@ export const PercentileBar = ({
     type === "offensive"
       ? "text-cyan-300 light:text-cyan-600"
       : "text-rose-400 light:text-rose-600";
-  /* Light: match WAR ring (slate-200). Dark: muted cyan / rose tracks—no shared green hue */
   const trackColor =
     type === "offensive"
       ? "bg-[rgba(20,78,98,0.56)] light:bg-slate-200"

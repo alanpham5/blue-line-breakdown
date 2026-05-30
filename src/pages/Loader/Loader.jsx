@@ -1,10 +1,6 @@
 import { Link } from "react-router-dom";
 import { LoadingScreen } from "../../components/LoadingScreen";
 
-/**
- * Static preview of the first-visit / cold-cache load UI (same shell as Home when
- * isExternal && initInProgress — see Home.jsx).
- */
 export const Loader = () => {
   return (
     <div className="relative min-h-screen ice-background px-4 pb-10 pt-5 text-white light:text-gray-900 sm:px-6 sm:py-8">

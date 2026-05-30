@@ -677,7 +677,6 @@ html.light .liquid-glass-strong {
 }
 
 @layer components {
-  /* Home "Search Player" + Teams "Search Roster" — soft blue pill, gloss, white label */
   .btn-search-primary {
     position: relative;
     isolation: isolate;
@@ -757,7 +756,6 @@ html.light .liquid-glass-strong {
     display: inline-flex;
   }
 
-  /* Text links — same blue family as .btn-search-primary */
   .link-accent {
     text-decoration: underline;
     text-decoration-color: rgba(79, 158, 247, 0.45);

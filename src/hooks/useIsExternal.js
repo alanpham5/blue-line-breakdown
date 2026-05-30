@@ -7,15 +7,13 @@ export function useIsExternal() {
 
   useEffect(() => {
     const hasVisited = sessionStorage.getItem("appVisited") === "true";
-    const isFromTutorial = sessionStorage.getItem("fromTutorial") === "true";
     const isStandalone = window.navigator.standalone === true;
 
-    const externalBehavior = !hasVisited || isStandalone || isFromTutorial;
+    const externalBehavior = !hasVisited || isStandalone;
 
     setIsExternal(externalBehavior);
 
     sessionStorage.setItem("appVisited", "true");
-    sessionStorage.removeItem("fromTutorial"); // consume once
   }, [navType]);
 
   return isExternal;

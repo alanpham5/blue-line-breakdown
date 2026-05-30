@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { Loader2 } from "lucide-react";
 import { LoadingWheel } from "./LoadingWheel";
 import { useTheme } from "../providers/ThemeContext";
 
@@ -17,7 +16,6 @@ export const LoadingScreen = () => {
 
   const [loadingMessage, setLoadingMessage] = useState(messages[0]);
   const [showLoader, setShowLoader] = useState(false);
-  const [showTutorial, setShowTutorial] = useState(false);
   const [pulse, setPulse] = useState(true);
   const indexRef = useRef(0);
   const { actualTheme } = useTheme();
@@ -33,13 +31,9 @@ export const LoadingScreen = () => {
       }, 10000);
       return () => clearInterval(interval);
     }, 4000);
-    const tutorialTimeout = setTimeout(() => {
-      setShowTutorial(true);
-    }, 12000);
 
     return () => {
       clearTimeout(loaderTimeout);
-      clearTimeout(tutorialTimeout);
     };
   }, []);
 
@@ -74,14 +68,6 @@ export const LoadingScreen = () => {
             {loadingMessage}
           </p>
         </div>
-      )}
-      {showTutorial && (
-        <p className="mt-6 text-center text-sm sm:text-base max-w-md liquid-glass-animate text-white light:text-gray-900">
-          New here? Check out a{" "}
-          <a href="/tutorial" className="link-accent font-bold">
-            tutorial
-          </a>
-        </p>
       )}
     </div>
   );

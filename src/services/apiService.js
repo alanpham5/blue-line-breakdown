@@ -90,6 +90,16 @@ export const apiService = {
     return response.json();
   },
 
+  async fetchTeamSummary(team, year) {
+    const response = await fetch(
+      `${API_BASE_URL}/teams?team=${team}&year=${year}`
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch team summary");
+    }
+    return response.json();
+  },
+
   async fetchRosters(year, team, position) {
     const response = await fetch(
       `${API_BASE_URL}/rosters?year=${year}&team=${team}&position=${position}`
