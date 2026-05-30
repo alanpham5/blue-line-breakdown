@@ -27,7 +27,7 @@ export const PlayerCard = ({ player, team, season, stroke, onPlayerClick }) => {
             "--team-color": playerUtils.getTeamColor(team, season),
           }}
           onError={(e) => {
-            e.target.src = "/mobile-icon.png";
+            e.target.src = "/blb-dark.png";
           }}
         />
         <h3 className="font-bold text-white max-w-[145px] sm:max-w-full truncate light:text-gray-900">

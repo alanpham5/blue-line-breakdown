@@ -2,6 +2,22 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 const ThemeContext = createContext();
 
+const getResolvedTheme = (themeMode) => {
+  if (themeMode === "system") {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+  return themeMode;
+};
+
+const updateAppIcons = (resolvedTheme) => {
+  const href =
+    resolvedTheme === "light" ? "/blb-light.png" : "/blb-dark.png";
+  document.getElementById("app-favicon")?.setAttribute("href", href);
+  document.getElementById("app-apple-touch-icon")?.setAttribute("href", href);
+};
+
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
     if (typeof window !== "undefined") {
@@ -17,17 +33,15 @@ export function ThemeProvider({ children }) {
       root.classList.remove("light", "dark");
 
       if (themeMode === "system") {
-        const systemPreference = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches
-          ? "dark"
-          : "light";
+        const systemPreference = getResolvedTheme("system");
         root.classList.add(systemPreference);
         root.removeAttribute("data-theme");
       } else {
         root.classList.add(themeMode);
         root.setAttribute("data-theme", themeMode);
       }
+
+      updateAppIcons(getResolvedTheme(themeMode));
     };
 
     applyTheme(theme);
@@ -37,8 +51,10 @@ export function ThemeProvider({ children }) {
       const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
       const handleSystemThemeChange = (e) => {
+        const systemPreference = e.matches ? "dark" : "light";
         root.classList.remove("light", "dark");
-        root.classList.add(e.matches ? "dark" : "light");
+        root.classList.add(systemPreference);
+        updateAppIcons(systemPreference);
       };
 
       mediaQuery.addEventListener("change", handleSystemThemeChange);
@@ -53,12 +69,7 @@ export function ThemeProvider({ children }) {
     theme,
     setTheme,
     actualTheme:
-      theme === "system"
-        ? typeof window !== "undefined" &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light"
-        : theme,
+      typeof window !== "undefined" ? getResolvedTheme(theme) : theme,
   };
 
   return (

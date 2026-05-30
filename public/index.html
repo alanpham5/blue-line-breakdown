@@ -5,8 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="Hockey Player Similarity Explorer" />
-    <link rel="icon" href="/blb-light.png" />
-    <link rel="apple-touch-icon" href="/mobile-icon.png" />
+    <link rel="icon" id="app-favicon" href="/blb-dark.png" />
+    <link rel="apple-touch-icon" id="app-apple-touch-icon" href="/blb-dark.png" />
+    <script>
+      (function () {
+        var stored = localStorage.getItem("theme") || "system";
+        var dark =
+          stored === "dark" ||
+          (stored === "system" &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches);
+        var href = dark ? "/blb-dark.png" : "/blb-light.png";
+        var favicon = document.getElementById("app-favicon");
+        var apple = document.getElementById("app-apple-touch-icon");
+        if (favicon) favicon.href = href;
+        if (apple) apple.href = href;
+      })();
+    </script>
     <title>Blue Line Breakdown</title>
   </head>
   <!-- Google tag (gtag.js) -->
