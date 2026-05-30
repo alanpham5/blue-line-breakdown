@@ -151,8 +151,16 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
   }, [searchParams]);
 
   useEffect(() => {
-    if (hasSearched && teamSummaryData && !loadingData && teamHeaderRef.current) {
-      teamHeaderRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (
+      hasSearched &&
+      teamSummaryData &&
+      !loadingData &&
+      teamHeaderRef.current
+    ) {
+      teamHeaderRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }
   }, [hasSearched, teamSummaryData, loadingData]);
 
@@ -272,7 +280,6 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
           <div className="max-w-6xl mx-auto">
             <Header />
 
-
             <div
               className={`liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7 mb-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
             >
@@ -281,7 +288,6 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                   Team Summary
                 </h1>
               </div>
-
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                 <div>
@@ -350,10 +356,8 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
               </div>
             )}
 
-
             {hasSearched && teamSummaryData && !loadingData && (
               <div className="space-y-6 sm:space-y-8">
-
                 <div ref={teamHeaderRef} className="relative">
                   <div
                     className="team-card-surface liquid-glass rounded-[32px] overflow-hidden px-5 py-6 sm:px-6"
@@ -415,15 +419,13 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                   </div>
                 </div>
 
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-
                   <div className="liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7">
                     <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-4 mb-5">
                       <div className="flex items-center gap-2">
                         <Target className="h-6 w-6 shrink-0 text-cyan-300 light:text-cyan-600" />
                         <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900">
-                          Offensive Metrics
+                          Offense
                         </h3>
                       </div>
                       <div className="flex flex-col items-end">
@@ -471,13 +473,12 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                     </div>
                   </div>
 
-
                   <div className="liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7">
                     <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-4 mb-5">
                       <div className="flex items-center gap-2">
                         <Shield className="h-6 w-6 shrink-0 text-rose-400 light:text-rose-600" />
                         <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900">
-                          Defensive Metrics
+                          Defense
                         </h3>
                       </div>
                       <div className="flex flex-col items-end">
@@ -526,7 +527,6 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                       />
                     </div>
                   </div>
-
 
                   <div className="liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7">
                     <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-4 mb-5">
@@ -578,7 +578,6 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                     </div>
                   </div>
 
-
                   <div className="liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7">
                     <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-4 mb-5">
                       <div className="flex items-center gap-2">
@@ -590,7 +589,6 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                     </div>
 
                     <div className="space-y-6 mt-2">
-
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
                           <h4 className="text-sm font-semibold uppercase tracking-[0.1em] text-gray-400 light:text-gray-500">
@@ -604,7 +602,6 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                           type="offensive"
                         />
                       </div>
-
 
                       <div className="space-y-3">
                         <div className="flex items-center justify-between pt-2 border-t border-white/5 light:border-slate-100">
@@ -623,14 +620,12 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                   </div>
                 </div>
 
-
                 <div className="liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7">
                   <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900 border-b border-white/10 light:border-slate-200 pb-4 mb-5">
                     Top Impact Players
                   </h3>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-
                     <div>
                       <h4 className="text-md font-bold uppercase tracking-[0.1em] text-cyan-300 light:text-cyan-600 mb-4">
                         Forwards
@@ -675,7 +670,6 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                         ))}
                       </div>
                     </div>
-
 
                     <div>
                       <h4 className="text-md font-bold uppercase tracking-[0.1em] text-rose-400 light:text-rose-600 mb-4">
@@ -723,7 +717,6 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                     </div>
                   </div>
                 </div>
-
 
                 {teamSummaryData.similarTeams && (
                   <SimilarTeamsSection
