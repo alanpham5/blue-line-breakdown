@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Loader2, Search, Target, Shield, Flame, Activity } from "lucide-react";
+import { Loader2, Search, Target, Shield, Flame, Activity, Users } from "lucide-react";
 import { track } from "@vercel/analytics";
 import { apiService } from "../../services/apiService";
 import { Header } from "../../components/Header";
@@ -621,9 +621,12 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                 </div>
 
                 <div className="liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7">
-                  <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900 border-b border-white/10 light:border-slate-200 pb-4 mb-5">
-                    Top Impact Players
-                  </h3>
+                  <div className="flex items-center gap-2 border-b border-white/10 light:border-slate-200 pb-4 mb-5">
+                    <Users className="h-6 w-6 shrink-0 text-amber-300 light:text-amber-600" />
+                    <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900">
+                      Top Impact Players
+                    </h3>
+                  </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                     <div>

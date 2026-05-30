@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Users, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import { playerUtils } from "../../utils/playerUtils";
 import { Tooltip } from "../../components/Tooltip";
 import { useTheme } from "../../providers/ThemeContext";
@@ -54,7 +54,7 @@ const SimilarTeamCard = ({
         className={`relative mb-2 ${isMobile ? "" : "transition-transform duration-300 sm:group-hover:scale-105 group-active:scale-105"}`}
       >
         <div
-          className="h-16 w-16 sm:h-20 sm:w-20 overflow-hidden rounded-full bg-zinc-950/55 transition-all duration-300 backdrop-blur-sm shadow-lg light:bg-slate-700/45 flex items-center justify-center p-2"
+          className="h-16 w-16 sm:h-20 sm:w-20 overflow-hidden rounded-full bg-zinc-950/55 transition-all duration-300 backdrop-blur-sm shadow-lg light:bg-slate-700/45 flex items-center justify-center"
           style={{ border: `1px solid ${playerUtils.toRgba(teamColor, 0.3)}` }}
         >
           <img
@@ -64,7 +64,7 @@ const SimilarTeamCard = ({
               actualTheme
             )}
             alt={similarTeam.team}
-            className="w-full h-full object-contain team-logo-stroke"
+            className="h-full w-full scale-110 object-contain team-logo-stroke"
             onError={(e) => {
               e.target.src =
                 "https://assets.nhle.com/logos/nhl/svg/NHL_dark.svg";
@@ -120,12 +120,10 @@ export const SimilarTeamsSection = ({ similarTeams, onTeamClick }) => {
     <div className="relative liquid-glass-strong liquid-glass-animate rounded-[32px] p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
         <div className="flex items-center gap-1.5 sm:gap-2">
-          <Users className="h-6 w-6 shrink-0 text-amber-300 light:text-amber-600" />
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900 whitespace-nowrap">
-              Most Similar Teams
-            </h3>
-            <Tooltip
+          <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900 whitespace-nowrap">
+            Most Similar Teams
+          </h3>
+          <Tooltip
               id="similar-teams"
               position="bottom"
               width="w-64 sm:w-72"
@@ -149,7 +147,6 @@ export const SimilarTeamsSection = ({ similarTeams, onTeamClick }) => {
                 <Info className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </button>
             </Tooltip>
-          </div>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-2 xs:grid-cols-3 sm:grid-cols-4 md:flex md:flex-wrap md:justify-center md:gap-4">
