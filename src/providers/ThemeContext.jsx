@@ -11,9 +11,12 @@ const getResolvedTheme = (themeMode) => {
   return themeMode;
 };
 
-const updateAppIcons = (resolvedTheme) => {
+const getSystemTheme = () =>
+  window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+
+const updateAppIcons = () => {
   const href =
-    resolvedTheme === "light" ? "/blb-light.png" : "/blb-dark.png";
+    getSystemTheme() === "light" ? "/blb-light.png" : "/blb-dark.png";
   document.getElementById("app-favicon")?.setAttribute("href", href);
   document.getElementById("app-apple-touch-icon")?.setAttribute("href", href);
 };
@@ -41,7 +44,6 @@ export function ThemeProvider({ children }) {
         root.setAttribute("data-theme", themeMode);
       }
 
-      updateAppIcons(getResolvedTheme(themeMode));
     };
 
     applyTheme(theme);
@@ -54,7 +56,6 @@ export function ThemeProvider({ children }) {
         const systemPreference = e.matches ? "dark" : "light";
         root.classList.remove("light", "dark");
         root.classList.add(systemPreference);
-        updateAppIcons(systemPreference);
       };
 
       mediaQuery.addEventListener("change", handleSystemThemeChange);
@@ -64,6 +65,17 @@ export function ThemeProvider({ children }) {
       };
     }
   }, [theme]);
+
+  useEffect(() => {
+    updateAppIcons();
+
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    mediaQuery.addEventListener("change", updateAppIcons);
+
+    return () => {
+      mediaQuery.removeEventListener("change", updateAppIcons);
+    };
+  }, []);
 
   const value = {
     theme,

@@ -9,11 +9,7 @@
     <link rel="apple-touch-icon" id="app-apple-touch-icon" href="/blb-dark.png" />
     <script>
       (function () {
-        var stored = localStorage.getItem("theme") || "system";
-        var dark =
-          stored === "dark" ||
-          (stored === "system" &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches);
+        var dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         var href = dark ? "/blb-dark.png" : "/blb-light.png";
         var favicon = document.getElementById("app-favicon");
         var apple = document.getElementById("app-apple-touch-icon");
