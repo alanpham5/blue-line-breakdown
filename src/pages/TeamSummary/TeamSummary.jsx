@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Loader2, Search, Target, Shield, Flame, Activity, Users } from "lucide-react";
+import { Loader2, Search, Target, Shield, Flame, Activity, Users, Share } from "lucide-react";
 import { track } from "@vercel/analytics";
 import { apiService } from "../../services/apiService";
 import { Header } from "../../components/Header";
@@ -10,6 +10,8 @@ import { playerUtils } from "../../utils/playerUtils";
 import { useIsExternal } from "../../hooks/useIsExternal";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { useTheme } from "../../providers/ThemeContext";
+import { ShareableModal } from "../../components/ShareableModal";
+import { TeamShareableDisplay } from "./TeamShareableDisplay";
 
 const getSeasonName = (s) => `${s}-${(parseInt(s) + 1).toString().slice(-2)}`;
 
@@ -59,6 +61,15 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
   const [loadingMessage, setLoadingMessage] = useState("Searching...");
   const initInProgressRef = useRef(false);
   const teamHeaderRef = useRef(null);
+  const [showShareableModal, setShowShareableModal] = useState(false);
+
+  const isLocalhost = Boolean(
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "[::1]" ||
+    window.location.hostname.match(
+      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
+    )
+  );
 
   const seasonsList = Array.from(
     {
@@ -388,8 +399,18 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                         </div>
 
                         <div className="text-center md:text-left text-2xl font-bold text-white light:text-gray-900">
-                          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.04em]">
-                            {playerUtils.getFullTeamName(team, season)}
+                          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.04em] flex flex-wrap items-center justify-center md:justify-start gap-2">
+                            <span>{playerUtils.getFullTeamName(team, season)}</span>
+                            {isLocalhost && (
+                              <button
+                                type="button"
+                                onClick={() => setShowShareableModal(true)}
+                                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:text-white light:border-slate-300 light:bg-white/80 light:text-slate-600 light:hover:text-slate-900"
+                                aria-label="Open shareable view"
+                              >
+                                <Share className="h-4 w-4" />
+                              </button>
+                            )}
                           </h2>
                           <div className="mt-2 flex flex-wrap items-center justify-center md:justify-start gap-2 text-sm sm:text-base font-semibold text-gray-300 light:text-gray-600">
                             <span>
@@ -732,6 +753,20 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
           </div>
         </>
       )}
+
+      <ShareableModal
+        isOpen={showShareableModal}
+        onClose={() => setShowShareableModal(false)}
+        fileName={team ? `${playerUtils.getFullTeamName(team, season).replace(/\s+/g, '-')}-${season}` : 'team-shareable'}
+      >
+        <TeamShareableDisplay
+          team={team}
+          season={season}
+          teamSummaryData={teamSummaryData}
+          teamRecord={teamRecord}
+          teamClinchStatus={teamClinchStatus}
+        />
+      </ShareableModal>
     </div>
   );
 };

@@ -22,8 +22,8 @@ export const PercentileBar = ({
       : "text-rose-400 light:text-rose-600";
   const trackColor =
     type === "offensive"
-      ? "bg-[rgba(20,78,98,0.56)] light:bg-slate-200"
-      : "bg-[rgba(112,26,46,0.52)] light:bg-slate-200";
+      ? `bg-[rgba(20,78,98,0.56)] ${forceDark ? "" : "light:bg-slate-200"}`
+      : `bg-[rgba(112,26,46,0.52)] ${forceDark ? "" : "light:bg-slate-200"}`;
 
   return (
     <div className="mb-4 sm:mb-5 percentile-bar-container">

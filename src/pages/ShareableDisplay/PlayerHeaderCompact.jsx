@@ -2,7 +2,6 @@ import { Ruler, Scale, Calendar } from "lucide-react";
 import { ArchetypeBadge } from "../Home/ArchetypeBadge";
 import { Link } from "react-router-dom";
 import { playerUtils } from "../../utils/playerUtils";
-import { useSearchParams } from "react-router-dom";
 
 export const PlayerHeaderCompact = ({ player, biometrics }) => {
   const teamColor = playerUtils.getTeamColor(player.team, player.season);
@@ -21,13 +20,7 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
     player.season,
     "dark"
   );
-  const [searchParams, setSearchParams] = useSearchParams();
   const archetypes = player.archetypes;
-  const onReset = () => {
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    newSearchParams.delete("shareable");
-    setSearchParams(newSearchParams);
-  };
   return (
     <div
       className="team-card-surface-strong relative overflow-hidden rounded-[28px] px-5 py-4 liquid-glass-strong"
@@ -37,7 +30,6 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
         <div
           className="w-32 h-32 rounded-full overflow-hidden shrink-0"
           style={{ background: teamColorGradient }}
-          onClick={onReset}
         >
           <img
             src={playerUtils.getPlayerHeadshot(

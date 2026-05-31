@@ -1,4 +1,4 @@
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Ruler, Scale, Calendar, Share } from "lucide-react";
 import { playerUtils } from "../../utils/playerUtils";
 import { ArchetypeBadge } from "./ArchetypeBadge";
@@ -53,8 +53,7 @@ const TeamLogoLink = ({
   );
 };
 
-export const PlayerHeader = ({ player, biometrics }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
   const navigate = useNavigate();
   const { actualTheme } = useTheme();
   const teamCardGradient = playerUtils.getTeamCardGradient(
@@ -69,12 +68,6 @@ export const PlayerHeader = ({ player, biometrics }) => {
   );
 
   const archetypes = player.archetypes || [];
-
-  const activateShareable = () => {
-    const newSearchParams = new URLSearchParams(searchParams.toString());
-    newSearchParams.append("shareable", true);
-    setSearchParams(newSearchParams);
-  };
 
   const isLocalhost = Boolean(
     window.location.hostname === "localhost" ||
@@ -142,10 +135,10 @@ export const PlayerHeader = ({ player, biometrics }) => {
                 className="w-5 h-9 object-cover xl:hidden"
               />
             )}
-            {isLocalhost && (
+            {isLocalhost && onShareClick && (
               <button
                 type="button"
-                onClick={activateShareable}
+                onClick={onShareClick}
                 className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:text-white light:border-slate-300 light:bg-white/80 light:text-slate-600 light:hover:text-slate-900"
                 aria-label="Open shareable view"
               >

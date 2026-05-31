@@ -14,6 +14,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { useIsExternal } from "../../hooks/useIsExternal";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { ShareableDisplay } from "../ShareableDisplay/ShareableDisplay";
+import { ShareableModal } from "../../components/ShareableModal";
 
 export const Home = ({ enablePageLoadAnimations = true }) => {
   const defaultSeason = (new Date().getFullYear() - 1).toString();
@@ -31,7 +32,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
   const [initInProgress, setInitInProgress] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [renderKey, setRenderKey] = useState(0);
-  const [shareable, setShareable] = useState(false);
+  const [showShareableModal, setShowShareableModal] = useState(false);
 
   const initInProgressRef = useRef(false);
   const isUpdatingFromUrlRef = useRef(false);
@@ -59,9 +60,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
     }
   }, [isLocalhost, searchParams]);
 
-  useEffect(() => {
-    setShareable(searchParams.get("shareable") === "true");
-  }, [searchParams]);
+
 
   useEffect(() => {
     if (playerHeaderRef.current) {
@@ -360,12 +359,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
       {isExternal && initInProgress ? (
         <LoadingScreen />
       ) : (
-        <>
-          {shareable ? (
-            <div className="flex justify-center">
-              <ShareableDisplay playerData={playerData} />
-            </div>
-          ) : (
+          <>
             <>
               {loading && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/72 backdrop-blur-sm light:bg-black/30">
@@ -421,6 +415,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
                           <PlayerHeader
                             player={playerData.player}
                             biometrics={playerData.biometrics}
+                            onShareClick={() => setShowShareableModal(true)}
                           />
                         </div>
                         <div className="w-full lg:w-96 shrink-0">
@@ -489,8 +484,15 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
                 </div>
               </div>
             </>
-          )}
-        </>
+
+            <ShareableModal
+              isOpen={showShareableModal}
+              onClose={() => setShowShareableModal(false)}
+              fileName={playerData ? `${playerData.player.name.replace(/\s+/g, '-')}-${playerData.player.season}` : 'player-shareable'}
+            >
+              <ShareableDisplay playerData={playerData} />
+            </ShareableModal>
+          </>
       )}
     </div>
   );

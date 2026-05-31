@@ -781,3 +781,120 @@ html.light .liquid-glass-strong {
     text-decoration-color: rgba(37, 111, 212, 0.55);
   }
 }
+
+/* Shareable Modal */
+.shareable-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: modalBackdropIn 0.25s ease-out both;
+}
+
+.shareable-modal-scroll-area {
+  position: absolute;
+  inset: 0;
+  overflow-x: auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.shareable-modal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100%;
+  padding: 24px 16px;
+  width: fit-content;
+  min-width: 100%;
+  box-sizing: border-box;
+}
+
+.shareable-modal-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+  animation: modalContentIn 0.35s cubic-bezier(0.33, 1, 0.68, 1) 0.08s both;
+}
+
+.shareable-modal-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.shareable-modal-btn:active {
+  transform: scale(0.97);
+}
+
+.shareable-modal-btn-download {
+  background: linear-gradient(180deg, #4f9ef7 0%, #3d8deb 38%, #2f7fe3 100%);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 4px 12px rgba(32, 100, 190, 0.28);
+}
+
+.shareable-modal-btn-download:hover:not(:disabled) {
+  background: linear-gradient(180deg, #5da8f9 0%, #4a95ee 38%, #3a88e8 100%);
+}
+
+.shareable-modal-btn-download:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.shareable-modal-btn-close {
+  background: rgba(255, 255, 255, 0.08);
+  color: #d1d5db;
+  padding: 10px;
+}
+
+.shareable-modal-btn-close:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+.shareable-modal-content {
+  animation: modalContentIn 0.4s cubic-bezier(0.33, 1, 0.68, 1) 0.12s both;
+  border-radius: 20px;
+  overflow: visible;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+}
+
+@keyframes modalBackdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalContentIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
