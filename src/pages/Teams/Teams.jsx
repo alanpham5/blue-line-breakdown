@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { track } from "@vercel/analytics";
 import { Loader2, Search } from "lucide-react";
 import { apiService } from "../../services/apiService";
 import { Header } from "../../components/Header";
+import { AppSelect } from "../../components/AppSelect";
 import { TeamHeader } from "./TeamHeader";
 import { PlayerCard } from "./PlayerCard";
 import { playerUtils } from "../../utils/playerUtils";
@@ -42,10 +43,8 @@ const SearchForm = ({
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
       <div>
-        <label className="block text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-gray-500 light:text-slate-500 mb-2">
-          Season
-        </label>
-        <select
+        <AppSelect
+          placeholder="Season"
           value={tempSeason}
           onChange={(e) => setTempSeason(e.target.value)}
           className={`${sharedFieldClassName} pr-10`}
@@ -55,16 +54,14 @@ const SearchForm = ({
               {getSeasonName(s)}
             </option>
           ))}
-        </select>
+        </AppSelect>
       </div>
       <div>
-        <label className="block text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-gray-500 light:text-slate-500 mb-2">
-          Team
-        </label>
-        <select
+        <AppSelect
+          placeholder="Team"
           value={tempTeam}
           onChange={(e) => setTempTeam(e.target.value)}
-          disabled={loadingTeams}
+          disabled={loadingTeams || !tempSeason}
           className={`${sharedFieldClassName} pr-10 disabled:cursor-not-allowed disabled:opacity-50`}
         >
           {loadingTeams ? (
@@ -78,20 +75,18 @@ const SearchForm = ({
                 </option>
               ))
           )}
-        </select>
+        </AppSelect>
       </div>
       <div>
-        <label className="block text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-gray-500 light:text-slate-500 mb-2">
-          Position
-        </label>
-        <select
+        <AppSelect
+          placeholder="Position"
           value={tempPosition}
           onChange={(e) => setTempPosition(e.target.value)}
           className={`${sharedFieldClassName} pr-10`}
         >
           <option value="F">Forwards</option>
           <option value="D">Defensemen</option>
-        </select>
+        </AppSelect>
       </div>
     </div>
   );
@@ -99,15 +94,12 @@ const SearchForm = ({
 
 export const Teams = ({ enablePageLoadAnimations = true }) => {
   const now = new Date();
-  const latestSeasonYear =
-    now.getMonth() >= 10 ? now.getFullYear() : now.getFullYear() - 1;
-  const defaultSeason = latestSeasonYear.toString();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const initialSeason = searchParams.get("season") || defaultSeason;
+  const initialSeason = searchParams.get("season") || "";
   const initialTeam = searchParams.get("team") || "";
-  const initialPosition = searchParams.get("position") || "F";
+  const initialPosition = searchParams.get("position") || "";
 
   const [season, setSeason] = useState(initialSeason);
   const [team, setTeam] = useState(initialTeam);
@@ -150,6 +142,10 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
 
   useEffect(() => {
     if (!urlInitComplete) return;
+    if (!tempSeason) {
+      setTeams([]);
+      return;
+    }
     fetchTeams();
   }, [tempSeason, urlInitComplete]);
 
@@ -171,9 +167,6 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
     if (urlSeason) {
       setSeason(urlSeason);
       setTempSeason(urlSeason);
-    } else {
-      setSeason(defaultSeason);
-      setTempSeason(defaultSeason);
     }
 
     if (urlTeam) {
@@ -246,14 +239,10 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
       setTeams(data.teams || []);
       const urlTeam = searchParams.get("team");
 
-      if (data.teams?.length) {
-        if (tempTeam && data.teams.includes(tempTeam)) {
-          setTempTeam(tempTeam);
-        } else if (data.teams.includes(urlTeam)) {
-          setTempTeam(urlTeam);
-        } else {
-          setTempTeam(data.teams[0]);
-        }
+      if (tempTeam && data.teams?.length && !data.teams.includes(tempTeam)) {
+        setTempTeam("");
+      } else if (urlTeam && data.teams?.includes(urlTeam)) {
+        setTempTeam(urlTeam);
       }
     } catch {
     } finally {

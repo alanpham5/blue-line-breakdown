@@ -296,6 +296,31 @@ html.light .ice-background {
   color: var(--control-placeholder);
 }
 
+select.app-field {
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--control-bg);
+  box-shadow: var(--control-shadow);
+}
+
+select.app-field::-ms-expand {
+  display: none;
+}
+
+select.app-field:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+select.app-field.app-select-native {
+  color: transparent !important;
+  -webkit-text-fill-color: transparent;
+}
+
+select.app-field.app-select-native option {
+  color: var(--text-primary);
+}
+
 .app-field:focus {
   outline: none;
   border-color: var(--control-border-focus);
@@ -484,69 +509,84 @@ html.light .liquid-glass-strong {
 
 .shareable-display-dark .liquid-glass,
 .shareable-display-dark .liquid-glass-strong {
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-base);
-  background:
-    linear-gradient(
-      180deg,
-      var(--glass-gradient-start) 0%,
-      var(--glass-gradient-mid) 42%,
-      var(--glass-gradient-end) 100%
-    ),
-    var(--glass-bg);
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: none !important; /* Remove inset shadow to prevent html2canvas double-shading */
+  backdrop-filter: none !important; /* Disable blur filter which html2canvas renders as a solid dark block */
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Simplify background rendering to prevent double-shaded rectangles in html2canvas */
+.shareable-display-dark .liquid-glass {
+  background: var(--glass-bg) !important;
 }
 
 .shareable-display-dark .liquid-glass-strong {
-  background:
-    radial-gradient(
-      140% 160% at 0% 0%,
-      var(--glass-gradient-strong-start) 0%,
-      var(--glass-gradient-strong-mid) 48%,
-      var(--glass-gradient-strong-end) 100%
-    ),
-    var(--glass-bg-strong);
+  background: var(--glass-bg-strong) !important;
+}
+
+/* Disable absolute pseudo-elements which html2canvas mis-sizes, causing inner rectangles */
+.shareable-display-dark .liquid-glass::before,
+.shareable-display-dark .liquid-glass-strong::before {
+  display: none !important;
 }
 
 .shareable-display-dark .team-card-surface {
-  background:
-    var(--team-card-gradient),
-    linear-gradient(
-      180deg,
-      var(--glass-gradient-start) 0%,
-      var(--glass-gradient-mid) 42%,
-      var(--glass-gradient-end) 100%
-    ),
-    var(--glass-bg);
-  background-repeat: no-repeat, no-repeat, no-repeat;
+  background: var(--team-card-gradient), var(--glass-bg) !important;
+  background-repeat: no-repeat, no-repeat;
   background-size:
     100% 52%,
-    100% 100%,
     100% 100%;
   background-position:
-    top left,
     top left,
     top left;
 }
 
 .shareable-display-dark .team-card-surface-strong {
-  background:
-    var(--team-card-gradient),
-    radial-gradient(
-      140% 160% at 0% 0%,
-      var(--glass-gradient-strong-start) 0%,
-      var(--glass-gradient-strong-mid) 48%,
-      var(--glass-gradient-strong-end) 100%
-    ),
-    var(--glass-bg-strong);
-  background-repeat: no-repeat, no-repeat, no-repeat;
+  background: var(--team-card-gradient), var(--glass-bg-strong) !important;
+  background-repeat: no-repeat, no-repeat;
   background-size:
     100% 52%,
-    100% 100%,
     100% 100%;
   background-position:
     top left,
-    top left,
     top left;
+}
+
+/* Prevent text cropping by disabling overflow restriction on text elements and enforcing clean line-heights */
+.shareable-display-dark .truncate,
+.shareable-display-dark span,
+.shareable-display-dark h1,
+.shareable-display-dark h2,
+.shareable-display-dark h3,
+.shareable-display-dark h4 {
+  text-overflow: clip !important;
+  overflow: visible !important;
+}
+
+.shareable-display-dark .percentile-bar-container span,
+.shareable-display-dark .truncate,
+.shareable-display-dark h2,
+.shareable-display-dark h3,
+.shareable-display-dark h4 {
+  line-height: 1.45 !important;
+}
+
+.shareable-display-dark .percentile-bar-container span {
+  padding-bottom: 8px !important; /* More bottom padding for stats bar labels */
+}
+
+.shareable-display-dark .mb-2 span.truncate {
+  padding-bottom: 4px !important; /* More bottom padding for compact team stats labels */
+}
+
+/* Force perfect alignment and centering for circular similarity badges */
+.shareable-display-dark .similarity-badge {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  padding-bottom: 0 !important;
+  transform: none !important;
 }
 
 @keyframes glassAppear {
@@ -871,9 +911,9 @@ html.light .liquid-glass-strong {
 }
 
 .shareable-modal-content {
-  animation: modalContentIn 0.4s cubic-bezier(0.33, 1, 0.68, 1) 0.12s both;
-  border-radius: 20px;
-  overflow: visible;
+  animation: modalContentFadeIn 0.4s ease-out 0.12s both;
+  border-radius: 0;
+  overflow: hidden;
   box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5);
   flex-shrink: 0;
 }
@@ -894,7 +934,33 @@ html.light .liquid-glass-strong {
   }
   to {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: none;
   }
 }
 
+@keyframes modalContentFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Hide background components when shareable modal is open to prevent screenshot interference */
+body.shareable-modal-open .max-w-6xl {
+  visibility: hidden;
+}
+
+/* Force body and ice-background to be black to avoid light subpixel bleeding at edges */
+body.shareable-modal-open,
+body.shareable-modal-open #root,
+body.shareable-modal-open .ice-background {
+  background: #000000 !important;
+  background-color: #000000 !important;
+}
+
+body.shareable-modal-open .ice-background::before,
+body.shareable-modal-open .ice-background::after {
+  display: none !important;
+}

@@ -1,18 +1,31 @@
 import { stanleyCupChampions } from "../data/stanleyCupData";
 
 export const playerUtils = {
+  getCorsWrappedUrl(url) {
+    if (!url) return url;
+    // Only wrap absolute external HTTP/HTTPS URLs
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      return url;
+    }
+    // Skip if it points to our own host (same origin)
+    if (url.includes(window.location.host)) {
+      return url;
+    }
+    return `https://images.weserv.nl/?url=${encodeURIComponent(url)}`;
+  },
+
   getPlayerHeadshot(playerId, team = null, season = null) {
     if (playerId === 8484801 && parseInt(season) === 2025) {
-      return "celebrini-cupcake.png";
+      return "/celebrini-cupcake.png";
     }
     if (playerId === 8484227 && parseInt(season) === 2025) {
-      return "smith-cupcake.png";
+      return "/smith-cupcake.png";
     }
     if (playerId === 8481559 && parseInt(season) === 2025) {
-      return "hughes.png";
+      return "/hughes.png";
     }
     if (playerId === 8471675 && parseInt(season) === 2009) {
-      return "crosby.png";
+      return "/crosby.png";
     }
 
     if (team && season) {

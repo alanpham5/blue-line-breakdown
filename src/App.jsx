@@ -25,7 +25,9 @@ const App = () => {
             <Route
               path="/teams"
               element={
-                <TeamSummary enablePageLoadAnimations={enablePageLoadAnimations} />
+                <TeamSummary
+                  enablePageLoadAnimations={enablePageLoadAnimations}
+                />
               }
             />
             <Route path="/about" element={<About />} />

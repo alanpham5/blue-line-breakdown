@@ -26,7 +26,9 @@ const CompactStatBar = ({ label, percentile, type = "offensive" }) => {
           {percentile.toFixed(1)}
         </span>
       </div>
-      <div className={`w-full h-1.5 overflow-hidden rounded-full ${trackColor}`}>
+      <div
+        className={`w-full h-1.5 overflow-hidden rounded-full ${trackColor}`}
+      >
         <div
           className={`h-1.5 rounded-full bg-gradient-to-r ${color}`}
           style={{ width: `${Math.min(100, Math.max(0, percentile))}%` }}
@@ -70,8 +72,14 @@ export const TeamShareableDisplay = ({
   }
 
   const didWinStanleyCup = playerUtils.didWinStanleyCup(team, season);
-  const teamCardGradient = playerUtils.getTeamCardGradient(team, season, "dark");
-  const teamLogoUrl = playerUtils.getTeamLogoUrl(team, season, "dark");
+  const teamCardGradient = playerUtils.getTeamCardGradient(
+    team,
+    season,
+    "dark"
+  );
+  const teamLogoUrl = playerUtils.getCorsWrappedUrl(
+    playerUtils.getTeamLogoUrl(team, season, "dark")
+  );
   const stats = teamSummaryData.stats;
 
   return (
@@ -97,6 +105,7 @@ export const TeamShareableDisplay = ({
           justifyContent: "center",
           background: "rgba(255, 255, 255, 0.01)",
           borderRight: "1px solid rgba(255, 255, 255, 0.05)",
+          overflow: "visible",
         }}
       >
         <div
@@ -108,7 +117,7 @@ export const TeamShareableDisplay = ({
             display: "flex",
             alignItems: "center",
             gap: 16,
-            fontSize: 30,
+            fontSize: 26,
             fontWeight: 800,
             letterSpacing: "0.15em",
             color: "#f3f4f6",
@@ -118,7 +127,7 @@ export const TeamShareableDisplay = ({
           <img
             src="/blb-dark.png"
             alt="Logo"
-            style={{ width: 60, height: 60 }}
+            style={{ width: 44, height: 44, display: "block" }}
           />
           <span>Blue Line Breakdown</span>
         </div>
@@ -152,9 +161,17 @@ export const TeamShareableDisplay = ({
                 <img
                   src={teamLogoUrl}
                   alt={`${team} logo`}
-                  className={`relative h-24 object-contain team-logo-stroke z-10 ${
+                  className={`team-logo-stroke z-10 ${
                     didWinStanleyCup ? "scale-75" : ""
                   }`}
+                  style={{
+                    width: "auto",
+                    height: "auto",
+                    maxWidth: "100%",
+                    maxHeight: "100%",
+                    display: "block",
+                    margin: "auto",
+                  }}
                 />
               )}
             </div>
@@ -185,54 +202,127 @@ export const TeamShareableDisplay = ({
         <div className="grid grid-cols-2 gap-3">
           {/* Offense */}
           <div className="liquid-glass-strong rounded-[22px] px-4 py-3">
-            <div className="flex items-center justify-between mb-2">
+            <div
+              className="flex items-center justify-between mb-2"
+              style={{ position: "relative", top: "-8px" }}
+            >
               <div className="flex items-center gap-1.5">
                 <Target className="h-5 w-5 shrink-0 text-cyan-300" />
                 <h3 className="text-base font-extrabold text-white">Offense</h3>
               </div>
               <RatingBadge value={stats.offense_rating} color="text-cyan-300" />
             </div>
-            <CompactStatBar label="Goal Scoring" percentile={stats.goals_pg_pct} type="offensive" />
-            <CompactStatBar label="Chance Creation" percentile={stats.xg_pg_pct} type="offensive" />
-            <CompactStatBar label="Dangerous Shots" percentile={stats.high_danger_shots_pg_pct} type="offensive" />
-            <CompactStatBar label="Shots on Net" percentile={stats.shots_on_goal_pg_pct} type="offensive" />
-            <CompactStatBar label="Rebound Chances" percentile={stats.rebound_xg_pg_pct} type="offensive" />
+            <CompactStatBar
+              label="Goal Scoring"
+              percentile={stats.goals_pg_pct}
+              type="offensive"
+            />
+            <CompactStatBar
+              label="Chance Creation"
+              percentile={stats.xg_pg_pct}
+              type="offensive"
+            />
+            <CompactStatBar
+              label="Dangerous Shots"
+              percentile={stats.high_danger_shots_pg_pct}
+              type="offensive"
+            />
+            <CompactStatBar
+              label="Shots on Net"
+              percentile={stats.shots_on_goal_pg_pct}
+              type="offensive"
+            />
+            <CompactStatBar
+              label="Rebound Chances"
+              percentile={stats.rebound_xg_pg_pct}
+              type="offensive"
+            />
           </div>
 
           {/* Defense */}
           <div className="liquid-glass-strong rounded-[22px] px-4 py-3">
-            <div className="flex items-center justify-between mb-2">
+            <div
+              className="flex items-center justify-between mb-2"
+              style={{ position: "relative", top: "-8px" }}
+            >
               <div className="flex items-center gap-1.5">
                 <Shield className="h-5 w-5 shrink-0 text-rose-400" />
                 <h3 className="text-base font-extrabold text-white">Defense</h3>
               </div>
               <RatingBadge value={stats.defense_rating} color="text-rose-400" />
             </div>
-            <CompactStatBar label="Goals Allowed" percentile={stats.goals_against_pg_pct} type="defensive" />
-            <CompactStatBar label="Chances Allowed" percentile={stats.xg_against_pg_pct} type="defensive" />
-            <CompactStatBar label="Dangerous Shots Allowed" percentile={stats.high_danger_shots_against_pg_pct} type="defensive" />
-            <CompactStatBar label="Shots Allowed" percentile={stats.shots_against_pg_pct} type="defensive" />
-            <CompactStatBar label="Takeaways" percentile={stats.takeaways_pg_pct} type="defensive" />
+            <CompactStatBar
+              label="Goals Allowed"
+              percentile={stats.goals_against_pg_pct}
+              type="defensive"
+            />
+            <CompactStatBar
+              label="Chances Allowed"
+              percentile={stats.xg_against_pg_pct}
+              type="defensive"
+            />
+            <CompactStatBar
+              label="Dangerous Shots Allowed"
+              percentile={stats.high_danger_shots_against_pg_pct}
+              type="defensive"
+            />
+            <CompactStatBar
+              label="Shots Allowed"
+              percentile={stats.shots_against_pg_pct}
+              type="defensive"
+            />
+            <CompactStatBar
+              label="Takeaways"
+              percentile={stats.takeaways_pg_pct}
+              type="defensive"
+            />
           </div>
 
           {/* Aggressiveness */}
           <div className="liquid-glass-strong rounded-[22px] px-4 py-3">
-            <div className="flex items-center justify-between mb-2">
+            <div
+              className="flex items-center justify-between mb-2"
+              style={{ position: "relative", top: "-8px" }}
+            >
               <div className="flex items-center gap-1.5">
                 <Flame className="h-5 w-5 shrink-0 text-amber-300" />
-                <h3 className="text-base font-extrabold text-white">Aggression</h3>
+                <h3 className="text-base font-extrabold text-white">
+                  Aggression
+                </h3>
               </div>
-              <RatingBadge value={stats.aggressiveness_rating} color="text-amber-300" />
+              <RatingBadge
+                value={stats.aggressiveness_rating}
+                color="text-amber-300"
+              />
             </div>
-            <CompactStatBar label="Hits" percentile={stats.hits_pg_pct} type="aggressiveness" />
-            <CompactStatBar label="Penalties Taken" percentile={stats.penalties_pg_pct} type="aggressiveness" />
-            <CompactStatBar label="Penalty Minutes" percentile={stats.penalty_minutes_pg_pct} type="aggressiveness" />
-            <CompactStatBar label="Shots Blocked" percentile={stats.blocked_shots_pg_pct} type="aggressiveness" />
+            <CompactStatBar
+              label="Hits"
+              percentile={stats.hits_pg_pct}
+              type="aggressiveness"
+            />
+            <CompactStatBar
+              label="Penalties Taken"
+              percentile={stats.penalties_pg_pct}
+              type="aggressiveness"
+            />
+            <CompactStatBar
+              label="Penalty Minutes"
+              percentile={stats.penalty_minutes_pg_pct}
+              type="aggressiveness"
+            />
+            <CompactStatBar
+              label="Shots Blocked"
+              percentile={stats.blocked_shots_pg_pct}
+              type="aggressiveness"
+            />
           </div>
 
           {/* Miscellaneous */}
           <div className="liquid-glass-strong rounded-[22px] px-4 py-3">
-            <div className="flex items-center gap-1.5 mb-2">
+            <div
+              className="flex items-center gap-1.5 mb-2"
+              style={{ position: "relative", top: "-8px" }}
+            >
               <Activity className="h-5 w-5 shrink-0 text-sky-300" />
               <h3 className="text-base font-extrabold text-white">Misc</h3>
             </div>
@@ -240,13 +330,21 @@ export const TeamShareableDisplay = ({
               <div className="text-xs font-bold uppercase tracking-[0.12em] text-gray-400 mb-1">
                 Possession
               </div>
-              <CompactStatBar label="Puck Management" percentile={stats.possession_pct} type="offensive" />
+              <CompactStatBar
+                label="Puck Management"
+                percentile={stats.possession_pct}
+                type="offensive"
+              />
             </div>
             <div className="pt-1.5 border-t border-white/5">
               <div className="text-xs font-bold uppercase tracking-[0.12em] text-gray-400 mb-1">
                 Pace
               </div>
-              <CompactStatBar label="Game Pace" percentile={stats.pace_pg_pct} type="pace" />
+              <CompactStatBar
+                label="Game Pace"
+                percentile={stats.pace_pg_pct}
+                type="pace"
+              />
             </div>
           </div>
         </div>
@@ -255,7 +353,10 @@ export const TeamShareableDisplay = ({
         <div className="grid grid-cols-[1fr_auto] gap-3">
           {/* Top Impact Players */}
           <div className="liquid-glass-strong rounded-[22px] px-4 py-3">
-            <div className="flex items-center gap-2 mb-2">
+            <div
+              className="flex items-center gap-2 mb-2"
+              style={{ position: "relative", top: "-8px" }}
+            >
               <Users className="h-5 w-5 shrink-0 text-amber-300" />
               <h3 className="text-base font-extrabold text-white">
                 Top Impact Players
@@ -269,16 +370,21 @@ export const TeamShareableDisplay = ({
                 </h4>
                 <div className="space-y-2">
                   {teamSummaryData.topForwards?.slice(0, 4).map((fw) => (
-                    <div
-                      key={fw.playerId}
-                      className="flex items-center gap-2"
-                    >
+                    <div key={fw.playerId} className="flex items-center gap-2">
                       <img
-                        src={playerUtils.getPlayerHeadshot(fw.playerId, team, season)}
+                        src={playerUtils.getCorsWrappedUrl(
+                          playerUtils.getPlayerHeadshot(
+                            fw.playerId,
+                            team,
+                            season
+                          )
+                        )}
                         alt={fw.name}
                         className="w-8 h-8 rounded-full object-cover bg-zinc-900 shrink-0"
                         onError={(e) => {
-                          e.target.src = playerUtils.getDefaultHeadshot();
+                          e.target.src = playerUtils.getCorsWrappedUrl(
+                            playerUtils.getDefaultHeadshot()
+                          );
                         }}
                       />
                       <div className="flex-1 min-w-0">
@@ -300,16 +406,21 @@ export const TeamShareableDisplay = ({
                 </h4>
                 <div className="space-y-2">
                   {teamSummaryData.topDefensemen?.slice(0, 4).map((df) => (
-                    <div
-                      key={df.playerId}
-                      className="flex items-center gap-2"
-                    >
+                    <div key={df.playerId} className="flex items-center gap-2">
                       <img
-                        src={playerUtils.getPlayerHeadshot(df.playerId, team, season)}
+                        src={playerUtils.getCorsWrappedUrl(
+                          playerUtils.getPlayerHeadshot(
+                            df.playerId,
+                            team,
+                            season
+                          )
+                        )}
                         alt={df.name}
                         className="w-8 h-8 rounded-full object-cover bg-zinc-900 shrink-0"
                         onError={(e) => {
-                          e.target.src = playerUtils.getDefaultHeadshot();
+                          e.target.src = playerUtils.getCorsWrappedUrl(
+                            playerUtils.getDefaultHeadshot()
+                          );
                         }}
                       />
                       <div className="flex-1 min-w-0">
@@ -328,48 +439,103 @@ export const TeamShareableDisplay = ({
           </div>
 
           {/* Similar Teams */}
-          {teamSummaryData.similarTeams && teamSummaryData.similarTeams.length > 0 && (
-            <div className="liquid-glass-strong rounded-[22px] px-3.5 py-3" style={{ width: 320 }}>
-              <h3 className="text-base font-extrabold text-white mb-2">
-                Most Similar Teams
-              </h3>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 place-items-center">
-                {teamSummaryData.similarTeams.slice(0, 4).map((similar) => (
-                  <div key={`${similar.team}-${similar.season}`} className="text-center">
-                    <div className="relative w-16 h-16 mx-auto mb-1">
-                      <div
-                        className="h-16 w-16 overflow-hidden rounded-full bg-zinc-950/55 flex items-center justify-center"
-                        style={{
-                          border: `1px solid ${playerUtils.toRgba(
-                            playerUtils.getTeamColor(similar.team, similar.season, "dark"),
-                            0.3
-                          )}`,
-                        }}
-                      >
-                        <img
-                          src={playerUtils.getTeamLogoUrl(similar.team, similar.season, "dark")}
-                          alt={similar.team}
-                          className="h-full w-full scale-110 object-contain team-logo-stroke"
-                          onError={(e) => {
-                            e.target.src = "https://assets.nhle.com/logos/nhl/svg/NHL_dark.svg";
+          {teamSummaryData.similarTeams &&
+            teamSummaryData.similarTeams.length > 0 && (
+              <div
+                className="liquid-glass-strong rounded-[22px] px-3.5 py-3"
+                style={{ width: 320 }}
+              >
+                <h3
+                  className="text-base font-extrabold text-white mb-2"
+                  style={{
+                    position: "relative",
+                    top: "-8px",
+                    display: "block",
+                  }}
+                >
+                  Most Similar Teams
+                </h3>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 place-items-center">
+                  {teamSummaryData.similarTeams.slice(0, 4).map((similar) => (
+                    <div
+                      key={`${similar.team}-${similar.season}`}
+                      className="text-center"
+                    >
+                      <div className="relative w-16 h-16 mx-auto mb-1">
+                        <div
+                          className="h-16 w-16 overflow-hidden rounded-full bg-zinc-950/55 flex items-center justify-center"
+                          style={{
+                            border: `1px solid ${playerUtils.toRgba(
+                              playerUtils.getTeamColor(
+                                similar.team,
+                                similar.season,
+                                "dark"
+                              ),
+                              0.3
+                            )}`,
                           }}
-                        />
+                        >
+                          <img
+                            src={playerUtils.getCorsWrappedUrl(
+                              playerUtils.getTeamLogoUrl(
+                                similar.team,
+                                similar.season,
+                                "dark"
+                              )
+                            )}
+                            alt={similar.team}
+                            className="team-logo-stroke scale-110"
+                            style={{
+                              width: "auto",
+                              height: "auto",
+                              maxWidth: "100%",
+                              maxHeight: "100%",
+                              display: "block",
+                              margin: "auto",
+                            }}
+                            onError={(e) => {
+                              e.target.src = playerUtils.getCorsWrappedUrl(
+                                "https://assets.nhle.com/logos/nhl/svg/NHL_dark.svg"
+                              );
+                            }}
+                          />
+                        </div>
+                        <div
+                          className="absolute bottom-[-4px] right-[-4px] flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-b from-[#ffe57e] to-[#ffd037] text-[9px] font-bold text-[#4f3d00] shadow-md z-20"
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            lineHeight: 1,
+                          }}
+                        >
+                          <span
+                            className="shareable-similarity-score"
+                            style={{
+                              display: "block",
+                              lineHeight: "1",
+                              position: "relative",
+                              top: "-1px",
+                            }}
+                          >
+                            {Math.round(similar.similarity)}
+                          </span>
+                        </div>
                       </div>
-                      <div className="absolute bottom-[-4px] right-[-4px] flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-b from-[#ffe57e] to-[#ffd037] text-[9px] font-bold text-[#4f3d00] shadow-md z-20">
-                        {Math.round(similar.similarity)}
-                      </div>
+                      <p className="text-[11px] font-semibold text-white leading-tight max-w-[120px] truncate mx-auto">
+                        {playerUtils.getFullTeamName(
+                          similar.team,
+                          similar.season
+                        )}
+                      </p>
+                      <p className="text-[9px] uppercase tracking-[0.16em] text-gray-400 mt-0.5">
+                        {playerUtils.formatSeason(similar.season)}
+                      </p>
                     </div>
-                    <p className="text-[11px] font-semibold text-white leading-tight max-w-[120px] truncate mx-auto">
-                      {playerUtils.getFullTeamName(similar.team, similar.season)}
-                    </p>
-                    <p className="text-[9px] uppercase tracking-[0.16em] text-gray-400 mt-0.5">
-                      {playerUtils.formatSeason(similar.season)}
-                    </p>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
 
         <div className="text-sm pt-0.5 font-bold justify-self-center text-white/90">

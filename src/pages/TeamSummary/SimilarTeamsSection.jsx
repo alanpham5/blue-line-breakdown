@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Info } from "lucide-react";
 import { playerUtils } from "../../utils/playerUtils";
 import { Tooltip } from "../../components/Tooltip";
@@ -124,29 +124,29 @@ export const SimilarTeamsSection = ({ similarTeams, onTeamClick }) => {
             Most Similar Teams
           </h3>
           <Tooltip
-              id="similar-teams"
-              position="bottom"
-              width="w-64 sm:w-72"
-              content={
-                <div className="space-y-2">
-                  <div className="mb-1 font-semibold text-amber-300 light:text-amber-600">
-                    Team Similarity
-                  </div>
-                  <div className="text-xs leading-relaxed text-gray-300 light:text-gray-600">
-                    Teams are compared using normalized offensive, defensive,
-                    and pacing statistics. Similarity scores indicate how
-                    closely their statistical profiles match in these areas.
-                  </div>
+            id="similar-teams"
+            position="bottom"
+            width="w-64 sm:w-72"
+            content={
+              <div className="space-y-2">
+                <div className="mb-1 font-semibold text-amber-300 light:text-amber-600">
+                  Team Similarity
                 </div>
-              }
+                <div className="text-xs leading-relaxed text-gray-300 light:text-gray-600">
+                  Teams are compared using normalized offensive, defensive, and
+                  pacing statistics. Similarity scores indicate how closely
+                  their statistical profiles match in these areas.
+                </div>
+              </div>
+            }
+          >
+            <button
+              className="shrink-0 text-gray-400 hover:text-gray-200 light:text-gray-500 light:hover:text-gray-700 transition-colors"
+              aria-label="Info about team similarity"
             >
-              <button
-                className="shrink-0 text-gray-400 hover:text-gray-200 light:text-gray-500 light:hover:text-gray-700 transition-colors"
-                aria-label="Info about team similarity"
-              >
-                <Info className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              </button>
-            </Tooltip>
+              <Info className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            </button>
+          </Tooltip>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-2 xs:grid-cols-3 sm:grid-cols-4 md:flex md:flex-wrap md:justify-center md:gap-4">
