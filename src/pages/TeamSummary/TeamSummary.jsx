@@ -1,9 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Loader2, Search, Target, Shield, Flame, Activity, Users, Share } from "lucide-react";
+import {
+  Loader2,
+  Search,
+  Target,
+  Shield,
+  Flame,
+  Activity,
+  Users,
+  Download,
+} from "lucide-react";
 import { track } from "@vercel/analytics";
 import { apiService } from "../../services/apiService";
 import { Header } from "../../components/Header";
+import { AppSelect } from "../../components/AppSelect";
 import { TeamStatBar } from "./TeamStatBar";
 import { SimilarTeamsSection } from "./SimilarTeamsSection";
 import { playerUtils } from "../../utils/playerUtils";
@@ -32,18 +42,14 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
   const isExternal = useIsExternal();
 
   const now = new Date();
-  const latestSeasonYear =
-    now.getMonth() >= 10 ? now.getFullYear() : now.getFullYear() - 1;
-  const defaultSeason = latestSeasonYear.toString();
-
-  const initialTeam = searchParams.get("team") || null;
+  const initialTeam = searchParams.get("team") || "";
   const initialSeason =
-    searchParams.get("year") || searchParams.get("season") || null;
+    searchParams.get("year") || searchParams.get("season") || "";
 
   const [team, setTeam] = useState(initialTeam);
-  const [season, setSeason] = useState(initialSeason || defaultSeason);
-  const [tempTeam, setTempTeam] = useState(initialTeam || "ANA");
-  const [tempSeason, setTempSeason] = useState(initialSeason || defaultSeason);
+  const [season, setSeason] = useState(initialSeason);
+  const [tempTeam, setTempTeam] = useState(initialTeam);
+  const [tempSeason, setTempSeason] = useState(initialSeason);
   const [hasSearched, setHasSearched] = useState(
     !!(initialTeam && initialSeason)
   );
@@ -62,14 +68,6 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
   const initInProgressRef = useRef(false);
   const teamHeaderRef = useRef(null);
   const [showShareableModal, setShowShareableModal] = useState(false);
-
-  const isLocalhost = Boolean(
-    window.location.hostname === "localhost" ||
-    window.location.hostname === "[::1]" ||
-    window.location.hostname.match(
-      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
-    )
-  );
 
   const seasonsList = Array.from(
     {
@@ -123,15 +121,18 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
   }, []);
 
   useEffect(() => {
+    if (!tempSeason) {
+      setTeamsList([]);
+      return;
+    }
+
     const fetchTeamsList = async () => {
       setLoadingTeams(true);
       try {
         const data = await apiService.fetchTeams(tempSeason);
         setTeamsList(data.teams || []);
-        if (data.teams?.length) {
-          if (!data.teams.includes(tempTeam)) {
-            setTempTeam(data.teams[0]);
-          }
+        if (tempTeam && data.teams?.length && !data.teams.includes(tempTeam)) {
+          setTempTeam("");
         }
       } catch {
         setTeamsList([]);
@@ -302,10 +303,8 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <label className="block text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-gray-500 light:text-slate-500 mb-2">
-                    Season
-                  </label>
-                  <select
+                  <AppSelect
+                    placeholder="Season"
                     value={tempSeason}
                     onChange={(e) => setTempSeason(e.target.value)}
                     className="app-field px-4 py-3.5 pr-10 text-base text-white light:text-gray-900"
@@ -315,16 +314,14 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                         {getSeasonName(s)}
                       </option>
                     ))}
-                  </select>
+                  </AppSelect>
                 </div>
                 <div>
-                  <label className="block text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-gray-500 light:text-slate-500 mb-2">
-                    Team
-                  </label>
-                  <select
+                  <AppSelect
+                    placeholder="Team"
                     value={tempTeam}
                     onChange={(e) => setTempTeam(e.target.value)}
-                    disabled={loadingTeams}
+                    disabled={loadingTeams || !tempSeason}
                     className="app-field px-4 py-3.5 pr-10 text-base text-white light:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {loadingTeams ? (
@@ -340,7 +337,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                           </option>
                         ))
                     )}
-                  </select>
+                  </AppSelect>
                 </div>
               </div>
 
@@ -400,17 +397,17 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
 
                         <div className="text-center md:text-left text-2xl font-bold text-white light:text-gray-900">
                           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.04em] flex flex-wrap items-center justify-center md:justify-start gap-2">
-                            <span>{playerUtils.getFullTeamName(team, season)}</span>
-                            {isLocalhost && (
-                              <button
-                                type="button"
-                                onClick={() => setShowShareableModal(true)}
-                                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:text-white light:border-slate-300 light:bg-white/80 light:text-slate-600 light:hover:text-slate-900"
-                                aria-label="Open shareable view"
-                              >
-                                <Share className="h-4 w-4" />
-                              </button>
-                            )}
+                            <span>
+                              {playerUtils.getFullTeamName(team, season)}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => setShowShareableModal(true)}
+                              className="hidden md:inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:text-white light:border-slate-300 light:bg-white/80 light:text-slate-600 light:hover:text-slate-900"
+                              aria-label="Download shareable image"
+                            >
+                              <Download className="h-4 w-4" />
+                            </button>
                           </h2>
                           <div className="mt-2 flex flex-wrap items-center justify-center md:justify-start gap-2 text-sm sm:text-base font-semibold text-gray-300 light:text-gray-600">
                             <span>
@@ -757,7 +754,11 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
       <ShareableModal
         isOpen={showShareableModal}
         onClose={() => setShowShareableModal(false)}
-        fileName={team ? `${playerUtils.getFullTeamName(team, season).replace(/\s+/g, '-')}-${season}` : 'team-shareable'}
+        fileName={
+          team
+            ? `${playerUtils.getFullTeamName(team, season).replace(/\s+/g, "-")}-${season}`
+            : "team-shareable"
+        }
       >
         <TeamShareableDisplay
           team={team}

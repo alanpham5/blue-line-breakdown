@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 
 export const LoadingWheel = ({ size = 650, actualTheme = "dark" }) => {
   const canvasRef = useRef(null);

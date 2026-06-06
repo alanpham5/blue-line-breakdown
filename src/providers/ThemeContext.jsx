@@ -43,7 +43,6 @@ export function ThemeProvider({ children }) {
         root.classList.add(themeMode);
         root.setAttribute("data-theme", themeMode);
       }
-
     };
 
     applyTheme(theme);

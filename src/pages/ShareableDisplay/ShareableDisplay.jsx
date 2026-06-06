@@ -49,6 +49,7 @@ export const ShareableDisplay = ({ playerData }) => {
             justifyContent: "center",
             background: "rgba(255, 255, 255, 0.01)",
             borderRight: "1px solid rgba(255, 255, 255, 0.05)",
+            overflow: "visible",
           }}
         >
           <div
@@ -105,9 +106,9 @@ export const ShareableDisplay = ({ playerData }) => {
           </div>
 
           <div className="liquid-glass-strong rounded-[28px] p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Users className="h-6 w-6 shrink-0 text-amber-300" />
-              <h3 className="text-2xl font-bold text-white">
+            <div className="shareable-card-title-row flex items-center gap-2 mb-2">
+              <Users className="shareable-card-title-icon h-6 w-6 shrink-0 text-amber-300" />
+              <h3 className="shareable-card-title-text text-2xl font-bold text-white">
                 Most Similar Players
               </h3>
             </div>
@@ -118,19 +119,36 @@ export const ShareableDisplay = ({ playerData }) => {
                   <div className="relative mb-2 inline-block">
                     <div className="h-16 w-16 sm:h-20 sm:w-20 overflow-hidden rounded-full bg-zinc-950/55 backdrop-blur-sm shadow-lg border border-white/5 flex items-center justify-center">
                       <img
-                        src={playerUtils.getPlayerHeadshot(
-                          p.playerId,
-                          p.team,
-                          p.season
+                        src={playerUtils.getCorsWrappedUrl(
+                          playerUtils.getPlayerHeadshot(
+                            p.playerId,
+                            p.team,
+                            p.season
+                          )
                         )}
                         className="w-full h-full object-cover"
                         onError={(e) => {
-                          e.target.src = playerUtils.getDefaultHeadshot();
+                          e.target.src = playerUtils.getCorsWrappedUrl(
+                            playerUtils.getDefaultHeadshot()
+                          );
                         }}
                       />
                     </div>
-                    <div className="absolute -bottom-0.5 -right-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-b from-[#ffe57e] to-[#ffd037] text-[10px] font-bold text-[#4f3d00] shadow-[0_4px_10px_rgba(255,208,55,0.18)] sm:-bottom-1 sm:-right-1 sm:h-8 sm:w-8 sm:text-xs">
-                      {Math.round(p.similarity)}
+                    <div
+                      className="absolute -bottom-0.5 -right-0.5 flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-b from-[#ffe57e] to-[#ffd037] text-[10px] font-bold text-[#4f3d00] shadow-[0_4px_10px_rgba(255,208,55,0.18)] sm:-bottom-1 sm:-right-1 sm:h-8 sm:w-8 sm:text-xs"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        lineHeight: 1,
+                      }}
+                    >
+                      <span
+                        className="shareable-similarity-score"
+                        style={{ display: "block", lineHeight: "1" }}
+                      >
+                        {Math.round(p.similarity)}
+                      </span>
                     </div>
                   </div>
                   <div className="text-[17px] max-w-[145px] font-bold truncate text-white">

@@ -1,4 +1,5 @@
 import { Search, X } from "lucide-react";
+import { AppSelect } from "../../components/AppSelect";
 
 const handleKeyPress = (e, onSearch) => {
   if (e.key === "Enter") {
@@ -47,9 +48,6 @@ export const SearchForm = ({
     >
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3 sm:gap-4">
         <div className="md:col-span-2">
-          <label className="block text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-gray-500 light:text-slate-500 mb-2">
-            Player Name
-          </label>
           <div className="relative">
             <Search
               size={16}
@@ -63,11 +61,7 @@ export const SearchForm = ({
               onChange={(e) => setPlayerName(e.target.value)}
               onKeyPress={(e) => handleKeyPress(e, onSearch)}
               autoComplete="off"
-              placeholder={
-                position === "F"
-                  ? "e.g., Macklin Celebrini"
-                  : "e.g., Cale Makar"
-              }
+              placeholder="Player Name"
               className={`${sharedFieldClassName} pl-11 pr-10`}
             />
             {playerName && (
@@ -82,10 +76,8 @@ export const SearchForm = ({
           </div>
         </div>
         <div>
-          <label className="block text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-gray-500 light:text-slate-500 mb-2">
-            Season
-          </label>
-          <select
+          <AppSelect
+            placeholder="Season"
             value={season}
             onChange={(e) => setSeason(e.target.value)}
             className={`${sharedFieldClassName} pr-10`}
@@ -98,20 +90,18 @@ export const SearchForm = ({
                 </option>
               );
             })}
-          </select>
+          </AppSelect>
         </div>
         <div>
-          <label className="block text-[0.72rem] font-semibold uppercase tracking-[0.2em] text-gray-500 light:text-slate-500 mb-2">
-            Position
-          </label>
-          <select
+          <AppSelect
+            placeholder="Position"
             value={position}
             onChange={(e) => setPosition(e.target.value)}
             className={`${sharedFieldClassName} pr-10`}
           >
             <option value="F">Forward</option>
             <option value="D">Defense</option>
-          </select>
+          </AppSelect>
         </div>
       </div>
 

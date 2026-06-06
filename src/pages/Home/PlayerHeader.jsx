@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Ruler, Scale, Calendar, Share } from "lucide-react";
+import { Ruler, Scale, Calendar, Download } from "lucide-react";
 import { playerUtils } from "../../utils/playerUtils";
 import { ArchetypeBadge } from "./ArchetypeBadge";
 import { useTheme } from "../../providers/ThemeContext";
@@ -69,14 +69,6 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
 
   const archetypes = player.archetypes || [];
 
-  const isLocalhost = Boolean(
-    window.location.hostname === "localhost" ||
-    window.location.hostname === "[::1]" ||
-    window.location.hostname.match(
-      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
-    )
-  );
-
   return (
     <div
       className="team-card-surface-strong liquid-glass-strong liquid-glass-animate overflow-hidden rounded-[32px] p-5 pb-8 lg:p-6 lg:pb-8"
@@ -135,14 +127,14 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
                 className="w-5 h-9 object-cover xl:hidden"
               />
             )}
-            {isLocalhost && onShareClick && (
+            {onShareClick && (
               <button
                 type="button"
                 onClick={onShareClick}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:text-white light:border-slate-300 light:bg-white/80 light:text-slate-600 light:hover:text-slate-900"
-                aria-label="Open shareable view"
+                className="hidden md:inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:text-white light:border-slate-300 light:bg-white/80 light:text-slate-600 light:hover:text-slate-900"
+                aria-label="Download shareable image"
               >
-                <Share className="h-4 w-4" />
+                <Download className="h-4 w-4" />
               </button>
             )}
           </h2>

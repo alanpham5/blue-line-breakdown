@@ -17,11 +17,10 @@ import { ShareableDisplay } from "../ShareableDisplay/ShareableDisplay";
 import { ShareableModal } from "../../components/ShareableModal";
 
 export const Home = ({ enablePageLoadAnimations = true }) => {
-  const defaultSeason = (new Date().getFullYear() - 1).toString();
   const [searchParams, setSearchParams] = useSearchParams();
   const [playerName, setPlayerName] = useState("");
-  const [season, setSeason] = useState(defaultSeason);
-  const [position, setPosition] = useState("F");
+  const [season, setSeason] = useState("");
+  const [position, setPosition] = useState("");
   const [loading, setLoading] = useState(false);
   const [initializingCache, setInitializingCache] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("Searching...");
@@ -60,8 +59,6 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
     }
   }, [isLocalhost, searchParams]);
 
-
-
   useEffect(() => {
     if (playerHeaderRef.current) {
       const y =
@@ -91,8 +88,6 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
       return;
     }
 
-    const defaultPosition = "F";
-
     if (urlPlayerName && urlPlayerName !== playerName)
       setPlayerName(urlPlayerName);
     if (urlSeason && urlSeason !== season) setSeason(urlSeason);
@@ -101,14 +96,14 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
       setFilterYear(urlFilterYear || null);
     }
 
-    if (urlPlayerName) {
+    if (urlPlayerName && urlSeason && urlPosition) {
       performSearch(
         urlPlayerName,
-        urlSeason || season || defaultSeason,
-        urlPosition || position || defaultPosition,
+        urlSeason,
+        urlPosition,
         urlFilterYear || null
       );
-    } else {
+    } else if (!urlPlayerName) {
       setPlayerData(null);
     }
   }, [searchParams]);
@@ -317,6 +312,14 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
       setError("Please enter a player name");
       return;
     }
+    if (!season) {
+      setError("Please select a season");
+      return;
+    }
+    if (!position) {
+      setError("Please select a position");
+      return;
+    }
     updateSearchParams(playerName, season, position, filterYear);
     track("player_search", {
       player: playerName,
@@ -359,140 +362,144 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
       {isExternal && initInProgress ? (
         <LoadingScreen />
       ) : (
+        <>
           <>
-            <>
-              {loading && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/72 backdrop-blur-sm light:bg-black/30">
-                  <div className="liquid-glass-strong flex flex-col items-center gap-4 rounded-[30px] p-8">
-                    <Loader2 className="h-12 w-12 animate-spin text-sky-300 light:text-sky-600" />
-                    <p className="text-lg font-medium text-white light:text-gray-900">
-                      {loadingMessage}
-                    </p>
-                  </div>
-                </div>
-              )}
-              <div className="max-w-6xl mx-auto relative z-10">
-                <Header />
-                <Analytics />
-                <div className="space-y-5 sm:space-y-7">
-                  <SearchForm
-                    playerName={playerName}
-                    setPlayerName={setPlayerName}
-                    season={season}
-                    setSeason={setSeason}
-                    position={position}
-                    setPosition={setPosition}
-                    onSearch={handleSearch}
-                    loading={loading}
-                    error={error}
-                    suggestions={suggestions}
-                    enablePageLoadAnimation={enablePageLoadAnimations}
-                    onSuggestionClick={async (suggestionName) => {
-                      setPlayerName(suggestionName);
-                      updateSearchParams(
-                        suggestionName,
-                        season,
-                        position,
-                        filterYear
-                      );
-                      await performSearch(
-                        suggestionName,
-                        season,
-                        position,
-                        filterYear
-                      );
-                    }}
-                  />
-
-                  {playerData && (
-                    <div
-                      className="space-y-5 sm:space-y-7"
-                      ref={playerHeaderRef}
-                      key={renderKey}
-                    >
-                      <div className="flex flex-col lg:flex-row lg:items-stretch gap-4 sm:gap-6">
-                        <div className="w-full lg:flex-1">
-                          <PlayerHeader
-                            player={playerData.player}
-                            biometrics={playerData.biometrics}
-                            onShareClick={() => setShowShareableModal(true)}
-                          />
-                        </div>
-                        <div className="w-full lg:w-96 shrink-0">
-                          <WarPercentileCard
-                            warPercentile={playerData.player.warPercentile}
-                          />
-                        </div>
-                      </div>
-                      <div className="w-full">
-                        <CountingStats stats={playerData.stats} />
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                        <StatsCard
-                          title="Offensive Metrics"
-                          icon={Target}
-                          stats={playerData.percentiles.offensive}
-                          allPercentiles={playerData.percentiles}
-                          type="offensive"
-                        />
-                        <StatsCard
-                          title="Defensive Metrics"
-                          icon={Shield}
-                          stats={playerData.percentiles.defensive}
-                          type="defensive"
-                        />
-                      </div>
-
-                      <SimilarPlayersSection
-                        players={playerData.similarPlayers}
-                        onPlayerClick={handleSimilarPlayerClick}
-                        filterYear={filterYear}
-                        onFilterYearChange={async (year) => {
-                          setFilterYear(year);
-                          if (playerName) {
-                            updateSearchParams(
-                              playerName,
-                              season,
-                              position,
-                              year || null
-                            );
-                            await performSearch(
-                              playerName,
-                              season,
-                              position,
-                              year || null
-                            );
-                          }
-                        }}
-                      />
-                    </div>
-                  )}
-
-                  {!playerData && !loading && (
-                    <div className="liquid-glass rounded-[32px] mt-4 sm:mt-6 px-5 py-10 text-center">
-                      <p className="mb-3 text-2xl font-semibold tracking-[-0.03em] text-white light:text-slate-900 sm:text-3xl">
-                        Enter a player name to get started
-                      </p>
-                      <p className="mx-auto max-w-2xl text-sm text-gray-400 light:text-gray-500 sm:text-base">
-                        Analytics derived from MoneyPuck data (2008-
-                        {new Date().getFullYear() - 1}), with proprietary
-                        calculations and metrics.
-                      </p>
-                    </div>
-                  )}
+            {loading && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/72 backdrop-blur-sm light:bg-black/30">
+                <div className="liquid-glass-strong flex flex-col items-center gap-4 rounded-[30px] p-8">
+                  <Loader2 className="h-12 w-12 animate-spin text-sky-300 light:text-sky-600" />
+                  <p className="text-lg font-medium text-white light:text-gray-900">
+                    {loadingMessage}
+                  </p>
                 </div>
               </div>
-            </>
+            )}
+            <div className="max-w-6xl mx-auto relative z-10">
+              <Header />
+              <Analytics />
+              <div className="space-y-5 sm:space-y-7">
+                <SearchForm
+                  playerName={playerName}
+                  setPlayerName={setPlayerName}
+                  season={season}
+                  setSeason={setSeason}
+                  position={position}
+                  setPosition={setPosition}
+                  onSearch={handleSearch}
+                  loading={loading}
+                  error={error}
+                  suggestions={suggestions}
+                  enablePageLoadAnimation={enablePageLoadAnimations}
+                  onSuggestionClick={async (suggestionName) => {
+                    setPlayerName(suggestionName);
+                    updateSearchParams(
+                      suggestionName,
+                      season,
+                      position,
+                      filterYear
+                    );
+                    await performSearch(
+                      suggestionName,
+                      season,
+                      position,
+                      filterYear
+                    );
+                  }}
+                />
 
-            <ShareableModal
-              isOpen={showShareableModal}
-              onClose={() => setShowShareableModal(false)}
-              fileName={playerData ? `${playerData.player.name.replace(/\s+/g, '-')}-${playerData.player.season}` : 'player-shareable'}
-            >
-              <ShareableDisplay playerData={playerData} />
-            </ShareableModal>
+                {playerData && (
+                  <div
+                    className="space-y-5 sm:space-y-7"
+                    ref={playerHeaderRef}
+                    key={renderKey}
+                  >
+                    <div className="flex flex-col lg:flex-row lg:items-stretch gap-4 sm:gap-6">
+                      <div className="w-full lg:flex-1">
+                        <PlayerHeader
+                          player={playerData.player}
+                          biometrics={playerData.biometrics}
+                          onShareClick={() => setShowShareableModal(true)}
+                        />
+                      </div>
+                      <div className="w-full lg:w-96 shrink-0">
+                        <WarPercentileCard
+                          warPercentile={playerData.player.warPercentile}
+                        />
+                      </div>
+                    </div>
+                    <div className="w-full">
+                      <CountingStats stats={playerData.stats} />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                      <StatsCard
+                        title="Offensive Metrics"
+                        icon={Target}
+                        stats={playerData.percentiles.offensive}
+                        allPercentiles={playerData.percentiles}
+                        type="offensive"
+                      />
+                      <StatsCard
+                        title="Defensive Metrics"
+                        icon={Shield}
+                        stats={playerData.percentiles.defensive}
+                        type="defensive"
+                      />
+                    </div>
+
+                    <SimilarPlayersSection
+                      players={playerData.similarPlayers}
+                      onPlayerClick={handleSimilarPlayerClick}
+                      filterYear={filterYear}
+                      onFilterYearChange={async (year) => {
+                        setFilterYear(year);
+                        if (playerName) {
+                          updateSearchParams(
+                            playerName,
+                            season,
+                            position,
+                            year || null
+                          );
+                          await performSearch(
+                            playerName,
+                            season,
+                            position,
+                            year || null
+                          );
+                        }
+                      }}
+                    />
+                  </div>
+                )}
+
+                {!playerData && !loading && (
+                  <div className="liquid-glass rounded-[32px] mt-4 sm:mt-6 px-5 py-10 text-center">
+                    <p className="mb-3 text-2xl font-semibold tracking-[-0.03em] text-white light:text-slate-900 sm:text-3xl">
+                      Enter a player name to get started
+                    </p>
+                    <p className="mx-auto max-w-2xl text-sm text-gray-400 light:text-gray-500 sm:text-base">
+                      Analytics derived from MoneyPuck data (2008-
+                      {new Date().getFullYear() - 1}), with proprietary
+                      calculations and metrics.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
           </>
+
+          <ShareableModal
+            isOpen={showShareableModal}
+            onClose={() => setShowShareableModal(false)}
+            fileName={
+              playerData
+                ? `${playerData.player.name.replace(/\s+/g, "-")}-${playerData.player.season}`
+                : "player-shareable"
+            }
+          >
+            <ShareableDisplay playerData={playerData} />
+          </ShareableModal>
+        </>
       )}
     </div>
   );

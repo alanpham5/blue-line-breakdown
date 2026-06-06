@@ -32,35 +32,54 @@ export const WarPercentileCardCompact = ({ warPercentile }) => {
       <div className="relative shrink-0 text-right">
         <div className="relative inline-flex items-center justify-center">
           <svg
-            className="h-[5.75rem] w-[5.75rem] -rotate-90 transform sm:h-[6.25rem] sm:w-[6.25rem]"
+            className="h-[5.75rem] w-[5.75rem] sm:h-[6.25rem] sm:w-[6.25rem]"
+            style={{ display: "block" }}
             viewBox="0 0 44 44"
           >
-            <circle
-              cx="22"
-              cy="22"
-              r={radius}
-              fill="none"
-              className="stroke-[rgba(103,120,90,0.42)] light:stroke-slate-200"
-              strokeWidth="3.5"
-            />
-            <circle
-              cx="22"
-              cy="22"
-              r={radius}
-              fill="none"
-              className="stroke-[#7dcb48]"
-              strokeWidth="3.5"
-              strokeDasharray={circumference}
-              strokeDashoffset={dashOffset}
-              strokeLinecap="round"
-            />
+            <g transform="rotate(-90 22 22)">
+              <circle
+                cx="22"
+                cy="22"
+                r={radius}
+                fill="none"
+                className="stroke-[rgba(103,120,90,0.42)] light:stroke-slate-200"
+                strokeWidth="3.5"
+              />
+              <circle
+                cx="22"
+                cy="22"
+                r={radius}
+                fill="none"
+                className="stroke-[#7dcb48]"
+                strokeWidth="3.5"
+                strokeDasharray={circumference}
+                strokeDashoffset={dashOffset}
+                strokeLinecap="round"
+              />
+            </g>
           </svg>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center">
-              <div className="text-[1.38rem] font-bold tracking-[-0.04em] text-white sm:text-[1.48rem]">
-                {warPercentile.toFixed(1)}
-              </div>
-            </div>
+          <div
+            className="absolute inset-0 flex items-center justify-center"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <span
+              className="shareable-war-score text-[1.38rem] font-bold tracking-[-0.04em] text-white sm:text-[1.48rem]"
+              style={{
+                lineHeight: "1",
+                display: "block",
+              }}
+            >
+              {warPercentile.toFixed(1)}
+            </span>
           </div>
         </div>
       </div>
