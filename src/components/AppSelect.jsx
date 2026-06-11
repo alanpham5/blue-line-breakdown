@@ -15,7 +15,10 @@ export const AppSelect = ({
   const options = Children.toArray(children)
     .filter(isValidElement)
     .map((child) => ({
-      value: child.props.value !== undefined ? child.props.value : child.props.children,
+      value:
+        child.props.value !== undefined
+          ? child.props.value
+          : child.props.children,
       label: child.props.children,
     }));
 
@@ -46,7 +49,10 @@ export const AppSelect = ({
   };
 
   return (
-    <div className="relative z-[50]" ref={containerRef}>
+    <div
+      className={`relative ${open ? "z-[60]" : "z-[50]"}`}
+      ref={containerRef}
+    >
       <button
         type="button"
         disabled={disabled}

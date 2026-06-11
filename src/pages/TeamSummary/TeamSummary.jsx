@@ -296,72 +296,72 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
             <Header />
 
             <div className="relative z-10">
-            <div
-              className={`liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7 mb-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
-              style={{ overflow: "visible" }}
-            >
-              <div className="mb-6">
-                <h1 className="section-title text-4xl sm:text-5xl">
-                  Team Summary
-                </h1>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                <div>
-                  <AppSelect
-                    placeholder="Season"
-                    value={tempSeason}
-                    onChange={(e) => setTempSeason(e.target.value)}
-                    className="app-field px-4 py-3.5 pr-10 text-base text-white light:text-gray-900"
-                  >
-                    {[...seasonsList].reverse().map((s) => (
-                      <option key={s} value={s}>
-                        {getSeasonName(s)}
-                      </option>
-                    ))}
-                  </AppSelect>
-                </div>
-                <div>
-                  <AppSelect
-                    placeholder="Team"
-                    value={tempTeam}
-                    onChange={(e) => setTempTeam(e.target.value)}
-                    disabled={loadingTeams || !tempSeason}
-                    className="app-field px-4 py-3.5 pr-10 text-base text-white light:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {loadingTeams ? (
-                      <option>Loading...</option>
-                    ) : (
-                      [...teamsList]
-                        .sort((a, b) =>
-                          getTeamLabel(a).localeCompare(getTeamLabel(b))
-                        )
-                        .map((t) => (
-                          <option key={t} value={t}>
-                            {getTeamLabel(t)}
-                          </option>
-                        ))
-                    )}
-                  </AppSelect>
-                </div>
-              </div>
-
-              <button
-                onClick={handleSearchClick}
-                disabled={loadingData || !tempSeason || !tempTeam}
-                className="btn-search-primary mb-1 mt-5"
+              <div
+                className={`liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7 mb-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
+                style={{ overflow: "visible" }}
               >
-                {loadingData ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" /> Searching...
-                  </>
-                ) : (
-                  <>
-                    <Search size={20} /> View Team Summary
-                  </>
-                )}
-              </button>
-            </div>
+                <div className="mb-6">
+                  <h1 className="section-title text-4xl sm:text-5xl">
+                    Team Summary
+                  </h1>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                  <div>
+                    <AppSelect
+                      placeholder="Season"
+                      value={tempSeason}
+                      onChange={(e) => setTempSeason(e.target.value)}
+                      className="app-field px-4 py-3.5 pr-10 text-base text-white light:text-gray-900"
+                    >
+                      {[...seasonsList].reverse().map((s) => (
+                        <option key={s} value={s}>
+                          {getSeasonName(s)}
+                        </option>
+                      ))}
+                    </AppSelect>
+                  </div>
+                  <div>
+                    <AppSelect
+                      placeholder="Team"
+                      value={tempTeam}
+                      onChange={(e) => setTempTeam(e.target.value)}
+                      disabled={loadingTeams || !tempSeason}
+                      className="app-field px-4 py-3.5 pr-10 text-base text-white light:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {loadingTeams ? (
+                        <option>Loading...</option>
+                      ) : (
+                        [...teamsList]
+                          .sort((a, b) =>
+                            getTeamLabel(a).localeCompare(getTeamLabel(b))
+                          )
+                          .map((t) => (
+                            <option key={t} value={t}>
+                              {getTeamLabel(t)}
+                            </option>
+                          ))
+                      )}
+                    </AppSelect>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleSearchClick}
+                  disabled={loadingData || !tempSeason || !tempTeam}
+                  className="btn-search-primary mb-1 mt-5"
+                >
+                  {loadingData ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" /> Searching...
+                    </>
+                  ) : (
+                    <>
+                      <Search size={20} /> View Team Summary
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
 
             {error && (

@@ -353,75 +353,75 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
           <div className="max-w-6xl mx-auto">
             <Header />
             <div className="relative z-10">
-            <div
-              className={`liquid-glass-strong rounded-[32px] p-5 sm:p-6 lg:p-7 mb-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
-              style={{ overflow: "visible" }}
-            >
-              <div className="mb-6">
-                <h1 className="section-title text-4xl sm:text-5xl">Teams</h1>
-              </div>
-              <SearchForm
-                seasons={seasons}
-                tempSeason={tempSeason}
-                setTempSeason={setTempSeason}
-                tempTeam={tempTeam}
-                setTempTeam={setTempTeam}
-                tempPosition={tempPosition}
-                setTempPosition={setTempPosition}
-                teams={teams}
-                loadingTeams={loadingTeams}
-                getSeasonName={getSeasonName}
-              />
-              <button
-                onClick={handleSearchClick}
-                disabled={loading}
-                className="btn-search-primary mb-1 mt-5"
+              <div
+                className={`liquid-glass-strong rounded-[32px] p-5 sm:p-6 lg:p-7 mb-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
+                style={{ overflow: "visible" }}
               >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" /> Searching...
-                  </>
-                ) : (
-                  <>
-                    <Search size={20} /> Search Roster
-                  </>
-                )}
-              </button>
-              {players.length > 0 && (
-                <div className="relative z-0 mt-6 space-y-6 sm:mt-7 sm:space-y-7">
-                  <TeamHeader
-                    team={team}
-                    season={season}
-                    position={position}
-                    teamRecord={teamRecord}
-                    teamClinchStatus={teamClinchStatus}
-                  />
-                  <div
-                    className="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
-                    key={renderKey}
-                  >
-                    {players.map((p, idx) => (
-                      <div
-                        key={p.playerId}
-                        style={{ animationDelay: `${idx * 0.05}s` }}
-                      >
-                        <PlayerCard
-                          player={p}
-                          team={team}
-                          season={season}
-                          stroke={playerUtils.getTeamColor(
-                            team,
-                            season,
-                            actualTheme
-                          )}
-                          onPlayerClick={handlePlayerClick}
-                        />
-                      </div>
-                    ))}
-                  </div>
+                <div className="mb-6">
+                  <h1 className="section-title text-4xl sm:text-5xl">Teams</h1>
                 </div>
-              )}
-            </div>
+                <SearchForm
+                  seasons={seasons}
+                  tempSeason={tempSeason}
+                  setTempSeason={setTempSeason}
+                  tempTeam={tempTeam}
+                  setTempTeam={setTempTeam}
+                  tempPosition={tempPosition}
+                  setTempPosition={setTempPosition}
+                  teams={teams}
+                  loadingTeams={loadingTeams}
+                  getSeasonName={getSeasonName}
+                />
+                <button
+                  onClick={handleSearchClick}
+                  disabled={loading}
+                  className="btn-search-primary mb-1 mt-5"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" /> Searching...
+                    </>
+                  ) : (
+                    <>
+                      <Search size={20} /> Search Roster
+                    </>
+                  )}
+                </button>
+                {players.length > 0 && (
+                  <div className="relative z-0 mt-6 space-y-6 sm:mt-7 sm:space-y-7">
+                    <TeamHeader
+                      team={team}
+                      season={season}
+                      position={position}
+                      teamRecord={teamRecord}
+                      teamClinchStatus={teamClinchStatus}
+                    />
+                    <div
+                      className="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
+                      key={renderKey}
+                    >
+                      {players.map((p, idx) => (
+                        <div
+                          key={p.playerId}
+                          style={{ animationDelay: `${idx * 0.05}s` }}
+                        >
+                          <PlayerCard
+                            player={p}
+                            team={team}
+                            season={season}
+                            stroke={playerUtils.getTeamColor(
+                              team,
+                              season,
+                              actualTheme
+                            )}
+                            onPlayerClick={handlePlayerClick}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </>

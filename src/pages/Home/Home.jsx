@@ -379,34 +379,34 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
               <Analytics />
               <div className="space-y-5 sm:space-y-7">
                 <div className="relative z-10">
-                <SearchForm
-                  playerName={playerName}
-                  setPlayerName={setPlayerName}
-                  season={season}
-                  setSeason={setSeason}
-                  position={position}
-                  setPosition={setPosition}
-                  onSearch={handleSearch}
-                  loading={loading}
-                  error={error}
-                  suggestions={suggestions}
-                  enablePageLoadAnimation={enablePageLoadAnimations}
-                  onSuggestionClick={async (suggestionName) => {
-                    setPlayerName(suggestionName);
-                    updateSearchParams(
-                      suggestionName,
-                      season,
-                      position,
-                      filterYear
-                    );
-                    await performSearch(
-                      suggestionName,
-                      season,
-                      position,
-                      filterYear
-                    );
-                  }}
-                />
+                  <SearchForm
+                    playerName={playerName}
+                    setPlayerName={setPlayerName}
+                    season={season}
+                    setSeason={setSeason}
+                    position={position}
+                    setPosition={setPosition}
+                    onSearch={handleSearch}
+                    loading={loading}
+                    error={error}
+                    suggestions={suggestions}
+                    enablePageLoadAnimation={enablePageLoadAnimations}
+                    onSuggestionClick={async (suggestionName) => {
+                      setPlayerName(suggestionName);
+                      updateSearchParams(
+                        suggestionName,
+                        season,
+                        position,
+                        filterYear
+                      );
+                      await performSearch(
+                        suggestionName,
+                        season,
+                        position,
+                        filterYear
+                      );
+                    }}
+                  />
                 </div>
 
                 {playerData && (

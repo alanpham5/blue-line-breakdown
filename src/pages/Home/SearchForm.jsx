@@ -119,7 +119,10 @@ export const SearchForm = ({
     >
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3 sm:gap-4">
         <div className="md:col-span-2">
-          <div className="relative z-[50]" ref={autofillContainerRef}>
+          <div
+            className={`relative ${showAutofill ? "z-[60]" : "z-[50]"}`}
+            ref={autofillContainerRef}
+          >
             <Search
               size={16}
               className="app-field-icon absolute left-4 top-1/2 -translate-y-1/2"
