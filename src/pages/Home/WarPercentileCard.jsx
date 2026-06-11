@@ -98,13 +98,8 @@ export const WarPercentileCard = ({ warPercentile, showInfo = true }) => {
               />
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center">
-                <div className="text-[1.38rem] font-bold tracking-[-0.04em] text-white light:text-gray-900 sm:text-[1.48rem]">
-                  {displayValue}
-                </div>
-                <div className="text-[0.7rem] uppercase tracking-[0.2em] text-gray-500 light:text-slate-500">
-                  pct
-                </div>
+              <div className="text-[1.38rem] font-bold tracking-[-0.04em] text-white light:text-gray-900 sm:text-[1.48rem]">
+                {displayValue}
               </div>
             </div>
           </div>
