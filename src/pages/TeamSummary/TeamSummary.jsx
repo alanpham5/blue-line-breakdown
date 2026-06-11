@@ -295,8 +295,10 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
           <div className="max-w-6xl mx-auto">
             <Header />
 
+            <div className="relative z-10">
             <div
               className={`liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7 mb-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
+              style={{ overflow: "visible" }}
             >
               <div className="mb-6">
                 <h1 className="section-title text-4xl sm:text-5xl">
@@ -360,6 +362,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                 )}
               </button>
             </div>
+            </div>
 
             {error && (
               <div className="liquid-glass rounded-[32px] p-6 text-center text-rose-400 mb-8">
@@ -368,7 +371,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
             )}
 
             {hasSearched && teamSummaryData && !loadingData && (
-              <div className="space-y-6 sm:space-y-8">
+              <div className="relative z-0 space-y-6 sm:space-y-8">
                 <div ref={teamHeaderRef} className="relative">
                   <div
                     className="team-card-surface liquid-glass rounded-[32px] overflow-hidden px-5 py-6 sm:px-6"

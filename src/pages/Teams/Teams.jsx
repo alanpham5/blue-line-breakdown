@@ -352,9 +352,10 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
 
           <div className="max-w-6xl mx-auto">
             <Header />
+            <div className="relative z-10">
             <div
               className={`liquid-glass-strong rounded-[32px] p-5 sm:p-6 lg:p-7 mb-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
-              style={{ isolation: "auto", overflow: "visible" }}
+              style={{ overflow: "visible" }}
             >
               <div className="mb-6">
                 <h1 className="section-title text-4xl sm:text-5xl">Teams</h1>
@@ -387,7 +388,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
                 )}
               </button>
               {players.length > 0 && (
-                <div className="mt-6 space-y-6 sm:mt-7 sm:space-y-7">
+                <div className="relative z-0 mt-6 space-y-6 sm:mt-7 sm:space-y-7">
                   <TeamHeader
                     team={team}
                     season={season}
@@ -420,6 +421,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
                   </div>
                 </div>
               )}
+            </div>
             </div>
           </div>
         </>
