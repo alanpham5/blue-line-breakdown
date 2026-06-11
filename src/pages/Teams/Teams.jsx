@@ -354,6 +354,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
             <Header />
             <div
               className={`liquid-glass-strong rounded-[32px] p-5 sm:p-6 lg:p-7 mb-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
+              style={{ isolation: "auto", overflow: "visible" }}
             >
               <div className="mb-6">
                 <h1 className="section-title text-4xl sm:text-5xl">Teams</h1>

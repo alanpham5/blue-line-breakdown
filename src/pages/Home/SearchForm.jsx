@@ -1,5 +1,7 @@
+import { useEffect, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 import { AppSelect } from "../../components/AppSelect";
+import { apiService } from "../../services/apiService";
 
 const handleKeyPress = (e, onSearch) => {
   if (e.key === "Enter") {
@@ -42,13 +44,82 @@ export const SearchForm = ({
   const sharedFieldClassName =
     "app-field px-4 py-3.5 text-base text-white light:text-gray-900";
 
+  const [autofillResults, setAutofillResults] = useState([]);
+  const [showAutofill, setShowAutofill] = useState(false);
+  const autofillContainerRef = useRef(null);
+  const suppressAutofillRef = useRef(false);
+  const userTypingRef = useRef(false);
+
+  useEffect(() => {
+    const query = playerName.trim();
+
+    // Capture and immediately reset the typing flag so only genuine
+    // keystrokes (not URL / programmatic updates) trigger the dropdown.
+    const wasUserTyping = userTypingRef.current;
+    userTypingRef.current = false;
+
+    if (query.length < 3) {
+      setAutofillResults([]);
+      return;
+    }
+
+    // Suppress when the change was not from the user typing
+    // (deeplink load, refresh, suggestion select, etc.)
+    if (!wasUserTyping || suppressAutofillRef.current) {
+      suppressAutofillRef.current = false;
+      return;
+    }
+
+    let cancelled = false;
+    const timeoutId = setTimeout(async () => {
+      try {
+        const data = await apiService.searchAutofill(query);
+        if (!cancelled) {
+          setAutofillResults(data.results || []);
+          setShowAutofill(true);
+        }
+      } catch {
+        if (!cancelled) {
+          setAutofillResults([]);
+        }
+      }
+    }, 250);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timeoutId);
+    };
+  }, [playerName]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        autofillContainerRef.current &&
+        !autofillContainerRef.current.contains(e.target)
+      ) {
+        setShowAutofill(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleAutofillSelect = (result) => {
+    suppressAutofillRef.current = true;
+    setPlayerName(result.name);
+    if (!season) setSeason(result.latestYear.toString());
+    setPosition(result.position?.toUpperCase() === "DEFENSEMAN" ? "D" : "F");
+    setShowAutofill(false);
+  };
+
   return (
     <div
       className={`liquid-glass-strong rounded-[32px] p-5 sm:p-6 lg:p-7 mb-6 sm:mb-8 ${enablePageLoadAnimation ? "liquid-glass-animate" : ""}`}
+      style={{ isolation: "auto", overflow: "visible" }}
     >
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3 sm:gap-4">
         <div className="md:col-span-2">
-          <div className="relative">
+          <div className="relative z-[50]" ref={autofillContainerRef}>
             <Search
               size={16}
               className="app-field-icon absolute left-4 top-1/2 -translate-y-1/2"
@@ -58,8 +129,14 @@ export const SearchForm = ({
               type="search"
               inputMode="search"
               value={playerName}
-              onChange={(e) => setPlayerName(e.target.value)}
+              onChange={(e) => {
+                userTypingRef.current = true;
+                setPlayerName(e.target.value);
+              }}
               onKeyPress={(e) => handleKeyPress(e, onSearch)}
+              onFocus={() => {
+                if (autofillResults.length > 0) setShowAutofill(true);
+              }}
               autoComplete="off"
               placeholder="Player Name"
               className={`${sharedFieldClassName} pl-11 pr-10`}
@@ -72,6 +149,43 @@ export const SearchForm = ({
               >
                 <X size={18} />
               </button>
+            )}
+            {autofillResults.length > 0 && (
+              <div
+                className={`liquid-glass !absolute left-0 right-0 top-[calc(100%+8px)] z-50 max-h-80 origin-top overflow-y-auto rounded-[24px] p-2 transition-all duration-200 ease-out ${
+                  showAutofill
+                    ? "translate-y-0 scale-y-100 opacity-100"
+                    : "pointer-events-none -translate-y-1 scale-y-95 opacity-0"
+                }`}
+              >
+                {autofillResults.map((result) => (
+                  <button
+                    key={result.playerId}
+                    type="button"
+                    onClick={() => handleAutofillSelect(result)}
+                    className="flex w-full items-center gap-3 rounded-[18px] px-3 py-2 text-left transition-colors hover:bg-[#3d8deb]/35 light:hover:bg-[#d4e8fc]"
+                  >
+                    <img
+                      src={`https://assets.nhle.com/mugs/nhl/latest/${result.playerId}.png`}
+                      alt=""
+                      className="h-10 w-10 flex-shrink-0 rounded-full bg-white/10 object-cover"
+                      loading="lazy"
+                      onError={(e) => {
+                        e.target.style.visibility = "hidden";
+                      }}
+                    />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium text-white light:text-gray-900">
+                        {result.name}
+                      </p>
+                      <p className="text-xs text-[#a9d0fd] light:text-[#256fd4]">
+                        {result.latestYear}-{result.latestYear + 1} ·{" "}
+                        {result.position}
+                      </p>
+                    </div>
+                  </button>
+                ))}
+              </div>
             )}
           </div>
         </div>
@@ -107,7 +221,7 @@ export const SearchForm = ({
 
       <button
         onClick={onSearch}
-        disabled={loading}
+        disabled={loading || !playerName.trim() || !season || !position}
         className="btn-search-primary mt-5"
       >
         <Search size={20} />

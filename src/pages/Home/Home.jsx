@@ -378,6 +378,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
               <Header />
               <Analytics />
               <div className="space-y-5 sm:space-y-7">
+                <div className="relative z-10">
                 <SearchForm
                   playerName={playerName}
                   setPlayerName={setPlayerName}
@@ -406,10 +407,11 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
                     );
                   }}
                 />
+                </div>
 
                 {playerData && (
                   <div
-                    className="space-y-5 sm:space-y-7"
+                    className="relative z-0 space-y-5 sm:space-y-7"
                     ref={playerHeaderRef}
                     key={renderKey}
                   >
@@ -473,7 +475,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
                 )}
 
                 {!playerData && !loading && (
-                  <div className="liquid-glass rounded-[32px] mt-4 sm:mt-6 px-5 py-10 text-center">
+                  <div className="relative z-0 liquid-glass rounded-[32px] mt-4 sm:mt-6 px-5 py-10 text-center">
                     <p className="mb-3 text-2xl font-semibold tracking-[-0.03em] text-white light:text-slate-900 sm:text-3xl">
                       Enter a player name to get started
                     </p>

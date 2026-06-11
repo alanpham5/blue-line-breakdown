@@ -9,6 +9,7 @@ import {
   Activity,
   Users,
   Download,
+  Share,
 } from "lucide-react";
 import { track } from "@vercel/analytics";
 import { apiService } from "../../services/apiService";
@@ -18,6 +19,7 @@ import { TeamStatBar } from "./TeamStatBar";
 import { SimilarTeamsSection } from "./SimilarTeamsSection";
 import { playerUtils } from "../../utils/playerUtils";
 import { useIsExternal } from "../../hooks/useIsExternal";
+import { useIsMobile } from "../../hooks/useIsMobile";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { useTheme } from "../../providers/ThemeContext";
 import { ShareableModal } from "../../components/ShareableModal";
@@ -40,6 +42,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { actualTheme } = useTheme();
   const isExternal = useIsExternal();
+  const isMobile = useIsMobile();
 
   const now = new Date();
   const initialTeam = searchParams.get("team") || "";
@@ -343,7 +346,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
 
               <button
                 onClick={handleSearchClick}
-                disabled={loadingData}
+                disabled={loadingData || !tempSeason || !tempTeam}
                 className="btn-search-primary mb-1 mt-5"
               >
                 {loadingData ? (
@@ -403,10 +406,18 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                             <button
                               type="button"
                               onClick={() => setShowShareableModal(true)}
-                              className="hidden md:inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:text-white light:border-slate-300 light:bg-white/80 light:text-slate-600 light:hover:text-slate-900"
-                              aria-label="Download shareable image"
+                              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:text-white light:border-slate-300 light:bg-white/80 light:text-slate-600 light:hover:text-slate-900"
+                              aria-label={
+                                isMobile
+                                  ? "Share image"
+                                  : "Download shareable image"
+                              }
                             >
-                              <Download className="h-4 w-4" />
+                              {isMobile ? (
+                                <Share className="h-4 w-4" />
+                              ) : (
+                                <Download className="h-4 w-4" />
+                              )}
                             </button>
                           </h2>
                           <div className="mt-2 flex flex-wrap items-center justify-center md:justify-start gap-2 text-sm sm:text-base font-semibold text-gray-300 light:text-gray-600">

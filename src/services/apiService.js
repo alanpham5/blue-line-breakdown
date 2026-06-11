@@ -82,6 +82,16 @@ export const apiService = {
     return response.json();
   },
 
+  async searchAutofill(query, limit = 5) {
+    const response = await fetch(
+      `${API_BASE_URL}/search/autofill?q=${encodeURIComponent(query)}&limit=${limit}`
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch autofill suggestions");
+    }
+    return response.json();
+  },
+
   async fetchTeams(year) {
     const response = await fetch(`${API_BASE_URL}/teams?year=${year}`);
     if (!response.ok) {

@@ -36,7 +36,7 @@ export function ThemeToggle({ showLabel = true }) {
             transition-all duration-200 ease-out
             ${
               theme === value
-                ? "bg-sky-400/10 text-sky-300 shadow-[0_6px_16px_rgba(88,166,255,0.12)] light:bg-sky-500/10 light:text-sky-700"
+                ? "bg-white/10 text-[#7ee340] light:bg-slate-900/10 light:text-[#2e6e14]"
                 : "text-slate-400 hover:text-slate-100 dark:text-slate-400 dark:hover:text-slate-100 light:text-slate-600 light:hover:text-slate-800 hover:bg-white/5 light:hover:bg-slate-900/5"
             }
           `}
@@ -49,10 +49,6 @@ export function ThemeToggle({ showLabel = true }) {
             <span className="text-sm font-medium hidden lg:inline">
               {label}
             </span>
-          )}
-
-          {theme === value && (
-            <span className="absolute inset-0 -z-10 rounded-full bg-sky-400/8 opacity-80" />
           )}
         </button>
       ))}

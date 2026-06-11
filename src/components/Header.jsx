@@ -7,7 +7,7 @@ const navLinkClassName = ({ isActive }) =>
   [
     "inline-flex min-w-[5.5rem] items-center justify-center rounded-full px-4 py-2.5 text-sm font-semibold transition-all duration-200 outline-none focus:outline-none focus-visible:outline-none",
     isActive
-      ? "bg-sky-400/10 text-sky-300 shadow-[0_6px_16px_rgba(88,166,255,0.12)] light:bg-sky-500/10 light:text-sky-700"
+      ? "bg-white/10 text-[#7ee340] light:bg-slate-900/10 light:text-[#2e6e14]"
       : "text-gray-300 hover:text-white hover:bg-white/5 light:text-slate-600 light:hover:text-slate-900 light:hover:bg-slate-900/5",
   ].join(" ");
 
