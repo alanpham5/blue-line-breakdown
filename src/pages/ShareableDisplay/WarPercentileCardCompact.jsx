@@ -42,7 +42,7 @@ export const WarPercentileCardCompact = ({ warPercentile }) => {
                 cy="22"
                 r={radius}
                 fill="none"
-                className="stroke-[rgba(103,120,90,0.42)] light:stroke-slate-200"
+                className="stroke-[rgba(103,120,90,0.42)]"
                 strokeWidth="3.5"
               />
               <circle

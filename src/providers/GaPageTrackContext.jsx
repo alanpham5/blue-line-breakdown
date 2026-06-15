@@ -11,14 +11,42 @@ export const GaPageTrackContext = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (!window.gtag) return;
-
     const pagePath = `${location.pathname}${location.search}${location.hash}`;
     const searchParams = new URLSearchParams(location.search);
     const normalizedPath =
       location.pathname.length > 1 && location.pathname.endsWith("/")
         ? location.pathname.slice(0, -1)
         : location.pathname;
+
+    const SITE_NAME = "Blue Line Breakdown";
+    let pageTitle;
+    if (normalizedPath === "/") {
+      const player = searchParams.get("player");
+      const season = searchParams.get("season");
+      if (player) {
+        pageTitle = capitalizeWordsRegex(player);
+        if (season) pageTitle += ` (${season})`;
+      } else {
+        pageTitle = "Player Breakdown";
+      }
+    } else if (normalizedPath === "/teams") {
+      const team = searchParams.get("team");
+      const season = searchParams.get("season") || searchParams.get("year");
+      if (team) {
+        pageTitle = team;
+        if (season) pageTitle += ` (${season})`;
+      } else {
+        pageTitle = "Team Summary";
+      }
+    } else if (normalizedPath === "/about") {
+      pageTitle = "About";
+    } else if (normalizedPath === "/loader") {
+      pageTitle = "Loading";
+    }
+
+    document.title = pageTitle ? `${pageTitle} | ${SITE_NAME}` : SITE_NAME;
+
+    if (!window.gtag) return;
 
     window.gtag("event", "page_view", {
       page_title: document.title,
