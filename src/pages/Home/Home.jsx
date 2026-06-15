@@ -15,6 +15,7 @@ import { useIsExternal } from "../../hooks/useIsExternal";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { ShareableDisplay } from "../ShareableDisplay/ShareableDisplay";
 import { ShareableModal } from "../../components/ShareableModal";
+import { Footer } from "../../components/Footer";
 
 export const Home = ({ enablePageLoadAnimations = true }) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -487,6 +488,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
                   </div>
                 )}
               </div>
+              <Footer />
             </div>
           </>
 

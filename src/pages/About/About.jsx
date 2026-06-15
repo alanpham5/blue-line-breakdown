@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Header } from "../../components/Header";
+import { Footer } from "../../components/Footer";
 
 export const About = ({ enablePageLoadAnimations = true }) => {
   return (
@@ -42,6 +43,23 @@ export const About = ({ enablePageLoadAnimations = true }) => {
                 data, with in-house metrics and analysis, covering NHL seasons
                 from 2008 to the present.
               </p>
+              <div className="mt-6 flex justify-start">
+                <a
+                  href="https://x.com/BLBreakdown"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full bg-white/10 hover:bg-white/20 light:bg-slate-900/10 light:hover:bg-slate-900/20 px-5 py-2.5 text-sm font-semibold text-white light:text-gray-900 transition-all duration-200 shadow-sm border border-white/5 light:border-slate-200/50"
+                >
+                  <span>Follow on</span>
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="h-4 w-4 fill-current text-white light:text-gray-900"
+                    aria-hidden="true"
+                  >
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                </a>
+              </div>
             </section>
           </div>
 
@@ -78,19 +96,56 @@ export const About = ({ enablePageLoadAnimations = true }) => {
                   </a>
                   .
                 </p>
-
-                <div className="pt-6">
-                  <Link
-                    to="/"
-                    className="btn-search-primary btn-search-primary-inline"
-                  >
-                    Back to Home
-                  </Link>
-                </div>
               </div>
             </div>
           </div>
+
+          <div
+            className={`liquid-glass rounded-[32px] p-6 sm:p-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
+          >
+            <h2 className="mb-6 text-2xl font-bold text-center text-white light:text-gray-900 sm:text-3xl">
+              Discover More
+            </h2>
+            <div className="flex justify-center gap-12 sm:gap-16">
+              <a
+                href="https://full-court-focus.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col items-center text-center focus:outline-none"
+              >
+                <div className="relative mb-3 h-20 w-20 overflow-hidden rounded-[22%] bg-white/[0.04] transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)] group-focus-visible:ring-2 group-focus-visible:ring-[#7ee340] border border-white/10 shadow-md">
+                  <img
+                    src="/fcf.png"
+                    alt="Full Court Focus"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <span className="text-sm font-semibold text-gray-300 light:text-gray-600 transition-colors duration-200 group-hover:text-[#7ee340] light:group-hover:text-[#2e6e14]">
+                  Full Court Focus
+                </span>
+              </a>
+
+              <a
+                href="https://redzone-report.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col items-center text-center focus:outline-none"
+              >
+                <div className="relative mb-3 h-20 w-20 overflow-hidden rounded-[22%] bg-white/[0.04] transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)] group-focus-visible:ring-2 group-focus-visible:ring-[#7ee340] border border-white/10 shadow-md">
+                  <img
+                    src="/rr-color.png"
+                    alt="RedZone Report"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <span className="text-sm font-semibold text-gray-300 light:text-gray-600 transition-colors duration-200 group-hover:text-[#7ee340] light:group-hover:text-[#2e6e14]">
+                  RedZone Report
+                </span>
+              </a>
+            </div>
+          </div>
         </div>
+        <Footer />
       </div>
     </div>
   );

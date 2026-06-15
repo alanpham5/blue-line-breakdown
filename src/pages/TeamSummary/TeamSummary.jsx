@@ -23,6 +23,8 @@ import { useIsMobile } from "../../hooks/useIsMobile";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { useTheme } from "../../providers/ThemeContext";
 import { ShareableModal } from "../../components/ShareableModal";
+import { Footer } from "../../components/Footer";
+
 import { TeamShareableDisplay } from "./TeamShareableDisplay";
 
 const getSeasonName = (s) => `${s}-${(parseInt(s) + 1).toString().slice(-2)}`;
@@ -761,6 +763,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                 )}
               </div>
             )}
+            <Footer />
           </div>
         </>
       )}
