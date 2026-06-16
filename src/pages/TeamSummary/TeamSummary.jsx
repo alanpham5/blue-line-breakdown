@@ -263,7 +263,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
 
   const handlePlayerClick = (playerName, playerPosition) => {
     navigate(
-      `/?player=${encodeURIComponent(playerName)}&season=${season}&position=${playerPosition}`
+      `/players?player=${encodeURIComponent(playerName)}&season=${season}&position=${playerPosition}`
     );
   };
 

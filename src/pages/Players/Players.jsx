@@ -17,7 +17,7 @@ import { ShareableDisplay } from "../ShareableDisplay/ShareableDisplay";
 import { ShareableModal } from "../../components/ShareableModal";
 import { Footer } from "../../components/Footer";
 
-export const Home = ({ enablePageLoadAnimations = true }) => {
+export const Players = ({ enablePageLoadAnimations = true }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [playerName, setPlayerName] = useState("");
   const [season, setSeason] = useState("");
@@ -55,7 +55,7 @@ export const Home = ({ enablePageLoadAnimations = true }) => {
   useEffect(() => {
     if (isLocalhost && searchParams.toString()) {
       console.log(
-        `https://blue-line-breakdown.vercel.app/?${searchParams.toString()}`
+        `https://blue-line-breakdown.vercel.app/players?${searchParams.toString()}`
       );
     }
   }, [isLocalhost, searchParams]);

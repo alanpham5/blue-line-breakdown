@@ -29,8 +29,31 @@ export function ThemeProvider({ children }) {
     return "system";
   });
 
+  const [isTouch, setIsTouch] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const mediaQuery = window.matchMedia("(pointer: coarse)");
+      setIsTouch(mediaQuery.matches);
+      const handlePointerChange = (e) => {
+        setIsTouch(e.matches);
+      };
+      mediaQuery.addEventListener("change", handlePointerChange);
+      return () => {
+        mediaQuery.removeEventListener("change", handlePointerChange);
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isTouch) {
+      setTheme("system");
+    }
+  }, [isTouch]);
+
   useEffect(() => {
     const root = document.documentElement;
+    const activeTheme = isTouch ? "system" : theme;
 
     const applyTheme = (themeMode) => {
       root.classList.remove("light", "dark");
@@ -45,10 +68,12 @@ export function ThemeProvider({ children }) {
       }
     };
 
-    applyTheme(theme);
-    localStorage.setItem("theme", theme);
+    applyTheme(activeTheme);
+    if (!isTouch) {
+      localStorage.setItem("theme", theme);
+    }
 
-    if (theme === "system") {
+    if (activeTheme === "system") {
       const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
       const handleSystemThemeChange = (e) => {
@@ -63,7 +88,7 @@ export function ThemeProvider({ children }) {
         mediaQuery.removeEventListener("change", handleSystemThemeChange);
       };
     }
-  }, [theme]);
+  }, [theme, isTouch]);
 
   useEffect(() => {
     updateAppIcons();
@@ -76,11 +101,20 @@ export function ThemeProvider({ children }) {
     };
   }, []);
 
+  const handleSetTheme = (newTheme) => {
+    if (!isTouch) {
+      setTheme(newTheme);
+    }
+  };
+
   const value = {
-    theme,
-    setTheme,
+    theme: isTouch ? "system" : theme,
+    setTheme: handleSetTheme,
+    isThemeTogglingDisabled: isTouch,
     actualTheme:
-      typeof window !== "undefined" ? getResolvedTheme(theme) : theme,
+      typeof window !== "undefined"
+        ? getResolvedTheme(isTouch ? "system" : theme)
+        : theme,
   };
 
   return (

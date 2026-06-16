@@ -183,4 +183,12 @@ export const apiService = {
       };
     }
   },
+
+  async fetchFeatured() {
+    const response = await fetch(`${API_BASE_URL}/featured`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch featured data");
+    }
+    return response.json();
+  },
 };

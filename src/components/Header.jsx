@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Users, Shield, Info } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 
 const navLinkClassName = ({ isActive }) =>
@@ -11,119 +11,144 @@ const navLinkClassName = ({ isActive }) =>
       : "text-gray-300 hover:text-white hover:bg-white/5 light:text-slate-600 light:hover:text-slate-900 light:hover:bg-slate-900/5",
   ].join(" ");
 
+const bottomNavLinkClassName = ({ isActive }) =>
+  [
+    "flex flex-col items-center justify-center gap-1 rounded-2xl py-1 px-3 text-[10px] font-bold tracking-wide transition-all duration-200 outline-none focus:outline-none",
+    isActive
+      ? "text-[#7ee340] light:text-[#2e6e14]"
+      : "text-gray-400 hover:text-white light:text-slate-500 light:hover:text-slate-900",
+  ].join(" ");
+
 export const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    let ticking = false;
+    let lastY = window.pageYOffset;
+
+    const handleScroll = () => {
+      const scrollY = window.pageYOffset;
+      const isBottom =
+        window.innerHeight + scrollY >=
+        document.documentElement.scrollHeight - 20;
+
+      // Always show when hitting the bottom of the page
+      if (isBottom) {
+        setIsVisible(true);
+        lastY = scrollY > 0 ? scrollY : 0;
+        ticking = false;
+        return;
+      }
+
+      if (Math.abs(scrollY - lastY) < 10) {
+        ticking = false;
+        return;
+      }
+
+      // Hide when scrolling down past 50px, show when scrolling up
+      if (scrollY > lastY && scrollY > 50) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+
+      lastY = scrollY > 0 ? scrollY : 0;
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(handleScroll);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const headerMobileClasses = isVisible
+    ? "fixed top-4 left-4 right-4 z-50 translate-y-0 opacity-100"
+    : "fixed top-4 left-4 right-4 z-50 -translate-y-[120%] opacity-0 pointer-events-none";
 
   return (
-    <header className="mb-6 sm:mb-8">
-      <div className="liquid-glass-strong rounded-[32px] px-4 py-4 sm:px-5 sm:py-5">
-        <div className="flex items-center justify-between gap-3 md:gap-4">
-          <Link
-            to="/"
-            className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3"
-          >
-            <img
-              src="/blb-dark.png"
-              alt="Logo"
-              className="h-10 w-10 shrink-0 sm:h-11 sm:w-11 lg:h-14 lg:w-14 block light:hidden"
-            />
-            <img
-              src="/blb-light.png"
-              alt="Logo"
-              className="h-10 w-10 shrink-0 sm:h-11 sm:w-11 lg:h-14 lg:w-14 hidden light:block"
-            />
-            <div className="min-w-0 flex-1 overflow-hidden">
-              <h1 className="whitespace-nowrap text-[clamp(0.72rem,4.2vw,2.8rem)] font-bold leading-none tracking-[-0.04em] text-white light:text-gray-900 sm:text-[clamp(1rem,2.4vw,2.8rem)]">
-                Blue Line Breakdown
-              </h1>
-            </div>
-          </Link>
+    <div className="h-[74px] mb-6 md:h-auto md:mb-8 relative">
+      {/* Header Container */}
+      <header
+        className={`transition-all duration-300 ease-in-out md:static md:translate-y-0 md:opacity-100 md:pointer-events-auto ${headerMobileClasses}`}
+      >
+        <div className="liquid-glass-strong rounded-[32px] px-4 py-4 sm:px-5 sm:py-5">
+          <div className="flex items-center justify-between gap-3 md:gap-4">
+            <Link
+              to="/"
+              className="flex min-w-0 flex-1 items-center justify-center md:justify-start gap-2 sm:gap-3"
+            >
+              <img
+                src="/blb-dark.png"
+                alt="Logo"
+                className="h-10 w-10 shrink-0 sm:h-11 sm:w-11 lg:h-14 lg:w-14 block light:hidden"
+              />
+              <img
+                src="/blb-light.png"
+                alt="Logo"
+                className="h-10 w-10 shrink-0 sm:h-11 sm:w-11 lg:h-14 lg:w-14 hidden light:block"
+              />
+              <div className="min-w-0 flex-1 overflow-hidden">
+                <h1 className="whitespace-nowrap text-[clamp(0.72rem,4.2vw,2.8rem)] font-bold leading-none tracking-[-0.04em] text-white light:text-gray-900 sm:text-[clamp(1rem,2.4vw,2.8rem)]">
+                  Blue Line Breakdown
+                </h1>
+              </div>
+            </Link>
 
-          <button
-            type="button"
-            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/5 text-white outline-none transition-colors hover:bg-white/10 focus:outline-none focus-visible:outline-none md:hidden light:bg-white/80 light:text-slate-900 light:hover:bg-white"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-expanded={isMenuOpen}
-            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          >
-            {isMenuOpen ? (
-              <X className="h-6 w-6" strokeWidth={2.25} />
-            ) : (
-              <Menu className="h-6 w-6" strokeWidth={2.25} />
-            )}
-          </button>
-
-          <div className="hidden shrink-0 items-center gap-3 md:flex">
-            <nav>
-              <ul className="flex items-center gap-2">
-                <li>
-                  <NavLink to="/" end className={navLinkClassName}>
-                    Players
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink to="/teams" className={navLinkClassName}>
-                    Teams
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink to="/about" className={navLinkClassName}>
-                    About
-                  </NavLink>
-                </li>
-              </ul>
-            </nav>
-            <ThemeToggle showLabel={true} />
-          </div>
-        </div>
-
-        <nav
-          className={`${isMenuOpen ? "block" : "hidden"} md:hidden mt-4 w-full z-50`}
-          aria-hidden={!isMenuOpen}
-        >
-          <div className="liquid-glass rounded-[28px] p-3">
-            <ul className="flex flex-col items-center gap-2">
-              <li className="flex w-full max-w-xs justify-center">
-                <NavLink
-                  to="/"
-                  end
-                  className={({ isActive }) =>
-                    `${navLinkClassName({ isActive })} w-full justify-center`
-                  }
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Players
-                </NavLink>
-              </li>
-              <li className="flex w-full max-w-xs justify-center">
-                <NavLink
-                  to="/teams"
-                  className={({ isActive }) =>
-                    `${navLinkClassName({ isActive })} w-full justify-center`
-                  }
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Teams
-                </NavLink>
-              </li>
-              <li className="flex w-full max-w-xs justify-center">
-                <NavLink
-                  to="/about"
-                  className={({ isActive }) =>
-                    `${navLinkClassName({ isActive })} w-full justify-center`
-                  }
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  About
-                </NavLink>
-              </li>
-            </ul>
-            <div className="mt-3 flex justify-center">
+            <div className="hidden shrink-0 items-center gap-3 md:flex">
+              <nav>
+                <ul className="flex items-center gap-2">
+                  <li>
+                    <NavLink to="/players" className={navLinkClassName}>
+                      Players
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/teams" className={navLinkClassName}>
+                      Teams
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/about" className={navLinkClassName}>
+                      About
+                    </NavLink>
+                  </li>
+                </ul>
+              </nav>
               <ThemeToggle showLabel={true} />
             </div>
           </div>
-        </nav>
+        </div>
+      </header>
+
+      {/* Bottom Navigation for Mobile */}
+      <div
+        className={`transition-all duration-300 ease-in-out md:hidden ${
+          isVisible
+            ? "fixed bottom-4 left-4 right-4 z-50 translate-y-0 opacity-100"
+            : "fixed bottom-4 left-4 right-4 z-50 translate-y-[120%] opacity-0 pointer-events-none"
+        }`}
+      >
+        <div className="liquid-glass-strong rounded-[24px] px-4 py-2 flex items-center justify-around shadow-lg">
+          <NavLink to="/players" className={bottomNavLinkClassName}>
+            <Users className="h-5 w-5 mb-0.5" />
+            <span>Players</span>
+          </NavLink>
+          <NavLink to="/teams" className={bottomNavLinkClassName}>
+            <Shield className="h-5 w-5 mb-0.5" />
+            <span>Teams</span>
+          </NavLink>
+          <NavLink to="/about" className={bottomNavLinkClassName}>
+            <Info className="h-5 w-5 mb-0.5" />
+            <span>About</span>
+          </NavLink>
+        </div>
       </div>
-    </header>
+    </div>
   );
 };

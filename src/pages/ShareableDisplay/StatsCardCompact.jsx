@@ -1,4 +1,4 @@
-import { PercentileBar } from "../Home/PercentileBar";
+import { PercentileBar } from "../Players/PercentileBar";
 import { playerUtils } from "../../utils/playerUtils";
 
 export const StatsCardCompact = ({

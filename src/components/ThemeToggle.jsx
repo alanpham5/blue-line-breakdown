@@ -2,7 +2,11 @@ import { useTheme } from "../providers/ThemeContext";
 import { Sun, Moon, Monitor } from "lucide-react";
 
 export function ThemeToggle({ showLabel = true }) {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, isThemeTogglingDisabled } = useTheme();
+
+  if (isThemeTogglingDisabled) {
+    return null;
+  }
 
   const themes = [
     {

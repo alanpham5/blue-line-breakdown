@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Home } from "./pages/Home/Home";
+import { Players } from "./pages/Players/Players";
+import { Splashscreen } from "./pages/Splashscreen/Splashscreen";
 import { About } from "./pages/About/About";
 import { TeamSummary } from "./pages/TeamSummary/TeamSummary";
 import { Loader } from "./pages/Loader/Loader";
@@ -19,7 +20,13 @@ const App = () => {
             <Route
               path="/"
               element={
-                <Home enablePageLoadAnimations={enablePageLoadAnimations} />
+                <Splashscreen enablePageLoadAnimations={enablePageLoadAnimations} />
+              }
+            />
+            <Route
+              path="/players"
+              element={
+                <Players enablePageLoadAnimations={enablePageLoadAnimations} />
               }
             />
             <Route

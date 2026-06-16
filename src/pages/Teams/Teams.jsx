@@ -327,7 +327,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
 
   const handlePlayerClick = (player) => {
     navigate(
-      `/?player=${encodeURIComponent(
+      `/players?player=${encodeURIComponent(
         player.name
       )}&season=${season}&position=${position}`
     );
