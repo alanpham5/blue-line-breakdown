@@ -567,6 +567,13 @@ html.light .liquid-glass-strong {
   overflow: visible !important;
 }
 
+.shareable-display-dark .player-name-truncate {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  display: block !important;
+}
+
 .shareable-display-dark .percentile-bar-container span,
 .shareable-display-dark .truncate,
 .shareable-display-dark h2,

@@ -86,6 +86,7 @@ const SearchForm = ({
         >
           <option value="F">Forwards</option>
           <option value="D">Defensemen</option>
+          <option value="G">Goalies</option>
         </AppSelect>
       </div>
     </div>
@@ -358,7 +359,9 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
                 style={{ overflow: "visible" }}
               >
                 <div className="mb-5">
-                  <h2 className="text-lg font-bold tracking-tight text-white light:text-gray-900">Lookup Team</h2>
+                  <h2 className="text-lg font-bold tracking-tight text-white light:text-gray-900">
+                    Lookup Team
+                  </h2>
                 </div>
                 <SearchForm
                   seasons={seasons}

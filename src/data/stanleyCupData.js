@@ -15,7 +15,7 @@ export const hardcodedChampions = {
   2021: "COL",
   2022: "VGK",
   2023: "FLA",
-  2024: "FLA"
+  2024: "FLA",
 };
 export const apiChampions = {
   2007: "DET",
@@ -36,7 +36,7 @@ export const apiChampions = {
   2022: "VGK",
   2023: "FLA",
   2024: "FLA",
-  2025: "CAR"
+  2025: "CAR",
 };
 export const stanleyCupChampions = Object.keys(apiChampions).length
   ? apiChampions

@@ -1,7 +1,7 @@
 /* Scrollbar hiding utilities */
 .hide-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari and Opera */
@@ -10,8 +10,9 @@
 /* Custom interactive effects for player cards */
 .snap-start:hover {
   border-color: rgba(255, 255, 255, 0.15) !important;
-  box-shadow: 0 12px 28px var(--player-team-glow, rgba(255, 255, 255, 0.05)), 
-              0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+  box-shadow:
+    0 12px 28px var(--player-team-glow, rgba(255, 255, 255, 0.05)),
+    0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
 }
 
 /* Entry animations for high premium feel */

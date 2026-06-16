@@ -14,7 +14,9 @@ export const StatsCardCompact = ({
       <div className="shareable-card-title-row flex items-center gap-1.5 sm:gap-2 mb-2">
         <Icon
           className={`shareable-card-title-icon h-6 w-6 ${
-            type === "offensive" ? "text-cyan-300" : "text-rose-400"
+            type === "offensive" || type === "shotStopping"
+              ? "text-cyan-300"
+              : "text-rose-400"
           }`}
         />
         <h3 className="shareable-card-title-text text-xl sm:text-2xl font-bold text-white whitespace-nowrap">

@@ -1,36 +1,80 @@
 export const CountingStats = ({ stats }) => {
-  if (!stats || stats.length === 0) return null;
+  if (!stats || Object.keys(stats).length === 0) return null;
 
-  const labels = {
-    assists: "Assists",
-    gamesPlayed: "Games Played",
-    goals: "Goals",
-    penaltyMinutes: "Penalty Minutes",
-    points: "Points",
-  };
+  const isGoalie = stats.savePct !== undefined || stats.saves !== undefined;
 
-  const mobileLabels = {
-    assists: "A",
-    gamesPlayed: "GP",
-    goals: "G",
-    penaltyMinutes: "PIM",
-    points: "PTS",
-  };
+  const labels = isGoalie
+    ? {
+        gamesPlayed: "Games Played",
+        shotsAgainst: "Shots Against",
+        saves: "Saves",
+        goalsAgainst: "Goals Against",
+        savePct: "Save %",
+        goalsSavedAboveExpected: "GSAX",
+      }
+    : {
+        assists: "Assists",
+        gamesPlayed: "Games Played",
+        goals: "Goals",
+        penaltyMinutes: "Penalty Minutes",
+        points: "Points",
+      };
 
-  const statsOrder = [
-    "gamesPlayed",
-    "goals",
-    "assists",
-    "points",
-    "penaltyMinutes",
-  ];
+  const mobileLabels = isGoalie
+    ? {
+        gamesPlayed: "GP",
+        shotsAgainst: "SA",
+        saves: "SV",
+        goalsAgainst: "GA",
+        savePct: "SV%",
+        goalsSavedAboveExpected: "GSAX",
+      }
+    : {
+        assists: "A",
+        gamesPlayed: "GP",
+        goals: "G",
+        penaltyMinutes: "PIM",
+        points: "PTS",
+      };
 
-  const statValueClasses = {
-    gamesPlayed: "text-white light:text-slate-900",
-    goals: "text-rose-400 light:text-rose-600",
-    assists: "text-[#7dcb48]",
-    points: "text-sky-300 light:text-sky-700",
-    penaltyMinutes: "text-amber-300 light:text-amber-700",
+  const statsOrder = isGoalie
+    ? [
+        "gamesPlayed",
+        "shotsAgainst",
+        "saves",
+        "goalsAgainst",
+        "savePct",
+        "goalsSavedAboveExpected",
+      ]
+    : ["gamesPlayed", "goals", "assists", "points", "penaltyMinutes"];
+
+  const statValueClasses = isGoalie
+    ? {
+        gamesPlayed: "text-white light:text-slate-900",
+        shotsAgainst: "text-sky-300 light:text-sky-700",
+        saves: "text-[#7dcb48]",
+        goalsAgainst: "text-rose-400 light:text-rose-600",
+        savePct: "text-amber-300 light:text-amber-700",
+        goalsSavedAboveExpected: "text-cyan-300 light:text-cyan-700",
+      }
+    : {
+        gamesPlayed: "text-white light:text-slate-900",
+        goals: "text-rose-400 light:text-rose-600",
+        assists: "text-[#7dcb48]",
+        points: "text-sky-300 light:text-sky-700",
+        penaltyMinutes: "text-amber-300 light:text-amber-700",
+      };
+
+  const formatValue = (statKey) => {
+    const val = stats[statKey];
+    if (val === undefined || val === null) return "-";
+    if (statKey === "savePct") {
+      return val.toFixed(3);
+    }
+    if (statKey === "goalsSavedAboveExpected") {
+      return val.toFixed(1);
+    }
+    return val;
   };
 
   return (
@@ -48,7 +92,7 @@ export const CountingStats = ({ stats }) => {
             <div
               className={`text-2xl sm:text-3xl font-semibold leading-tight ${statValueClasses[statKey]}`}
             >
-              {stats[statKey]}
+              {formatValue(statKey)}
             </div>
           </div>
         ))}

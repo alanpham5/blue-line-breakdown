@@ -490,6 +490,20 @@ export const playerUtils = {
       TAKE: "Takeaways",
       CH_SUP: "Chance Suppression",
       GOAL_PREV: "Goal Prevention",
+
+      // Goalie Stats
+      SV_PCT: "Save Percentage",
+      GSAX: "Goals Saved Above Expected (GSAX/60)",
+      HD_SV: "High-Danger Save %",
+      MD_SV: "Medium-Danger Save %",
+      LD_SV: "Low-Danger Save %",
+      GA_60: "Goals Against / 60",
+      WORKLOAD: "Shots Faced / 60",
+      xGA_60: "Expected Goals Against / 60",
+      REB_CTRL: "Rebound Control",
+      FREEZE: "Puck Freezes / 60",
+      HD_WORK: "High-Danger Shots Faced / 60",
+      GAMES: "Games Played",
     };
     return statNames[statKey] || statKey;
   },
@@ -514,6 +528,24 @@ export const playerUtils = {
       GOAL_PREV: "Share of scoring attempts stopped by the player.",
       winShare:
         "The percentile rank of the player's contribution to team wins compared to other players on the team in the same position.",
+
+      // Goalie explanations
+      SV_PCT:
+        "Ranks the goalie's overall save percentage vs. other goaltenders.",
+      GSAX: "Goals saved above expected per 60 minutes. Measures a goalie's shot-stopping impact relative to the quality of shots faced.",
+      HD_SV: "Save percentage on high-danger shots (from the slot/inner slot).",
+      MD_SV: "Save percentage on medium-danger shots.",
+      LD_SV: "Save percentage on low-danger shots (from distance/poor angles).",
+      GA_60:
+        "Goals against per 60 minutes, inverted so fewer goals against is a higher rank.",
+      WORKLOAD: "Shots faced per 60 minutes. Measures how busy the goalie is.",
+      xGA_60:
+        "Expected goals against per 60 minutes. Reflects the difficulty of shots faced.",
+      REB_CTRL:
+        "Rebound control, based on rebounds allowed per 60 minutes. Inverted so fewer allowed is higher.",
+      FREEZE: "Number of puck freezes per 60 minutes to stop play.",
+      HD_WORK: "High-danger shots faced per 60 minutes.",
+      GAMES: "Total games played in the season.",
     };
 
     return (

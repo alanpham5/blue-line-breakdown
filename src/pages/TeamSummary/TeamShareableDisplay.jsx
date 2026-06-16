@@ -362,7 +362,7 @@ export const TeamShareableDisplay = ({
                 Top Impact Players
               </h3>
             </div>
-            <div className="grid grid-cols-2 gap-x-5 gap-y-0">
+            <div className="grid grid-cols-3 gap-x-4 gap-y-0">
               {/* Forwards */}
               <div>
                 <h4 className="text-[12px] font-bold uppercase tracking-[0.12em] text-cyan-300 mb-1.5">
@@ -370,7 +370,10 @@ export const TeamShareableDisplay = ({
                 </h4>
                 <div className="space-y-2">
                   {teamSummaryData.topForwards?.slice(0, 4).map((fw) => (
-                    <div key={fw.playerId} className="flex items-center gap-2">
+                    <div
+                      key={fw.playerId}
+                      className="flex items-center gap-1.5"
+                    >
                       <img
                         src={playerUtils.getCorsWrappedUrl(
                           playerUtils.getPlayerHeadshot(
@@ -380,7 +383,7 @@ export const TeamShareableDisplay = ({
                           )
                         )}
                         alt={fw.name}
-                        className="w-8 h-8 rounded-full object-cover bg-zinc-900 shrink-0"
+                        className="w-7 h-7 rounded-full object-cover bg-zinc-900 shrink-0"
                         onError={(e) => {
                           e.target.src = playerUtils.getCorsWrappedUrl(
                             playerUtils.getDefaultHeadshot()
@@ -388,11 +391,11 @@ export const TeamShareableDisplay = ({
                         }}
                       />
                       <div className="flex-1 min-w-0">
-                        <div className="text-base font-bold text-white truncate">
+                        <div className="text-sm font-bold text-white player-name-truncate">
                           {fw.name}
                         </div>
                       </div>
-                      <span className="text-base font-extrabold text-cyan-300 shrink-0">
+                      <span className="text-sm font-extrabold text-cyan-300 shrink-0">
                         {fw.warPercentile.toFixed(1)}%
                       </span>
                     </div>
@@ -406,7 +409,10 @@ export const TeamShareableDisplay = ({
                 </h4>
                 <div className="space-y-2">
                   {teamSummaryData.topDefensemen?.slice(0, 4).map((df) => (
-                    <div key={df.playerId} className="flex items-center gap-2">
+                    <div
+                      key={df.playerId}
+                      className="flex items-center gap-1.5"
+                    >
                       <img
                         src={playerUtils.getCorsWrappedUrl(
                           playerUtils.getPlayerHeadshot(
@@ -416,7 +422,7 @@ export const TeamShareableDisplay = ({
                           )
                         )}
                         alt={df.name}
-                        className="w-8 h-8 rounded-full object-cover bg-zinc-900 shrink-0"
+                        className="w-7 h-7 rounded-full object-cover bg-zinc-900 shrink-0"
                         onError={(e) => {
                           e.target.src = playerUtils.getCorsWrappedUrl(
                             playerUtils.getDefaultHeadshot()
@@ -424,12 +430,51 @@ export const TeamShareableDisplay = ({
                         }}
                       />
                       <div className="flex-1 min-w-0">
-                        <div className="text-base font-bold text-white truncate">
+                        <div className="text-sm font-bold text-white player-name-truncate">
                           {df.name}
                         </div>
                       </div>
-                      <span className="text-base font-extrabold text-rose-400 shrink-0">
+                      <span className="text-sm font-extrabold text-rose-400 shrink-0">
                         {df.warPercentile.toFixed(1)}%
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {/* Goalies */}
+              <div>
+                <h4 className="text-[12px] font-bold uppercase tracking-[0.12em] text-amber-300 mb-1.5">
+                  Goalies
+                </h4>
+                <div className="space-y-2">
+                  {teamSummaryData.topGoalies?.slice(0, 2).map((gl) => (
+                    <div
+                      key={gl.playerId}
+                      className="flex items-center gap-1.5"
+                    >
+                      <img
+                        src={playerUtils.getCorsWrappedUrl(
+                          playerUtils.getPlayerHeadshot(
+                            gl.playerId,
+                            team,
+                            season
+                          )
+                        )}
+                        alt={gl.name}
+                        className="w-7 h-7 rounded-full object-cover bg-zinc-900 shrink-0"
+                        onError={(e) => {
+                          e.target.src = playerUtils.getCorsWrappedUrl(
+                            playerUtils.getDefaultHeadshot()
+                          );
+                        }}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-bold text-white player-name-truncate">
+                          {gl.name}
+                        </div>
+                      </div>
+                      <span className="text-sm font-extrabold text-amber-300 shrink-0">
+                        {gl.warPercentile.toFixed(1)}%
                       </span>
                     </div>
                   ))}
@@ -443,7 +488,7 @@ export const TeamShareableDisplay = ({
             teamSummaryData.similarTeams.length > 0 && (
               <div
                 className="liquid-glass-strong rounded-[22px] px-3.5 py-3"
-                style={{ width: 320 }}
+                style={{ width: 290 }}
               >
                 <h3
                   className="text-base font-extrabold text-white mb-2"
@@ -522,7 +567,7 @@ export const TeamShareableDisplay = ({
                           </span>
                         </div>
                       </div>
-                      <p className="text-[11px] font-semibold text-white leading-tight max-w-[120px] truncate mx-auto">
+                      <p className="text-[11px] font-semibold text-white leading-tight max-w-[110px] truncate mx-auto">
                         {playerUtils.getFullTeamName(
                           similar.team,
                           similar.season

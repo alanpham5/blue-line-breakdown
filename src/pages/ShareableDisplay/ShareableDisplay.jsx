@@ -91,18 +91,37 @@ export const ShareableDisplay = ({ playerData }) => {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <StatsCardCompact
-              title="Offensive Metrics"
-              icon={Target}
-              stats={percentiles.offensive}
-              type="offensive"
-            />
-            <StatsCardCompact
-              title="Defensive Metrics"
-              icon={Shield}
-              stats={percentiles.defensive}
-              type="defensive"
-            />
+            {player.position === "G" ? (
+              <>
+                <StatsCardCompact
+                  title="Shot Stopping"
+                  icon={Target}
+                  stats={percentiles.shotStopping}
+                  type="shotStopping"
+                />
+                <StatsCardCompact
+                  title="Workload"
+                  icon={Shield}
+                  stats={percentiles.workload}
+                  type="workload"
+                />
+              </>
+            ) : (
+              <>
+                <StatsCardCompact
+                  title="Offensive Metrics"
+                  icon={Target}
+                  stats={percentiles.offensive}
+                  type="offensive"
+                />
+                <StatsCardCompact
+                  title="Defensive Metrics"
+                  icon={Shield}
+                  stats={percentiles.defensive}
+                  type="defensive"
+                />
+              </>
+            )}
           </div>
 
           <div className="liquid-glass-strong rounded-[28px] p-4">

@@ -45,7 +45,6 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
   const { actualTheme } = useTheme();
   const isExternal = useIsExternal();
   const isMobile = useIsMobile();
-
   const now = new Date();
   const initialTeam = searchParams.get("team") || "";
   const initialSeason =
@@ -683,7 +682,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                     </h3>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
                     <div>
                       <h4 className="text-md font-bold uppercase tracking-[0.1em] text-cyan-300 light:text-cyan-600 mb-4">
                         Forwards
@@ -767,6 +766,51 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                               <div
                                 className="bg-gradient-to-r from-rose-500 to-red-400 h-1.5 rounded-full transition-all duration-300 gauge-fill"
                                 style={{ width: `${df.warPercentile}%` }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="text-md font-bold uppercase tracking-[0.1em] text-amber-300 light:text-amber-600 mb-4">
+                        Goalies
+                      </h4>
+                      <div className="space-y-3">
+                        {teamSummaryData.topGoalies?.slice(0, 2).map((gl) => (
+                          <div
+                            key={gl.playerId}
+                            onClick={() => handlePlayerClick(gl.name, "G")}
+                            className="flex flex-col p-3 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] light:bg-gray-100/50 light:hover:bg-gray-100 border border-white/5 light:border-slate-200/50 cursor-pointer transition-all duration-200"
+                          >
+                            <div className="flex items-center justify-between mb-3">
+                              <div className="flex items-center gap-3">
+                                <img
+                                  src={playerUtils.getPlayerHeadshot(
+                                    gl.playerId,
+                                    team,
+                                    season
+                                  )}
+                                  alt={gl.name}
+                                  className="w-10 h-10 rounded-full object-cover bg-zinc-900"
+                                  onError={(e) => {
+                                    e.target.src =
+                                      playerUtils.getDefaultHeadshot();
+                                  }}
+                                />
+                                <span className="font-semibold text-sm sm:text-base text-white light:text-gray-900">
+                                  {gl.name}
+                                </span>
+                              </div>
+                              <span className="text-sm font-bold text-amber-300 light:text-amber-700">
+                                {gl.warPercentile.toFixed(1)}%
+                              </span>
+                            </div>
+                            <div className="w-full bg-white/[0.06] light:bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                              <div
+                                className="bg-gradient-to-r from-amber-500 to-orange-400 h-1.5 rounded-full transition-all duration-300 gauge-fill"
+                                style={{ width: `${gl.warPercentile}%` }}
                               />
                             </div>
                           </div>

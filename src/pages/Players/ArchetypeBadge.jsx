@@ -6,6 +6,11 @@ import {
   Dumbbell,
   ShieldCheck,
   Home,
+  Crown,
+  Zap,
+  Flame,
+  Layers,
+  Activity,
 } from "lucide-react";
 import { Tooltip } from "../../components/Tooltip";
 
@@ -21,6 +26,13 @@ const archetypeIcons = {
   Quarterback: Wand,
   "Shot Blocker": Shield,
   "Stay-at-Home": Home,
+  // Goalie archetypes
+  "Elite Starter": Crown,
+  Workhorse: Zap,
+  "High-Danger Specialist": Flame,
+  "Volume Starter": Layers,
+  "Rebound Controller": Activity,
+  Backup: ShieldCheck,
 };
 
 const archetypeDefinitions = {
@@ -35,6 +47,18 @@ const archetypeDefinitions = {
   Quarterback: "Contributes on offense with passing and decision-making.",
   "Shot Blocker": "Puts their body on the line to stop shots.",
   "Stay-at-Home": "Focuses on defense and protecting the goal area.",
+  // Goalie archetypes
+  "Elite Starter":
+    "Top-tier goalie with elite save percentage and high goals saved above expected.",
+  Workhorse:
+    "Starts a high volume of games and faces a heavy workload of shots.",
+  "High-Danger Specialist":
+    "Excels at stopping high-difficulty, high-danger scoring chances.",
+  "Volume Starter":
+    "Plays a large portion of games and maintains solid efficiency under heavy volume.",
+  "Rebound Controller":
+    "Excellent at freezing the puck and preventing second-chance opportunities.",
+  Backup: "Plays a supporting role with limited game appearances.",
 };
 
 export const ArchetypeBadge = ({ archetype, forceDark = false }) => {

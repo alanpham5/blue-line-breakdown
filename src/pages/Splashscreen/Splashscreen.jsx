@@ -9,7 +9,6 @@ import { LoadingScreen } from "../../components/LoadingScreen";
 import { useTheme } from "../../providers/ThemeContext";
 import "./Splashscreen.css";
 
-
 export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -54,8 +53,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
           });
         }
       }
-    } catch (err) {
-    }
+    } catch (err) {}
   };
   const [scrollEdges, setScrollEdges] = useState({
     atStart: true,
@@ -78,7 +76,12 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
     const loadFeatured = async () => {
       try {
         const data = await apiService.fetchFeatured();
-        if (data && data.players && data.players.length > 0 && data.featuredTeam) {
+        if (
+          data &&
+          data.players &&
+          data.players.length > 0 &&
+          data.featuredTeam
+        ) {
           setFeaturedData(data);
         }
       } catch (err) {
@@ -176,7 +179,10 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                     </div>
                     <div className="grid grid-cols-4 gap-3">
                       {Array.from({ length: 4 }).map((_, i) => (
-                        <div key={i} className="liquid-glass rounded-2xl p-3 flex flex-col items-center gap-2">
+                        <div
+                          key={i}
+                          className="liquid-glass rounded-2xl p-3 flex flex-col items-center gap-2"
+                        >
                           <div className="h-2 w-12 rounded bg-white/10 light:bg-slate-200" />
                           <div className="h-6 w-10 rounded bg-white/10 light:bg-slate-200" />
                         </div>
@@ -192,10 +198,10 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
       )}
 
       {featuredData && (
-      <div className="max-w-6xl mx-auto relative z-10">
-        <Header />
+        <div className="max-w-6xl mx-auto relative z-10">
+          <Header />
 
-        <div className="space-y-12">
+          <div className="space-y-12">
             {/* Featured Players Row */}
             <section
               className={`space-y-4 ${enablePageLoadAnimations ? "fade-in-up-delay-1" : ""}`}
@@ -490,8 +496,8 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
             )}
           </div>
 
-        <Footer />
-      </div>
+          <Footer />
+        </div>
       )}
     </div>
   );

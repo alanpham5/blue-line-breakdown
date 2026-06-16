@@ -82,10 +82,16 @@ export const TeamHeader = ({
 
               <span className="text-lg font-semibold text-gray-300 light:text-gray-700">
                 <span className="md:hidden">
-                  {position === "F" ? "FWD" : "DEF"} •{" "}
+                  {position === "F" ? "FWD" : position === "D" ? "DEF" : "G"}{" "}
+                  •{" "}
                 </span>
                 <span className="hidden md:inline">
-                  {position === "F" ? "Forwards" : "Defensemen"} •{" "}
+                  {position === "F"
+                    ? "Forwards"
+                    : position === "D"
+                      ? "Defensemen"
+                      : "Goalies"}{" "}
+                  •{" "}
                 </span>
                 {getSeasonName(season)}
               </span>

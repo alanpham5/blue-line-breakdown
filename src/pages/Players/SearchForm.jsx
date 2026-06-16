@@ -108,7 +108,14 @@ export const SearchForm = ({
     suppressAutofillRef.current = true;
     setPlayerName(result.name);
     if (!season) setSeason(result.latestYear.toString());
-    setPosition(result.position?.toUpperCase() === "DEFENSEMAN" ? "D" : "F");
+    const pos = result.position?.toUpperCase();
+    if (pos === "DEFENSEMAN" || pos === "D") {
+      setPosition("D");
+    } else if (pos === "GOALIE" || pos === "GOALTENDER" || pos === "G") {
+      setPosition("G");
+    } else {
+      setPosition("F");
+    }
     setShowAutofill(false);
   };
 
@@ -118,7 +125,9 @@ export const SearchForm = ({
       style={{ isolation: "auto", overflow: "visible" }}
     >
       <div className="mb-5">
-        <h2 className="text-2xl font-bold tracking-tight text-white light:text-gray-900">Lookup Player</h2>
+        <h2 className="text-2xl font-bold tracking-tight text-white light:text-gray-900">
+          Lookup Player
+        </h2>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3 sm:gap-4">
         <div className="md:col-span-2">
@@ -221,6 +230,7 @@ export const SearchForm = ({
           >
             <option value="F">Forward</option>
             <option value="D">Defense</option>
+            <option value="G">Goalie</option>
           </AppSelect>
         </div>
       </div>

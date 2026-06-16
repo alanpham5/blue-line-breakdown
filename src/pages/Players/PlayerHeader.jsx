@@ -161,7 +161,13 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
               <span className="text-gray-500 light:text-gray-400">•</span>
               <span>{playerUtils.formatSeason(player.season)}</span>
               <span className="text-gray-500 light:text-gray-400">•</span>
-              <span>{player.position === "F" ? "Forward" : "Defense"}</span>
+              <span>
+                {player.position === "F"
+                  ? "Forward"
+                  : player.position === "D"
+                    ? "Defense"
+                    : "Goalie"}
+              </span>
             </div>
             {(biometrics?.height || biometrics?.weight || player?.age) && (
               <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start lg:gap-4">

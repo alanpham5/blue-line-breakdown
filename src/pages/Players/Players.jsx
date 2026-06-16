@@ -346,7 +346,14 @@ export const Players = ({ enablePageLoadAnimations = true }) => {
   const handleSimilarPlayerClick = async (player) => {
     let normalizedPosition = "F";
     if (player.position) {
-      normalizedPosition = player.position.toUpperCase() === "D" ? "D" : "F";
+      const pos = player.position.toUpperCase();
+      if (pos === "D") {
+        normalizedPosition = "D";
+      } else if (pos === "G") {
+        normalizedPosition = "G";
+      } else {
+        normalizedPosition = "F";
+      }
     } else if (position) {
       normalizedPosition = position;
     }
@@ -447,19 +454,39 @@ export const Players = ({ enablePageLoadAnimations = true }) => {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                      <StatsCard
-                        title="Offensive Metrics"
-                        icon={Target}
-                        stats={playerData.percentiles.offensive}
-                        allPercentiles={playerData.percentiles}
-                        type="offensive"
-                      />
-                      <StatsCard
-                        title="Defensive Metrics"
-                        icon={Shield}
-                        stats={playerData.percentiles.defensive}
-                        type="defensive"
-                      />
+                      {playerData.player.position === "G" ? (
+                        <>
+                          <StatsCard
+                            title="Shot Stopping"
+                            icon={Target}
+                            stats={playerData.percentiles.shotStopping}
+                            allPercentiles={playerData.percentiles}
+                            type="shotStopping"
+                          />
+                          <StatsCard
+                            title="Workload"
+                            icon={Shield}
+                            stats={playerData.percentiles.workload}
+                            type="workload"
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <StatsCard
+                            title="Offensive Metrics"
+                            icon={Target}
+                            stats={playerData.percentiles.offensive}
+                            allPercentiles={playerData.percentiles}
+                            type="offensive"
+                          />
+                          <StatsCard
+                            title="Defensive Metrics"
+                            icon={Shield}
+                            stats={playerData.percentiles.defensive}
+                            type="defensive"
+                          />
+                        </>
+                      )}
                     </div>
 
                     <SimilarPlayersSection
