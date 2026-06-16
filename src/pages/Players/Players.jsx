@@ -48,8 +48,12 @@ export const Players = ({ enablePageLoadAnimations = true }) => {
   );
 
   useEffect(() => {
+    document.title = "Players | Blue Line Breakdown";
     checkHealth();
     initializeCacheInBackground();
+    return () => {
+      document.title = "Blue Line Breakdown";
+    };
   }, []);
 
   useEffect(() => {
@@ -59,6 +63,14 @@ export const Players = ({ enablePageLoadAnimations = true }) => {
       );
     }
   }, [isLocalhost, searchParams]);
+
+  useEffect(() => {
+    if (playerData?.player?.name) {
+      document.title = `${playerData.player.name} | Blue Line Breakdown`;
+    } else {
+      document.title = "Players | Blue Line Breakdown";
+    }
+  }, [playerData?.player?.name]);
 
   useEffect(() => {
     if (playerHeaderRef.current) {

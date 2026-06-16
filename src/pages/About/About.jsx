@@ -1,8 +1,16 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 
 export const About = ({ enablePageLoadAnimations = true }) => {
+  useEffect(() => {
+    document.title = "About | Blue Line Breakdown";
+    return () => {
+      document.title = "Blue Line Breakdown";
+    };
+  }, []);
+
   return (
     <div className="min-h-screen ice-background px-4 pb-10 pt-5 text-white light:text-gray-900 sm:px-6 sm:py-8">
       <div className="max-w-6xl mx-auto relative z-10">

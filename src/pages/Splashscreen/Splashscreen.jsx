@@ -132,10 +132,46 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
     }
   }, [searchParams, navigate]);
 
+  useEffect(() => {
+    document.title = "Blue Line Breakdown";
+    apiService.healthCheck().catch(() => {});
+    initializeCacheInBackground();
+  }, []);
+
+  const initializeCacheInBackground = async () => {
+    try {
+      initInProgressRef.current = true;
+      const cacheStatus = await apiService.checkCacheStatus();
+      if (!cacheStatus.dataLoaded && !cacheStatus.cacheExists) {
+        const initResponse = await apiService.initializeCache();
+        if (initResponse.status === "loading") {
+          let timeoutId;
+          await new Promise((resolve) => {
+            const checkStatus = async () => {
+              const status = await apiService.checkCacheStatus();
+              if (status.dataLoaded || status.cacheExists) {
+                if (timeoutId) clearTimeout(timeoutId);
+                initInProgressRef.current = false;
+                resolve();
+              } else {
+                timeoutId = setTimeout(checkStatus, 30000);
+              }
+            };
+            checkStatus();
+          });
+        }
+      }
+    } catch (err) {
+    } finally {
+      initInProgressRef.current = false;
+    }
+  };
+
   const [featuredData, setFeaturedData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errorState, setErrorState] = useState(false);
   const scrollContainerRef = useRef(null);
+  const initInProgressRef = useRef(false);
   const [scrollEdges, setScrollEdges] = useState({
     atStart: true,
     atEnd: true,

@@ -84,6 +84,14 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
   );
 
   useEffect(() => {
+    if (teamSummaryData && team) {
+      document.title = `${team} | Blue Line Breakdown`;
+    } else {
+      document.title = "Teams | Blue Line Breakdown";
+    }
+  }, [team, teamSummaryData]);
+
+  useEffect(() => {
     const checkHealth = async () => {
       try {
         await apiService.healthCheck();
