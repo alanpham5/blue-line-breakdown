@@ -117,6 +117,9 @@ export const SearchForm = ({
       className={`liquid-glass-strong rounded-[32px] p-5 sm:p-6 lg:p-7 mb-6 sm:mb-8 ${enablePageLoadAnimation ? "liquid-glass-animate" : ""}`}
       style={{ isolation: "auto", overflow: "visible" }}
     >
+      <div className="mb-5">
+        <h2 className="text-2xl font-bold tracking-tight text-white light:text-gray-900">Lookup Player</h2>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3 sm:gap-4">
         <div className="md:col-span-2">
           <div

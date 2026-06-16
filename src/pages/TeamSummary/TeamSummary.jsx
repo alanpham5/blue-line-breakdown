@@ -302,10 +302,10 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                 className={`liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7 mb-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
                 style={{ overflow: "visible" }}
               >
-                <div className="mb-6">
-                  <h1 className="section-title text-4xl sm:text-5xl">
-                    Team Summary
-                  </h1>
+                <div className="mb-5">
+                  <h2 className="text-2xl font-bold tracking-tight text-white light:text-gray-900">
+                    Lookup Team
+                  </h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
@@ -359,12 +359,25 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                     </>
                   ) : (
                     <>
-                      <Search size={20} /> View Team Summary
+                      <Search size={20} /> Search Team
                     </>
                   )}
                 </button>
               </div>
             </div>
+
+            {!hasSearched && !loadingData && (
+              <div className="relative z-0 liquid-glass rounded-[32px] mt-4 sm:mt-6 px-5 py-10 text-center">
+                <p className="mb-3 text-2xl font-semibold tracking-[-0.03em] text-white light:text-slate-900 sm:text-3xl">
+                  Select a team and season to get started
+                </p>
+                <p className="mx-auto max-w-2xl text-sm text-gray-400 light:text-gray-500 sm:text-base">
+                  Analytics derived from MoneyPuck data (2008–
+                  {new Date().getFullYear() - 1}), with proprietary calculations
+                  and metrics.
+                </p>
+              </div>
+            )}
 
             {error && (
               <div className="liquid-glass rounded-[32px] p-6 text-center text-rose-400 mb-8">

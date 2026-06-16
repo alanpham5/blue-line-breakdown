@@ -357,8 +357,8 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
                 className={`liquid-glass-strong rounded-[32px] p-5 sm:p-6 lg:p-7 mb-8 ${enablePageLoadAnimations ? "liquid-glass-animate" : ""}`}
                 style={{ overflow: "visible" }}
               >
-                <div className="mb-6">
-                  <h1 className="section-title text-4xl sm:text-5xl">Teams</h1>
+                <div className="mb-5">
+                  <h2 className="text-lg font-bold tracking-tight text-white light:text-gray-900">Lookup Team</h2>
                 </div>
                 <SearchForm
                   seasons={seasons}

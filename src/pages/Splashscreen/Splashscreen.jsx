@@ -22,9 +22,9 @@ const FALLBACK_FEATURED = {
       goals_against_pg: 2.8,
       goals_pg: 3.5,
       offense_rating: 88.5,
-      possession: 0.525
+      possession: 0.525,
     },
-    team: "COL"
+    team: "COL",
   },
   players: [
     {
@@ -34,7 +34,7 @@ const FALLBACK_FEATURED = {
       season: 2025,
       team: "EDM",
       war: 4.5,
-      warPercentile: 99.8
+      warPercentile: 99.8,
     },
     {
       name: "Cale Makar",
@@ -43,7 +43,7 @@ const FALLBACK_FEATURED = {
       season: 2024,
       team: "COL",
       war: 3.9,
-      warPercentile: 99.4
+      warPercentile: 99.4,
     },
     {
       name: "Nathan MacKinnon",
@@ -52,7 +52,7 @@ const FALLBACK_FEATURED = {
       season: 2025,
       team: "COL",
       war: 4.2,
-      warPercentile: 99.7
+      warPercentile: 99.7,
     },
     {
       name: "Auston Matthews",
@@ -61,7 +61,7 @@ const FALLBACK_FEATURED = {
       season: 2025,
       team: "TOR",
       war: 3.8,
-      warPercentile: 99.1
+      warPercentile: 99.1,
     },
     {
       name: "Nikita Kucherov",
@@ -70,7 +70,7 @@ const FALLBACK_FEATURED = {
       season: 2025,
       team: "TBL",
       war: 4.1,
-      warPercentile: 99.6
+      warPercentile: 99.6,
     },
     {
       name: "Roman Josi",
@@ -79,7 +79,7 @@ const FALLBACK_FEATURED = {
       season: 2024,
       team: "NSH",
       war: 3.4,
-      warPercentile: 98.8
+      warPercentile: 98.8,
     },
     {
       name: "Artemi Panarin",
@@ -88,7 +88,7 @@ const FALLBACK_FEATURED = {
       season: 2025,
       team: "NYR",
       war: 3.7,
-      warPercentile: 99.0
+      warPercentile: 99.0,
     },
     {
       name: "Quinn Hughes",
@@ -97,7 +97,7 @@ const FALLBACK_FEATURED = {
       season: 2025,
       team: "VAN",
       war: 3.6,
-      warPercentile: 98.9
+      warPercentile: 98.9,
     },
     {
       name: "Matthew Tkachuk",
@@ -106,7 +106,7 @@ const FALLBACK_FEATURED = {
       season: 2024,
       team: "FLA",
       war: 3.5,
-      warPercentile: 98.7
+      warPercentile: 98.7,
     },
     {
       name: "Kirill Kaprizov",
@@ -115,9 +115,9 @@ const FALLBACK_FEATURED = {
       season: 2025,
       team: "MIN",
       war: 3.6,
-      warPercentile: 98.9
-    }
-  ]
+      warPercentile: 98.9,
+    },
+  ],
 };
 
 export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
@@ -136,7 +136,10 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
   const [loading, setLoading] = useState(true);
   const [errorState, setErrorState] = useState(false);
   const scrollContainerRef = useRef(null);
-  const [scrollEdges, setScrollEdges] = useState({ atStart: true, atEnd: true });
+  const [scrollEdges, setScrollEdges] = useState({
+    atStart: true,
+    atEnd: true,
+  });
 
   const updateScrollEdges = () => {
     const el = scrollContainerRef.current;
@@ -144,7 +147,9 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
     const atStart = el.scrollLeft <= 8;
     const atEnd = el.scrollLeft >= el.scrollWidth - el.clientWidth - 8;
     setScrollEdges((prev) =>
-      prev.atStart === atStart && prev.atEnd === atEnd ? prev : { atStart, atEnd }
+      prev.atStart === atStart && prev.atEnd === atEnd
+        ? prev
+        : { atStart, atEnd }
     );
   };
 
@@ -154,13 +159,21 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
         setLoading(true);
         const data = await apiService.fetchFeatured();
         // Fallback checks for empty/malformed responses
-        if (data && data.players && data.players.length > 0 && data.featuredTeam) {
+        if (
+          data &&
+          data.players &&
+          data.players.length > 0 &&
+          data.featuredTeam
+        ) {
           setFeaturedData(data);
         } else {
           setFeaturedData(FALLBACK_FEATURED);
         }
       } catch (err) {
-        console.warn("Failed to fetch featured data from server, using fallback offline data:", err);
+        console.warn(
+          "Failed to fetch featured data from server, using fallback offline data:",
+          err
+        );
         setFeaturedData(FALLBACK_FEATURED);
         setErrorState(true);
       } finally {
@@ -192,12 +205,20 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
   const players = featuredData?.players || [];
 
   // Fade scroll edges only when there is hidden content in that direction
-  const leftStop = scrollEdges.atStart ? "black 0" : "transparent 0, black 48px";
-  const rightStop = scrollEdges.atEnd ? "black 100%" : "black calc(100% - 48px), transparent 100%";
+  const leftStop = scrollEdges.atStart
+    ? "black 0"
+    : "transparent 0, black 48px";
+  const rightStop = scrollEdges.atEnd
+    ? "black 100%"
+    : "black calc(100% - 48px), transparent 100%";
   const playersMaskImage = `linear-gradient(to right, ${leftStop}, ${rightStop})`;
 
-  const teamCardGradient = team ? playerUtils.getTeamCardGradient(team.team, team.season, actualTheme) : "";
-  const teamWonCup = team ? playerUtils.didWinStanleyCup(team.team, team.season) : false;
+  const teamCardGradient = team
+    ? playerUtils.getTeamCardGradient(team.team, team.season, actualTheme)
+    : "";
+  const teamWonCup = team
+    ? playerUtils.didWinStanleyCup(team.team, team.season)
+    : false;
 
   return (
     <div className="min-h-screen ice-background px-4 pb-10 pt-5 text-white light:text-gray-900 sm:px-6 sm:py-8">
@@ -207,13 +228,16 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20">
             <Loader2 className="h-10 w-10 animate-spin text-sky-400 light:text-sky-600 mb-4" />
-            <p className="text-gray-400 light:text-slate-500">Loading featured data...</p>
+            <p className="text-gray-400 light:text-slate-500">
+              Loading featured data...
+            </p>
           </div>
         ) : (
           <div className="space-y-12">
-            
             {/* Featured Players Row */}
-            <section className={`space-y-4 ${enablePageLoadAnimations ? "fade-in-up-delay-1" : ""}`}>
+            <section
+              className={`space-y-4 ${enablePageLoadAnimations ? "fade-in-up-delay-1" : ""}`}
+            >
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-2xl font-bold tracking-tight text-white light:text-gray-900 flex items-center gap-2">
@@ -221,7 +245,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                     Featured Players
                   </h2>
                 </div>
-                
+
                 {/* Scroll Indicators / Arrows */}
                 <div className="flex gap-2">
                   <button
@@ -229,8 +253,18 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                     className="p-2 rounded-full bg-white/5 border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 light:bg-slate-900/5 light:border-slate-900/10 light:text-slate-600 light:hover:bg-slate-900/10 transition"
                     aria-label="Scroll Left"
                   >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2.5}
+                        d="M15 19l-7-7 7-7"
+                      />
                     </svg>
                   </button>
                   <button
@@ -238,8 +272,18 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                     className="p-2 rounded-full bg-white/5 border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 light:bg-slate-900/5 light:border-slate-900/10 light:text-slate-600 light:hover:bg-slate-900/10 transition"
                     aria-label="Scroll Right"
                   >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2.5}
+                        d="M9 5l7 7-7 7"
+                      />
                     </svg>
                   </button>
                 </div>
@@ -253,11 +297,15 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                   className="flex gap-4 overflow-x-auto py-6 px-1 scroll-smooth snap-x snap-mandatory hide-scrollbar"
                   style={{
                     maskImage: playersMaskImage,
-                    WebkitMaskImage: playersMaskImage
+                    WebkitMaskImage: playersMaskImage,
                   }}
                 >
                   {players.map((player) => {
-                    const pColor = playerUtils.getTeamColor(player.team, player.season, actualTheme);
+                    const pColor = playerUtils.getTeamColor(
+                      player.team,
+                      player.season,
+                      actualTheme
+                    );
 
                     return (
                       <div
@@ -272,7 +320,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                         className="snap-start flex-shrink-0 w-[170px] sm:w-[190px] liquid-glass rounded-2xl p-4 flex flex-col items-center text-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.4)] hover:scale-[1.02] select-none"
                         style={{
                           "--player-team-glow": `${pColor}1a`,
-                          boxShadow: `0 8px 32px 0 rgba(0,0,0,0.18)`
+                          boxShadow: `0 8px 32px 0 rgba(0,0,0,0.18)`,
                         }}
                       >
                         {/* Player headshot */}
@@ -280,7 +328,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                           className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mb-3 relative flex items-center justify-center"
                           style={{
                             background: pColor,
-                            boxShadow: `0 0 0 4px ${pColor}1f, 0 6px 16px rgba(0,0,0,0.28)`
+                            boxShadow: `0 0 0 4px ${pColor}1f, 0 6px 16px rgba(0,0,0,0.28)`,
                           }}
                         >
                           <img
@@ -314,7 +362,9 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
 
             {/* Featured Team Hero Section */}
             {team && (
-              <section className={`space-y-4 ${enablePageLoadAnimations ? "fade-in-up-delay-2" : ""}`}>
+              <section
+                className={`space-y-4 ${enablePageLoadAnimations ? "fade-in-up-delay-2" : ""}`}
+              >
                 <div>
                   <h2 className="text-2xl font-bold tracking-tight text-white light:text-gray-900 flex items-center gap-2">
                     <Shield className="h-6 w-6 text-sky-400 light:text-sky-600" />
@@ -331,9 +381,8 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                   <ArrowUpRight className="absolute top-5 right-5 z-10 h-6 w-6 text-gray-300 transition-all duration-200 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 light:text-slate-500 light:group-hover:text-slate-900" />
 
                   <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center pt-6 md:pt-4">
-
                     {/* Left Column - Team info */}
-                    <div className="md:col-span-5 flex flex-col items-center md:items-start text-center md:text-left">
+                    <div className="md:col-span-5 flex flex-col items-center text-center">
                       <div className="relative w-32 h-32 sm:w-40 sm:h-40 flex items-center justify-center mb-4">
                         {teamWonCup && (
                           <img
@@ -344,7 +393,14 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                         )}
 
                         <img
-                          src={team.logoUrl || playerUtils.getTeamLogoUrl(team.team, team.season, actualTheme)}
+                          src={
+                            team.logoUrl ||
+                            playerUtils.getTeamLogoUrl(
+                              team.team,
+                              team.season,
+                              actualTheme
+                            )
+                          }
                           alt={`${team.name} Logo`}
                           className={`relative z-10 w-full h-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.35)] ${
                             teamWonCup
@@ -362,86 +418,114 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                       </h3>
 
                       <p className="text-sm font-semibold text-gray-300 light:text-gray-500">
-                        {playerUtils.formatSeason(team.season)} Campaign
+                        {playerUtils.formatSeason(team.season)}
                       </p>
                     </div>
 
                     {/* Right Column - Stats Details */}
                     <div className="md:col-span-7 space-y-5">
-                      
                       {/* Metric bars */}
                       <div className="liquid-glass rounded-2xl p-5 sm:p-6 space-y-4">
-                        
                         {/* Offense Rating */}
                         <div className="space-y-1.5">
                           <div className="flex justify-between items-center text-xs sm:text-sm">
-                            <span className="font-semibold text-gray-300 light:text-gray-600">Offense Percentile</span>
-                            <span className="font-extrabold text-sky-400 light:text-sky-600">{team.stats.offense_rating.toFixed(1)}%</span>
+                            <span className="font-semibold text-gray-300 light:text-gray-600">
+                              Offense Percentile
+                            </span>
+                            <span className="font-extrabold text-sky-400 light:text-sky-600">
+                              {team.stats.offense_rating.toFixed(1)}%
+                            </span>
                           </div>
                           <div className="w-full h-2 rounded-full bg-black/20 overflow-hidden">
-                            <div className="h-full rounded-full bg-gradient-to-r from-sky-500 to-sky-300 shadow-[0_0_10px_rgba(56,189,248,0.3)]"
-                                 style={{ width: `${team.stats.offense_rating}%` }} />
+                            <div
+                              className="h-full rounded-full bg-gradient-to-r from-sky-500 to-sky-300 shadow-[0_0_10px_rgba(56,189,248,0.3)]"
+                              style={{ width: `${team.stats.offense_rating}%` }}
+                            />
                           </div>
                         </div>
 
                         {/* Defense Rating */}
                         <div className="space-y-1.5">
                           <div className="flex justify-between items-center text-xs sm:text-sm">
-                            <span className="font-semibold text-gray-300 light:text-gray-600">Defense Percentile</span>
-                            <span className="font-extrabold text-rose-400 light:text-rose-600">{team.stats.defense_rating.toFixed(1)}%</span>
+                            <span className="font-semibold text-gray-300 light:text-gray-600">
+                              Defense Percentile
+                            </span>
+                            <span className="font-extrabold text-rose-400 light:text-rose-600">
+                              {team.stats.defense_rating.toFixed(1)}%
+                            </span>
                           </div>
                           <div className="w-full h-2 rounded-full bg-black/20 overflow-hidden">
-                            <div className="h-full rounded-full bg-gradient-to-r from-rose-500 to-rose-300 shadow-[0_0_10px_rgba(251,113,133,0.3)]"
-                                 style={{ width: `${team.stats.defense_rating}%` }} />
+                            <div
+                              className="h-full rounded-full bg-gradient-to-r from-rose-500 to-rose-300 shadow-[0_0_10px_rgba(251,113,133,0.3)]"
+                              style={{ width: `${team.stats.defense_rating}%` }}
+                            />
                           </div>
                         </div>
 
                         {/* Aggressiveness Rating */}
                         <div className="space-y-1.5">
                           <div className="flex justify-between items-center text-xs sm:text-sm">
-                            <span className="font-semibold text-gray-300 light:text-gray-600">Aggressiveness Percentile</span>
-                            <span className="font-extrabold text-amber-400 light:text-amber-600">{team.stats.aggressiveness_rating.toFixed(1)}%</span>
+                            <span className="font-semibold text-gray-300 light:text-gray-600">
+                              Aggressiveness Percentile
+                            </span>
+                            <span className="font-extrabold text-amber-400 light:text-amber-600">
+                              {team.stats.aggressiveness_rating.toFixed(1)}%
+                            </span>
                           </div>
                           <div className="w-full h-2 rounded-full bg-black/20 overflow-hidden">
-                            <div className="h-full rounded-full bg-gradient-to-r from-amber-500 to-amber-300 shadow-[0_0_10px_rgba(251,191,36,0.3)]"
-                                 style={{ width: `${team.stats.aggressiveness_rating}%` }} />
+                            <div
+                              className="h-full rounded-full bg-gradient-to-r from-amber-500 to-amber-300 shadow-[0_0_10px_rgba(251,191,36,0.3)]"
+                              style={{
+                                width: `${team.stats.aggressiveness_rating}%`,
+                              }}
+                            />
                           </div>
                         </div>
-
                       </div>
 
                       {/* Summary Metrics Grid */}
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        
                         <div className="liquid-glass rounded-2xl p-3 text-center">
-                          <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">Goals PG</div>
-                          <div className="text-xl font-extrabold text-white light:text-gray-900">{team.stats.goals_pg.toFixed(2)}</div>
+                          <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">
+                            Goals PG
+                          </div>
+                          <div className="text-xl font-extrabold text-white light:text-gray-900">
+                            {team.stats.goals_pg.toFixed(2)}
+                          </div>
                         </div>
 
                         <div className="liquid-glass rounded-2xl p-3 text-center">
-                          <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">Goals Against</div>
-                          <div className="text-xl font-extrabold text-white light:text-gray-900">{team.stats.goals_against_pg.toFixed(2)}</div>
+                          <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">
+                            Goals Against
+                          </div>
+                          <div className="text-xl font-extrabold text-white light:text-gray-900">
+                            {team.stats.goals_against_pg.toFixed(2)}
+                          </div>
                         </div>
 
                         <div className="liquid-glass rounded-2xl p-3 text-center">
-                          <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">Possession</div>
-                          <div className="text-xl font-extrabold text-white light:text-gray-900">{(team.stats.possession * 100).toFixed(1)}%</div>
+                          <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">
+                            Possession
+                          </div>
+                          <div className="text-xl font-extrabold text-white light:text-gray-900">
+                            {(team.stats.possession * 100).toFixed(1)}%
+                          </div>
                         </div>
 
                         <div className="liquid-glass rounded-2xl p-3 text-center">
-                          <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">Blocked Shots</div>
-                          <div className="text-xl font-extrabold text-white light:text-gray-900">{team.stats.blocked_shots_pg.toFixed(1)}</div>
+                          <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">
+                            Blocked Shots
+                          </div>
+                          <div className="text-xl font-extrabold text-white light:text-gray-900">
+                            {team.stats.blocked_shots_pg.toFixed(1)}
+                          </div>
                         </div>
-
                       </div>
-
                     </div>
-
                   </div>
                 </Link>
               </section>
             )}
-
           </div>
         )}
 
