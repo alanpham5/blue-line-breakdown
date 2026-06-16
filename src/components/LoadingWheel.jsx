@@ -1,10 +1,20 @@
 import { useRef, useEffect } from "react";
 
-export const LoadingWheel = ({ size = 650, actualTheme = "dark" }) => {
+export const LoadingWheel = ({
+  size = 650,
+  actualTheme = "dark",
+  onCircleComplete,
+}) => {
   const canvasRef = useRef(null);
   const trailCanvasRef = useRef(null);
   const animationRef = useRef(null);
   const angleRef = useRef(0);
+  const circleCompletedRef = useRef(false);
+  const onCircleCompleteRef = useRef(onCircleComplete);
+
+  useEffect(() => {
+    onCircleCompleteRef.current = onCircleComplete;
+  }, [onCircleComplete]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -139,6 +149,10 @@ export const LoadingWheel = ({ size = 650, actualTheme = "dark" }) => {
       drawZamboni(x, y, rot);
 
       angleRef.current += speed;
+      if (!circleCompletedRef.current && angleRef.current >= Math.PI * 2) {
+        circleCompletedRef.current = true;
+        if (onCircleCompleteRef.current) onCircleCompleteRef.current();
+      }
       animationRef.current = requestAnimationFrame(animate);
     }
 

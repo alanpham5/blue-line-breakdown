@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { LoadingWheel } from "./LoadingWheel";
 import { useTheme } from "../providers/ThemeContext";
 
-export const LoadingScreen = () => {
+export const LoadingScreen = ({ onZamboniCircleComplete }) => {
   const messages = [
     "Hold on, we need to refresh the data...",
     "Turning on the lights...",
@@ -62,7 +62,11 @@ export const LoadingScreen = () => {
       {showLoader && (
         <div className="liquid-glass-animate">
           <div className="flex items-center justify-center">
-            <LoadingWheel size={80} actualTheme={actualTheme} />
+            <LoadingWheel
+              size={80}
+              actualTheme={actualTheme}
+              onCircleComplete={onZamboniCircleComplete}
+            />
           </div>
           <p className="text-lg sm:text-xl text-white light:text-gray-900">
             {loadingMessage}

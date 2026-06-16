@@ -1,124 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
-import { Users, Shield, ArrowUpRight, Loader2 } from "lucide-react";
+import { Users, Shield, ArrowUpRight } from "lucide-react";
 import { apiService } from "../../services/apiService";
 import { playerUtils } from "../../utils/playerUtils";
 import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
+import { LoadingScreen } from "../../components/LoadingScreen";
 import { useTheme } from "../../providers/ThemeContext";
 import "./Splashscreen.css";
 
-// High-fidelity fallback data in case the endpoint fails or is loading
-const FALLBACK_FEATURED = {
-  featuredTeam: {
-    logoUrl: "https://assets.nhle.com/logos/nhl/svg/COL_light.svg",
-    name: "Colorado Avalanche",
-    recordType: "in_progress",
-    season: 2025,
-    stats: {
-      aggressiveness_rating: 82.4,
-      blocked_shots_pg: 14.2,
-      defense_rating: 62.1,
-      goals_against_pg: 2.8,
-      goals_pg: 3.5,
-      offense_rating: 88.5,
-      possession: 0.525,
-    },
-    team: "COL",
-  },
-  players: [
-    {
-      name: "Connor McDavid",
-      playerId: 8478402,
-      position: "F",
-      season: 2025,
-      team: "EDM",
-      war: 4.5,
-      warPercentile: 99.8,
-    },
-    {
-      name: "Cale Makar",
-      playerId: 8480069,
-      position: "D",
-      season: 2024,
-      team: "COL",
-      war: 3.9,
-      warPercentile: 99.4,
-    },
-    {
-      name: "Nathan MacKinnon",
-      playerId: 8477444,
-      position: "F",
-      season: 2025,
-      team: "COL",
-      war: 4.2,
-      warPercentile: 99.7,
-    },
-    {
-      name: "Auston Matthews",
-      playerId: 8479318,
-      position: "F",
-      season: 2025,
-      team: "TOR",
-      war: 3.8,
-      warPercentile: 99.1,
-    },
-    {
-      name: "Nikita Kucherov",
-      playerId: 8476453,
-      position: "F",
-      season: 2025,
-      team: "TBL",
-      war: 4.1,
-      warPercentile: 99.6,
-    },
-    {
-      name: "Roman Josi",
-      playerId: 8474590,
-      position: "D",
-      season: 2024,
-      team: "NSH",
-      war: 3.4,
-      warPercentile: 98.8,
-    },
-    {
-      name: "Artemi Panarin",
-      playerId: 8478550,
-      position: "F",
-      season: 2025,
-      team: "NYR",
-      war: 3.7,
-      warPercentile: 99.0,
-    },
-    {
-      name: "Quinn Hughes",
-      playerId: 8480800,
-      position: "D",
-      season: 2025,
-      team: "VAN",
-      war: 3.6,
-      warPercentile: 98.9,
-    },
-    {
-      name: "Matthew Tkachuk",
-      playerId: 8479316,
-      position: "F",
-      season: 2024,
-      team: "FLA",
-      war: 3.5,
-      warPercentile: 98.7,
-    },
-    {
-      name: "Kirill Kaprizov",
-      playerId: 8478856,
-      position: "F",
-      season: 2025,
-      team: "MIN",
-      war: 3.6,
-      warPercentile: 98.9,
-    },
-  ],
-};
 
 export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
   const [searchParams] = useSearchParams();
@@ -132,15 +22,19 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
     }
   }, [searchParams, navigate]);
 
+  const [featuredData, setFeaturedData] = useState(null);
+  const [errorState, setErrorState] = useState(false);
+  const [showSkeleton, setShowSkeleton] = useState(false);
+  const scrollContainerRef = useRef(null);
+
   useEffect(() => {
     document.title = "Blue Line Breakdown";
-    apiService.healthCheck().catch(() => {});
     initializeCacheInBackground();
   }, []);
 
   const initializeCacheInBackground = async () => {
     try {
-      initInProgressRef.current = true;
+      await apiService.healthCheck().catch(() => {});
       const cacheStatus = await apiService.checkCacheStatus();
       if (!cacheStatus.dataLoaded && !cacheStatus.cacheExists) {
         const initResponse = await apiService.initializeCache();
@@ -151,7 +45,6 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
               const status = await apiService.checkCacheStatus();
               if (status.dataLoaded || status.cacheExists) {
                 if (timeoutId) clearTimeout(timeoutId);
-                initInProgressRef.current = false;
                 resolve();
               } else {
                 timeoutId = setTimeout(checkStatus, 30000);
@@ -162,16 +55,8 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
         }
       }
     } catch (err) {
-    } finally {
-      initInProgressRef.current = false;
     }
   };
-
-  const [featuredData, setFeaturedData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [errorState, setErrorState] = useState(false);
-  const scrollContainerRef = useRef(null);
-  const initInProgressRef = useRef(false);
   const [scrollEdges, setScrollEdges] = useState({
     atStart: true,
     atEnd: true,
@@ -192,28 +77,12 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
   useEffect(() => {
     const loadFeatured = async () => {
       try {
-        setLoading(true);
         const data = await apiService.fetchFeatured();
-        // Fallback checks for empty/malformed responses
-        if (
-          data &&
-          data.players &&
-          data.players.length > 0 &&
-          data.featuredTeam
-        ) {
+        if (data && data.players && data.players.length > 0 && data.featuredTeam) {
           setFeaturedData(data);
-        } else {
-          setFeaturedData(FALLBACK_FEATURED);
         }
       } catch (err) {
-        console.warn(
-          "Failed to fetch featured data from server, using fallback offline data:",
-          err
-        );
-        setFeaturedData(FALLBACK_FEATURED);
         setErrorState(true);
-      } finally {
-        setLoading(false);
       }
     };
     loadFeatured();
@@ -258,18 +127,75 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
 
   return (
     <div className="min-h-screen ice-background px-4 pb-10 pt-5 text-white light:text-gray-900 sm:px-6 sm:py-8">
+      {!featuredData && !showSkeleton && (
+        <LoadingScreen onZamboniCircleComplete={() => setShowSkeleton(true)} />
+      )}
+
+      {!featuredData && showSkeleton && (
+        <div className="max-w-6xl mx-auto relative z-10">
+          <Header />
+          <div className="space-y-12 animate-pulse">
+            {/* Players skeleton */}
+            <section className="space-y-4">
+              <div className="h-7 w-48 rounded-xl bg-white/10 light:bg-slate-200" />
+              <div className="flex gap-4 overflow-hidden py-6 px-1">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="flex-shrink-0 w-[170px] sm:w-[190px] liquid-glass rounded-2xl p-4 flex flex-col items-center gap-3"
+                  >
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-white/10 light:bg-slate-200" />
+                    <div className="h-4 w-24 rounded-lg bg-white/10 light:bg-slate-200" />
+                    <div className="h-3 w-16 rounded-lg bg-white/10 light:bg-slate-200" />
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Team skeleton */}
+            <section className="space-y-4">
+              <div className="h-7 w-40 rounded-xl bg-white/10 light:bg-slate-200" />
+              <div className="liquid-glass-strong rounded-[32px] p-6 sm:p-8">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center pt-4">
+                  <div className="md:col-span-5 flex flex-col items-center gap-4">
+                    <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-white/10 light:bg-slate-200" />
+                    <div className="h-8 w-48 rounded-xl bg-white/10 light:bg-slate-200" />
+                    <div className="h-4 w-24 rounded-lg bg-white/10 light:bg-slate-200" />
+                  </div>
+                  <div className="md:col-span-7 space-y-5">
+                    <div className="liquid-glass rounded-2xl p-5 sm:p-6 space-y-5">
+                      {Array.from({ length: 3 }).map((_, i) => (
+                        <div key={i} className="space-y-2">
+                          <div className="flex justify-between">
+                            <div className="h-3 w-32 rounded bg-white/10 light:bg-slate-200" />
+                            <div className="h-3 w-10 rounded bg-white/10 light:bg-slate-200" />
+                          </div>
+                          <div className="h-2 w-full rounded-full bg-white/10 light:bg-slate-200" />
+                        </div>
+                      ))}
+                    </div>
+                    <div className="grid grid-cols-4 gap-3">
+                      {Array.from({ length: 4 }).map((_, i) => (
+                        <div key={i} className="liquid-glass rounded-2xl p-3 flex flex-col items-center gap-2">
+                          <div className="h-2 w-12 rounded bg-white/10 light:bg-slate-200" />
+                          <div className="h-6 w-10 rounded bg-white/10 light:bg-slate-200" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+          <Footer />
+        </div>
+      )}
+
+      {featuredData && (
       <div className="max-w-6xl mx-auto relative z-10">
         <Header />
 
-        {loading ? (
-          <div className="flex flex-col items-center justify-center py-20">
-            <Loader2 className="h-10 w-10 animate-spin text-sky-400 light:text-sky-600 mb-4" />
-            <p className="text-gray-400 light:text-slate-500">
-              Loading featured data...
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-12">
+        <div className="space-y-12">
             {/* Featured Players Row */}
             <section
               className={`space-y-4 ${enablePageLoadAnimations ? "fade-in-up-delay-1" : ""}`}
@@ -563,10 +489,10 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
               </section>
             )}
           </div>
-        )}
 
         <Footer />
       </div>
+      )}
     </div>
   );
 };
