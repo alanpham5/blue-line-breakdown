@@ -8,6 +8,7 @@ export const CountingStats = ({ stats }) => {
         gamesPlayed: "Games Played",
         shotsAgainst: "Shots Against",
         saves: "Saves",
+        gaa: "Goals Against Avg",
         goalsAgainst: "Goals Against",
         savePct: "Save %",
         goalsSavedAboveExpected: "GSAX",
@@ -25,6 +26,7 @@ export const CountingStats = ({ stats }) => {
         gamesPlayed: "GP",
         shotsAgainst: "SA",
         saves: "SV",
+        gaa: "GAA",
         goalsAgainst: "GA",
         savePct: "SV%",
         goalsSavedAboveExpected: "GSAX",
@@ -37,22 +39,36 @@ export const CountingStats = ({ stats }) => {
         points: "PTS",
       };
 
+  // Goalie columns are responsive: mobile shows GP, SA, SV, GAA, SV% (5 cols)
+  // while desktop keeps the full GP, SA, SV, GA, SV%, GSAX set (6 cols).
+  // Hidden columns drop out of the auto-cols-fr grid so the visible ones
+  // redistribute evenly without crowding/overlap on narrow viewports.
   const statsOrder = isGoalie
     ? [
         "gamesPlayed",
         "shotsAgainst",
         "saves",
+        "gaa",
         "goalsAgainst",
         "savePct",
         "goalsSavedAboveExpected",
       ]
     : ["gamesPlayed", "goals", "assists", "points", "penaltyMinutes"];
 
+  const statVisibility = isGoalie
+    ? {
+        gaa: "flex lg:hidden", // mobile-only
+        goalsAgainst: "hidden lg:flex", // desktop-only
+        goalsSavedAboveExpected: "hidden lg:flex", // desktop-only
+      }
+    : {};
+
   const statValueClasses = isGoalie
     ? {
         gamesPlayed: "text-white light:text-slate-900",
         shotsAgainst: "text-sky-300 light:text-sky-700",
         saves: "text-[#7dcb48]",
+        gaa: "text-rose-400 light:text-rose-600",
         goalsAgainst: "text-rose-400 light:text-rose-600",
         savePct: "text-amber-300 light:text-amber-700",
         goalsSavedAboveExpected: "text-cyan-300 light:text-cyan-700",
@@ -66,6 +82,12 @@ export const CountingStats = ({ stats }) => {
       };
 
   const formatValue = (statKey) => {
+    if (statKey === "gaa") {
+      const ga = stats.goalsAgainst;
+      const gp = stats.gamesPlayed;
+      if (!gp || ga === undefined || ga === null) return "-";
+      return ((ga / gp) * 1).toFixed(2);
+    }
     const val = stats[statKey];
     if (val === undefined || val === null) return "-";
     if (statKey === "savePct") {
@@ -83,14 +105,14 @@ export const CountingStats = ({ stats }) => {
         {statsOrder.map((statKey) => (
           <div
             key={statKey}
-            className="flex flex-col items-center justify-center px-2"
+            className={`flex-col items-center justify-center px-1 sm:px-2 ${statVisibility[statKey] ?? "flex"}`}
           >
-            <div className="text-[0.72rem] sm:text-sm text-gray-400 light:text-gray-500 uppercase tracking-[0.2em]">
+            <div className="text-[0.7rem] sm:text-sm text-gray-400 light:text-gray-500 uppercase tracking-[0.15em] sm:tracking-[0.2em] whitespace-nowrap">
               <span className="hidden lg:inline">{labels[statKey] ?? "-"}</span>
               <span className="lg:hidden">{mobileLabels[statKey] ?? "-"}</span>
             </div>
             <div
-              className={`text-2xl sm:text-3xl font-semibold leading-tight ${statValueClasses[statKey]}`}
+              className={`text-xl sm:text-3xl font-semibold leading-tight tabular-nums whitespace-nowrap ${statValueClasses[statKey]}`}
             >
               {formatValue(statKey)}
             </div>
