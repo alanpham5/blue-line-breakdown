@@ -39,29 +39,12 @@ export const CountingStats = ({ stats }) => {
         points: "PTS",
       };
 
-  // Goalie columns are responsive: mobile shows GP, SA, SV, GAA, SV% (5 cols)
-  // while desktop keeps the full GP, SA, SV, GA, SV%, GSAX set (6 cols).
-  // Hidden columns drop out of the auto-cols-fr grid so the visible ones
-  // redistribute evenly without crowding/overlap on narrow viewports.
+  // Goalie columns are responsive: both desktop and mobile show GP, SA, SV, GAA, SV% (5 cols)
   const statsOrder = isGoalie
-    ? [
-        "gamesPlayed",
-        "shotsAgainst",
-        "saves",
-        "gaa",
-        "goalsAgainst",
-        "savePct",
-        "goalsSavedAboveExpected",
-      ]
+    ? ["gamesPlayed", "shotsAgainst", "saves", "gaa", "savePct"]
     : ["gamesPlayed", "goals", "assists", "points", "penaltyMinutes"];
 
-  const statVisibility = isGoalie
-    ? {
-        gaa: "flex lg:hidden", // mobile-only
-        goalsAgainst: "hidden lg:flex", // desktop-only
-        goalsSavedAboveExpected: "hidden lg:flex", // desktop-only
-      }
-    : {};
+  const statVisibility = {};
 
   const statValueClasses = isGoalie
     ? {
@@ -82,14 +65,11 @@ export const CountingStats = ({ stats }) => {
       };
 
   const formatValue = (statKey) => {
-    if (statKey === "gaa") {
-      const ga = stats.goalsAgainst;
-      const gp = stats.gamesPlayed;
-      if (!gp || ga === undefined || ga === null) return "-";
-      return ((ga / gp) * 1).toFixed(2);
-    }
     const val = stats[statKey];
     if (val === undefined || val === null) return "-";
+    if (statKey === "gaa") {
+      return val.toFixed(2);
+    }
     if (statKey === "savePct") {
       return val.toFixed(3);
     }

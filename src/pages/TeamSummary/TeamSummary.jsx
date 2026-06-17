@@ -1,21 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import {
-  Loader2,
-  Search,
-  Target,
-  Shield,
-  Flame,
-  Activity,
-  Users,
-  Download,
-  Share,
-} from "lucide-react";
+import { Loader2, Search, Users, Download, Share } from "lucide-react";
 import { track } from "@vercel/analytics";
 import { apiService } from "../../services/apiService";
 import { Header } from "../../components/Header";
 import { AppSelect } from "../../components/AppSelect";
-import { TeamStatBar } from "./TeamStatBar";
+import { TeamProfileStatsGrid } from "../../components/teamProfile/TeamProfileStatsGrid";
 import { SimilarTeamsSection } from "./SimilarTeamsSection";
 import { playerUtils } from "../../utils/playerUtils";
 import { useIsExternal } from "../../hooks/useIsExternal";
@@ -23,6 +13,8 @@ import { useIsMobile } from "../../hooks/useIsMobile";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { useTheme } from "../../providers/ThemeContext";
 import { ShareableModal } from "../../components/ShareableModal";
+import { BookmarkButton } from "../../components/BookmarkButton";
+import { ENTITY_TYPES } from "../../firebase/firestore";
 import { Footer } from "../../components/Footer";
 
 import { TeamShareableDisplay } from "./TeamShareableDisplay";
@@ -444,6 +436,19 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                                 <Download className="h-4 w-4" />
                               )}
                             </button>
+                            <BookmarkButton
+                              entityType={ENTITY_TYPES.TEAM}
+                              entityId={`${team}_${season}`}
+                              size="sm"
+                              meta={{
+                                label: playerUtils.getFullTeamName(
+                                  team,
+                                  season
+                                ),
+                                team,
+                                season,
+                              }}
+                            />
                           </h2>
                           <div className="mt-2 flex flex-wrap items-center justify-center md:justify-start gap-2 text-sm sm:text-base font-semibold text-gray-300 light:text-gray-600">
                             <span>
@@ -473,206 +478,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-                  <div className="liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7">
-                    <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-4 mb-5">
-                      <div className="flex items-center gap-2">
-                        <Target className="h-6 w-6 shrink-0 text-cyan-300 light:text-cyan-600" />
-                        <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900">
-                          Offense
-                        </h3>
-                      </div>
-                      <div className="flex flex-col items-end">
-                        <div className="text-2xl sm:text-3xl font-extrabold tracking-[-0.04em] text-cyan-300 light:text-cyan-600">
-                          {teamSummaryData.stats.offense_rating.toFixed(1)}%
-                        </div>
-                        <div className="hidden sm:block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.15em] text-gray-400 light:text-slate-500">
-                          Percentile Rating
-                        </div>
-                      </div>
-                    </div>
-                    <div className="space-y-4">
-                      <TeamStatBar
-                        label="Goal Scoring"
-                        rawValue={teamSummaryData.stats.goals_pg}
-                        percentile={teamSummaryData.stats.goals_pg_pct}
-                        type="offensive"
-                      />
-                      <TeamStatBar
-                        label="Chance Creation"
-                        rawValue={teamSummaryData.stats.xg_pg}
-                        percentile={teamSummaryData.stats.xg_pg_pct}
-                        type="offensive"
-                      />
-                      <TeamStatBar
-                        label="Dangerous Shots"
-                        rawValue={teamSummaryData.stats.high_danger_shots_pg}
-                        percentile={
-                          teamSummaryData.stats.high_danger_shots_pg_pct
-                        }
-                        type="offensive"
-                      />
-                      <TeamStatBar
-                        label="Shots on Net"
-                        rawValue={teamSummaryData.stats.shots_on_goal_pg}
-                        percentile={teamSummaryData.stats.shots_on_goal_pg_pct}
-                        type="offensive"
-                      />
-                      <TeamStatBar
-                        label="Rebound Chances"
-                        rawValue={teamSummaryData.stats.rebound_xg_pg}
-                        percentile={teamSummaryData.stats.rebound_xg_pg_pct}
-                        type="offensive"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7">
-                    <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-4 mb-5">
-                      <div className="flex items-center gap-2">
-                        <Shield className="h-6 w-6 shrink-0 text-rose-400 light:text-rose-600" />
-                        <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900">
-                          Defense
-                        </h3>
-                      </div>
-                      <div className="flex flex-col items-end">
-                        <div className="text-2xl sm:text-3xl font-extrabold tracking-[-0.04em] text-rose-400 light:text-rose-600">
-                          {teamSummaryData.stats.defense_rating.toFixed(1)}%
-                        </div>
-                        <div className="hidden sm:block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.15em] text-gray-400 light:text-slate-500">
-                          Percentile Rating
-                        </div>
-                      </div>
-                    </div>
-                    <div className="space-y-4">
-                      <TeamStatBar
-                        label="Goals Allowed"
-                        rawValue={teamSummaryData.stats.goals_against_pg}
-                        percentile={teamSummaryData.stats.goals_against_pg_pct}
-                        type="defensive"
-                      />
-                      <TeamStatBar
-                        label="Chances Allowed"
-                        rawValue={teamSummaryData.stats.xg_against_pg}
-                        percentile={teamSummaryData.stats.xg_against_pg_pct}
-                        type="defensive"
-                      />
-                      <TeamStatBar
-                        label="Dangerous Shots Allowed"
-                        rawValue={
-                          teamSummaryData.stats.high_danger_shots_against_pg
-                        }
-                        percentile={
-                          teamSummaryData.stats.high_danger_shots_against_pg_pct
-                        }
-                        type="defensive"
-                      />
-                      <TeamStatBar
-                        label="Shots Allowed"
-                        rawValue={teamSummaryData.stats.shots_against_pg}
-                        percentile={teamSummaryData.stats.shots_against_pg_pct}
-                        type="defensive"
-                      />
-                      <TeamStatBar
-                        label="Takeaways"
-                        rawValue={teamSummaryData.stats.takeaways_pg}
-                        percentile={teamSummaryData.stats.takeaways_pg_pct}
-                        type="defensive"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7">
-                    <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-4 mb-5">
-                      <div className="flex items-center gap-2">
-                        <Flame className="h-6 w-6 shrink-0 text-amber-300 light:text-amber-600" />
-                        <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900">
-                          Aggressiveness
-                        </h3>
-                      </div>
-                      <div className="flex flex-col items-end">
-                        <div className="text-2xl sm:text-3xl font-extrabold tracking-[-0.04em] text-amber-300 light:text-amber-600">
-                          {teamSummaryData.stats.aggressiveness_rating.toFixed(
-                            1
-                          )}
-                          %
-                        </div>
-                        <div className="hidden sm:block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.15em] text-gray-400 light:text-slate-500">
-                          Percentile Rating
-                        </div>
-                      </div>
-                    </div>
-                    <div className="space-y-4">
-                      <TeamStatBar
-                        label="Hits"
-                        rawValue={teamSummaryData.stats.hits_pg}
-                        percentile={teamSummaryData.stats.hits_pg_pct}
-                        type="aggressiveness"
-                      />
-                      <TeamStatBar
-                        label="Penalties Taken"
-                        rawValue={teamSummaryData.stats.penalties_pg}
-                        percentile={teamSummaryData.stats.penalties_pg_pct}
-                        type="aggressiveness"
-                      />
-                      <TeamStatBar
-                        label="Penalty Minutes"
-                        rawValue={teamSummaryData.stats.penalty_minutes_pg}
-                        percentile={
-                          teamSummaryData.stats.penalty_minutes_pg_pct
-                        }
-                        type="aggressiveness"
-                      />
-                      <TeamStatBar
-                        label="Shots Blocked"
-                        rawValue={teamSummaryData.stats.blocked_shots_pg}
-                        percentile={teamSummaryData.stats.blocked_shots_pg_pct}
-                        type="aggressiveness"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7">
-                    <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-4 mb-5">
-                      <div className="flex items-center gap-2">
-                        <Activity className="h-6 w-6 shrink-0 text-sky-300 light:text-sky-600" />
-                        <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900">
-                          Miscellaneous
-                        </h3>
-                      </div>
-                    </div>
-
-                    <div className="space-y-6 mt-2">
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <h4 className="text-sm font-semibold uppercase tracking-[0.1em] text-gray-400 light:text-gray-500">
-                            Possession
-                          </h4>
-                        </div>
-                        <TeamStatBar
-                          label="Puck Management"
-                          rawValue={teamSummaryData.stats.possession}
-                          percentile={teamSummaryData.stats.possession_pct}
-                          type="offensive"
-                        />
-                      </div>
-
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between pt-2 border-t border-white/5 light:border-slate-100">
-                          <h4 className="text-sm font-semibold uppercase tracking-[0.1em] text-gray-400 light:text-gray-500">
-                            Pace
-                          </h4>
-                        </div>
-                        <TeamStatBar
-                          label="Game Pace"
-                          rawValue={teamSummaryData.stats.pace_pg}
-                          percentile={teamSummaryData.stats.pace_pg_pct}
-                          type="pace"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <TeamProfileStatsGrid stats={teamSummaryData.stats} />
 
                 <div className="liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7">
                   <div className="flex items-center gap-2 border-b border-white/10 light:border-slate-200 pb-4 mb-5">

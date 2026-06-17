@@ -191,4 +191,59 @@ export const apiService = {
     }
     return response.json();
   },
+
+  // Expansion Draft — every franchise active in a season (drives the team grid).
+  async fetchDraftTeams(year) {
+    const response = await fetch(`${API_BASE_URL}/draft/teams?year=${year}`);
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.error || "Failed to fetch draft teams");
+    }
+    return response.json();
+  },
+
+  // Expansion Draft — full single-team roster with box scores, age, and the
+  // server-resolved protection annotations the draft table renders.
+  async fetchDraftRoster(year, team) {
+    const response = await fetch(
+      `${API_BASE_URL}/draft/rosters?year=${year}&team=${encodeURIComponent(team)}`
+    );
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.error || "Failed to fetch draft roster");
+    }
+    return response.json();
+  },
+
+  // Expansion Draft — analyze a completed draft into a full team profile
+  // (simulated stats, similar teams, predicted record, franchise-ordered roster).
+  async analyzeDraft({ season, teamName, picks }) {
+    const response = await fetch(`${API_BASE_URL}/draft/analyze`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ season: parseInt(season), teamName, picks }),
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.error || "Failed to analyze draft");
+    }
+    return response.json();
+  },
+
+  // Expansion Draft — re-analyze a saved roster into a fresh profile without
+  // strict franchise-list validation. Used when reopening a non-leaderboard
+  // saved franchise so metrics are always computed dynamically.
+  async reanalyzeDraft({ season, teamName, picks }) {
+    const response = await fetch(`${API_BASE_URL}/draft/reanalyze`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ season: parseInt(season), teamName, picks }),
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.error || "Failed to re-analyze draft");
+    }
+    return response.json();
+  },
 };
+

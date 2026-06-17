@@ -4,6 +4,10 @@ export const TeamStatBar = ({
   percentile,
   type = "offensive",
 }) => {
+  const percentileNum = Number(percentile);
+  const hasPercentile = Number.isFinite(percentileNum);
+  const safePercentile = hasPercentile ? percentileNum : 0;
+
   let color = "from-cyan-500 to-sky-400";
   let valueColor = "text-cyan-300 light:text-cyan-600";
   let trackColor = "bg-[rgba(20,78,98,0.56)] light:bg-slate-200";
@@ -31,7 +35,7 @@ export const TeamStatBar = ({
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <span className={`text-sm lg:text-base font-bold ${valueColor}`}>
-            {percentile.toFixed(1)}
+            {hasPercentile ? safePercentile.toFixed(1) : "—"}
           </span>
         </div>
       </div>
@@ -40,7 +44,7 @@ export const TeamStatBar = ({
       >
         <div
           className={`h-2.5 rounded-full bg-gradient-to-r ${color} percentile-bar-fill ${shadowColor}`}
-          style={{ width: `${Math.min(100, Math.max(0, percentile))}%` }}
+          style={{ width: `${Math.min(100, Math.max(0, safePercentile))}%` }}
         />
       </div>
     </div>

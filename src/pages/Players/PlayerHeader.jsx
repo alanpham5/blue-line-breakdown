@@ -4,6 +4,8 @@ import { playerUtils } from "../../utils/playerUtils";
 import { ArchetypeBadge } from "./ArchetypeBadge";
 import { useTheme } from "../../providers/ThemeContext";
 import { useIsMobile } from "../../hooks/useIsMobile";
+import { BookmarkButton } from "../../components/BookmarkButton";
+import { ENTITY_TYPES } from "../../firebase/firestore";
 
 const BiometricItem = ({ icon: Icon, value, label }) => (
   <div className="flex items-center gap-1.5 text-gray-300 light:text-gray-600">
@@ -145,6 +147,18 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
                 )}
               </button>
             )}
+            <BookmarkButton
+              entityType={ENTITY_TYPES.PLAYER}
+              entityId={player.playerId}
+              size="sm"
+              meta={{
+                label: player.name,
+                player: player.name,
+                season: player.season,
+                position: player.position,
+                team: player.team,
+              }}
+            />
           </h2>
           <div className="space-y-3">
             <div className="flex flex-wrap items-center justify-center gap-2 text-[0.8125rem] font-semibold text-gray-300 light:text-gray-600 md:gap-1 lg:justify-start lg:text-[0.9375rem]">

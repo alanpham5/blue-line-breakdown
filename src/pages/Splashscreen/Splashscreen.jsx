@@ -1,12 +1,22 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
-import { Users, Shield, ArrowUpRight } from "lucide-react";
+import {
+  Users,
+  Shield,
+  ArrowUpRight,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { apiService } from "../../services/apiService";
 import { playerUtils } from "../../utils/playerUtils";
 import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { useTheme } from "../../providers/ThemeContext";
+import {
+  DraftLeaderboardPreview,
+  SectionAnchor,
+} from "../ExpansionDraft/DraftLeaderboardPreview";
 import "./Splashscreen.css";
 
 export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
@@ -111,13 +121,17 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
 
   const team = featuredData?.featuredTeam;
   const teamStats = team?.stats || {};
-  const offenseRating = teamStats.offense_rating ?? 0;
-  const defenseRating = teamStats.defense_rating ?? 0;
-  const aggressivenessRating = teamStats.aggressiveness_rating ?? 0;
-  const goalsPg = teamStats.goals_pg ?? 0;
-  const goalsAgainstPg = teamStats.goals_against_pg ?? 0;
-  const possession = teamStats.possession ?? 0;
-  const blockedShotsPg = teamStats.blocked_shots_pg ?? 0;
+  const num = (v, fallback = 0) => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : fallback;
+  };
+  const offenseRating = num(teamStats.offense_rating);
+  const defenseRating = num(teamStats.defense_rating);
+  const aggressivenessRating = num(teamStats.aggressiveness_rating);
+  const goalsPg = num(teamStats.goals_pg);
+  const goalsAgainstPg = num(teamStats.goals_against_pg);
+  const possession = num(teamStats.possession);
+  const blockedShotsPg = num(teamStats.blocked_shots_pg);
   const hasStats =
     offenseRating > 0 ||
     defenseRating > 0 ||
@@ -222,138 +236,116 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
             <section
               className={`space-y-4 ${enablePageLoadAnimations ? "fade-in-up-delay-1" : ""}`}
             >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-2xl font-bold tracking-tight text-white light:text-gray-900 flex items-center gap-2">
-                    <Users className="h-6 w-6 text-[#7ee340] light:text-[#2e6e14]" />
-                    Featured Players
-                  </h2>
-                </div>
-
-                {/* Scroll Indicators / Arrows */}
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleScrollLeft}
-                    className="p-2 rounded-full bg-white/5 border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 light:bg-slate-900/5 light:border-slate-900/10 light:text-slate-600 light:hover:bg-slate-900/10 transition"
-                    aria-label="Scroll Left"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2.5}
-                        d="M15 19l-7-7 7-7"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    onClick={handleScrollRight}
-                    className="p-2 rounded-full bg-white/5 border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 light:bg-slate-900/5 light:border-slate-900/10 light:text-slate-600 light:hover:bg-slate-900/10 transition"
-                    aria-label="Scroll Right"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2.5}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </button>
-                </div>
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-2xl font-bold tracking-tight text-white light:text-gray-900 flex items-center gap-2">
+                  <Users className="h-6 w-6 text-[#7ee340] light:text-[#2e6e14]" />
+                  Featured Players
+                </h2>
+                <SectionAnchor to="/players">Search Players</SectionAnchor>
               </div>
 
-              {/* Scrollable Container wrapper with fade-out mask */}
-              <div className="relative group">
-                <div
-                  ref={scrollContainerRef}
-                  onScroll={updateScrollEdges}
-                  className="flex gap-4 overflow-x-auto py-6 px-1 scroll-smooth snap-x snap-mandatory hide-scrollbar"
-                  style={{
-                    maskImage: playersMaskImage,
-                    WebkitMaskImage: playersMaskImage,
-                  }}
+              {/* Carousel with side controls */}
+              <div className="flex items-center gap-2 sm:gap-3">
+                <button
+                  type="button"
+                  onClick={handleScrollLeft}
+                  disabled={scrollEdges.atStart}
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:bg-white/10 hover:text-white disabled:pointer-events-none disabled:opacity-30 light:border-slate-200 light:bg-white/80 light:text-slate-600 light:hover:bg-white"
+                  aria-label="Scroll players left"
                 >
-                  {players.map((player) => {
-                    const pColor = playerUtils.getTeamColor(
-                      player.team,
-                      player.season,
-                      actualTheme
-                    );
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
 
-                    return (
-                      <div
-                        key={`${player.playerId}-${player.season}`}
-                        onClick={() =>
-                          navigate(
-                            `/players?player=${encodeURIComponent(
-                              player.name
-                            )}&season=${player.season}&position=${player.position}`
-                          )
-                        }
-                        className="snap-start flex-shrink-0 w-[170px] sm:w-[190px] liquid-glass rounded-2xl p-4 flex flex-col items-center text-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.4)] hover:scale-[1.02] select-none"
-                        style={{
-                          "--player-team-glow": `${pColor}1a`,
-                          boxShadow: `0 8px 32px 0 rgba(0,0,0,0.18)`,
-                        }}
-                      >
-                        {/* Player headshot */}
+                <div className="relative min-w-0 flex-1">
+                  <div
+                    ref={scrollContainerRef}
+                    onScroll={updateScrollEdges}
+                    className="flex gap-4 overflow-x-auto py-6 px-1 scroll-smooth snap-x snap-mandatory hide-scrollbar"
+                    style={{
+                      maskImage: playersMaskImage,
+                      WebkitMaskImage: playersMaskImage,
+                    }}
+                  >
+                    {players.map((player) => {
+                      const pColor = playerUtils.getTeamColor(
+                        player.team,
+                        player.season,
+                        actualTheme
+                      );
+
+                      return (
                         <div
-                          className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mb-3 relative flex items-center justify-center"
+                          key={`${player.playerId}-${player.season}`}
+                          onClick={() =>
+                            navigate(
+                              `/players?player=${encodeURIComponent(
+                                player.name
+                              )}&season=${player.season}&position=${player.position}`
+                            )
+                          }
+                          className="snap-start flex-shrink-0 w-[170px] sm:w-[190px] liquid-glass rounded-2xl p-4 flex flex-col items-center text-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.4)] hover:scale-[1.02] select-none"
                           style={{
-                            background: pColor,
-                            boxShadow: `0 0 0 4px ${pColor}1f, 0 6px 16px rgba(0,0,0,0.28)`,
+                            "--player-team-glow": `${pColor}1a`,
+                            boxShadow: `0 8px 32px 0 rgba(0,0,0,0.18)`,
                           }}
                         >
-                          <img
-                            src={playerUtils.getPlayerHeadshot(
-                              player.playerId,
-                              player.team,
-                              player.season
-                            )}
-                            alt={player.name}
-                            className="w-full h-full object-cover"
-                            loading="lazy"
-                            onError={(e) => {
-                              e.target.src = playerUtils.getDefaultHeadshot();
+                          <div
+                            className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mb-3 relative flex items-center justify-center"
+                            style={{
+                              background: pColor,
+                              boxShadow: `0 0 0 4px ${pColor}1f, 0 6px 16px rgba(0,0,0,0.28)`,
                             }}
-                          />
-                        </div>
+                          >
+                            <img
+                              src={playerUtils.getPlayerHeadshot(
+                                player.playerId,
+                                player.team,
+                                player.season
+                              )}
+                              alt={player.name}
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                              onError={(e) => {
+                                e.target.src = playerUtils.getDefaultHeadshot();
+                              }}
+                            />
+                          </div>
 
-                        {/* Player Info */}
-                        <h3 className="text-sm font-bold text-white light:text-gray-900 line-clamp-1 w-full">
-                          {player.name}
-                        </h3>
-                        <div className="text-[10px] sm:text-xs font-semibold text-gray-400 light:text-slate-500">
-                          {playerUtils.formatSeason(player.season)}
+                          <h3 className="text-sm font-bold text-white light:text-gray-900 line-clamp-1 w-full">
+                            {player.name}
+                          </h3>
+                          <div className="text-[10px] sm:text-xs font-semibold text-gray-400 light:text-slate-500">
+                            {playerUtils.formatSeason(player.season)}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                 </div>
+
+                <button
+                  type="button"
+                  onClick={handleScrollRight}
+                  disabled={scrollEdges.atEnd}
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:bg-white/10 hover:text-white disabled:pointer-events-none disabled:opacity-30 light:border-slate-200 light:bg-white/80 light:text-slate-600 light:hover:bg-white"
+                  aria-label="Scroll players right"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
               </div>
             </section>
 
-            {/* Featured Team Hero Section */}
+            {/* Featured Team */}
             {team && (
               <section
                 className={`space-y-4 ${enablePageLoadAnimations ? "fade-in-up-delay-2" : ""}`}
               >
-                <div>
+                <div className="flex items-center justify-between gap-3">
                   <h2 className="text-2xl font-bold tracking-tight text-white light:text-gray-900 flex items-center gap-2">
                     <Shield className="h-6 w-6 text-sky-400 light:text-sky-600" />
                     Featured Team
                   </h2>
+                  <SectionAnchor to="/teams">Search Teams</SectionAnchor>
                 </div>
 
                 <Link
@@ -516,6 +508,12 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                 </Link>
               </section>
             )}
+
+            {/* Community Drafts */}
+            <DraftLeaderboardPreview
+              className={enablePageLoadAnimations ? "fade-in-up-delay-3" : ""}
+              limit={5}
+            />
           </div>
 
           <Footer />

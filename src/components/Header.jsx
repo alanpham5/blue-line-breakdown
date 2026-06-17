@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { Users, Shield, Info } from "lucide-react";
-import { ThemeToggle } from "./ThemeToggle";
+import { Users, Shield, Info, Trophy } from "lucide-react";
+import { AccountMenu } from "./auth/AccountMenu";
 
 const navLinkClassName = ({ isActive }) =>
   [
@@ -114,18 +114,23 @@ export const Header = () => {
                     </NavLink>
                   </li>
                   <li>
+                    <NavLink to="/expansion-draft" className={navLinkClassName}>
+                      Draft
+                    </NavLink>
+                  </li>
+                  <li>
                     <NavLink to="/about" className={navLinkClassName}>
                       About
                     </NavLink>
                   </li>
                 </ul>
               </nav>
-              <ThemeToggle showLabel={true} />
+              <AccountMenu />
             </div>
 
             <div className="flex shrink-0 items-center gap-2">
               <div className="md:hidden">
-                <ThemeToggle showLabel={false} />
+                <AccountMenu />
               </div>
             </div>
           </div>
@@ -148,6 +153,10 @@ export const Header = () => {
           <NavLink to="/teams" className={bottomNavLinkClassName}>
             <Shield className="h-5 w-5 mb-0.5" />
             <span>Teams</span>
+          </NavLink>
+          <NavLink to="/expansion-draft" className={bottomNavLinkClassName}>
+            <Trophy className="h-5 w-5 mb-0.5" />
+            <span>Draft</span>
           </NavLink>
           <NavLink to="/about" className={bottomNavLinkClassName}>
             <Info className="h-5 w-5 mb-0.5" />
