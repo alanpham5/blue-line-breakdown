@@ -20,7 +20,9 @@ const App = () => {
             <Route
               path="/"
               element={
-                <Splashscreen enablePageLoadAnimations={enablePageLoadAnimations} />
+                <Splashscreen
+                  enablePageLoadAnimations={enablePageLoadAnimations}
+                />
               }
             />
             <Route

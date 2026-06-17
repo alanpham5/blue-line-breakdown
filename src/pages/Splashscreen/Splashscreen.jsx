@@ -110,6 +110,22 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
   };
 
   const team = featuredData?.featuredTeam;
+  const teamStats = team?.stats || {};
+  const offenseRating = teamStats.offense_rating ?? 0;
+  const defenseRating = teamStats.defense_rating ?? 0;
+  const aggressivenessRating = teamStats.aggressiveness_rating ?? 0;
+  const goalsPg = teamStats.goals_pg ?? 0;
+  const goalsAgainstPg = teamStats.goals_against_pg ?? 0;
+  const possession = teamStats.possession ?? 0;
+  const blockedShotsPg = teamStats.blocked_shots_pg ?? 0;
+  const hasStats =
+    offenseRating > 0 ||
+    defenseRating > 0 ||
+    aggressivenessRating > 0 ||
+    goalsPg > 0 ||
+    goalsAgainstPg > 0 ||
+    possession > 0 ||
+    blockedShotsPg > 0;
   const players = featuredData?.players || [];
 
   // Fade scroll edges only when there is hidden content in that direction
@@ -350,7 +366,11 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
 
                   <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center pt-6 md:pt-4">
                     {/* Left Column - Team info */}
-                    <div className="md:col-span-5 flex flex-col items-center text-center">
+                    <div
+                      className={`${
+                        hasStats ? "md:col-span-5" : "md:col-span-12"
+                      } flex flex-col items-center text-center`}
+                    >
                       <div className="relative w-32 h-32 sm:w-40 sm:h-40 flex items-center justify-center mb-4">
                         {teamWonCup && (
                           <img
@@ -391,105 +411,107 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                     </div>
 
                     {/* Right Column - Stats Details */}
-                    <div className="md:col-span-7 space-y-5">
-                      {/* Metric bars */}
-                      <div className="liquid-glass rounded-2xl p-5 sm:p-6 space-y-4">
-                        {/* Offense Rating */}
-                        <div className="space-y-1.5">
-                          <div className="flex justify-between items-center text-xs sm:text-sm">
-                            <span className="font-semibold text-gray-300 light:text-gray-600">
-                              Offense Percentile
-                            </span>
-                            <span className="font-extrabold text-sky-400 light:text-sky-600">
-                              {team.stats.offense_rating.toFixed(1)}%
-                            </span>
+                    {hasStats && (
+                      <div className="md:col-span-7 space-y-5">
+                        {/* Metric bars */}
+                        <div className="liquid-glass rounded-2xl p-5 sm:p-6 space-y-4">
+                          {/* Offense Rating */}
+                          <div className="space-y-1.5">
+                            <div className="flex justify-between items-center text-xs sm:text-sm">
+                              <span className="font-semibold text-gray-300 light:text-gray-600">
+                                Offense Percentile
+                              </span>
+                              <span className="font-extrabold text-sky-400 light:text-sky-600">
+                                {offenseRating.toFixed(1)}%
+                              </span>
+                            </div>
+                            <div className="w-full h-2 rounded-full bg-black/20 overflow-hidden">
+                              <div
+                                className="h-full rounded-full bg-gradient-to-r from-sky-500 to-sky-300 shadow-[0_0_10px_rgba(56,189,248,0.3)]"
+                                style={{ width: `${offenseRating}%` }}
+                              />
+                            </div>
                           </div>
-                          <div className="w-full h-2 rounded-full bg-black/20 overflow-hidden">
-                            <div
-                              className="h-full rounded-full bg-gradient-to-r from-sky-500 to-sky-300 shadow-[0_0_10px_rgba(56,189,248,0.3)]"
-                              style={{ width: `${team.stats.offense_rating}%` }}
-                            />
+
+                          {/* Defense Rating */}
+                          <div className="space-y-1.5">
+                            <div className="flex justify-between items-center text-xs sm:text-sm">
+                              <span className="font-semibold text-gray-300 light:text-gray-600">
+                                Defense Percentile
+                              </span>
+                              <span className="font-extrabold text-rose-400 light:text-rose-600">
+                                {defenseRating.toFixed(1)}%
+                              </span>
+                            </div>
+                            <div className="w-full h-2 rounded-full bg-black/20 overflow-hidden">
+                              <div
+                                className="h-full rounded-full bg-gradient-to-r from-rose-500 to-rose-300 shadow-[0_0_10px_rgba(251,113,133,0.3)]"
+                                style={{ width: `${defenseRating}%` }}
+                              />
+                            </div>
+                          </div>
+
+                          {/* Aggressiveness Rating */}
+                          <div className="space-y-1.5">
+                            <div className="flex justify-between items-center text-xs sm:text-sm">
+                              <span className="font-semibold text-gray-300 light:text-gray-600">
+                                Aggressiveness Percentile
+                              </span>
+                              <span className="font-extrabold text-amber-400 light:text-amber-600">
+                                {aggressivenessRating.toFixed(1)}%
+                              </span>
+                            </div>
+                            <div className="w-full h-2 rounded-full bg-black/20 overflow-hidden">
+                              <div
+                                className="h-full rounded-full bg-gradient-to-r from-amber-500 to-amber-300 shadow-[0_0_10px_rgba(251,191,36,0.3)]"
+                                style={{
+                                  width: `${aggressivenessRating}%`,
+                                }}
+                              />
+                            </div>
                           </div>
                         </div>
 
-                        {/* Defense Rating */}
-                        <div className="space-y-1.5">
-                          <div className="flex justify-between items-center text-xs sm:text-sm">
-                            <span className="font-semibold text-gray-300 light:text-gray-600">
-                              Defense Percentile
-                            </span>
-                            <span className="font-extrabold text-rose-400 light:text-rose-600">
-                              {team.stats.defense_rating.toFixed(1)}%
-                            </span>
+                        {/* Summary Metrics Grid */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                          <div className="liquid-glass rounded-2xl p-3 text-center">
+                            <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">
+                              Goals PG
+                            </div>
+                            <div className="text-xl font-extrabold text-white light:text-gray-900">
+                              {goalsPg.toFixed(2)}
+                            </div>
                           </div>
-                          <div className="w-full h-2 rounded-full bg-black/20 overflow-hidden">
-                            <div
-                              className="h-full rounded-full bg-gradient-to-r from-rose-500 to-rose-300 shadow-[0_0_10px_rgba(251,113,133,0.3)]"
-                              style={{ width: `${team.stats.defense_rating}%` }}
-                            />
-                          </div>
-                        </div>
 
-                        {/* Aggressiveness Rating */}
-                        <div className="space-y-1.5">
-                          <div className="flex justify-between items-center text-xs sm:text-sm">
-                            <span className="font-semibold text-gray-300 light:text-gray-600">
-                              Aggressiveness Percentile
-                            </span>
-                            <span className="font-extrabold text-amber-400 light:text-amber-600">
-                              {team.stats.aggressiveness_rating.toFixed(1)}%
-                            </span>
+                          <div className="liquid-glass rounded-2xl p-3 text-center">
+                            <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">
+                              Goals Against
+                            </div>
+                            <div className="text-xl font-extrabold text-white light:text-gray-900">
+                              {goalsAgainstPg.toFixed(2)}
+                            </div>
                           </div>
-                          <div className="w-full h-2 rounded-full bg-black/20 overflow-hidden">
-                            <div
-                              className="h-full rounded-full bg-gradient-to-r from-amber-500 to-amber-300 shadow-[0_0_10px_rgba(251,191,36,0.3)]"
-                              style={{
-                                width: `${team.stats.aggressiveness_rating}%`,
-                              }}
-                            />
+
+                          <div className="liquid-glass rounded-2xl p-3 text-center">
+                            <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">
+                              Possession
+                            </div>
+                            <div className="text-xl font-extrabold text-white light:text-gray-900">
+                              {(possession * 100).toFixed(1)}%
+                            </div>
+                          </div>
+
+                          <div className="liquid-glass rounded-2xl p-3 text-center">
+                            <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">
+                              Blocked Shots
+                            </div>
+                            <div className="text-xl font-extrabold text-white light:text-gray-900">
+                              {blockedShotsPg.toFixed(1)}
+                            </div>
                           </div>
                         </div>
                       </div>
-
-                      {/* Summary Metrics Grid */}
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        <div className="liquid-glass rounded-2xl p-3 text-center">
-                          <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">
-                            Goals PG
-                          </div>
-                          <div className="text-xl font-extrabold text-white light:text-gray-900">
-                            {team.stats.goals_pg.toFixed(2)}
-                          </div>
-                        </div>
-
-                        <div className="liquid-glass rounded-2xl p-3 text-center">
-                          <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">
-                            Goals Against
-                          </div>
-                          <div className="text-xl font-extrabold text-white light:text-gray-900">
-                            {team.stats.goals_against_pg.toFixed(2)}
-                          </div>
-                        </div>
-
-                        <div className="liquid-glass rounded-2xl p-3 text-center">
-                          <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">
-                            Possession
-                          </div>
-                          <div className="text-xl font-extrabold text-white light:text-gray-900">
-                            {(team.stats.possession * 100).toFixed(1)}%
-                          </div>
-                        </div>
-
-                        <div className="liquid-glass rounded-2xl p-3 text-center">
-                          <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">
-                            Blocked Shots
-                          </div>
-                          <div className="text-xl font-extrabold text-white light:text-gray-900">
-                            {team.stats.blocked_shots_pg.toFixed(1)}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    )}
                   </div>
                 </Link>
               </section>
