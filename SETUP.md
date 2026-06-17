@@ -4,7 +4,7 @@ This guide covers everything needed to enable **Authentication**, **Cloud
 Firestore bookmarking**, and the **Expansion Draft community leaderboard**.
 
 The frontend uses the **Firebase Web SDK v10 (modular)**. All wiring lives under
-[`src/firebase/`](src/firebase/) and reads configuration from
+[`src/lib/firebase/`](src/lib/firebase/) and reads configuration from
 `REACT_APP_FIREBASE_*` environment variables — no keys are committed.
 
 ---
@@ -121,31 +121,41 @@ users/{uid}                      (owner-only)
                                  { status:'in_progress', season:number,
                                    teamName, picks:{ [team]: player },
                                    pickCount:number, updatedAt }
-  drafts/{autoId}                completed franchise
+  drafts/{autoId}                completed franchise (source of truth)
                                  { status:'complete', season:number, teamName,
-                                   profile, createdAt, updatedAt }
+                                   picks:[player],            // roster only —
+                                   pickCount:number,          // metrics are
+                                   postedToLeaderboard?:bool, // recalculated on
+                                   createdAt, updatedAt }      // every view
 
-expansion_drafts/{autoId}        (public read)
-  { ownerId, ownerName, teamName, season:number,
-    profile: {                     // full /draft/analyze response
+expansion_drafts/{draftId}       (public read; id == the saved draft's id)
+  { draftId,                       // reference back to the saved draft
+    ownerId, ownerName, teamName, season:number,
+    profile: {                     // metrics snapshot, captured once at post
       stats, roster, similarTeams, predictedRecord, draftSummary },
-    picks: profile.roster,         // legacy mirror (franchise-ordered roster)
-    metrics: profile.draftSummary, // legacy mirror
+    picks: profile.roster,         // roster snapshot (franchise-ordered)
+    metrics: profile.draftSummary, // metrics snapshot
     likes:number, likedBy:[uid], createdAt }
 ```
+
+A saved draft is private and stores only its roster; team metrics are
+recalculated by the backend whenever the draft is viewed. A leaderboard entry
+is a public snapshot that reuses the saved draft's id, so a draft has at most
+one entry, posting is idempotent, deleting a draft cascades to its entry, and an
+entry can never reference a missing or another user's draft.
 
 ## Security rules summary
 
 `firestore.rules` enforces:
 
-| Path                         | Read   | Write                                                                        |
-| ---------------------------- | ------ | ---------------------------------------------------------------------------- |
-| `users/{uid}`                | owner  | owner only                                                                   |
-| `users/{uid}/bookmarks/{id}` | owner  | owner only                                                                   |
-| `users/{uid}/drafts/{id}`    | owner  | owner only (private saved drafts — no email gate)                            |
-| `expansion_drafts/{id}`      | public | **create**: signed-in **+ verified email** + `ownerId == uid` + `likes == 0` |
-|                              |        | **update**: signed-in, only `likes`/`likedBy` may change, only your own uid  |
-|                              |        | **delete**: owner only                                                       |
+| Path                         | Read   | Write                                                                                                                                   |
+| ---------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `users/{uid}`                | owner  | owner only                                                                                                                              |
+| `users/{uid}/bookmarks/{id}` | owner  | owner only                                                                                                                              |
+| `users/{uid}/drafts/{id}`    | owner  | owner only (private saved drafts — no email gate)                                                                                       |
+| `expansion_drafts/{id}`      | public | **create**: verified email + `ownerId == uid` + `draftId == id` + `likes == 0` + the owned saved draft `users/{uid}/drafts/{id}` exists |
+|                              |        | **update**: signed-in, only `likes`/`likedBy` may change, only your own uid                                                             |
+|                              |        | **delete**: owner only                                                                                                                  |
 
 This guarantees users can only touch their own data, and posting to the
 community leaderboard requires a verified email (matching the in-app

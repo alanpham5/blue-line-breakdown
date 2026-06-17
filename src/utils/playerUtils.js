@@ -1,19 +1,15 @@
-import { stanleyCupChampions } from "../data/stanleyCupData";
-
+import { stanleyCupChampions } from "data/stanleyCupData";
 export const playerUtils = {
   getCorsWrappedUrl(url) {
     if (!url) return url;
-    // Only wrap absolute external HTTP/HTTPS URLs
     if (!url.startsWith("http://") && !url.startsWith("https://")) {
       return url;
     }
-    // Skip if it points to our own host (same origin)
     if (url.includes(window.location.host)) {
       return url;
     }
     return `https://images.weserv.nl/?url=${encodeURIComponent(url)}`;
   },
-
   getPlayerHeadshot(playerId, team = null, season = null) {
     if (playerId === 8484801 && parseInt(season) === 2025) {
       return "/celebrini-cupcake.png";
@@ -27,7 +23,6 @@ export const playerUtils = {
     if (playerId === 8471675 && parseInt(season) === 2009) {
       return "/crosby.png";
     }
-
     if (team && season) {
       const seasonYear = parseInt(season);
       const nextYear = seasonYear + 1;
@@ -36,16 +31,13 @@ export const playerUtils = {
         team.toUpperCase() == "ARI" && seasonYear <= 2013
           ? "PHX"
           : team.toUpperCase();
-
       return `https://assets.nhle.com/mugs/nhl/${yearRange}/${teamCode}/${playerId}.png`;
     }
     return `https://assets.nhle.com/mugs/nhl/latest/${playerId}.png`;
   },
-
   getDefaultHeadshot() {
     return "https://assets.nhle.com/mugs/nhl/default-skater.png";
   },
-
   getTeamColor(teamCode, season = null, actualTheme = "dark") {
     const retroColors = {
       NSH: [
@@ -162,46 +154,179 @@ export const playerUtils = {
         },
       ],
     };
-
     const teamBrand = {
-      ANA: { primary: "#CF4520", secondary: "#000000", worksOnDark: true },
-      ARI: { primary: "#6F263D", secondary: "#862633", worksOnDark: false },
-      ATL: { primary: "#041E42", secondary: "#5C88DA", worksOnDark: false },
-      BOS: { primary: "#000000", secondary: "#FFB81C", worksOnDark: false },
-      BUF: { primary: "#003087", secondary: "#FFB81C", worksOnDark: false },
-      CGY: { primary: "#C8102E", secondary: "#F1BE48", worksOnDark: true },
-      CHI: { primary: "#CF0A2C", secondary: "#000000", worksOnDark: true },
-      CAR: { primary: "#CC0000", secondary: "#000000", worksOnDark: true },
-      COL: { primary: "#6F263D", secondary: "#236192", worksOnDark: true },
-      CBJ: { primary: "#002654", secondary: "#CE1126", worksOnDark: false },
-      DAL: { primary: "#006847", secondary: "#8F8F8C", worksOnDark: true },
-      DET: { primary: "#CE1126", secondary: "#FFFFFF", worksOnDark: true },
-      EDM: { primary: "#00205B", secondary: "#FF4C00", worksOnDark: false },
-      FLA: { primary: "#C8102E", secondary: "#041E42", worksOnDark: true },
-      LAK: { primary: "#000000", secondary: "#AFB7BA", worksOnDark: false },
-      MIN: { primary: "#154734", secondary: "#A6192E", worksOnDark: false },
-      MTL: { primary: "#AF1E2D", secondary: "#192168", worksOnDark: true },
-      NJD: { primary: "#CE1126", secondary: "#000000", worksOnDark: true },
-      NSH: { primary: "#efad1c", secondary: "#041E42", worksOnDark: true },
-      NYI: { primary: "#003087", secondary: "#FC4C02", worksOnDark: false },
-      NYR: { primary: "#0038A8", secondary: "#CE1126", worksOnDark: false },
-      OTT: { primary: "#C52032", secondary: "#D69F0F", worksOnDark: true },
-      PHI: { primary: "#F74902", secondary: "#000000", worksOnDark: true },
-      PIT: { primary: "#000000", secondary: "#ffb71cee", worksOnDark: false },
-      SEA: { primary: "#68A2B9", secondary: "#001628", worksOnDark: true },
-      SJS: { primary: "#006D75", secondary: "#000000", worksOnDark: true },
-      STL: { primary: "#0072CE", secondary: "#FCB514", worksOnDark: false },
-      TBL: { primary: "#002868", secondary: "#002c7e", worksOnDark: false },
-      TOR: { primary: "#00205B", secondary: "#002c7e", worksOnDark: false },
-      UTA: { primary: "#6CACE3", secondary: "#000000", worksOnDark: true },
-      VAN: { primary: "#00205B", secondary: "#00843D", worksOnDark: false },
-      VGK: { primary: "#B4975A", secondary: "#333F42", worksOnDark: true },
-      WSH: { primary: "#C8102E", secondary: "#041E42", worksOnDark: true },
-      WPG: { primary: "#041E42", secondary: "#0363C2", worksOnDark: false },
+      ANA: {
+        primary: "#CF4520",
+        secondary: "#000000",
+        worksOnDark: true,
+      },
+      ARI: {
+        primary: "#6F263D",
+        secondary: "#862633",
+        worksOnDark: false,
+      },
+      ATL: {
+        primary: "#041E42",
+        secondary: "#5C88DA",
+        worksOnDark: false,
+      },
+      BOS: {
+        primary: "#000000",
+        secondary: "#FFB81C",
+        worksOnDark: false,
+      },
+      BUF: {
+        primary: "#003087",
+        secondary: "#FFB81C",
+        worksOnDark: false,
+      },
+      CGY: {
+        primary: "#C8102E",
+        secondary: "#F1BE48",
+        worksOnDark: true,
+      },
+      CHI: {
+        primary: "#CF0A2C",
+        secondary: "#000000",
+        worksOnDark: true,
+      },
+      CAR: {
+        primary: "#CC0000",
+        secondary: "#000000",
+        worksOnDark: true,
+      },
+      COL: {
+        primary: "#6F263D",
+        secondary: "#236192",
+        worksOnDark: true,
+      },
+      CBJ: {
+        primary: "#002654",
+        secondary: "#CE1126",
+        worksOnDark: false,
+      },
+      DAL: {
+        primary: "#006847",
+        secondary: "#8F8F8C",
+        worksOnDark: true,
+      },
+      DET: {
+        primary: "#CE1126",
+        secondary: "#FFFFFF",
+        worksOnDark: true,
+      },
+      EDM: {
+        primary: "#00205B",
+        secondary: "#FF4C00",
+        worksOnDark: false,
+      },
+      FLA: {
+        primary: "#C8102E",
+        secondary: "#041E42",
+        worksOnDark: true,
+      },
+      LAK: {
+        primary: "#000000",
+        secondary: "#AFB7BA",
+        worksOnDark: false,
+      },
+      MIN: {
+        primary: "#154734",
+        secondary: "#A6192E",
+        worksOnDark: false,
+      },
+      MTL: {
+        primary: "#AF1E2D",
+        secondary: "#192168",
+        worksOnDark: true,
+      },
+      NJD: {
+        primary: "#CE1126",
+        secondary: "#000000",
+        worksOnDark: true,
+      },
+      NSH: {
+        primary: "#efad1c",
+        secondary: "#041E42",
+        worksOnDark: true,
+      },
+      NYI: {
+        primary: "#003087",
+        secondary: "#FC4C02",
+        worksOnDark: false,
+      },
+      NYR: {
+        primary: "#0038A8",
+        secondary: "#CE1126",
+        worksOnDark: false,
+      },
+      OTT: {
+        primary: "#C52032",
+        secondary: "#D69F0F",
+        worksOnDark: true,
+      },
+      PHI: {
+        primary: "#F74902",
+        secondary: "#000000",
+        worksOnDark: true,
+      },
+      PIT: {
+        primary: "#000000",
+        secondary: "#ffb71cee",
+        worksOnDark: false,
+      },
+      SEA: {
+        primary: "#68A2B9",
+        secondary: "#001628",
+        worksOnDark: true,
+      },
+      SJS: {
+        primary: "#006D75",
+        secondary: "#000000",
+        worksOnDark: true,
+      },
+      STL: {
+        primary: "#0072CE",
+        secondary: "#FCB514",
+        worksOnDark: false,
+      },
+      TBL: {
+        primary: "#002868",
+        secondary: "#002c7e",
+        worksOnDark: false,
+      },
+      TOR: {
+        primary: "#00205B",
+        secondary: "#002c7e",
+        worksOnDark: false,
+      },
+      UTA: {
+        primary: "#6CACE3",
+        secondary: "#000000",
+        worksOnDark: true,
+      },
+      VAN: {
+        primary: "#00205B",
+        secondary: "#00843D",
+        worksOnDark: false,
+      },
+      VGK: {
+        primary: "#B4975A",
+        secondary: "#333F42",
+        worksOnDark: true,
+      },
+      WSH: {
+        primary: "#C8102E",
+        secondary: "#041E42",
+        worksOnDark: true,
+      },
+      WPG: {
+        primary: "#041E42",
+        secondary: "#0363C2",
+        worksOnDark: false,
+      },
     };
-
     let brand = teamBrand[teamCode];
-
     if (retroColors[teamCode] && season) {
       const seasonYear = parseInt(season);
       for (const era of retroColors[teamCode]) {
@@ -214,17 +339,13 @@ export const playerUtils = {
         }
       }
     }
-
     if (!brand) return "#AFB7BA";
-
     if (actualTheme === "light") {
       return brand.primary;
     }
-
     if (brand.worksOnDark) {
       return brand.primary;
     }
-
     if (
       brand.secondary &&
       brand.secondary !== "#FFFFFF" &&
@@ -232,13 +353,10 @@ export const playerUtils = {
     ) {
       return brand.secondary;
     }
-
     return brand.primary;
   },
-
   getSurfaceGradient(color, actualTheme = "dark") {
     if (!color) return color;
-
     const topShade =
       actualTheme === "light"
         ? "rgba(7, 12, 20, 0.22)"
@@ -251,63 +369,49 @@ export const playerUtils = {
       actualTheme === "light"
         ? "rgba(255, 255, 255, 0.1)"
         : "rgba(255, 255, 255, 0.12)";
-
     return `linear-gradient(180deg, ${topShade} 0%, ${midShade} 38%, rgba(255, 255, 255, 0.02) 72%, ${bottomLift} 100%), linear-gradient(180deg, ${color} 0%, ${color} 100%)`;
   },
-
   toRgba(color, alpha = 1) {
     if (typeof color !== "string" || !color.startsWith("#")) return color;
-
     let hex = color.slice(1);
-
     if (hex.length === 3 || hex.length === 4) {
       hex = hex
         .split("")
         .map((char) => char + char)
         .join("");
     }
-
     let baseAlpha = 1;
     if (hex.length === 8) {
       baseAlpha = parseInt(hex.slice(6, 8), 16) / 255;
       hex = hex.slice(0, 6);
     }
-
     if (hex.length !== 6) return color;
-
     const r = parseInt(hex.slice(0, 2), 16);
     const g = parseInt(hex.slice(2, 4), 16);
     const b = parseInt(hex.slice(4, 6), 16);
     const finalAlpha = Math.max(0, Math.min(1, alpha * baseAlpha));
-
     return `rgba(${r}, ${g}, ${b}, ${finalAlpha})`;
   },
-
   getCardGradient(color, actualTheme = "dark") {
     if (!color) return color;
-
     const topTint = this.toRgba(color, actualTheme === "light" ? 0.2 : 0.26);
     const upperTint = this.toRgba(color, actualTheme === "light" ? 0.11 : 0.14);
     const lowerTint = this.toRgba(color, actualTheme === "light" ? 0.04 : 0.05);
     const transparentTint = this.toRgba(color, 0);
-
     return `linear-gradient(180deg, ${topTint} 0%, ${upperTint} 18%, ${lowerTint} 32%, ${transparentTint} 54%, ${transparentTint} 100%)`;
   },
-
   getTeamColorGradient(teamCode, season = null, actualTheme = "dark") {
     return this.getSurfaceGradient(
       this.getTeamColor(teamCode, season, actualTheme),
       actualTheme
     );
   },
-
   getTeamCardGradient(teamCode, season = null, actualTheme = "dark") {
     return this.getCardGradient(
       this.getTeamColor(teamCode, season, actualTheme),
       actualTheme
     );
   },
-
   getFullTeamName(teamCode, season = null) {
     if (teamCode.toUpperCase() === "ARI" && season <= 2013) {
       return "Phoenix Coyotes";
@@ -351,25 +455,18 @@ export const playerUtils = {
       WSH: "Washington Capitals",
       WPG: "Winnipeg Jets",
     };
-
     return teamNames[teamCode.toUpperCase()] || teamCode.toUpperCase();
   },
-
   getTeamLogoUrl(teamCode, season = null, actualTheme = "dark") {
     if (!teamCode) return null;
-
     const suffix = actualTheme === "light" ? "light" : "dark";
-
     const applySuffix = (path) =>
       path.replace(/_(?:dark)\.svg$/i, `_${suffix}.svg`);
-
     const base = "https://assets.nhle.com/logos/nhl/svg";
     const teamCodeUpper = teamCode.toUpperCase();
-
     if (teamCodeUpper === "WSH") {
       return `${base}/${applySuffix("WSH_secondary_dark.svg")}`;
     }
-
     if (!season) {
       if (teamCodeUpper === "ATL") {
         return `${base}/${applySuffix("ATL_19992000-20102011_dark.svg")}`;
@@ -379,9 +476,7 @@ export const playerUtils = {
       }
       return `${base}/${teamCodeUpper}_${suffix}.svg`;
     }
-
     const seasonYear = parseInt(season);
-
     if (teamCodeUpper === "TOR" && seasonYear == 2016) {
       return "/leafs-100.svg";
     }
@@ -404,45 +499,185 @@ export const playerUtils = {
         ? `${base}/NSH_19981999-20102011_light.svg`
         : `${base}/NSH_19981999-20102011_dark.svg`;
     }
-
     const logoEras = {
-      ATL: [{ start: 1999, end: 2010, url: "ATL_19992000-20102011_dark.svg" }],
-      ARI: [{ start: 2003, end: 2020, url: "PHX_20032004-20132014_dark.svg" }],
+      ATL: [
+        {
+          start: 1999,
+          end: 2010,
+          url: "ATL_19992000-20102011_dark.svg",
+        },
+      ],
+      ARI: [
+        {
+          start: 2003,
+          end: 2020,
+          url: "PHX_20032004-20132014_dark.svg",
+        },
+      ],
       BUF: [
-        { start: 2006, end: 2009, url: "BUF_20062007-20092010_dark.svg" },
-        { start: 2010, end: 2019, url: "BUF_20102011-20192020_dark.svg" },
+        {
+          start: 2006,
+          end: 2009,
+          url: "BUF_20062007-20092010_dark.svg",
+        },
+        {
+          start: 2010,
+          end: 2019,
+          url: "BUF_20102011-20192020_dark.svg",
+        },
       ],
-      CGY: [{ start: 1994, end: 2019, url: "CGY_19941995-20192020_dark.svg" }],
-      CHI: [{ start: 2025, end: 2025, url: "CHI_19651966-19881989_dark.svg" }],
-      DET: [{ start: 2025, end: 2025, url: "DET_19321933-19471948_dark.svg" }],
+      CGY: [
+        {
+          start: 1994,
+          end: 2019,
+          url: "CGY_19941995-20192020_dark.svg",
+        },
+      ],
+      CHI: [
+        {
+          start: 2025,
+          end: 2025,
+          url: "CHI_19651966-19881989_dark.svg",
+        },
+      ],
+      DET: [
+        {
+          start: 2025,
+          end: 2025,
+          url: "DET_19321933-19471948_dark.svg",
+        },
+      ],
       EDM: [
-        { start: 1996, end: 2010, url: "EDM_19971998-20102011_dark.svg" },
-        { start: 2017, end: 2021, url: "EDM_20172018-20212022_dark.svg" },
+        {
+          start: 1996,
+          end: 2010,
+          url: "EDM_19971998-20102011_dark.svg",
+        },
+        {
+          start: 2017,
+          end: 2021,
+          url: "EDM_20172018-20212022_dark.svg",
+        },
       ],
-      NYI: [{ start: 1997, end: 2009, url: "NYI_19971998-20092010_dark.svg" }],
-      OTT: [{ start: 2007, end: 2019, url: "OTT_20072008-20192020_dark.svg" }],
-      TBL: [{ start: 2008, end: 2010, url: "TBL_20072008-20102011_dark.svg" }],
-      ANA: [{ start: 2006, end: 2023, url: "ANA_20132014-20232024_dark.svg" }],
-      DAL: [{ start: 1994, end: 2012, url: "DAL_19941995-20122013_dark.svg" }],
-      FLA: [{ start: 1999, end: 2015, url: "FLA_19992000-20152016_dark.svg" }],
-      MTL: [{ start: 2009, end: 2010, url: "MTL_19171918-19181919_dark.svg" }],
-      NYR: [{ start: 2025, end: 2025, url: "NYR_19261927-19341935_dark.svg" }],
-      PIT: [{ start: 2006, end: 2015, url: "PIT_20062007-20152016_dark.svg" }],
+      NYI: [
+        {
+          start: 1997,
+          end: 2009,
+          url: "NYI_19971998-20092010_dark.svg",
+        },
+      ],
+      OTT: [
+        {
+          start: 2007,
+          end: 2019,
+          url: "OTT_20072008-20192020_dark.svg",
+        },
+      ],
+      TBL: [
+        {
+          start: 2008,
+          end: 2010,
+          url: "TBL_20072008-20102011_dark.svg",
+        },
+      ],
+      ANA: [
+        {
+          start: 2006,
+          end: 2023,
+          url: "ANA_20132014-20232024_dark.svg",
+        },
+      ],
+      DAL: [
+        {
+          start: 1994,
+          end: 2012,
+          url: "DAL_19941995-20122013_dark.svg",
+        },
+      ],
+      FLA: [
+        {
+          start: 1999,
+          end: 2015,
+          url: "FLA_19992000-20152016_dark.svg",
+        },
+      ],
+      MTL: [
+        {
+          start: 2009,
+          end: 2010,
+          url: "MTL_19171918-19181919_dark.svg",
+        },
+      ],
+      NYR: [
+        {
+          start: 2025,
+          end: 2025,
+          url: "NYR_19261927-19341935_dark.svg",
+        },
+      ],
+      PIT: [
+        {
+          start: 2006,
+          end: 2015,
+          url: "PIT_20062007-20152016_dark.svg",
+        },
+      ],
       LAK: [
-        { start: 2002, end: 2009, url: "LAK_20022003-20092010_dark.svg" },
-        { start: 2010, end: 2010, url: "LAK_20102011_dark.svg" },
-        { start: 2011, end: 2018, url: "LAK_20112012-20182019_dark.svg" },
-        { start: 2019, end: 2023, url: "LAK_20192020-20232024_dark.svg" },
+        {
+          start: 2002,
+          end: 2009,
+          url: "LAK_20022003-20092010_dark.svg",
+        },
+        {
+          start: 2010,
+          end: 2010,
+          url: "LAK_20102011_dark.svg",
+        },
+        {
+          start: 2011,
+          end: 2018,
+          url: "LAK_20112012-20182019_dark.svg",
+        },
+        {
+          start: 2019,
+          end: 2023,
+          url: "LAK_20192020-20232024_dark.svg",
+        },
       ],
       BOS: [
-        { start: 2008, end: 2022, url: "BOS_20082009-20222023_dark.svg" },
-        { start: 2024, end: 2024, url: "BOS_20082009-20222023_dark.svg" },
+        {
+          start: 2008,
+          end: 2022,
+          url: "BOS_20082009-20222023_dark.svg",
+        },
+        {
+          start: 2024,
+          end: 2024,
+          url: "BOS_20082009-20222023_dark.svg",
+        },
       ],
-      TOR: [{ start: 1987, end: 2015, url: "TOR_19871988-20152016_dark.svg" }],
-      STL: [{ start: 2008, end: 2024, url: "STL_20082009-20242025_light.svg" }],
-      UTA: [{ start: 2024, end: 2024, url: "UTA_20242025-20242025_dark.svg" }],
+      TOR: [
+        {
+          start: 1987,
+          end: 2015,
+          url: "TOR_19871988-20152016_dark.svg",
+        },
+      ],
+      STL: [
+        {
+          start: 2008,
+          end: 2024,
+          url: "STL_20082009-20242025_light.svg",
+        },
+      ],
+      UTA: [
+        {
+          start: 2024,
+          end: 2024,
+          url: "UTA_20242025-20242025_dark.svg",
+        },
+      ],
     };
-
     if (logoEras[teamCodeUpper]) {
       for (const era of logoEras[teamCodeUpper]) {
         if (seasonYear >= era.start && seasonYear <= era.end) {
@@ -450,7 +685,6 @@ export const playerUtils = {
         }
       }
     }
-
     if (
       teamCodeUpper === "CGY" &&
       seasonYear >= 2020 &&
@@ -458,23 +692,19 @@ export const playerUtils = {
     ) {
       return `${base}/CGY_hdr_dark.svg`;
     }
-
     return `${base}/${teamCodeUpper}_${suffix}.svg`;
   },
-
   didWinStanleyCup(team, season) {
     return stanleyCupChampions.hasOwnProperty(season)
       ? stanleyCupChampions[season] === team
       : false;
   },
-
   formatSeason(year) {
     const yearNum = parseInt(year);
     if (isNaN(yearNum)) return year;
     const nextYear = yearNum + 1;
     return `${yearNum}-${nextYear}`;
   },
-
   formatStatName(statKey) {
     const statNames = {
       SHOT_TAL: "Shooting Talent",
@@ -483,15 +713,12 @@ export const playerUtils = {
       PASS_FREQ: "Passing Tendency",
       PP_USAGE: "Power Play Usage",
       ONICE_IMP: "On-Ice Impact",
-
       POS_CTRL: "Possession Control",
       BLK: "Shot Blocking",
       HIT: "Physical Engagement",
       TAKE: "Takeaways",
       CH_SUP: "Chance Suppression",
       GOAL_PREV: "Goal Prevention",
-
-      // Goalie Stats
       SV_PCT: "Save Percentage",
       GSAX: "Goals Saved Above Expected (GSAX/60)",
       HD_SV: "High-Danger Save %",
@@ -507,7 +734,6 @@ export const playerUtils = {
     };
     return statNames[statKey] || statKey;
   },
-
   getStatExplanation(statKey) {
     const explanations = {
       SHOT_TAL:
@@ -518,7 +744,6 @@ export const playerUtils = {
       PP_USAGE: "How often the player is utilized on the power play.",
       ONICE_IMP:
         "How much offense the team creates when the player is on the ice.",
-
       POS_CTRL:
         "How well the team controls possession with the player on the ice.",
       BLK: "How often the player blocks opponent shots.",
@@ -528,8 +753,6 @@ export const playerUtils = {
       GOAL_PREV: "Share of scoring attempts stopped by the player.",
       winShare:
         "The percentile rank of the player's contribution to team wins compared to other players on the team in the same position.",
-
-      // Goalie explanations
       SV_PCT:
         "Ranks the goalie's overall save percentage vs. other goaltenders.",
       GSAX: "Goals saved above expected per 60 minutes. Measures a goalie's shot-stopping impact relative to the quality of shots faced.",
@@ -547,13 +770,11 @@ export const playerUtils = {
       HD_WORK: "High-danger shots faced per 60 minutes.",
       GAMES: "Total games played in the season.",
     };
-
     return (
       explanations[statKey] ||
       "Player performance metric compared to league average."
     );
   },
-
   getTopStats(stats, count = 6) {
     return Object.entries(stats)
       .sort(([, a], [, b]) => b - a)
@@ -564,7 +785,6 @@ export const playerUtils = {
         value,
       }));
   },
-
   getOffensiveStats(stats, allPercentiles = null) {
     const statKeys = [
       "I_F_goals",
@@ -574,7 +794,6 @@ export const playerUtils = {
       "OnIce_F_xGoals",
       "I_F_giveaways",
     ];
-
     return statKeys
       .map((key) => {
         let value = stats[key];
@@ -593,7 +812,6 @@ export const playerUtils = {
             value = allPercentiles[key];
           }
         }
-
         if (value !== undefined) {
           return {
             key,

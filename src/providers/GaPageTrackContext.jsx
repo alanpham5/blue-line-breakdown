@@ -1,15 +1,12 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-
 function capitalizeWordsRegex(str) {
   return str.replace(/(^|\s)\S/g, function (match) {
     return match.toUpperCase();
   });
 }
-
 export const GaPageTrackContext = () => {
   const location = useLocation();
-
   useEffect(() => {
     const pagePath = `${location.pathname}${location.search}${location.hash}`;
     const searchParams = new URLSearchParams(location.search);
@@ -17,7 +14,6 @@ export const GaPageTrackContext = () => {
       location.pathname.length > 1 && location.pathname.endsWith("/")
         ? location.pathname.slice(0, -1)
         : location.pathname;
-
     const SITE_NAME = "Blue Line Breakdown";
     let pageTitle;
     if (normalizedPath === "/") {
@@ -43,23 +39,18 @@ export const GaPageTrackContext = () => {
     } else if (normalizedPath === "/loader") {
       pageTitle = "Loading";
     }
-
     document.title = pageTitle ? `${pageTitle} | ${SITE_NAME}` : SITE_NAME;
-
     if (!window.gtag) return;
-
     window.gtag("event", "page_view", {
       page_title: document.title,
       page_location: window.location.href,
       page_path: pagePath,
       debug_mode: process.env.NODE_ENV !== "production",
     });
-
     if (normalizedPath === "/") {
       const player = searchParams.get("player");
       const season = searchParams.get("season");
       const position = searchParams.get("position");
-
       if (player && season) {
         window.gtag("event", "player_view", {
           player: capitalizeWordsRegex(player),
@@ -70,12 +61,10 @@ export const GaPageTrackContext = () => {
         });
       }
     }
-
     if (normalizedPath === "/teams") {
       const team = searchParams.get("team");
       const season = searchParams.get("season") || searchParams.get("year");
       const position = searchParams.get("position") || "summary";
-
       if (team && season) {
         window.gtag("event", "team_view", {
           team,
@@ -87,6 +76,5 @@ export const GaPageTrackContext = () => {
       }
     }
   }, [location]);
-
   return null;
 };

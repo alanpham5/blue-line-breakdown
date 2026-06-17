@@ -50,17 +50,24 @@ service cloud.firestore {
     }
 
     // ---- Community leaderboard ----
+    // Entry id == the owner's saved-draft id. A post is therefore always a
+    // public projection of a real, owned draft, and a draft can have at most
+    // one entry.
     match /expansion_drafts/{draftId} {
       // Public read.
       allow read: if true;
 
-      // Create requires a verified email and self-ownership; likes must start
+      // Create requires a verified email and self-ownership; the entry must
+      // reference (by id) a saved draft the creator actually owns, so a post
+      // can never point at a missing or another user's draft. Likes must start
       // at zero so the leaderboard can't be seeded with inflated counts.
       allow create: if emailVerified()
         && request.resource.data.ownerId == request.auth.uid
+        && request.resource.data.draftId == draftId
         && request.resource.data.likes == 0
         && request.resource.data.season is number
-        && request.resource.data.teamName is string;
+        && request.resource.data.teamName is string
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid)/drafts/$(draftId));
 
       // Any signed-in user may toggle a like, but only the likes/likedBy fields
       // may change — and the actor may only add/remove THEIR OWN uid.

@@ -1,9 +1,5 @@
 import { Target, Shield, Flame, Activity } from "lucide-react";
-import { TeamStatBar } from "../../pages/TeamSummary/TeamStatBar";
-
-// Offense / Defense / Aggressiveness / Miscellaneous percentile cards, shared by
-// the Team Summary page and the Expansion Draft result page. Driven entirely by
-// the `stats` object returned from the backend (raw values + `*_pct` + ratings).
+import { TeamStatBar } from "components/teamProfile/TeamStatBar";
 const RatingHeader = ({ icon: Icon, title, rating, accent }) => (
   <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-4 mb-5">
     <div className="flex items-center gap-2">
@@ -26,16 +22,13 @@ const RatingHeader = ({ icon: Icon, title, rating, accent }) => (
     )}
   </div>
 );
-
 const Card = ({ children }) => (
   <div className="liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7">
     {children}
   </div>
 );
-
 export const TeamProfileStatsGrid = ({ stats }) => {
   if (!stats) return null;
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
       <Card>
