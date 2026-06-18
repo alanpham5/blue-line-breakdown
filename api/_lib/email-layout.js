@@ -27,7 +27,7 @@ export function renderAuthEmail({
   <meta name="color-scheme" content="dark">
   <meta name="supported-color-schemes" content="dark">
 </head>
-<body style="margin:0;padding:0;background:${COLORS.bg};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<body style="margin:0;padding:0;background:${COLORS.bg};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,'Fira Sans','Droid Sans','Helvetica Neue',sans-serif;">
   <span style="display:none;max-height:0;overflow:hidden;opacity:0;color:${COLORS.bg};">${preheader}</span>
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${COLORS.bg};padding:40px 16px;">
     <tr><td align="center">

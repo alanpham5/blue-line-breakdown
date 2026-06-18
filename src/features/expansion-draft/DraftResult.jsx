@@ -273,7 +273,7 @@ export const DraftResult = () => {
           <div className="flex flex-col items-center gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-1 flex-col items-center text-center">
               <div className="mt-2 flex flex-col items-center gap-3 sm:flex-row">
-                <h1 className="text-3xl font-bold tracking-[-0.04em] text-white light:text-gray-900 sm:text-4xl flex flex-wrap items-baseline justify-center">
+                <h1 className="text-3xl font-bold tracking-display text-white light:text-gray-900 sm:text-4xl flex flex-wrap items-baseline justify-center">
                   {draft.teamName}
                   {!isOwnEntry && draft.ownerName && (
                     <span className="ml-3 text-lg font-medium text-gray-400 light:text-gray-500">
@@ -314,7 +314,7 @@ export const DraftResult = () => {
                   <span className="text-2xl font-extrabold tabular-nums text-sky-300 light:text-sky-600">
                     {record.display}
                   </span>
-                  <span className="text-[0.7rem] font-semibold uppercase tracking-[0.15em] text-gray-400 light:text-gray-500">
+                  <span className="text-[0.7rem] font-semibold text-gray-400 light:text-gray-500">
                     Predicted
                   </span>
                 </div>
@@ -382,7 +382,7 @@ export const DraftResult = () => {
           </div>
         )}
 
-        <h2 className="mt-8 text-lg font-bold tracking-tight text-white light:text-gray-900">
+        <h2 className="mt-8 text-lg font-bold tracking-display text-white light:text-gray-900">
           The Roster
         </h2>
         <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
@@ -592,7 +592,7 @@ const RosterCard = ({ player, season, actualTheme, onSelect }) => {
 
       <div>
         <div className="mb-1 flex items-center justify-between text-[0.7rem]">
-          <span className="font-medium uppercase tracking-[0.1em] text-gray-400 light:text-gray-500">
+          <span className="font-medium text-gray-400 light:text-gray-500">
             League Pctile
           </span>
           <span className={`font-bold ${theme.text}`}>

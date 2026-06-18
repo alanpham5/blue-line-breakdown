@@ -486,7 +486,7 @@ export const Players = ({ enablePageLoadAnimations = true }) => {
 
                 {!playerData && !loading && (
                   <div className="relative z-0 liquid-glass rounded-[32px] mt-4 sm:mt-6 px-5 py-10 text-center">
-                    <p className="mb-3 text-2xl font-semibold tracking-[-0.03em] text-white light:text-slate-900 sm:text-3xl">
+                    <p className="mb-3 text-2xl font-semibold tracking-display text-white light:text-slate-900 sm:text-3xl">
                       Enter a player name to get started
                     </p>
                     <p className="mx-auto max-w-2xl text-sm text-gray-400 light:text-gray-500 sm:text-base">

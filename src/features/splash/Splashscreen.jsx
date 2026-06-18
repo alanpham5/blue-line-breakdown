@@ -235,7 +235,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
               className={`space-y-4 ${enablePageLoadAnimations ? "fade-in-up-delay-1" : ""}`}
             >
               <div className="flex items-center justify-between gap-3">
-                <h2 className="text-2xl font-bold tracking-tight text-white light:text-gray-900 flex items-center gap-2">
+                <h2 className="text-2xl font-bold tracking-display text-white light:text-gray-900 flex items-center gap-2">
                   <Users className="h-6 w-6 text-[#7ee340] light:text-[#2e6e14]" />
                   Featured Players
                 </h2>
@@ -334,7 +334,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                 className={`space-y-4 ${enablePageLoadAnimations ? "fade-in-up-delay-2" : ""}`}
               >
                 <div className="flex items-center justify-between gap-3">
-                  <h2 className="text-2xl font-bold tracking-tight text-white light:text-gray-900 flex items-center gap-2">
+                  <h2 className="text-2xl font-bold tracking-display text-white light:text-gray-900 flex items-center gap-2">
                     <Shield className="h-6 w-6 text-sky-400 light:text-sky-600" />
                     Featured Team
                   </h2>
@@ -380,7 +380,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                         />
                       </div>
 
-                      <h3 className="text-3xl sm:text-4xl font-black tracking-[-0.04em] text-white light:text-gray-900 mb-1">
+                      <h3 className="text-3xl sm:text-4xl font-black tracking-display text-white light:text-gray-900 mb-1">
                         {team.name}
                       </h3>
 
@@ -452,7 +452,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
 
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                           <div className="liquid-glass rounded-2xl p-3 text-center">
-                            <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">
+                            <div className="text-[10px] font-boldr text-gray-400 light:text-slate-500 mb-1">
                               Goals PG
                             </div>
                             <div className="text-xl font-extrabold text-white light:text-gray-900">
@@ -461,7 +461,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                           </div>
 
                           <div className="liquid-glass rounded-2xl p-3 text-center">
-                            <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">
+                            <div className="text-[10px] font-boldr text-gray-400 light:text-slate-500 mb-1">
                               Goals Against
                             </div>
                             <div className="text-xl font-extrabold text-white light:text-gray-900">
@@ -470,7 +470,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                           </div>
 
                           <div className="liquid-glass rounded-2xl p-3 text-center">
-                            <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">
+                            <div className="text-[10px] font-boldr text-gray-400 light:text-slate-500 mb-1">
                               Possession
                             </div>
                             <div className="text-xl font-extrabold text-white light:text-gray-900">
@@ -479,7 +479,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                           </div>
 
                           <div className="liquid-glass rounded-2xl p-3 text-center">
-                            <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 light:text-slate-500 mb-1">
+                            <div className="text-[10px] font-boldr text-gray-400 light:text-slate-500 mb-1">
                               Blocked Shots
                             </div>
                             <div className="text-xl font-extrabold text-white light:text-gray-900">

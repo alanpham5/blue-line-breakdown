@@ -74,7 +74,7 @@ const SimilarTeamCard = ({
       <p className="text-xs font-semibold leading-tight text-white light:text-gray-900 sm:text-sm">
         {playerUtils.getFullTeamName(similarTeam.team, similarTeam.season)}
       </p>
-      <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-gray-400 light:text-gray-500 sm:text-[11px]">
+      <p className="mt-1 text-[10px] text-gray-400 light:text-gray-500 sm:text-[11px]">
         {playerUtils.formatSeason(similarTeam.season)}
       </p>
     </div>
@@ -109,7 +109,7 @@ export const SimilarTeamsSection = ({ similarTeams, onTeamClick }) => {
     <div className="relative liquid-glass-strong liquid-glass-animate rounded-[32px] p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
         <div className="flex items-center gap-1.5 sm:gap-2">
-          <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900 whitespace-nowrap">
+          <h3 className="text-xl sm:text-2xl font-bold tracking-display text-white light:text-gray-900 whitespace-nowrap">
             Most Similar Teams
           </h3>
           <Tooltip

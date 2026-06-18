@@ -62,9 +62,7 @@ export const ShareableDisplay = ({ playerData }) => {
               gap: 16,
               fontSize: 30,
               fontWeight: 800,
-              letterSpacing: "0.15em",
               color: "#f3f4f6",
-              textTransform: "uppercase",
             }}
           >
             <img

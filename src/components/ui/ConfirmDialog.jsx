@@ -19,7 +19,7 @@ export const ConfirmDialog = ({
         className="app-modal-backdrop absolute inset-0 bg-black/60"
       />
       <div className="app-modal-panel relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/10 bg-[#0b1220]/95 p-5 text-white shadow-2xl backdrop-blur light:border-slate-200 light:bg-white">
-        <h3 className="text-lg font-extrabold tracking-tight text-white light:text-gray-900">
+        <h3 className="text-lg font-extrabold tracking-display text-white light:text-gray-900">
           {title}
         </h3>
         {message && (

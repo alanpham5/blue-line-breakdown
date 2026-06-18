@@ -80,6 +80,19 @@ export const ShareableModal = ({ isOpen, onClose, fileName, children }) => {
       wrapper.style.cssText =
         "position: fixed; left: -100000px; top: 0; width: auto; height: auto; overflow: visible;";
     }
+    // html2canvas throws InvalidStateError if it tries to build a pattern from
+    // a 0x0 source (e.g. an SVG logo that reports no intrinsic size in the
+    // clone). Such sources are invisible anyway, so skip them instead of
+    // letting the whole export fail.
+    const ctxProto = CanvasRenderingContext2D.prototype;
+    const origCreatePattern = ctxProto.createPattern;
+    ctxProto.createPattern = function (image, repetition) {
+      const w = image && (image.width ?? image.naturalWidth ?? image.videoWidth);
+      const h =
+        image && (image.height ?? image.naturalHeight ?? image.videoHeight);
+      if (!w || !h) return null;
+      return origCreatePattern.call(this, image, repetition);
+    };
     try {
       const canvas = await html2canvas(node, {
         useCORS: true,
@@ -150,6 +163,7 @@ export const ShareableModal = ({ isOpen, onClose, fileName, children }) => {
       });
       return canvas.toDataURL("image/png");
     } finally {
+      ctxProto.createPattern = origCreatePattern;
       if (scaled) {
         node.style.transform = prevNodeTransform;
         wrapper.setAttribute("style", prevWrapperStyle);

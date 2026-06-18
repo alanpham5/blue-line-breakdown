@@ -13,6 +13,7 @@ const CompactStatBar = ({ label, percentile, type = "offensive" }) => {
     valueColor = "text-amber-300";
     trackColor = "bg-[rgba(120,80,20,0.52)]";
   }
+  const fillWidth = Math.min(100, Math.max(0, percentile));
   return (
     <div className="mb-2">
       <div className="flex justify-between items-center mb-0.5 gap-2">
@@ -26,18 +27,18 @@ const CompactStatBar = ({ label, percentile, type = "offensive" }) => {
       <div
         className={`w-full h-1.5 overflow-hidden rounded-full ${trackColor}`}
       >
-        <div
-          className={`h-1.5 rounded-full bg-gradient-to-r ${color}`}
-          style={{
-            width: `${Math.min(100, Math.max(0, percentile))}%`,
-          }}
-        />
+        {fillWidth > 0 && (
+          <div
+            className={`h-1.5 rounded-full bg-gradient-to-r ${color}`}
+            style={{ width: `${fillWidth}%` }}
+          />
+        )}
       </div>
     </div>
   );
 };
 const RatingBadge = ({ value, color }) => (
-  <span className={`text-lg font-extrabold tracking-[-0.04em] ${color}`}>
+  <span className={`text-lg font-extrabold tracking-display ${color}`}>
     {value.toFixed(1)}%
   </span>
 );
@@ -113,9 +114,7 @@ export const TeamShareableDisplay = ({
             gap: 16,
             fontSize: 26,
             fontWeight: 800,
-            letterSpacing: "0.15em",
             color: "#f3f4f6",
-            textTransform: "uppercase",
           }}
         >
           <img
@@ -172,7 +171,7 @@ export const TeamShareableDisplay = ({
               )}
             </div>
             <div className="text-center">
-              <h2 className="text-3xl font-extrabold tracking-[-0.04em] text-white">
+              <h2 className="text-3xl font-extrabold tracking-display text-white">
                 {playerUtils.getFullTeamName(team, season)}
               </h2>
               <div className="flex items-center justify-center gap-2 mt-1 text-base font-semibold text-gray-300">
@@ -330,7 +329,7 @@ export const TeamShareableDisplay = ({
               <h3 className="text-base font-extrabold text-white">Misc</h3>
             </div>
             <div className="mb-2">
-              <div className="text-xs font-bold uppercase tracking-[0.12em] text-gray-400 mb-1">
+              <div className="text-xs font-bold text-gray-400 mb-1">
                 Possession
               </div>
               <CompactStatBar
@@ -340,7 +339,7 @@ export const TeamShareableDisplay = ({
               />
             </div>
             <div className="pt-1.5 border-t border-white/5">
-              <div className="text-xs font-bold uppercase tracking-[0.12em] text-gray-400 mb-1">
+              <div className="text-xs font-bold text-gray-400 mb-1">
                 Pace
               </div>
               <CompactStatBar
@@ -368,7 +367,7 @@ export const TeamShareableDisplay = ({
             </div>
             <div className="grid grid-cols-3 gap-x-4 gap-y-0">
               <div>
-                <h4 className="text-[12px] font-bold uppercase tracking-[0.12em] text-cyan-300 mb-1.5">
+                <h4 className="text-[12px] font-bold text-cyan-300 mb-1.5">
                   Forwards
                 </h4>
                 <div className="space-y-2">
@@ -407,7 +406,7 @@ export const TeamShareableDisplay = ({
               </div>
 
               <div>
-                <h4 className="text-[12px] font-bold uppercase tracking-[0.12em] text-rose-400 mb-1.5">
+                <h4 className="text-[12px] font-bold text-rose-400 mb-1.5">
                   Defensemen
                 </h4>
                 <div className="space-y-2">
@@ -446,7 +445,7 @@ export const TeamShareableDisplay = ({
               </div>
 
               <div>
-                <h4 className="text-[12px] font-bold uppercase tracking-[0.12em] text-amber-300 mb-1.5">
+                <h4 className="text-[12px] font-bold text-amber-300 mb-1.5">
                   Goalies
                 </h4>
                 <div className="space-y-2">
@@ -570,7 +569,7 @@ export const TeamShareableDisplay = ({
                           similar.season
                         )}
                       </p>
-                      <p className="text-[9px] uppercase tracking-[0.16em] text-gray-400 mt-0.5">
+                      <p className="text-[9px] text-gray-400 mt-0.5">
                         {playerUtils.formatSeason(similar.season)}
                       </p>
                     </div>

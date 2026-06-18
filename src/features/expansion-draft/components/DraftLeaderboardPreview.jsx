@@ -76,7 +76,7 @@ export const DraftLeaderboardPreview = ({
   return (
     <section className={className}>
       <div className="mb-4 flex items-center justify-between gap-3">
-        <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-white light:text-gray-900">
+        <h2 className="flex items-center gap-2 text-2xl font-bold tracking-display text-white light:text-gray-900">
           <ListOrdered className="h-6 w-6 text-sky-300 light:text-sky-600" />
           {title}
         </h2>
@@ -134,17 +134,17 @@ export const DraftLeaderboardPreview = ({
                         <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-[11px] font-semibold">
                           {stats.offense_rating != null && (
                             <span className="text-cyan-300 light:text-cyan-600">
-                              {stats.offense_rating.toFixed(0)}% OFF
+                              {stats.offense_rating.toFixed(0)}% Off
                             </span>
                           )}
                           {stats.defense_rating != null && (
                             <span className="text-rose-400 light:text-rose-600">
-                              {stats.defense_rating.toFixed(0)}% DEF
+                              {stats.defense_rating.toFixed(0)}% Def
                             </span>
                           )}
                           {stats.aggressiveness_rating != null && (
                             <span className="text-amber-300 light:text-amber-600">
-                              {stats.aggressiveness_rating.toFixed(0)}% AGG
+                              {stats.aggressiveness_rating.toFixed(0)}% Agg
                             </span>
                           )}
                         </p>

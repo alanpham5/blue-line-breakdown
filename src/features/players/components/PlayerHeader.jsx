@@ -113,7 +113,7 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
           </div>
         </div>
         <div className="flex min-w-0 w-full max-w-full flex-col items-center py-1 lg:items-start xl:flex-1">
-          <h2 className="mb-3 flex min-w-0 w-full items-center justify-center gap-2 text-[1.7rem] font-bold tracking-[-0.04em] text-white light:text-gray-900 sm:text-[1.8rem] lg:justify-start lg:text-[2.2rem]">
+          <h2 className="mb-3 flex min-w-0 w-full items-center justify-center gap-2 text-[1.7rem] font-bold tracking-display text-white light:text-gray-900 sm:text-[1.8rem] lg:justify-start lg:text-[2.2rem]">
             <span className="min-w-0 truncate" style={{ fontSize: 'clamp(1.1rem, 4vw, 2.2rem)' }}>{player.name}</span>
             {didWinStanleyCup && (
               <img

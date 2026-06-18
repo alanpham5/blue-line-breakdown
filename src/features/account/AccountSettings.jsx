@@ -201,7 +201,7 @@ export const AccountSettings = () => {
             <ArrowLeft className="h-4 w-4" /> Back
           </Link>
 
-          <h1 className="mb-6 text-3xl font-extrabold tracking-[-0.04em] text-white light:text-gray-900 sm:text-4xl">
+          <h1 className="mb-6 text-3xl font-extrabold tracking-display text-white light:text-gray-900 sm:text-4xl">
             Account settings
           </h1>
 
@@ -375,7 +375,7 @@ export const AccountSettings = () => {
               <X className="h-5 w-5" />
             </button>
 
-            <h2 className="text-2xl font-bold tracking-tight text-white light:text-gray-900">
+            <h2 className="text-2xl font-bold tracking-display text-white light:text-gray-900">
               Edit display name
             </h2>
             <p className="mt-1 text-sm text-gray-400 light:text-gray-500">
@@ -383,7 +383,7 @@ export const AccountSettings = () => {
             </p>
 
             <div className="mt-5">
-              <label className="block text-xs font-semibold uppercase tracking-[0.14em] text-gray-500">
+              <label className="block text-xs font-semibold text-gray-500">
                 Display name
                 <input
                   type="text"
@@ -437,7 +437,7 @@ export const AccountSettings = () => {
               <AlertTriangle className="h-6 w-6" />
             </div>
 
-            <h2 className="mt-4 text-2xl font-bold tracking-tight text-white light:text-gray-900">
+            <h2 className="mt-4 text-2xl font-bold tracking-display text-white light:text-gray-900">
               Delete your account?
             </h2>
             <p className="mt-1 text-sm text-gray-400 light:text-gray-500">
@@ -446,14 +446,14 @@ export const AccountSettings = () => {
             </p>
 
             <div className="mt-5">
-              <label className="block text-xs font-semibold uppercase tracking-[0.14em] text-gray-500">
-                Type DELETE to confirm
+              <label className="block text-xs font-semibold text-gray-500">
+                Type Delete to confirm
                 <input
                   type="text"
                   value={deleteConfirm}
                   onChange={(e) => setDeleteConfirm(e.target.value)}
                   autoComplete="off"
-                  placeholder="DELETE"
+                  placeholder="Delete"
                   className="mt-1.5 app-field py-3 pl-4 pr-4 text-sm text-white light:text-gray-900"
                 />
               </label>
@@ -462,7 +462,7 @@ export const AccountSettings = () => {
             <button
               type="button"
               onClick={handleDeleteAccount}
-              disabled={busy === "delete" || deleteConfirm.trim() !== "DELETE"}
+              disabled={busy === "delete" || deleteConfirm.trim().toLowerCase() !== "delete"}
               className="mt-5 flex w-full items-center justify-center gap-2 rounded-[18px] bg-rose-500 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-rose-600 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {busy === "delete" ? (

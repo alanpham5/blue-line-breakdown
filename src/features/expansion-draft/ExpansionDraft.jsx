@@ -364,11 +364,11 @@ export const ExpansionDraft = () => {
         <Header />
 
         <div className="liquid-glass-strong liquid-glass-animate rounded-[32px] p-6 sm:p-8">
-          <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-white light:text-gray-900 sm:text-4xl flex flex-col sm:flex-row sm:items-center gap-3 flex-wrap">
+          <h1 className="mt-2 text-3xl font-bold tracking-display text-white light:text-gray-900 sm:text-4xl flex flex-col sm:flex-row sm:items-center gap-3 flex-wrap">
             <span className="flex-1 min-w-[280px] flex items-center gap-3">
               Build your expansion franchise
               <span
-                className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-bold uppercase tracking-wide self-center"
+                className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-bold self-center"
                 style={{
                   background: "var(--btn-accent)",
                   color: "var(--btn-accent-text)",
@@ -475,7 +475,7 @@ export const ExpansionDraft = () => {
               className="liquid-glass-animate scroll-mt-20"
             >
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <h2 className="text-lg font-bold tracking-tight text-white light:text-gray-900">
+                <h2 className="text-lg font-bold tracking-display text-white light:text-gray-900">
                   Franchises
                   <span className="ml-2 text-sm font-medium text-gray-500">
                     {draftedCount}/{teams.length} drafted
@@ -506,7 +506,7 @@ export const ExpansionDraft = () => {
 
               <div className="mt-4 grid grid-cols-3 gap-3 rounded-2xl border border-white/5 bg-white/5 p-4 light:border-slate-200 light:bg-white/60">
                 <div className="flex flex-col items-center justify-center text-center">
-                  <span className="text-[0.7rem] font-bold uppercase tracking-[0.1em] text-gray-400 light:text-gray-500">
+                  <span className="text-[0.7rem] font-bold text-gray-400 light:text-gray-500">
                     Forwards
                   </span>
                   <span
@@ -519,7 +519,7 @@ export const ExpansionDraft = () => {
                   </span>
                 </div>
                 <div className="flex flex-col items-center justify-center text-center border-x border-white/10 light:border-slate-200">
-                  <span className="text-[0.7rem] font-bold uppercase tracking-[0.1em] text-gray-400 light:text-gray-500">
+                  <span className="text-[0.7rem] font-bold text-gray-400 light:text-gray-500">
                     Defensemen
                   </span>
                   <span
@@ -532,7 +532,7 @@ export const ExpansionDraft = () => {
                   </span>
                 </div>
                 <div className="flex flex-col items-center justify-center text-center">
-                  <span className="text-[0.7rem] font-bold uppercase tracking-[0.1em] text-gray-400 light:text-gray-500">
+                  <span className="text-[0.7rem] font-bold text-gray-400 light:text-gray-500">
                     Goalies
                   </span>
                   <span
@@ -811,7 +811,7 @@ const RosterTable = ({ roster, season, isMobile, pickedId, onPick }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="liquid-glass liquid-glass-animate rounded-[28px] p-4 sm:p-5 flex flex-col">
-          <h4 className="mb-3 text-sm font-bold uppercase tracking-[0.1em] text-cyan-300 light:text-cyan-600 border-b border-white/5 pb-2 light:border-slate-200">
+          <h4 className="mb-3 text-sm font-bold text-cyan-300 light:text-cyan-600 border-b border-white/5 pb-2 light:border-slate-200">
             Forwards
           </h4>
           <div className="overflow-x-auto flex-1">
@@ -827,7 +827,7 @@ const RosterTable = ({ roster, season, isMobile, pickedId, onPick }) => {
         </div>
 
         <div className="liquid-glass liquid-glass-animate rounded-[28px] p-4 sm:p-5 flex flex-col">
-          <h4 className="mb-3 text-sm font-bold uppercase tracking-[0.1em] text-cyan-300 light:text-cyan-600 border-b border-white/5 pb-2 light:border-slate-200">
+          <h4 className="mb-3 text-sm font-bold text-cyan-300 light:text-cyan-600 border-b border-white/5 pb-2 light:border-slate-200">
             Defensemen
           </h4>
           <div className="overflow-x-auto flex-1">
@@ -844,7 +844,7 @@ const RosterTable = ({ roster, season, isMobile, pickedId, onPick }) => {
       </div>
 
       <div className="liquid-glass liquid-glass-animate rounded-[28px] p-4 sm:p-5">
-        <h4 className="mb-3 text-sm font-bold uppercase tracking-[0.1em] text-cyan-300 light:text-cyan-600 border-b border-white/5 pb-2 light:border-slate-200">
+        <h4 className="mb-3 text-sm font-bold text-cyan-300 light:text-cyan-600 border-b border-white/5 pb-2 light:border-slate-200">
           Goalies
         </h4>
         <div className="overflow-x-auto">
@@ -875,12 +875,12 @@ const SkaterTable = ({
 }) => (
   <table className="w-full border-collapse text-sm">
     <thead>
-      <tr className="text-left text-[0.7rem] uppercase tracking-[0.1em] text-gray-500">
+      <tr className="text-left text-[0.7rem] text-gray-500">
         <th className="px-2 py-2">Player</th>
         {!isMobile && <th className="px-2 py-2 text-center">Age</th>}
         <th className="px-2 py-2 text-center">G</th>
         <th className="px-2 py-2 text-center">A</th>
-        <th className="px-2 py-2 text-center">PTS</th>
+        <th className="px-2 py-2 text-center">Pts</th>
         <th className="px-2 py-2 text-center">+/-</th>
       </tr>
     </thead>
@@ -956,12 +956,12 @@ const GoalieTable = ({
 }) => (
   <table className="w-full border-collapse text-sm">
     <thead>
-      <tr className="text-left text-[0.7rem] uppercase tracking-[0.1em] text-gray-500">
+      <tr className="text-left text-[0.7rem] text-gray-500">
         <th className="px-2 py-2">Player</th>
         {!isMobile && <th className="px-2 py-2 text-center">Age</th>}
-        <th className="px-2 py-2 text-center">SV%</th>
-        <th className="px-2 py-2 text-center">GAA</th>
-        <th className="px-2 py-2 text-center">GP</th>
+        <th className="px-2 py-2 text-center">Sv%</th>
+        <th className="px-2 py-2 text-center">Gaa</th>
+        <th className="px-2 py-2 text-center">Gp</th>
         <th className="px-2 py-2 text-center">Saves</th>
       </tr>
     </thead>
@@ -1079,8 +1079,8 @@ const ConfirmModal = ({ confirm, season, onCancel, onConfirm }) => {
         </h3>
         <p className="mt-1 text-sm text-gray-400 light:text-gray-500">
           {player.position === "G"
-            ? `${(player.savePct ?? 0).toFixed(3)} SV% · ${(player.gaa ?? 0).toFixed(2)} GAA · ${player.gamesPlayed} GP`
-            : `${player.goals}G · ${player.assists}A · ${player.points} PTS`}
+            ? `${(player.savePct ?? 0).toFixed(3)} Sv% · ${(player.gaa ?? 0).toFixed(2)} Gaa · ${player.gamesPlayed} Gp`
+            : `${player.goals}G · ${player.assists}A · ${player.points} Pts`}
           {player.age ? ` · Age ${player.age}` : ""}
         </p>
         <div className="mt-6 flex w-full gap-3">

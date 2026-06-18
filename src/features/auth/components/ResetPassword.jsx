@@ -99,7 +99,7 @@ export const ResetPassword = () => {
   return (
     <div className="min-h-screen ice-background flex items-center justify-center px-4">
       <div className="liquid-glass-strong rounded-[32px] p-8 sm:p-10 w-full max-w-md">
-        <h1 className="text-2xl font-bold tracking-tight text-white mb-1 light:text-gray-900">
+        <h1 className="text-2xl font-bold tracking-display text-white mb-1 light:text-gray-900">
           Choose a new password
         </h1>
         <p className="text-sm text-gray-400 mb-6 light:text-gray-500">

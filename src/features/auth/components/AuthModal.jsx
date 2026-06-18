@@ -161,7 +161,7 @@ export const AuthModal = () => {
         </button>
 
         <div className="mb-6 text-center">
-          <h2 className="text-2xl font-bold tracking-tight text-white light:text-gray-900">
+          <h2 className="text-2xl font-bold tracking-display text-white light:text-gray-900">
             {titles[view]}
           </h2>
           <p className="mt-1 text-sm text-gray-400 light:text-gray-500">
@@ -187,7 +187,7 @@ export const AuthModal = () => {
               <GoogleGlyph />
               Continue with Google
             </button>
-            <div className="my-5 flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-gray-500">
+            <div className="my-5 flex items-center gap-3 text-xs text-gray-500">
               <span className="h-px flex-1 bg-white/10 light:bg-slate-200" />
               or
               <span className="h-px flex-1 bg-white/10 light:bg-slate-200" />

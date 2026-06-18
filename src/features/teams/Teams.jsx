@@ -331,7 +331,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
                 }}
               >
                 <div className="mb-5">
-                  <h2 className="text-lg font-bold tracking-tight text-white light:text-gray-900">
+                  <h2 className="text-lg font-bold tracking-display text-white light:text-gray-900">
                     Lookup Team
                   </h2>
                 </div>

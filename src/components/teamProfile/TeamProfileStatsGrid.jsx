@@ -4,18 +4,18 @@ const RatingHeader = ({ icon: Icon, title, rating, accent }) => (
   <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-4 mb-5">
     <div className="flex items-center gap-2">
       <Icon className={`h-6 w-6 shrink-0 ${accent}`} />
-      <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900">
+      <h3 className="text-xl sm:text-2xl font-bold tracking-display text-white light:text-gray-900">
         {title}
       </h3>
     </div>
     {rating != null && (
       <div className="flex flex-col items-end">
         <div
-          className={`text-2xl sm:text-3xl font-extrabold tracking-[-0.04em] ${accent}`}
+          className={`text-2xl sm:text-3xl font-extrabold tracking-display ${accent}`}
         >
           {rating.toFixed(1)}%
         </div>
-        <div className="hidden sm:block text-[0.65rem] sm:text-[0.7rem] uppercase tracking-[0.15em] text-gray-400 light:text-slate-500">
+        <div className="hidden sm:block text-[0.65rem] sm:text-[0.7rem] text-gray-400 light:text-slate-500">
           Percentile Rating
         </div>
       </div>
@@ -152,14 +152,14 @@ export const TeamProfileStatsGrid = ({ stats }) => {
         <div className="flex items-center justify-between border-b border-white/10 light:border-slate-200 pb-4 mb-5">
           <div className="flex items-center gap-2">
             <Activity className="h-6 w-6 shrink-0 text-sky-300 light:text-sky-600" />
-            <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900">
+            <h3 className="text-xl sm:text-2xl font-bold tracking-display text-white light:text-gray-900">
               Miscellaneous
             </h3>
           </div>
         </div>
         <div className="space-y-6 mt-2">
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold uppercase tracking-[0.1em] text-gray-400 light:text-gray-500">
+            <h4 className="text-sm font-semibold text-gray-400 light:text-gray-500">
               Possession
             </h4>
             <TeamStatBar
@@ -170,7 +170,7 @@ export const TeamProfileStatsGrid = ({ stats }) => {
             />
           </div>
           <div className="space-y-3">
-            <h4 className="pt-2 border-t border-white/5 light:border-slate-100 text-sm font-semibold uppercase tracking-[0.1em] text-gray-400 light:text-gray-500">
+            <h4 className="pt-2 border-t border-white/5 light:border-slate-100 text-sm font-semibold text-gray-400 light:text-gray-500">
               Pace
             </h4>
             <TeamStatBar

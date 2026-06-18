@@ -110,7 +110,7 @@ export const SearchForm = ({
       }}
     >
       <div className="mb-5">
-        <h2 className="text-2xl font-bold tracking-tight text-white light:text-gray-900">
+        <h2 className="text-2xl font-bold tracking-display text-white light:text-gray-900">
           Lookup Player
         </h2>
       </div>

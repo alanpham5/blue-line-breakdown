@@ -9,7 +9,7 @@ export const CountingStats = ({ stats }) => {
         gaa: "Goals Against Avg",
         goalsAgainst: "Goals Against",
         savePct: "Save %",
-        goalsSavedAboveExpected: "GSAX",
+        goalsSavedAboveExpected: "Gsax",
       }
     : {
         assists: "Assists",
@@ -20,20 +20,20 @@ export const CountingStats = ({ stats }) => {
       };
   const mobileLabels = isGoalie
     ? {
-        gamesPlayed: "GP",
-        shotsAgainst: "SA",
-        saves: "SV",
-        gaa: "GAA",
-        goalsAgainst: "GA",
-        savePct: "SV%",
-        goalsSavedAboveExpected: "GSAX",
+        gamesPlayed: "Gp",
+        shotsAgainst: "Sa",
+        saves: "Sv",
+        gaa: "Gaa",
+        goalsAgainst: "Ga",
+        savePct: "Sv%",
+        goalsSavedAboveExpected: "Gsax",
       }
     : {
         assists: "A",
-        gamesPlayed: "GP",
+        gamesPlayed: "Gp",
         goals: "G",
-        penaltyMinutes: "PIM",
-        points: "PTS",
+        penaltyMinutes: "Pim",
+        points: "Pts",
       };
   const statsOrder = isGoalie
     ? ["gamesPlayed", "shotsAgainst", "saves", "gaa", "savePct"]
@@ -78,7 +78,7 @@ export const CountingStats = ({ stats }) => {
             key={statKey}
             className={`flex-col items-center justify-center px-1 sm:px-2 ${statVisibility[statKey] ?? "flex"}`}
           >
-            <div className="text-[0.7rem] sm:text-sm text-gray-400 light:text-gray-500 uppercase tracking-[0.15em] sm:tracking-[0.2em] whitespace-nowrap">
+            <div className="text-[0.7rem] sm:text-sm text-gray-400 light:text-gray-500 whitespace-nowrap">
               <span className="hidden lg:inline">{labels[statKey] ?? "-"}</span>
               <span className="lg:hidden">{mobileLabels[statKey] ?? "-"}</span>
             </div>

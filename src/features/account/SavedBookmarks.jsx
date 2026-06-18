@@ -52,7 +52,7 @@ export const SavedBookmarks = () => {
             <ArrowLeft className="h-4 w-4" /> Back
           </Link>
 
-          <h1 className="fade-in-up mb-6 flex items-center gap-2 text-3xl font-extrabold tracking-[-0.04em] text-white light:text-gray-900 sm:text-4xl">
+          <h1 className="fade-in-up mb-6 flex items-center gap-2 text-3xl font-extrabold tracking-display text-white light:text-gray-900 sm:text-4xl">
             <Bookmark className="h-7 w-7 text-sky-300 light:text-sky-600" /> My
             Bookmarks
           </h1>
@@ -107,7 +107,7 @@ const Section = ({
   onRemove,
 }) => (
   <section className="liquid-glass-strong fade-in-up rounded-[28px] p-4 sm:p-6">
-    <h2 className="mb-3 flex items-center gap-2 text-sm font-bold uppercase tracking-[0.1em] text-gray-400 light:text-gray-500">
+    <h2 className="mb-3 flex items-center gap-2 text-sm font-bold text-gray-400 light:text-gray-500">
       {showHeaderIcon && <Icon className="h-4 w-4" />} {label}
       <span className="text-gray-500">({items.length})</span>
     </h2>

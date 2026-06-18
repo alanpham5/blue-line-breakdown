@@ -15,7 +15,7 @@ export const WarPercentileCardCompact = ({ warPercentile }) => {
     >
       <Trophy className="h-4 w-4 shrink-0 text-[#7dcb48] sm:h-5 sm:w-5" />
       <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:gap-2">
-        <h3 className="min-w-0 shrink font-bold tracking-[-0.04em] text-white leading-[1.06]">
+        <h3 className="min-w-0 shrink font-bold tracking-display text-white leading-[1.06]">
           <span className="block text-[1.2rem] leading-snug sm:hidden whitespace-nowrap">
             League Percentile
           </span>
@@ -74,7 +74,7 @@ export const WarPercentileCardCompact = ({ warPercentile }) => {
             }}
           >
             <span
-              className="shareable-war-score text-[1.38rem] font-bold tracking-[-0.04em] text-white sm:text-[1.48rem]"
+              className="shareable-war-score text-[1.38rem] font-bold tracking-display text-white sm:text-[1.48rem]"
               style={{
                 lineHeight: "1",
                 display: "block",

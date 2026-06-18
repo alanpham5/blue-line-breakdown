@@ -45,7 +45,7 @@ export const SimilarPlayersSection = ({
         <div className="flex items-center gap-1.5 sm:gap-2">
           <Users className="h-6 w-6 shrink-0 text-amber-300 light:text-amber-600" />
           <div className="flex items-center gap-1.5 sm:gap-2">
-            <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900 whitespace-nowrap">
+            <h3 className="text-xl sm:text-2xl font-bold tracking-display text-white light:text-gray-900 whitespace-nowrap">
               Most Similar Players
             </h3>
             <div className="absolute top-[22px] right-5 sm:static sm:top-auto sm:right-auto">

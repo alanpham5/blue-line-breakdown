@@ -25,7 +25,7 @@ export const StatsCard = ({
       <div className="mb-4 flex items-center justify-between gap-2 sm:mb-6 sm:gap-3">
         <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
           <Icon className={`h-6 w-6 shrink-0 ${colorClasses.iconColor}`} />
-          <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900 whitespace-nowrap">
+          <h3 className="text-xl sm:text-2xl font-bold tracking-display text-white light:text-gray-900 whitespace-nowrap">
             {title}
           </h3>
         </div>

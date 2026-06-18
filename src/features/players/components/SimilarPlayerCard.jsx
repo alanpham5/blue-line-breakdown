@@ -57,7 +57,7 @@ export const SimilarPlayerCard = ({ player, onClick, animationKey }) => {
       <p className="text-xs font-semibold leading-tight text-white light:text-gray-900 sm:text-sm">
         {player.name}
       </p>
-      <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-gray-400 light:text-gray-500 sm:text-[11px]">
+      <p className="mt-1 text-[10px] text-gray-400 light:text-gray-500 sm:text-[11px]">
         {playerUtils.formatSeason(player.season)}
       </p>
     </div>

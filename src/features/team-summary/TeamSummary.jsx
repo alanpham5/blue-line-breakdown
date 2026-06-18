@@ -290,7 +290,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                 }}
               >
                 <div className="mb-5">
-                  <h2 className="text-2xl font-bold tracking-tight text-white light:text-gray-900">
+                  <h2 className="text-2xl font-bold tracking-display text-white light:text-gray-900">
                     Lookup Team
                   </h2>
                 </div>
@@ -355,7 +355,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
 
             {!hasSearched && !loadingData && (
               <div className="relative z-0 liquid-glass rounded-[32px] mt-4 sm:mt-6 px-5 py-10 text-center">
-                <p className="mb-3 text-2xl font-semibold tracking-[-0.03em] text-white light:text-slate-900 sm:text-3xl">
+                <p className="mb-3 text-2xl font-semibold tracking-display text-white light:text-slate-900 sm:text-3xl">
                   Select a team and season to get started
                 </p>
                 <p className="mx-auto max-w-2xl text-sm text-gray-400 light:text-gray-500 sm:text-base">
@@ -406,7 +406,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                         </div>
 
                         <div className="text-center md:text-left text-2xl font-bold text-white light:text-gray-900">
-                          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.04em] flex flex-wrap items-center justify-center md:justify-start gap-2">
+                          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-display flex flex-wrap items-center justify-center md:justify-start gap-2">
                             <span>
                               {playerUtils.getFullTeamName(team, season)}
                             </span>
@@ -473,14 +473,14 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                 <div className="liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7">
                   <div className="flex items-center gap-2 border-b border-white/10 light:border-slate-200 pb-4 mb-5">
                     <Users className="h-6 w-6 shrink-0 text-amber-300 light:text-amber-600" />
-                    <h3 className="text-xl sm:text-2xl font-bold tracking-[-0.04em] text-white light:text-gray-900">
+                    <h3 className="text-xl sm:text-2xl font-bold tracking-display text-white light:text-gray-900">
                       Top Impact Players
                     </h3>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
                     <div>
-                      <h4 className="text-md font-bold uppercase tracking-[0.1em] text-cyan-300 light:text-cyan-600 mb-4">
+                      <h4 className="text-md font-bold text-cyan-300 light:text-cyan-600 mb-4">
                         Forwards
                       </h4>
                       <div className="space-y-3">
@@ -527,7 +527,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                     </div>
 
                     <div>
-                      <h4 className="text-md font-bold uppercase tracking-[0.1em] text-rose-400 light:text-rose-600 mb-4">
+                      <h4 className="text-md font-bold text-rose-400 light:text-rose-600 mb-4">
                         Defensemen
                       </h4>
                       <div className="space-y-3">
@@ -574,7 +574,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                     </div>
 
                     <div>
-                      <h4 className="text-md font-bold uppercase tracking-[0.1em] text-amber-300 light:text-amber-600 mb-4">
+                      <h4 className="text-md font-bold text-amber-300 light:text-amber-600 mb-4">
                         Goalies
                       </h4>
                       <div className="space-y-3">

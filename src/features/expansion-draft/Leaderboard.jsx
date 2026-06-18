@@ -75,11 +75,11 @@ export const Leaderboard = () => {
         <div className="liquid-glass-strong fade-in-up rounded-[32px] p-6 sm:p-8">
           <div className="flex items-center gap-2 text-sky-300 light:text-sky-600">
             <ListOrdered className="h-5 w-5" />
-            <span className="text-xs font-bold uppercase tracking-[0.2em]">
+            <span className="text-xs font-bold">
               Community Board
             </span>
           </div>
-          <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] sm:text-4xl">
+          <h1 className="mt-2 text-3xl font-bold tracking-display sm:text-4xl">
             Top expansion franchises
           </h1>
 
@@ -155,17 +155,17 @@ export const Leaderboard = () => {
                           </span>
                           {stats.offense_rating != null && (
                             <span className="text-cyan-300 light:text-cyan-600">
-                              {stats.offense_rating.toFixed(0)}% OFF
+                              {stats.offense_rating.toFixed(0)}% Off
                             </span>
                           )}
                           {stats.defense_rating != null && (
                             <span className="text-rose-400 light:text-rose-600">
-                              {stats.defense_rating.toFixed(0)}% DEF
+                              {stats.defense_rating.toFixed(0)}% Def
                             </span>
                           )}
                           {stats.aggressiveness_rating != null && (
                             <span className="text-amber-300 light:text-amber-600">
-                              {stats.aggressiveness_rating.toFixed(0)}% AGG
+                              {stats.aggressiveness_rating.toFixed(0)}% Agg
                             </span>
                           )}
                         </p>

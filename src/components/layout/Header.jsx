@@ -11,7 +11,7 @@ const navLinkClassName = ({ isActive }) =>
   ].join(" ");
 const bottomNavLinkClassName = ({ isActive }) =>
   [
-    "flex flex-col items-center justify-center gap-1 rounded-2xl py-1 px-3 text-[10px] font-bold tracking-wide transition-all duration-200 outline-none focus:outline-none",
+    "flex flex-col items-center justify-center gap-1 rounded-2xl py-1 px-3 text-[10px] font-bold transition-all duration-200 outline-none focus:outline-none",
     isActive
       ? "text-[#7ee340] light:text-[#2e6e14]"
       : "text-gray-400 hover:text-white light:text-slate-500 light:hover:text-slate-900",
@@ -78,7 +78,7 @@ export const Header = () => {
                 className="h-10 w-10 shrink-0 sm:h-11 sm:w-11 lg:h-14 lg:w-14 hidden light:block"
               />
               <div className="min-w-0 flex-1 overflow-hidden">
-                <h1 className="whitespace-nowrap text-[clamp(0.72rem,4.2vw,2.8rem)] font-bold leading-none tracking-[-0.04em] text-white light:text-gray-900 sm:text-[clamp(1rem,2.4vw,2.8rem)]">
+                <h1 className="whitespace-nowrap text-[clamp(0.72rem,4.2vw,2.8rem)] font-bold leading-none tracking-display text-white light:text-gray-900 sm:text-[clamp(1rem,2.4vw,2.8rem)]">
                   Blue Line Breakdown
                 </h1>
               </div>
@@ -102,7 +102,7 @@ export const Header = () => {
                       <span className="flex items-center gap-1.5">
                         Expansion
                         <span
-                          className="inline-flex items-center rounded-full px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-wide"
+                          className="inline-flex items-center rounded-full px-1.5 py-0.5 text-[0.6rem] font-bold"
                           style={{
                             background: "var(--btn-accent)",
                             color: "var(--btn-accent-text)",
@@ -148,13 +148,13 @@ export const Header = () => {
             <div className="relative">
               <Trophy className="h-5 w-5 mb-0.5" />
               <span
-                className="absolute -top-1 -right-6 inline-flex items-center rounded-full px-1 text-[0.5rem] font-bold uppercase tracking-wide"
+                className="absolute -top-1 -right-6 inline-flex items-center rounded-full px-1 text-[0.5rem] font-bold"
                 style={{
                   background: "var(--btn-accent)",
                   color: "var(--btn-accent-text)",
                 }}
               >
-                BETA
+                Beta
               </span>
             </div>
             <span>Expansion</span>

@@ -222,7 +222,7 @@ export const AccountMenu = () => {
             <Divider />
 
             <div className="px-1 py-2">
-              <p className="flex items-center gap-1.5 px-3 pb-1 text-xs font-bold uppercase tracking-[0.15em] text-gray-500">
+              <p className="flex items-center gap-1.5 px-3 pb-1 text-xs font-bold text-gray-500">
                 <Bookmark className="h-3.5 w-3.5" /> My Bookmarks
               </p>
               {bookmarks.length === 0 ? (
@@ -254,7 +254,7 @@ export const AccountMenu = () => {
             <Divider />
 
             <div className="px-1 py-2">
-              <p className="flex items-center gap-1.5 px-3 pb-1 text-xs font-bold uppercase tracking-[0.15em] text-gray-500">
+              <p className="flex items-center gap-1.5 px-3 pb-1 text-xs font-bold text-gray-500">
                 <Trophy className="h-3.5 w-3.5" /> My Drafts
               </p>
               {savedDrafts.length === 0 ? (
@@ -292,7 +292,7 @@ export const AccountMenu = () => {
             <Divider />
 
             <div className="flex items-center justify-between px-3 py-2">
-              <span className="text-xs font-bold uppercase tracking-[0.15em] text-gray-500">
+              <span className="text-xs font-bold text-gray-500">
                 Theme
               </span>
               <ThemeToggle showLabel={false} />

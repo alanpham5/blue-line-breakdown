@@ -81,7 +81,7 @@ export const TeamHeader = ({
 
               <span className="text-lg font-semibold text-gray-300 light:text-gray-700">
                 <span className="md:hidden">
-                  {position === "F" ? "FWD" : position === "D" ? "DEF" : "G"}{" "}
+                  {position === "F" ? "Fwd" : position === "D" ? "Def" : "G"}{" "}
                   •{" "}
                 </span>
                 <span className="hidden md:inline">

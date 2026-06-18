@@ -13,6 +13,7 @@ const CompactStatBar = ({ label, percentile, type = "offensive" }) => {
     valueColor = "text-amber-300";
     trackColor = "bg-[rgba(120,80,20,0.52)]";
   }
+  const fillWidth = Math.min(100, Math.max(0, percentile ?? 0));
   return (
     <div className="mb-1.5">
       <div className="flex justify-between items-center mb-0.5 gap-2">
@@ -26,25 +27,25 @@ const CompactStatBar = ({ label, percentile, type = "offensive" }) => {
       <div
         className={`w-full h-1.5 overflow-hidden rounded-full ${trackColor}`}
       >
-        <div
-          className={`h-1.5 rounded-full bg-gradient-to-r ${color}`}
-          style={{
-            width: `${Math.min(100, Math.max(0, percentile ?? 0))}%`,
-          }}
-        />
+        {fillWidth > 0 && (
+          <div
+            className={`h-1.5 rounded-full bg-gradient-to-r ${color}`}
+            style={{ width: `${fillWidth}%` }}
+          />
+        )}
       </div>
     </div>
   );
 };
 const RatingBadge = ({ value, color }) => (
-  <span className={`text-lg font-extrabold tracking-[-0.04em] ${color}`}>
+  <span className={`text-lg font-extrabold tracking-display ${color}`}>
     {(value ?? 0).toFixed(1)}%
   </span>
 );
 const ImpactColumn = ({ title, accent, players, season }) => (
   <div>
     <h4
-      className={`text-[12px] font-bold uppercase tracking-[0.12em] mb-1.5 ${accent}`}
+      className={`text-[12px] font-bold mb-1.5 ${accent}`}
     >
       {title}
     </h4>
@@ -156,9 +157,7 @@ export const DraftShareDisplay = ({ draft, profile }) => {
             gap: 16,
             fontSize: 26,
             fontWeight: 800,
-            letterSpacing: "0.15em",
             color: "#f3f4f6",
-            textTransform: "uppercase",
           }}
         >
           <img
@@ -185,10 +184,10 @@ export const DraftShareDisplay = ({ draft, profile }) => {
       >
         <div className="liquid-glass-strong rounded-[28px] overflow-hidden px-5 py-4">
           <div className="flex flex-col items-center text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.3em] text-amber-300">
+            <p className="text-xs font-bold text-amber-300">
               Expansion Draft Simulator · {parseInt(season, 10) + 1}
             </p>
-            <h2 className="mt-1.5 text-3xl font-extrabold tracking-[-0.04em] text-white">
+            <h2 className="mt-1.5 text-3xl font-extrabold tracking-display text-white">
               {draft.teamName}
             </h2>
             <div className="flex items-center justify-center gap-2 mt-1.5 text-base font-semibold text-gray-300">
@@ -346,7 +345,7 @@ export const DraftShareDisplay = ({ draft, profile }) => {
               <h3 className="text-base font-extrabold text-white">Misc</h3>
             </div>
             <div className="mb-2">
-              <div className="text-xs font-bold uppercase tracking-[0.12em] text-gray-400 mb-1">
+              <div className="text-xs font-bold text-gray-400 mb-1">
                 Possession
               </div>
               <CompactStatBar
@@ -356,7 +355,7 @@ export const DraftShareDisplay = ({ draft, profile }) => {
               />
             </div>
             <div className="pt-1.5 border-t border-white/5">
-              <div className="text-xs font-bold uppercase tracking-[0.12em] text-gray-400 mb-1">
+              <div className="text-xs font-bold text-gray-400 mb-1">
                 Pace
               </div>
               <CompactStatBar
@@ -487,7 +486,7 @@ export const DraftShareDisplay = ({ draft, profile }) => {
                         similar.season
                       )}
                     </p>
-                    <p className="text-[9px] uppercase tracking-[0.16em] text-gray-400 mt-0.5">
+                    <p className="text-[9px] text-gray-400 mt-0.5">
                       {playerUtils.formatSeason(similar.season)}
                     </p>
                   </div>
