@@ -1,112 +1,229 @@
-# Blue Line Breakdown — Firebase & Firestore Setup
+# Blue Line Breakdown — Auth & Infrastructure Setup
 
 This guide covers everything needed to enable **Authentication**, **Cloud
 Firestore bookmarking**, and the **Expansion Draft community leaderboard**.
 
-The frontend uses the **Firebase Web SDK v10 (modular)**. All wiring lives under
-[`src/lib/firebase/`](src/lib/firebase/) and reads configuration from
-`REACT_APP_FIREBASE_*` environment variables — no keys are committed.
+Google SSO is handled entirely by a direct OAuth 2.0 flow — configured once in
+Google Cloud Console and never touching Firebase's OAuth infrastructure. Email
+verification and password-reset messages are delivered by the **Firebase Trigger
+Email extension** over Gmail SMTP — no custom domain required. Firebase Auth is
+kept as the session and JWT layer; Firestore is the data store.
 
 ---
 
 ## 1. Create a Firebase project
 
-1. Go to the [Firebase Console](https://console.firebase.google.com/) →
-   **Add project**. Name it (e.g. `blue-line-breakdown`).
-2. Disable or enable Google Analytics as you prefer — it's not required.
+1. Go to [Firebase Console](https://console.firebase.google.com/) → **Add project**.
+2. Disable Google Analytics if preferred — it is not required.
 
 ## 2. Register a Web App
 
-1. In the project, click the **Web** icon (`</>`) to add a web app.
+1. Project → click the **Web** icon (`</>`) → **Add app**.
 2. Give it a nickname; you do **not** need Firebase Hosting.
-3. Copy the `firebaseConfig` values shown — you'll paste them into `.env`.
+3. Copy the `firebaseConfig` values — you will paste them into `.env` in step 5.
 
-## 3. Enable Authentication providers
+## 3. Enable Email/Password authentication
 
-Console → **Build → Authentication → Get started → Sign-in method**:
+Firebase Console → **Build → Authentication → Get started → Sign-in method**:
 
-- **Email/Password** → Enable.
-- **Google** → Enable, choose a support email, Save.
+- **Email/Password** → Enable → Save.
 
-Under **Authentication → Settings → Authorized domains**, make sure these are
-listed (add any you deploy to):
+> Google SSO is **not** configured here. It is configured entirely in Google
+> Cloud Console in the next step.
+
+Under **Authentication → Settings → Authorized domains**, add:
 
 - `localhost`
 - your Vercel domain, e.g. `blue-line-breakdown.vercel.app`
 
-> Google SSO popups and email-action links only work on authorized domains.
+---
 
-### SSO Branding (Custom Auth Domain)
+## 4. Google Cloud Console — OAuth setup
 
-To prevent Google SSO from showing the default Firebase domain (`blue-line-breakdown-afaf2.firebaseapp.com`) and display your app brand/domain instead:
+This is the **only** place you configure Google SSO.
 
-1. **Google Cloud Console Settings**:
-   - Go to Google Cloud Console, select your project, and navigate to **APIs & Services** -> **Credentials**.
-   - Edit the **OAuth 2.0 Client ID** for Web application.
-   - Add your Vercel domain (`https://blue-line-breakdown.vercel.app`) to **Authorized JavaScript origins**.
-   - Add the custom rewrite path (`https://blue-line-breakdown.vercel.app/__/auth/handler`) to **Authorized redirect URIs**.
-2. **Google OAuth Consent Screen**:
-   - In **APIs & Services** -> **OAuth consent screen**, ensure the **App name** is set to `Blue Line Breakdown`.
-3. **Vercel Rewrites (`vercel.json`)**:
-   - A `vercel.json` file must be present in the repository root containing a rewrite rule to proxy `/__/auth/*` requests to Firebase Hosting:
-     ```json
-     {
-       "rewrites": [
-         {
-           "source": "/__/auth/:path*",
-           "destination": "https://blue-line-breakdown-afaf2.firebaseapp.com/__/auth/:path*"
-         }
-       ]
-     }
-     ```
+### 4a. OAuth consent screen
 
-## 4. Create the Firestore database
+1. Open [Google Cloud Console](https://console.cloud.google.com/) → select your Firebase project.
+2. Navigate to **APIs & Services → OAuth consent screen**.
+3. Choose **External** → **Create**.
+4. Fill in:
+   - **App name**: `Blue Line Breakdown`
+   - **User support email**: your email
+   - **App logo**: optional, appears on the consent screen
+   - **App home page**: `https://blue-line-breakdown.vercel.app`
+   - **Developer contact email**: your email
+5. Click **Save and Continue** through the remaining screens.
 
-Console → **Build → Firestore Database → Create database**:
+### 4b. Create an OAuth 2.0 Client ID
 
-- Start in **production mode** (the rules below lock it down properly).
+1. Navigate to **APIs & Services → Credentials → Create Credentials → OAuth client ID**.
+2. Application type: **Web application**.
+3. Name: `Blue Line Breakdown Web`.
+4. Under **Authorized JavaScript origins**, add:
+   ```
+   https://blue-line-breakdown.vercel.app
+   http://localhost:3000
+   ```
+5. Under **Authorized redirect URIs**, add:
+   ```
+   https://blue-line-breakdown.vercel.app/api/auth/google/callback
+   http://localhost:3000/api/auth/google/callback
+   ```
+6. Click **Create**.
+7. Copy the **Client ID** and **Client Secret** — you will need both in step 5.
+
+> The redirect URI points to your Vercel serverless function, not to Firebase.
+> Firebase is not involved in this OAuth flow at all.
+
+---
+
+## 5. Firebase service account (Admin SDK)
+
+The serverless functions use the Firebase Admin SDK to create users, issue
+custom tokens, verify emails, reset passwords, and queue outgoing mail for the
+Trigger Email extension.
+
+1. Firebase Console → **Project settings** (gear icon) → **Service accounts**.
+2. Click **Generate new private key** → download the JSON file.
+3. Base64-encode it (no line breaks):
+
+   ```bash
+   base64 -i serviceAccount.json | tr -d '\n'
+   ```
+
+4. Copy the output — this is your `FIREBASE_SERVICE_ACCOUNT_B64` value.
+
+> Never commit the raw JSON or the encoded string to source control.
+
+---
+
+## 6. Transactional email — Firebase Trigger Email extension
+
+Instead of Resend (which needs a verified custom domain), email is sent by the
+official **Trigger Email from Firestore** extension. The serverless functions
+write a document to a Firestore collection; the extension picks it up and sends
+it over an SMTP provider. **Gmail SMTP works with no custom domain.**
+
+### 6a. Create a Gmail App Password (SMTP credentials)
+
+1. Use any Gmail account as the sender (e.g. your own).
+2. Enable **2-Step Verification**: [myaccount.google.com/security](https://myaccount.google.com/security).
+3. Go to **App passwords**: [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords).
+4. Create a new app password (name it `blue-line-breakdown`) and copy the 16-character value.
+
+> The app password is the SMTP password — your normal Gmail password will not work.
+> Gmail's free tier allows ~500 messages/day, which is ample for verification/reset email.
+
+### 6b. Install the Trigger Email extension
+
+Firebase Console → **Build → Extensions** → find **Trigger Email from Firestore**
+(`firebase/firestore-send-email`) → **Install**. During configuration:
+
+| Setting | Value |
+| --- | --- |
+| **SMTP connection URI** | `smtps://YOUR_EMAIL%40gmail.com@smtp.gmail.com:465` |
+| **SMTP password** | the 16-char Gmail App Password from step 6a |
+| **Email documents collection** | `mail` |
+| **Default FROM address** | `Blue Line Breakdown <YOUR_EMAIL@gmail.com>` |
+
+> Note the `%40` — the `@` in the email must be URL-encoded inside the connection URI.
+> Some console versions ask for the SMTP password as a separate field/secret rather
+> than inline in the URI; either is fine.
+
+The collection name (`mail`) must match `MAIL_COLLECTION` in your env (it defaults
+to `mail`, so you can leave that unset). The app passes no explicit FROM unless you
+set `EMAIL_FROM`, so the extension's default sender is used.
+
+### 6c. How the app uses it
+
+[`api/_lib/email.js`](api/_lib/email.js) writes `{ to, message: { subject, html } }`
+to the `mail` collection via the Admin SDK. The extension sends it and writes a
+`delivery` status field back onto the same document — handy for debugging in the
+Firestore console.
+
+---
+
+## 7. Firestore database
+
+Firebase Console → **Build → Firestore Database → Create database**:
+
+- Start in **production mode**.
 - Pick a region close to your users.
 
-## 5. Configure environment variables
-
-Copy `.env.example` to `.env` and fill in the Web App config from step 2. Note that for custom branded SSO, `REACT_APP_FIREBASE_AUTH_DOMAIN` should be set to your custom Vercel domain (e.g. `blue-line-breakdown.vercel.app`) instead of the default `.firebaseapp.com` domain:
-
-```bash
-REACT_APP_FIREBASE_API_KEY=...
-REACT_APP_FIREBASE_AUTH_DOMAIN=blue-line-breakdown.vercel.app
-REACT_APP_FIREBASE_PROJECT_ID=your-project
-REACT_APP_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
-REACT_APP_FIREBASE_MESSAGING_SENDER_ID=...
-REACT_APP_FIREBASE_APP_ID=...
-```
-
-In production (Vercel), add the same variables under **Project → Settings →
-Environment Variables**, then redeploy.
-
-> If these are missing, the app still runs — `isFirebaseConfigured` is `false`,
-> auth/bookmark UI shows a "configure Firebase" notice, and the leaderboard
-> renders empty instead of throwing.
-
-## 6. Deploy the security rules & indexes
-
-The repo ships:
-
-- [`firestore.rules`](firestore.rules) — access control (see below)
-- [`firestore.indexes.json`](firestore.indexes.json) — the composite index the
-  season-filtered leaderboard query needs
-- [`firebase.json`](firebase.json) — points the CLI at both
-
-Install the CLI once and deploy:
+### Deploy rules and indexes
 
 ```bash
 npm install -g firebase-tools
 firebase login
-firebase use --add            # select your project
+firebase use --add
 firebase deploy --only firestore:rules,firestore:indexes
 ```
 
-> Alternatively, the first time the season-filtered leaderboard query runs,
-> Firestore logs a console error with a **one-click "create index"** link.
+---
+
+## 8. Environment variables
+
+### Local development (`.env`)
+
+```bash
+REACT_APP_API_URL=https://blue-line-breakdown-api.onrender.com
+REACT_APP_APP_URL=http://localhost:3000
+
+REACT_APP_GOOGLE_CLIENT_ID=<Client ID from step 4b>
+GOOGLE_CLIENT_SECRET=<Client Secret from step 4b>
+
+REACT_APP_FIREBASE_API_KEY=...
+REACT_APP_FIREBASE_AUTH_DOMAIN=blue-line-breakdown-afaf2.firebaseapp.com
+REACT_APP_FIREBASE_PROJECT_ID=your-project-id
+REACT_APP_FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=...
+REACT_APP_FIREBASE_APP_ID=...
+
+FIREBASE_SERVICE_ACCOUNT_B64=<base64 output from step 5>
+
+# Email — delivered by the Trigger Email extension (step 6).
+# Both are optional; defaults shown.
+MAIL_COLLECTION=mail
+EMAIL_FROM=
+```
+
+> `REACT_APP_FIREBASE_AUTH_DOMAIN` can remain as the Firebase default domain
+> (`your-project.firebaseapp.com`) in both environments. The Google consent
+> screen is now driven entirely by the Cloud Console OAuth client — Firebase's
+> auth domain is no longer involved in the Google SSO flow.
+
+### Production (Vercel dashboard)
+
+Add all variables above to **Vercel → Project → Settings → Environment
+Variables**, with these production overrides:
+
+```bash
+REACT_APP_APP_URL=https://blue-line-breakdown.vercel.app
+```
+
+Mark `FIREBASE_SERVICE_ACCOUNT_B64` and `GOOGLE_CLIENT_SECRET` as **Sensitive**.
+The SMTP credentials live on the extension (configured in step 6), not in Vercel.
+Trigger a new deployment after saving.
+
+---
+
+## How Google SSO works (no Firebase involved)
+
+```
+User clicks "Continue with Google"
+  → Frontend redirects to accounts.google.com with your Client ID
+  → Google shows consent screen (your app name, your brand)
+  → User approves
+  → Google redirects to /api/auth/google/callback?code=...
+  → Serverless function exchanges code for Google tokens (using Client Secret)
+  → Serverless function finds or creates Firebase user (via Admin SDK)
+  → Serverless function issues a Firebase custom token
+  → Redirects browser to /auth/google/callback?customToken=...
+  → Frontend calls signInWithCustomToken → Firebase session established
+```
+
+No `firebaseapp.com` appears anywhere in this flow.
 
 ---
 
@@ -114,106 +231,54 @@ firebase deploy --only firestore:rules,firestore:indexes
 
 ```
 users/{uid}                      (owner-only)
-  bookmarks/{entityType}_{id}    { entityId, entityType: 'PLAYER'|'TEAM',
-                                   label, player?/team?, season?, position?,
-                                   createdAt }
-  drafts/progress_{season}       in-progress autosave (one per season)
-                                 { status:'in_progress', season:number,
-                                   teamName, picks:{ [team]: player },
-                                   pickCount:number, updatedAt }
-  drafts/{autoId}                completed franchise (source of truth)
-                                 { status:'complete', season:number, teamName,
-                                   picks:[player],            // roster only —
-                                   pickCount:number,          // metrics are
-                                   postedToLeaderboard?:bool, // recalculated on
-                                   createdAt, updatedAt }      // every view
+  bookmarks/{entityType}_{id}
+  drafts/progress_{season}
+  drafts/{autoId}
 
-expansion_drafts/{draftId}       (public read; id == the saved draft's id)
-  { draftId,                       // reference back to the saved draft
-    ownerId, ownerName, teamName, season:number,
-    profile: {                     // metrics snapshot, captured once at post
-      stats, roster, similarTeams, predictedRecord, draftSummary },
-    picks: profile.roster,         // roster snapshot (franchise-ordered)
-    metrics: profile.draftSummary, // metrics snapshot
-    likes:number, likedBy:[uid], createdAt }
+expansion_drafts/{draftId}       (public read)
+
+auth_tokens/{uuid}               (public read; no client writes)
+  { uid, type: 'verify'|'reset', used, expiresAt, createdAt }
+
+mail/{autoId}                    (no client access; Admin SDK + extension only)
+  { to, message: { subject, html }, delivery }
 ```
-
-A saved draft is private and stores only its roster; team metrics are
-recalculated by the backend whenever the draft is viewed. A leaderboard entry
-is a public snapshot that reuses the saved draft's id, so a draft has at most
-one entry, posting is idempotent, deleting a draft cascades to its entry, and an
-entry can never reference a missing or another user's draft.
 
 ## Security rules summary
 
-`firestore.rules` enforces:
-
-| Path                         | Read   | Write                                                                                                                                   |
-| ---------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `users/{uid}`                | owner  | owner only                                                                                                                              |
-| `users/{uid}/bookmarks/{id}` | owner  | owner only                                                                                                                              |
-| `users/{uid}/drafts/{id}`    | owner  | owner only (private saved drafts — no email gate)                                                                                       |
-| `expansion_drafts/{id}`      | public | **create**: verified email + `ownerId == uid` + `draftId == id` + `likes == 0` + the owned saved draft `users/{uid}/drafts/{id}` exists |
-|                              |        | **update**: signed-in, only `likes`/`likedBy` may change, only your own uid                                                             |
-|                              |        | **delete**: owner only                                                                                                                  |
-
-This guarantees users can only touch their own data, and posting to the
-community leaderboard requires a verified email (matching the in-app
-`user.emailVerified` gate).
-
----
-
-## Backend (Expansion Draft)
-
-All draft logic lives in the Flask backend (`blue-line-breakdown-stateless`);
-the frontend is a thin client that renders whatever the API returns.
-
-- `GET /draft/teams?year=<season>` → franchises active that season, ordered by
-  full name (also the roster ordering used by `/draft/analyze`)
-- `GET /draft/rosters?year=<season>&team=<ABBR>` → forwards/defensemen/goalies
-  with G/A/PTS/+−, age, goalie SV%/GAA/SV/SA, **plus** a `protection` object:
-
-  ```json
-  "protection": {
-    "scheme": "7-3-1",            // or "8-1"
-    "isLosing": false,            // resolved server-side from teams_processed
-    "players": [{ "playerId": 1, "protected": true, "protectionReason": "...",
-                  "exempt": false, ... }],
-    "unprotected": [ ... ]
-  }
-  ```
-
-- `POST /draft/analyze` — body `{ season, teamName, picks[] }`. Validates the
-  roster (one pick per franchise, 12 F / 6 D / 2 G, unprotected-only) and returns
-  a full team profile:
-
-  ```json
-  {
-    "teamName": "Seattle Kraken", "season": 2025, "isExpansionTeam": true,
-    "stats": { "goals_pg": 3.12, "goals_pg_pct": 72.4, "offense_rating": 68.2, ... },
-    "roster": [ /* one entry per franchise, in /draft/teams order, WAR-enriched */ ],
-    "similarTeams": [{ "team": "COL", "season": 2022, "similarity": 87.4 }],
-    "predictedRecord": { "wins": 44, "losses": 30, "otl": 8,
-                          "display": "44-30-8", "playoffProbability": 0.62 },
-    "draftSummary": { "counts": {...}, "scoringDepth": {...}, "ageTrajectory": {...} }
-  }
-  ```
-
-  A `400` is returned for any roster-rule violation.
-
-No extra configuration is required beyond the backend's existing data hosting.
-**Note:** the source dataset has no goalie W/L, so the draft table surfaces
-GP/SV%/GAA instead; `+/-` is approximated by on-ice goal differential.
+| Path | Read | Write |
+| --- | --- | --- |
+| `users/{uid}` | owner | owner only |
+| `users/{uid}/bookmarks/{id}` | owner | owner only |
+| `users/{uid}/drafts/{id}` | owner | owner only |
+| `expansion_drafts/{id}` | public | create: verified email + ownership; update: likes only; delete: owner |
+| `auth_tokens/{tokenId}` | public | Admin SDK only |
+| `mail/{docId}` | none | Admin SDK only (Trigger Email extension) |
 
 ---
 
 ## Local development
 
+The Google OAuth callback (`/api/auth/google/callback`) is a Vercel serverless
+function. The plain CRA dev server (`npm start`) does not serve `api/` — it
+serves `index.html` for every unknown path, so Google's redirect lands in React
+Router instead of the function.
+
+Use `vercel dev`, which starts both CRA and the serverless functions behind a
+single local port:
+
 ```bash
-cp .env.example .env     # fill in Firebase keys
+cp .env.example .env     # fill in all values
 npm install
-npm run dev              # http://localhost:3000
+npx vercel link          # one-time: links the project to your Vercel account
+npm run dev              # runs vercel dev → http://localhost:3000
 ```
 
-The backend defaults to `http://localhost:5001` (override with
-`REACT_APP_API_URL`).
+`vercel dev` reads `.env` automatically and routes `/api/*` to the functions
+while proxying everything else to CRA. The Google redirect URI
+`http://localhost:3000/api/auth/google/callback` must be registered in the
+Google Cloud Console (step 4b).
+
+> If you only need to work on the UI (no auth flows), `npm start` still works —
+> it just can't handle the OAuth callback.
+

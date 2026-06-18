@@ -11,19 +11,18 @@ import { useAuth } from "providers/AuthContext";
 import {
   signUpWithEmail,
   signInWithEmail,
-  signInWithGoogle,
-  completeGoogleLink,
+  initiateGoogleOAuth,
   resetPassword,
   mapAuthError,
-  ACCOUNT_EXISTS_CODE,
 } from "lib/firebase/auth";
 import { checkTeamNameProfanity } from "utils/profanity";
+
 const VIEW = {
   SIGNIN: "signin",
   SIGNUP: "signup",
   RESET: "reset",
-  LINK: "link",
 };
+
 const GoogleGlyph = () => (
   <svg aria-hidden="true" viewBox="0 0 18 18" className="h-5 w-5">
     <path
@@ -44,6 +43,7 @@ const GoogleGlyph = () => (
     />
   </svg>
 );
+
 export const AuthModal = () => {
   const { authModal, closeAuth, isConfigured } = useAuth();
   const isOpen = authModal.open;
@@ -51,20 +51,20 @@ export const AuthModal = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
-  const [pendingCred, setPendingCred] = useState(null);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
   const backdropRef = useRef(null);
+
   useEffect(() => {
     if (isOpen) {
       setView(authModal.mode === "signup" ? VIEW.SIGNUP : VIEW.SIGNIN);
       setError("");
       setNotice("");
       setPassword("");
-      setPendingCred(null);
     }
   }, [isOpen, authModal.mode]);
+
   useEffect(() => {
     if (!isOpen) return;
     const onKey = (e) => e.key === "Escape" && closeAuth();
@@ -75,30 +75,19 @@ export const AuthModal = () => {
       document.body.style.overflow = "";
     };
   }, [isOpen, closeAuth]);
+
   if (!isOpen) return null;
+
   const resetMessages = () => {
     setError("");
     setNotice("");
   };
-  const handleGoogle = async () => {
-    resetMessages();
-    setBusy(true);
-    try {
-      await signInWithGoogle();
-      closeAuth();
-    } catch (err) {
-      if (err?.code === ACCOUNT_EXISTS_CODE) {
-        setPendingCred(err.pendingCred);
-        setEmail(err.email || email);
-        setView(VIEW.LINK);
-        setError(mapAuthError(err));
-      } else {
-        setError(mapAuthError(err));
-      }
-    } finally {
-      setBusy(false);
-    }
+
+  const handleGoogle = () => {
+    closeAuth();
+    initiateGoogleOAuth();
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     resetMessages();
@@ -127,9 +116,6 @@ export const AuthModal = () => {
       } else if (view === VIEW.RESET) {
         await resetPassword(email);
         setNotice("Password reset email sent. Check your inbox — and your spam folder if you don't see it.");
-      } else if (view === VIEW.LINK) {
-        await completeGoogleLink(email, password, pendingCred);
-        closeAuth();
       }
     } catch (err) {
       setError(mapAuthError(err));
@@ -137,26 +123,27 @@ export const AuthModal = () => {
       setBusy(false);
     }
   };
+
   const titles = {
     [VIEW.SIGNIN]: "Welcome back",
     [VIEW.SIGNUP]: "Create your account",
     [VIEW.RESET]: "Reset your password",
-    [VIEW.LINK]: "Link your Google account",
   };
+
   const subtitles = {
     [VIEW.SIGNIN]: "Sign in to save bookmarks and post drafts.",
     [VIEW.SIGNUP]: "Join to bookmark players and run the Expansion Draft.",
     [VIEW.RESET]: "We'll email you a secure reset link.",
-    [VIEW.LINK]:
-      "This email already uses a password. Confirm it to link Google to the same account.",
   };
+
   const showPassword = view !== VIEW.RESET;
+
   const submitLabel = {
     [VIEW.SIGNIN]: "Sign in",
     [VIEW.SIGNUP]: "Create account",
     [VIEW.RESET]: "Send reset link",
-    [VIEW.LINK]: "Confirm & link",
   }[view];
+
   return (
     <div
       ref={backdropRef}
@@ -225,7 +212,6 @@ export const AuthModal = () => {
             placeholder="Email address"
             value={email}
             onChange={setEmail}
-            disabled={view === VIEW.LINK}
             autoComplete="email"
             required
           />
@@ -233,14 +219,10 @@ export const AuthModal = () => {
             <Field
               icon={Lock}
               type="password"
-              placeholder={
-                view === VIEW.LINK ? "Your existing password" : "Password"
-              }
+              placeholder="Password"
               value={password}
               onChange={setPassword}
-              autoComplete={
-                view === VIEW.SIGNUP ? "new-password" : "current-password"
-              }
+              autoComplete={view === VIEW.SIGNUP ? "new-password" : "current-password"}
               required
             />
           )}
@@ -295,7 +277,7 @@ export const AuthModal = () => {
               <Switcher onClick={() => setView(VIEW.SIGNIN)}>Sign in</Switcher>
             </>
           )}
-          {(view === VIEW.RESET || view === VIEW.LINK) && (
+          {view === VIEW.RESET && (
             <Switcher onClick={() => setView(VIEW.SIGNIN)}>
               Back to sign in
             </Switcher>
@@ -305,6 +287,7 @@ export const AuthModal = () => {
     </div>
   );
 };
+
 const Field = ({ icon: Icon, value, onChange, ...props }) => (
   <div className="relative">
     <Icon className="app-field-icon absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2" />
@@ -316,6 +299,7 @@ const Field = ({ icon: Icon, value, onChange, ...props }) => (
     />
   </div>
 );
+
 const Switcher = ({ onClick, children }) => (
   <button
     type="button"

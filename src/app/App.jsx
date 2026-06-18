@@ -10,6 +10,9 @@ import { Leaderboard } from "features/expansion-draft/Leaderboard";
 import { AccountSettings } from "features/account/AccountSettings";
 import { SavedBookmarks } from "features/account/SavedBookmarks";
 import { SavedDrafts } from "features/account/SavedDrafts";
+import { VerifyEmail } from "features/auth/components/VerifyEmail";
+import { ResetPassword } from "features/auth/components/ResetPassword";
+import { GoogleCallback } from "features/auth/components/GoogleCallback";
 import { ThemeProvider } from "providers/ThemeContext";
 import { TooltipProvider } from "providers/TooltipContext";
 import { GaPageTrackContext } from "providers/GaPageTrackContext";
@@ -60,6 +63,9 @@ const App = () => {
               <Route path="/account" element={<AccountSettings />} />
               <Route path="/account/bookmarks" element={<SavedBookmarks />} />
               <Route path="/account/drafts" element={<SavedDrafts />} />
+              <Route path="/auth/verify-email" element={<VerifyEmail />} />
+              <Route path="/auth/reset-password" element={<ResetPassword />} />
+              <Route path="/auth/google/callback" element={<GoogleCallback />} />
               <Route path="/loader" element={<Loader />} />
             </Routes>
           </BrowserRouter>

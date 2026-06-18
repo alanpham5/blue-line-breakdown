@@ -48,5 +48,17 @@ service cloud.firestore {
 
       allow delete: if isOwner(resource.data.ownerId);
     }
+
+    match /auth_tokens/{tokenId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Outgoing email queue for the Firebase "Trigger Email" extension.
+    // Written only by the Admin SDK (which bypasses these rules); never exposed
+    // to clients since documents contain recipient addresses and link tokens.
+    match /mail/{docId} {
+      allow read, write: if false;
+    }
   }
 }

@@ -51,37 +51,65 @@ Client-side heuristics (team colors, headshot/logo era resolution, theme
 resolution, canvas export, draft season mapping) are documented in
 **[ALGORITHMS.md](ALGORITHMS.md)**.
 
-## Accounts, Bookmarks & Leaderboard (Firebase)
+## Accounts, Bookmarks & Leaderboard
 
-Authentication and persistence are powered by **Firebase Auth + Cloud
-Firestore** (modular Web SDK v10). See **[SETUP.md](SETUP.md)** for the full
-configuration walkthrough.
+Authentication is powered by **Firebase Auth + Cloud Firestore** (Web SDK v10).
+The Google OAuth consent screen and all email delivery route through the Vercel
+domain — no `firebaseapp.com` branding is ever shown to users. See
+**[SETUP.md](SETUP.md)** for the full infrastructure walkthrough.
 
-- **Auth** — email/password + Google SSO, with automatic account-linking when a
-  Google email collides with an existing password account, email verification,
-  and password reset. Logic lives in [`src/lib/firebase/auth.js`](src/lib/firebase/auth.js);
-  session + bookmark state in [`src/providers/AuthContext.jsx`](src/providers/AuthContext.jsx).
-- **Account menu** — avatar dropdown in the header
-  ([`src/features/auth/components/AccountMenu.jsx`](src/features/auth/components/AccountMenu.jsx))
-  with account settings, a live bookmarks list, a **My Drafts** section (resume
-  in-progress drafts, reopen completed franchises), and sign-out.
-- **Bookmarks** — toggle players/teams from their profile headers
-  ([`src/components/ui/BookmarkButton.jsx`](src/components/ui/BookmarkButton.jsx)),
-  synced in real time via `onSnapshot`.
-- **Expansion Draft** — a thin client over the backend, which owns all draft
-  logic. Rosters arrive with server-resolved protection
-  ([`apiService.fetchDraftRoster`](src/lib/api/apiService.js)); completed drafts
-  are POSTed to `/draft/analyze` ([`apiService.analyzeDraft`](src/lib/api/apiService.js))
-  and the result page renders the returned team profile via the shared
-  [`TeamProfileStatsGrid`](src/components/teamProfile/TeamProfileStatsGrid.jsx).
-  Includes draft UI, HTML5-canvas share/export, and a Firestore-backed community
-  leaderboard.
-- **Saved drafts** — for signed-in users, in-progress drafts autosave to their
-  account (`users/{uid}/drafts`, one resumable doc per season) and completed
-  franchises are persisted on completion. Both are reachable from the account
-  menu, and the draft splash page surfaces a "Resume an in-progress draft"
-  section. State streams live via `onSnapshot` from
-  [`src/providers/AuthContext.jsx`](src/providers/AuthContext.jsx).
+### Auth architecture
 
-Configuration: copy `.env.example` → `.env` and fill in `REACT_APP_FIREBASE_*`.
-The app runs without Firebase configured (auth/bookmark UI degrades gracefully).
+| Surface | Implementation |
+| --- | --- |
+| **Google SSO** | Direct OAuth 2.0 redirect flow — configured in Google Cloud Console only. Frontend redirects to `accounts.google.com`; the Vercel serverless function at `/api/auth/google/callback` exchanges the code for a Firebase custom token; the client completes sign-in via `signInWithCustomToken`. No Firebase popup, no `firebaseapp.com` in the flow. |
+| **Email verification** | Custom token stored in Firestore `auth_tokens`; the Firebase **Trigger Email** extension delivers a branded email linking to `/auth/verify-email?token=<uuid>` |
+| **Password reset** | Same token pattern; the Firebase **Trigger Email** extension delivers a branded email linking to `/auth/reset-password?token=<uuid>` |
+| **Session / JWTs** | Firebase Auth (`onAuthStateChanged`) — unchanged |
+| **Data persistence** | Cloud Firestore — unchanged |
+
+### Supported use cases
+
+- **Sign up / sign in** — email + password or Google SSO. Google account-linking
+  is handled automatically when a Google email collides with an existing password
+  account.
+- **Email verification** — required to post to the community leaderboard.
+  Triggered on sign-up and resendable from Account Settings.
+- **Password reset** — request from the sign-in modal or Account Settings;
+  one-time link expires after 1 hour.
+
+### Key files
+
+| File | Purpose |
+| --- | --- |
+| [`src/lib/firebase/auth.js`](src/lib/firebase/auth.js) | Client-side auth operations |
+| [`src/providers/AuthContext.jsx`](src/providers/AuthContext.jsx) | Session state, bookmarks, drafts |
+| [`src/features/auth/components/AuthModal.jsx`](src/features/auth/components/AuthModal.jsx) | Sign-in / sign-up / reset modal |
+| [`src/features/auth/components/VerifyEmail.jsx`](src/features/auth/components/VerifyEmail.jsx) | `/auth/verify-email` landing page |
+| [`src/features/auth/components/ResetPassword.jsx`](src/features/auth/components/ResetPassword.jsx) | `/auth/reset-password` landing page |
+| [`api/auth/send-verification.js`](api/auth/send-verification.js) | Serverless — generate token, queue verification email |
+| [`api/auth/verify-email.js`](api/auth/verify-email.js) | Serverless — consume token, mark user verified |
+| [`api/auth/send-reset.js`](api/auth/send-reset.js) | Serverless — generate token, queue reset email |
+| [`api/auth/reset-password.js`](api/auth/reset-password.js) | Serverless — consume token, update password |
+| [`api/_lib/email.js`](api/_lib/email.js) | Serverless — queues mail for the Firebase Trigger Email extension |
+
+### Required environment variables
+
+| Variable | Where used | Description |
+| --- | --- | --- |
+| `REACT_APP_FIREBASE_API_KEY` | Browser | Firebase Web SDK |
+| `REACT_APP_FIREBASE_AUTH_DOMAIN` | Browser | Set to your Vercel domain, e.g. `blue-line-breakdown.vercel.app` |
+| `REACT_APP_FIREBASE_PROJECT_ID` | Browser | Firebase project ID |
+| `REACT_APP_FIREBASE_STORAGE_BUCKET` | Browser | Firebase Storage bucket |
+| `REACT_APP_FIREBASE_MESSAGING_SENDER_ID` | Browser | Firebase messaging sender ID |
+| `REACT_APP_FIREBASE_APP_ID` | Browser | Firebase app ID |
+| `REACT_APP_APP_URL` | Serverless | Public URL used to build email links, e.g. `https://blue-line-breakdown.vercel.app` |
+| `FIREBASE_SERVICE_ACCOUNT_B64` | Serverless | Base64-encoded Firebase service account JSON |
+| `MAIL_COLLECTION` | Serverless | Firestore collection watched by the Trigger Email extension (default `mail`) |
+| `EMAIL_FROM` | Serverless | Optional per-message FROM; defaults to the extension's configured sender |
+
+Copy `.env.example` → `.env` and fill in the values. Add the same variables under
+**Vercel → Project → Settings → Environment Variables** for production. The app
+runs without Firebase configured — auth/bookmark UI degrades gracefully when
+`isFirebaseConfigured` is `false`.
+

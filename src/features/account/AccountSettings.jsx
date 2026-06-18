@@ -12,6 +12,8 @@ import {
   User as UserIcon,
   ArrowLeft,
   LogOut,
+  Trash2,
+  AlertTriangle,
 } from "lucide-react";
 import { Header } from "components/layout/Header";
 import { Footer } from "components/layout/Footer";
@@ -21,6 +23,7 @@ import {
   resetPassword,
   resendVerification,
   updateDisplayName,
+  deleteAccount,
 } from "lib/firebase/auth";
 import { useTheme } from "providers/ThemeContext";
 import { checkTeamNameProfanity } from "utils/profanity";
@@ -43,6 +46,8 @@ export const AccountSettings = () => {
   const [error, setError] = useState("");
   const [nameModalOpen, setNameModalOpen] = useState(false);
   const [nameDraft, setNameDraft] = useState("");
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState("");
   useEffect(() => {
     document.title = "Account | Blue Line Breakdown";
     return () => {
@@ -71,6 +76,16 @@ export const AccountSettings = () => {
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [nameModalOpen, busy]);
+  useEffect(() => {
+    if (!deleteModalOpen) return;
+    const onKeyDown = (event) => {
+      if (event.key === "Escape" && busy !== "delete") {
+        setDeleteModalOpen(false);
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [deleteModalOpen, busy]);
   const handleSaveName = async () => {
     const normalized = nameDraft.trim().replace(/\s+/g, " ");
     setBusy("name");
@@ -104,6 +119,25 @@ export const AccountSettings = () => {
       setError("Couldn't update your display name. Please try again.");
     } finally {
       setBusy("");
+    }
+  };
+  const openDeleteModal = () => {
+    setDeleteConfirm("");
+    setDeleteModalOpen(true);
+    setError("");
+    setNotice("");
+  };
+  const handleDeleteAccount = async () => {
+    setBusy("delete");
+    setError("");
+    setNotice("");
+    try {
+      await deleteAccount();
+      setTheme("system");
+      navigate("/", { replace: true });
+    } catch {
+      setBusy("");
+      setError("Couldn't delete your account. Please try again.");
     }
   };
   const openNameModal = () => {
@@ -296,6 +330,26 @@ export const AccountSettings = () => {
               <LogOut className="h-4 w-4" /> Sign out
             </button>
           </section>
+
+          <section className="mt-4 rounded-[28px] border border-rose-500/30 bg-rose-500/5 p-6 sm:p-7">
+            <h2 className="text-base font-bold text-rose-400 light:text-rose-600">
+              Danger zone
+            </h2>
+            <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm text-gray-400 light:text-gray-500">
+                Permanently delete your account, drafts, and bookmarks. This
+                can't be undone.
+              </p>
+              <button
+                type="button"
+                onClick={openDeleteModal}
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-[18px] bg-rose-500/15 px-4 py-2.5 text-sm font-semibold text-rose-400 transition-colors hover:bg-rose-500/25 light:text-rose-600"
+              >
+                <Trash2 className="h-4 w-4" />
+                Delete account
+              </button>
+            </div>
+          </section>
         </div>
 
         <Footer />
@@ -354,6 +408,69 @@ export const AccountSettings = () => {
             >
               {busy === "name" && <Loader2 className="h-4 w-4 animate-spin" />}
               Save name
+            </button>
+          </div>
+        </div>
+      )}
+
+      {deleteModalOpen && (
+        <div
+          className="app-modal-backdrop fixed inset-0 z-[9999] flex items-center justify-center bg-black/72 p-4 backdrop-blur-sm light:bg-black/30"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget && busy !== "delete") {
+              setDeleteModalOpen(false);
+            }
+          }}
+        >
+          <div className="app-modal-panel liquid-glass-strong relative w-full max-w-md rounded-[32px] p-6 sm:p-8">
+            <button
+              type="button"
+              onClick={() => setDeleteModalOpen(false)}
+              disabled={busy === "delete"}
+              aria-label="Close delete account modal"
+              className="absolute right-4 top-4 rounded-full p-2 text-gray-400 transition-colors hover:bg-white/10 hover:text-white disabled:opacity-50 light:text-slate-500 light:hover:bg-slate-900/10 light:hover:text-slate-900"
+            >
+              <X className="h-5 w-5" />
+            </button>
+
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-rose-500/15 text-rose-400 light:text-rose-600">
+              <AlertTriangle className="h-6 w-6" />
+            </div>
+
+            <h2 className="mt-4 text-2xl font-bold tracking-tight text-white light:text-gray-900">
+              Delete your account?
+            </h2>
+            <p className="mt-1 text-sm text-gray-400 light:text-gray-500">
+              This permanently deletes your account, saved drafts, bookmarks,
+              and any drafts you've shared. This action can't be undone.
+            </p>
+
+            <div className="mt-5">
+              <label className="block text-xs font-semibold uppercase tracking-[0.14em] text-gray-500">
+                Type DELETE to confirm
+                <input
+                  type="text"
+                  value={deleteConfirm}
+                  onChange={(e) => setDeleteConfirm(e.target.value)}
+                  autoComplete="off"
+                  placeholder="DELETE"
+                  className="mt-1.5 app-field py-3 pl-4 pr-4 text-sm text-white light:text-gray-900"
+                />
+              </label>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleDeleteAccount}
+              disabled={busy === "delete" || deleteConfirm.trim() !== "DELETE"}
+              className="mt-5 flex w-full items-center justify-center gap-2 rounded-[18px] bg-rose-500 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-rose-600 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {busy === "delete" ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Trash2 className="h-4 w-4" />
+              )}
+              Delete account
             </button>
           </div>
         </div>

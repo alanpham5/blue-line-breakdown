@@ -142,3 +142,4 @@ dist
 /build
 /.claude
 /.cursor
+.vercel
