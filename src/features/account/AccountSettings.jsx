@@ -22,6 +22,7 @@ import {
   resendVerification,
   updateDisplayName,
 } from "lib/firebase/auth";
+import { useTheme } from "providers/ThemeContext";
 import { checkTeamNameProfanity } from "utils/profanity";
 const initialsFromUser = (user) => {
   const source = user?.displayName || user?.email || "";
@@ -35,6 +36,7 @@ const initialsFromUser = (user) => {
 };
 export const AccountSettings = () => {
   const { user, loading, openAuth, syncDisplayName } = useAuth();
+  const { setTheme } = useTheme();
   const navigate = useNavigate();
   const [busy, setBusy] = useState("");
   const [notice, setNotice] = useState("");
@@ -117,7 +119,7 @@ export const AccountSettings = () => {
     setError("");
     try {
       await resetPassword(user.email);
-      setNotice("Password reset email sent. Check your inbox.");
+      setNotice("Password reset email sent. Check your inbox — and your spam folder if you don't see it.");
     } catch {
       setError("Couldn't send reset email. Please try again.");
     } finally {
@@ -130,7 +132,7 @@ export const AccountSettings = () => {
     setError("");
     try {
       await resendVerification();
-      setNotice("Verification email sent. Check your inbox.");
+      setNotice("Verification email sent. Check your inbox — and your spam folder if you don't see it.");
     } catch {
       setError("Couldn't send verification email. Please try again.");
     } finally {
@@ -233,9 +235,10 @@ export const AccountSettings = () => {
                 <div className="flex items-start gap-2 text-sm text-amber-400 light:text-amber-600">
                   <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0" />
                   <span>
-                    Your email isn't verified yet. Verify it to secure your
-                    account.
-                  </span>
+                     Your email isn't verified yet. Verify it to secure your
+                     account and unlock posting. Check your spam folder if you
+                     haven't received the email.
+                   </span>
                 </div>
                 <button
                   type="button"
@@ -282,6 +285,7 @@ export const AccountSettings = () => {
             <button
               type="button"
               onClick={async () => {
+                setTheme("system");
                 await logOut();
                 navigate("/", {
                   replace: true,
@@ -299,14 +303,14 @@ export const AccountSettings = () => {
 
       {nameModalOpen && (
         <div
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/72 p-4 backdrop-blur-sm light:bg-black/30"
+          className="app-modal-backdrop fixed inset-0 z-[9999] flex items-center justify-center bg-black/72 p-4 backdrop-blur-sm light:bg-black/30"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget && busy !== "name") {
               setNameModalOpen(false);
             }
           }}
         >
-          <div className="liquid-glass-strong relative w-full max-w-md rounded-[32px] p-6 sm:p-8">
+          <div className="app-modal-panel liquid-glass-strong relative w-full max-w-md rounded-[32px] p-6 sm:p-8">
             <button
               type="button"
               onClick={() => setNameModalOpen(false)}

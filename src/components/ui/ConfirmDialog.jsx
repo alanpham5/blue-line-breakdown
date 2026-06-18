@@ -16,9 +16,9 @@ export const ConfirmDialog = ({
         type="button"
         aria-label="Close dialog"
         onClick={onCancel}
-        className="absolute inset-0 bg-black/60"
+        className="app-modal-backdrop absolute inset-0 bg-black/60"
       />
-      <div className="relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/10 bg-[#0b1220]/95 p-5 text-white shadow-2xl backdrop-blur light:border-slate-200 light:bg-white">
+      <div className="app-modal-panel relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/10 bg-[#0b1220]/95 p-5 text-white shadow-2xl backdrop-blur light:border-slate-200 light:bg-white">
         <h3 className="text-lg font-extrabold tracking-tight text-white light:text-gray-900">
           {title}
         </h3>

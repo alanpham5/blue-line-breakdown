@@ -365,8 +365,17 @@ export const ExpansionDraft = () => {
 
         <div className="liquid-glass-strong liquid-glass-animate rounded-[32px] p-6 sm:p-8">
           <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-white light:text-gray-900 sm:text-4xl flex flex-col sm:flex-row sm:items-center gap-3 flex-wrap">
-            <span className="flex-1 min-w-[280px]">
+            <span className="flex-1 min-w-[280px] flex items-center gap-3">
               Build your expansion franchise
+              <span
+                className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-bold uppercase tracking-wide self-center"
+                style={{
+                  background: "var(--btn-accent)",
+                  color: "var(--btn-accent-text)",
+                }}
+              >
+                Beta
+              </span>
             </span>
             <div className="w-full sm:w-[440px] shrink-0 font-normal text-base tracking-normal">
               <AppSelect
@@ -410,7 +419,7 @@ export const ExpansionDraft = () => {
               {inProgressDrafts.map((d) => (
                 <div
                   key={d.id}
-                  className="flex items-center gap-3 rounded-[18px] border border-white/10 bg-white/5 p-3 light:border-slate-200 light:bg-white/60"
+                  className="flex items-center gap-3 rounded-[18px] border border-white/10 bg-white/5 p-3 transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:bg-white/10 light:border-slate-200 light:bg-white/60"
                 >
                   <button
                     type="button"
@@ -444,8 +453,13 @@ export const ExpansionDraft = () => {
         )}
 
         {teamsLoading && (
-          <div className="mt-6 flex items-center justify-center gap-2 py-10 text-gray-400">
-            <Loader2 className="h-5 w-5 animate-spin" /> Loading franchises…
+          <div className="app-modal-backdrop fixed inset-0 z-[9999] flex items-center justify-center bg-black/72 backdrop-blur-sm light:bg-black/30">
+            <div className="app-modal-panel liquid-glass-strong rounded-[30px] p-8 text-center">
+              <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-sky-300 light:text-sky-600" />
+              <p className="text-lg font-medium text-white light:text-gray-900">
+                Loading franchises…
+              </p>
+            </div>
           </div>
         )}
         {teamsError && (
@@ -540,7 +554,7 @@ export const ExpansionDraft = () => {
                   </div>
                 )}
 
-              <div className="group/carousel relative mt-5">
+              <div className="group/carousel relative mt-5 overflow-visible">
                 <button
                   type="button"
                   aria-label="Scroll franchises left"
@@ -558,26 +572,30 @@ export const ExpansionDraft = () => {
                   <ChevronRight className="h-5 w-5" />
                 </button>
 
-                <div
-                  ref={carouselRef}
-                  className="flex snap-x snap-proximity gap-3 overflow-x-auto scroll-smooth pb-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-                >
-                  {teams.map((t) => (
-                    <div
-                      key={t.team}
-                      id={`team-card-${t.team}`}
-                      className="w-[10.5rem] shrink-0 snap-start sm:w-52"
-                    >
-                      <TeamCard
-                        team={t}
-                        season={season}
-                        actualTheme={actualTheme}
-                        pick={picks[t.team]}
-                        isActive={activeTeam === t.team}
-                        onClick={() => loadRoster(t.team)}
-                      />
+                <div className="-mx-3 px-3">
+                  <div
+                    ref={carouselRef}
+                    className="overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                  >
+                    <div className="flex snap-x snap-proximity gap-3 scroll-smooth px-2 py-8">
+                      {teams.map((t) => (
+                        <div
+                          key={t.team}
+                          id={`team-card-${t.team}`}
+                          className="relative z-0 w-[10.5rem] shrink-0 sm:w-52"
+                        >
+                          <TeamCard
+                            team={t}
+                            season={season}
+                            actualTheme={actualTheme}
+                            pick={picks[t.team]}
+                            isActive={activeTeam === t.team}
+                            onClick={() => loadRoster(t.team)}
+                          />
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -699,43 +717,51 @@ const TeamCard = ({ team, season, actualTheme, pick, isActive, onClick }) => (
   <button
     type="button"
     onClick={onClick}
-    className={`group relative flex h-full w-full flex-col items-center rounded-[22px] border p-3 text-center transition-all duration-200 ${isActive ? "border-sky-400/60 bg-sky-400/10" : "border-white/10 bg-white/5 hover:border-white/25 hover:bg-white/10 light:border-slate-200 light:bg-white/60"}`}
+    className="group w-full cursor-pointer border-0 bg-transparent p-0 outline-none"
   >
-    <img
-      src={playerUtils.getTeamLogoUrl(team.team, season, actualTheme)}
-      alt={team.name}
-      className="h-12 w-12 object-contain"
-      onError={(e) => (e.target.style.visibility = "hidden")}
-    />
-    <span className="mt-1.5 line-clamp-1 text-[0.7rem] font-semibold text-gray-200 light:text-slate-700">
-      {team.name}
-    </span>
+    <div
+      className={`flex flex-col items-center rounded-[22px] border p-3 text-center transition-all duration-300 ease-out group-hover:scale-[1.06] group-hover:shadow-[0_16px_36px_rgba(0,0,0,0.18)] group-focus-visible:ring-2 group-focus-visible:ring-sky-400/50 light:group-hover:shadow-[0_16px_36px_rgba(100,80,90,0.18)] ${
+        isActive
+          ? "border-sky-400/60 bg-sky-400/10"
+          : "border-white/10 bg-[#1c1c1e] group-hover:border-white/20 light:border-slate-200 light:bg-white"
+      }`}
+    >
+      <img
+        src={playerUtils.getTeamLogoUrl(team.team, season, actualTheme)}
+        alt={team.name}
+        className="h-12 w-12 object-contain"
+        onError={(e) => (e.target.style.visibility = "hidden")}
+      />
+      <span className="mt-1.5 line-clamp-1 text-[0.7rem] font-semibold text-gray-200 light:text-slate-700">
+        {team.name}
+      </span>
 
-    <div className="mt-2 w-full">
-      {pick ? (
-        <div className="flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2 py-1">
-          <img
-            src={playerUtils.getPlayerHeadshot(
-              pick.playerId,
-              team.team,
-              season
-            )}
-            alt={pick.name}
-            className="h-5 w-5 shrink-0 rounded-full object-cover bg-[var(--team-color)]"
-            style={{
-              "--team-color": playerUtils.getTeamColor(team.team, season),
-            }}
-            onError={(e) => (e.target.src = playerUtils.getDefaultHeadshot())}
-          />
-          <span className="line-clamp-1 text-[0.65rem] font-semibold text-emerald-300 light:text-emerald-700">
-            {pick.position} - {pick.name}
-          </span>
-        </div>
-      ) : (
-        <div className="rounded-full border border-dashed border-white/20 px-2 py-1 text-[0.65rem] font-medium text-gray-500 light:border-slate-300">
-          Empty slot
-        </div>
-      )}
+      <div className="mt-2 w-full">
+        {pick ? (
+          <div className="flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2 py-1">
+            <img
+              src={playerUtils.getPlayerHeadshot(
+                pick.playerId,
+                team.team,
+                season
+              )}
+              alt={pick.name}
+              className="h-5 w-5 shrink-0 rounded-full object-cover bg-[var(--team-color)]"
+              style={{
+                "--team-color": playerUtils.getTeamColor(team.team, season),
+              }}
+              onError={(e) => (e.target.src = playerUtils.getDefaultHeadshot())}
+            />
+            <span className="line-clamp-1 text-[0.65rem] font-semibold text-emerald-300 light:text-emerald-700">
+              {pick.position} - {pick.name}
+            </span>
+          </div>
+        ) : (
+          <div className="rounded-full border border-dashed border-white/20 px-2 py-1 text-[0.65rem] font-medium text-gray-500 light:border-slate-300">
+            Empty slot
+          </div>
+        )}
+      </div>
     </div>
   </button>
 );
@@ -771,10 +797,16 @@ const RosterTable = ({ roster, season, isMobile, pickedId, onPick }) => {
             {seasonSpan(season)} · {roster.protection.scheme} protection
           </span>
         </h3>
-        <p className="text-xs text-gray-400 flex items-center gap-1.5">
-          <Lock className="h-3.5 w-3.5 text-gray-500" /> Protected players
-          locked
-        </p>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-gray-400 light:text-gray-500">
+          <span className="inline-flex items-center gap-1.5">
+            <Lock className="h-3.5 w-3.5 text-gray-500" />
+            Protected
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <Shield className="h-3.5 w-3.5 text-sky-400 light:text-sky-600" />
+            Exempt
+          </span>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -827,15 +859,8 @@ const RosterTable = ({ roster, season, isMobile, pickedId, onPick }) => {
         </div>
       </div>
 
-      <p className="text-xs text-gray-500 flex flex-wrap gap-x-4 gap-y-1">
-        <span>
-          <Lock className="mr-1 inline h-3.5 w-3.5" /> Protected (Locked)
-        </span>
-        <span>
-          <Shield className="mr-1 inline h-3.5 w-3.5 text-sky-300 light:text-sky-600" />{" "}
-          Exempt (21 & under)
-        </span>
-        <span>Tap an available row to claim a player.</span>
+      <p className="text-xs text-gray-500">
+        Tap an available row to claim a player.
       </p>
     </div>
   );

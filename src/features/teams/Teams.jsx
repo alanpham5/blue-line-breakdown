@@ -311,8 +311,8 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
       ) : (
         <>
           {(initializingCache || showTeamsOverlay) && (
-            <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/72 backdrop-blur-sm light:bg-black/30">
-              <div className="liquid-glass-strong rounded-[30px] p-8 text-center">
+            <div className="app-modal-backdrop fixed inset-0 z-[9999] flex items-center justify-center bg-black/72 backdrop-blur-sm light:bg-black/30">
+              <div className="app-modal-panel liquid-glass-strong rounded-[30px] p-8 text-center">
                 <Loader2 className="mx-auto mb-4 h-12 w-12 animate-spin text-sky-300 light:text-sky-600" />
                 <p className="text-lg font-medium text-white light:text-gray-900">
                   {loadingMessage}

@@ -113,20 +113,20 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
           </div>
         </div>
         <div className="flex min-w-0 w-full max-w-full flex-col items-center py-1 lg:items-start xl:flex-1">
-          <h2 className="mb-3 flex flex-wrap items-center justify-center gap-2 text-[1.7rem] font-bold tracking-[-0.04em] text-white light:text-gray-900 sm:text-[1.8rem] lg:justify-start lg:text-[2.2rem]">
-            <span className="max-w-80 truncate">{player.name}</span>
+          <h2 className="mb-3 flex min-w-0 w-full items-center justify-center gap-2 text-[1.7rem] font-bold tracking-[-0.04em] text-white light:text-gray-900 sm:text-[1.8rem] lg:justify-start lg:text-[2.2rem]">
+            <span className="min-w-0 truncate" style={{ fontSize: 'clamp(1.1rem, 4vw, 2.2rem)' }}>{player.name}</span>
             {didWinStanleyCup && (
               <img
                 src="/stanleycup.png"
                 alt="Stanley Cup"
-                className="w-5 h-9 object-cover xl:hidden"
+                className="shrink-0 w-5 h-9 object-cover xl:hidden"
               />
             )}
             {onShareClick && (
               <button
                 type="button"
                 onClick={onShareClick}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:text-white light:border-slate-300 light:bg-white/80 light:text-slate-600 light:hover:text-slate-900"
+                className="shrink-0 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:text-white light:border-slate-300 light:bg-white/80 light:text-slate-600 light:hover:text-slate-900"
                 aria-label={
                   isMobile ? "Share image" : "Download shareable image"
                 }
@@ -142,6 +142,7 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
               entityType={ENTITY_TYPES.PLAYER}
               entityId={player.playerId}
               size="sm"
+              className="shrink-0"
               meta={{
                 label: player.name,
                 player: player.name,

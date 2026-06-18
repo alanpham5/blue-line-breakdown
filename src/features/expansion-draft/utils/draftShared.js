@@ -24,6 +24,8 @@ export const buildDraftResultState = (entry, user) => {
       ownerName: entry.ownerName,
       savedDraftId: entry.draftId || entry.id,
       postedToLeaderboard: true,
+      likes: entry.likes || 0,
+      likedBy: entry.likedBy || [],
     },
   };
 };

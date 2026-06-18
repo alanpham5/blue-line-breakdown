@@ -19,7 +19,6 @@ import {
   Settings,
   ChevronRight,
   Trophy,
-  PlayCircle,
   Trash2,
 } from "lucide-react";
 import { useAuth } from "providers/AuthContext";
@@ -36,6 +35,7 @@ import {
   draftNavTarget,
 } from "features/account/utils/savedItems";
 import { ThemeToggle } from "components/ui/ThemeToggle";
+import { useTheme } from "providers/ThemeContext";
 import { ConfirmDialog } from "components/ui/ConfirmDialog";
 const MAX_INLINE = 3;
 const initialsFromUser = (user) => {
@@ -50,6 +50,7 @@ const initialsFromUser = (user) => {
 };
 export const AccountMenu = () => {
   const { user, loading, bookmarks, drafts, openAuth } = useAuth();
+  const { setTheme } = useTheme();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [confirmDraft, setConfirmDraft] = useState(null);
@@ -234,7 +235,7 @@ export const AccountMenu = () => {
                     <BookmarkRow
                       key={bm.id}
                       icon={
-                        bm.entityType === ENTITY_TYPES.TEAM ? Shield : Users
+                        bm.entityType === ENTITY_TYPES.TEAM ? Shield : UserIcon
                       }
                       bookmark={bm}
                       onSelect={() => go(bookmarkHref(bm))}
@@ -304,6 +305,7 @@ export const AccountMenu = () => {
                 type="button"
                 onClick={async () => {
                   setOpen(false);
+                  setTheme("system");
                   await logOut();
                 }}
                 className="flex w-full items-center gap-2 rounded-[16px] px-3 py-2.5 text-left text-sm font-semibold text-rose-400 transition-colors hover:bg-rose-500/10 light:text-rose-600"
@@ -356,7 +358,7 @@ const BookmarkRow = ({ icon: Icon, bookmark, onSelect }) => (
 );
 const DraftRow = ({ draft, onClick, onDelete }) => {
   const inProgress = isInProgressDraft(draft);
-  const Icon = inProgress ? PlayCircle : Trophy;
+  const Icon = Users;
   const subtitle = inProgress
     ? `${seasonSpan(draft.season)} · ${draft.pickCount} picked`
     : `${seasonSpan(draft.season)}${draft.profile?.predictedRecord?.display ? ` · ${draft.profile.predictedRecord.display}` : ""}`;

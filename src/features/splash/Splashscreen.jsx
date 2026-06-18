@@ -257,7 +257,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                   <div
                     ref={scrollContainerRef}
                     onScroll={updateScrollEdges}
-                    className="flex gap-4 overflow-x-auto py-6 px-1 scroll-smooth snap-x snap-mandatory hide-scrollbar"
+                    className="flex gap-4 overflow-x-auto py-10 px-3 -my-4 scroll-smooth snap-x snap-mandatory hide-scrollbar"
                     style={{
                       maskImage: playersMaskImage,
                       WebkitMaskImage: playersMaskImage,

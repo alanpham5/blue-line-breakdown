@@ -122,11 +122,11 @@ export const AuthModal = () => {
         }
         await signUpWithEmail(email, password, normalizedName || undefined);
         setNotice(
-          "Account created. We've sent a verification link to your email."
+          "Account created. We've sent a verification link to your email. Check your spam folder if you don't see it."
         );
       } else if (view === VIEW.RESET) {
         await resetPassword(email);
-        setNotice("Password reset email sent. Check your inbox.");
+        setNotice("Password reset email sent. Check your inbox — and your spam folder if you don't see it.");
       } else if (view === VIEW.LINK) {
         await completeGoogleLink(email, password, pendingCred);
         closeAuth();
@@ -161,9 +161,9 @@ export const AuthModal = () => {
     <div
       ref={backdropRef}
       onMouseDown={(e) => e.target === backdropRef.current && closeAuth()}
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/72 p-4 backdrop-blur-sm light:bg-black/30"
+      className="app-modal-backdrop fixed inset-0 z-[9999] flex items-center justify-center bg-black/72 p-4 backdrop-blur-sm light:bg-black/30"
     >
-      <div className="liquid-glass-strong relative w-full max-w-md rounded-[32px] p-6 sm:p-8">
+      <div className="app-modal-panel liquid-glass-strong relative w-full max-w-md rounded-[32px] p-6 sm:p-8">
         <button
           type="button"
           onClick={closeAuth}

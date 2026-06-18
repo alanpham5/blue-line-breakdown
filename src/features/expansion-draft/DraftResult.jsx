@@ -8,6 +8,7 @@ import {
   Check,
   ShieldAlert,
   ListOrdered,
+  Heart,
 } from "lucide-react";
 import { Header } from "components/layout/Header";
 import { Footer } from "components/layout/Footer";
@@ -24,6 +25,7 @@ import {
   postDraftToLeaderboard,
   removeDraftFromLeaderboard,
   saveCompletedDraft,
+  toggleLike,
 } from "lib/firebase/firestore";
 import {
   seasonSpan,
@@ -31,6 +33,7 @@ import {
 } from "features/expansion-draft/utils/draftShared";
 import { DraftShareDisplay } from "features/expansion-draft/components/DraftShareDisplay";
 import { SaveDraftButton } from "features/expansion-draft/components/SaveDraftButton";
+import { ConfirmDialog } from "components/ui/ConfirmDialog";
 const normalizePicks = (picks) => {
   if (Array.isArray(picks)) return picks;
   if (!picks || typeof picks !== "object") return null;
@@ -59,6 +62,9 @@ export const DraftResult = () => {
   );
   const [saveState, setSaveState] = useState("idle");
   const [saveError, setSaveError] = useState("");
+  const [boardConfirm, setBoardConfirm] = useState(null);
+  const [likes, setLikes] = useState(location.state?.draft?.likes || 0);
+  const [likedBy, setLikedBy] = useState(location.state?.draft?.likedBy || []);
   const [profile, setProfile] = useState(
     location.state?.draft?.profile || null
   );
@@ -69,6 +75,8 @@ export const DraftResult = () => {
       setProfile(incoming.profile || null);
       setSavedId(incoming.savedDraftId || null);
       setPosted(Boolean(incoming.postedToLeaderboard));
+      setLikes(incoming.likes || 0);
+      setLikedBy(incoming.likedBy || []);
       setPostState("idle");
       setSaveState("idle");
       setSaveError("");
@@ -120,6 +128,8 @@ export const DraftResult = () => {
   const canEditCommunityEntry = Boolean(
     user && posted && (savedId || isOwnEntry)
   );
+  const showLike = Boolean(savedId && (posted || viewOnly));
+  const liked = Boolean(user && likedBy.includes(user.uid));
   if (!draft || !profile) {
     return (
       <div className="ice-background flex min-h-screen items-center justify-center text-gray-400">
@@ -184,7 +194,7 @@ export const DraftResult = () => {
     if (!user.emailVerified) {
       setPostState("error");
       setPostError(
-        "Please verify your email before posting to the community leaderboard."
+        "Please verify your email before posting to the community board."
       );
       return;
     }
@@ -225,8 +235,34 @@ export const DraftResult = () => {
       setPostError(err?.message || "Couldn't remove your draft.");
     }
   };
+  const handleLike = async () => {
+    if (!savedId) return;
+    if (!user) {
+      openAuth("signin");
+      return;
+    }
+    const wasLiked = liked;
+    setLikedBy((prev) =>
+      wasLiked ? prev.filter((id) => id !== user.uid) : [...prev, user.uid]
+    );
+    setLikes((prev) => (wasLiked ? Math.max(0, prev - 1) : prev + 1));
+    try {
+      await toggleLike(savedId, user.uid, wasLiked);
+    } catch {
+      setLikedBy(draft?.likedBy || []);
+      setLikes(draft?.likes || 0);
+    }
+  };
   const handleSimilarTeamClick = (team, season) => {
     navigate(`/teams?team=${team}&year=${season}`);
+  };
+  const handlePlayerClick = (player) => {
+    if (!player?.name) return;
+    const pos = (player.position || "").toUpperCase();
+    const normalizedPosition = pos === "D" ? "D" : pos === "G" ? "G" : "F";
+    navigate(
+      `/players?player=${encodeURIComponent(player.name)}&season=${draft.season}&position=${normalizedPosition}`
+    );
   };
   return (
     <div className="ice-background min-h-screen px-4 pb-16 pt-5 text-white light:text-gray-900 sm:px-6 sm:py-8">
@@ -252,6 +288,18 @@ export const DraftResult = () => {
                     <Download className="h-4 w-4" />
                   )}
                 </button>
+                {showLike && (
+                  <button
+                    type="button"
+                    onClick={handleLike}
+                    className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-bold transition-colors ${liked ? "bg-rose-500/15 text-rose-400" : "bg-white/10 text-gray-300 hover:bg-white/20 light:bg-slate-900/10 light:text-slate-600"}`}
+                    aria-pressed={liked}
+                    aria-label={liked ? "Unlike franchise" : "Like franchise"}
+                  >
+                    <Heart className={`h-4 w-4 ${liked ? "fill-current" : ""}`} />
+                    {likes}
+                  </button>
+                )}
               </div>
 
               <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -303,8 +351,8 @@ export const DraftResult = () => {
                   postState={postState}
                   postError={postError}
                   hasPosted={posted}
-                  onPost={handlePost}
-                  onRemove={handleRemoveFromBoard}
+                  onPost={() => setBoardConfirm("add")}
+                  onRemove={() => setBoardConfirm("remove")}
                   onSignIn={() => openAuth("signin")}
                 />
               )}
@@ -335,6 +383,7 @@ export const DraftResult = () => {
               player={p}
               season={draft.season}
               actualTheme={actualTheme}
+              onSelect={() => handlePlayerClick(p)}
             />
           ))}
         </div>
@@ -356,6 +405,32 @@ export const DraftResult = () => {
       >
         <DraftShareDisplay draft={draft} profile={profile} />
       </ShareableModal>
+
+      <ConfirmDialog
+        open={Boolean(boardConfirm)}
+        title={
+          boardConfirm === "remove"
+            ? "Remove from community board?"
+            : "Post to the community board?"
+        }
+        message={
+          boardConfirm === "remove"
+            ? "This removes your franchise from the public Community Board."
+            : "This shares your franchise on the public Community Board, where anyone can view and like it."
+        }
+        confirmLabel={boardConfirm === "remove" ? "Remove" : "Post franchise"}
+        destructive={boardConfirm === "remove"}
+        onCancel={() => setBoardConfirm(null)}
+        onConfirm={() => {
+          const action = boardConfirm;
+          setBoardConfirm(null);
+          if (action === "remove") {
+            handleRemoveFromBoard();
+          } else {
+            handlePost();
+          }
+        }}
+      />
 
       <Footer />
     </div>
@@ -392,10 +467,10 @@ const LeaderboardPost = ({
   <div className="w-full rounded-[24px] border border-white/10 bg-white/5 p-4 light:border-slate-200 light:bg-white/60">
     <div className="flex items-center justify-between gap-2">
       <h3 className="flex items-center gap-1.5 text-sm font-bold text-white light:text-gray-900">
-        <ListOrdered className="h-4 w-4 text-sky-300" /> Leaderboard
+        <ListOrdered className="h-4 w-4 text-sky-300" /> Community Board
       </h3>
       <Link
-        to={`/expansion-draft/leaderboard?season=${season}`}
+        to={`/expansion-draft/leaderboard`}
         className="text-xs font-semibold text-sky-300 hover:text-sky-200 light:text-sky-600"
       >
         View →
@@ -416,7 +491,7 @@ const LeaderboardPost = ({
     ) : !user.emailVerified ? (
       <p className="mt-3 flex items-start gap-2 text-sm text-amber-300 light:text-amber-700">
         <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" />
-        Verify your email to unlock posting.
+        Verify your email to unlock posting. Check your spam folder if you haven't received the email.
       </p>
     ) : hasPosted ? (
       <button
@@ -432,7 +507,7 @@ const LeaderboardPost = ({
       </button>
     ) : postState === "done" ? (
       <p className="mt-3 flex items-center gap-2 text-sm font-semibold text-emerald-300 light:text-emerald-700">
-        <Check className="h-4 w-4 shrink-0" /> Posted to the leaderboard!
+        <Check className="h-4 w-4 shrink-0" /> Posted to the community board!
       </p>
     ) : (
       <button
@@ -466,12 +541,16 @@ const POSITION_BAR = {
     text: "text-amber-300 light:text-amber-700",
   },
 };
-const RosterCard = ({ player, season, actualTheme }) => {
+const RosterCard = ({ player, season, actualTheme, onSelect }) => {
   const theme = POSITION_BAR[player.position] || POSITION_BAR.F;
   const percentile = player.warPercentile;
   const hasPercentile = percentile != null;
   return (
-    <div className="flex flex-col gap-2.5 rounded-[20px] border border-white/10 bg-white/5 p-3 light:border-slate-200 light:bg-white/60">
+    <button
+      type="button"
+      onClick={onSelect}
+      className="flex flex-col gap-2.5 rounded-[20px] border border-white/10 bg-white/5 p-3 text-left transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:border-white/20 hover:bg-white/10 light:border-slate-200 light:bg-white/60 light:hover:bg-slate-900/5"
+    >
       <div className="flex items-center gap-2.5">
         <img
           src={playerUtils.getPlayerHeadshot(
@@ -505,7 +584,7 @@ const RosterCard = ({ player, season, actualTheme }) => {
       <div>
         <div className="mb-1 flex items-center justify-between text-[0.7rem]">
           <span className="font-medium uppercase tracking-[0.1em] text-gray-400 light:text-gray-500">
-            WAR Pctile
+            League Pctile
           </span>
           <span className={`font-bold ${theme.text}`}>
             {hasPercentile ? `${percentile.toFixed(1)}%` : "—"}
@@ -520,6 +599,6 @@ const RosterCard = ({ player, season, actualTheme }) => {
           />
         </div>
       </div>
-    </div>
+    </button>
   );
 };

@@ -99,7 +99,18 @@ export const Header = () => {
                   </li>
                   <li>
                     <NavLink to="/expansion-draft" className={navLinkClassName}>
-                      Draft
+                      <span className="flex items-center gap-1.5">
+                        Expansion
+                        <span
+                          className="inline-flex items-center rounded-full px-1.5 py-0.5 text-[0.6rem] font-bold uppercase tracking-wide"
+                          style={{
+                            background: "var(--btn-accent)",
+                            color: "var(--btn-accent-text)",
+                          }}
+                        >
+                          Beta
+                        </span>
+                      </span>
                     </NavLink>
                   </li>
                   <li>
@@ -134,8 +145,19 @@ export const Header = () => {
             <span>Teams</span>
           </NavLink>
           <NavLink to="/expansion-draft" className={bottomNavLinkClassName}>
-            <Trophy className="h-5 w-5 mb-0.5" />
-            <span>Draft</span>
+            <div className="relative">
+              <Trophy className="h-5 w-5 mb-0.5" />
+              <span
+                className="absolute -top-1 -right-6 inline-flex items-center rounded-full px-1 text-[0.5rem] font-bold uppercase tracking-wide"
+                style={{
+                  background: "var(--btn-accent)",
+                  color: "var(--btn-accent-text)",
+                }}
+              >
+                BETA
+              </span>
+            </div>
+            <span>Expansion</span>
           </NavLink>
           <NavLink to="/about" className={bottomNavLinkClassName}>
             <Info className="h-5 w-5 mb-0.5" />
