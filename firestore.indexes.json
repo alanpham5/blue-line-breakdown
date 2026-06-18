@@ -1,0 +1,14 @@
+{
+  "indexes": [
+    {
+      "comment": "Leaderboard, filtered by season and ordered by likes (subscribeLeaderboard with a season filter).",
+      "collectionGroup": "expansion_drafts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "season", "order": "ASCENDING" },
+        { "fieldPath": "likes", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

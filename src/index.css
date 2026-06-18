@@ -54,7 +54,6 @@
   --control-placeholder: #787b84;
   --control-icon: #8e8d96;
 
-  /* Flat green primary buttons */
   --btn-accent: #7ee340;
   --btn-accent-hover: #8fe957;
   --btn-accent-active: #6fd230;
@@ -62,8 +61,6 @@
 }
 
 html.light {
-  /* Darker green + white text in light mode so the button stays distinct on
-     light surfaces and the label keeps sufficient contrast (WCAG AA). */
   --btn-accent: #3f9320;
   --btn-accent-hover: #48a226;
   --btn-accent-active: #37841b;
@@ -493,6 +490,13 @@ html.light .liquid-glass-strong {
   }
 }
 
+.team-card {
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+.team-card:hover {
+  transform: scale(1.05);
+}
+
 .shareable-display-dark {
   --glass-bg: rgba(28, 28, 30, 0.82);
   --glass-bg-strong: rgba(34, 34, 36, 0.92);
@@ -514,12 +518,11 @@ html.light .liquid-glass-strong {
 .shareable-display-dark .liquid-glass,
 .shareable-display-dark .liquid-glass-strong {
   border: 1px solid var(--glass-border) !important;
-  box-shadow: none !important; /* Remove inset shadow to prevent html2canvas double-shading */
-  backdrop-filter: none !important; /* Disable blur filter which html2canvas renders as a solid dark block */
+  box-shadow: none !important;
+  backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
 
-/* Simplify background rendering to prevent double-shaded rectangles in html2canvas */
 .shareable-display-dark .liquid-glass {
   background: var(--glass-bg) !important;
 }
@@ -528,7 +531,6 @@ html.light .liquid-glass-strong {
   background: var(--glass-bg-strong) !important;
 }
 
-/* Disable absolute pseudo-elements which html2canvas mis-sizes, causing inner rectangles */
 .shareable-display-dark .liquid-glass::before,
 .shareable-display-dark .liquid-glass-strong::before {
   display: none !important;
@@ -556,7 +558,6 @@ html.light .liquid-glass-strong {
     top left;
 }
 
-/* Prevent text cropping by disabling overflow restriction on text elements and enforcing clean line-heights */
 .shareable-display-dark .truncate,
 .shareable-display-dark span,
 .shareable-display-dark h1,
@@ -572,6 +573,8 @@ html.light .liquid-glass-strong {
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
   display: block !important;
+  line-height: 1.5 !important;
+  padding-bottom: 2px !important;
 }
 
 .shareable-display-dark .percentile-bar-container span,
@@ -583,14 +586,13 @@ html.light .liquid-glass-strong {
 }
 
 .shareable-display-dark .percentile-bar-container span {
-  padding-bottom: 8px !important; /* More bottom padding for stats bar labels */
+  padding-bottom: 8px !important;
 }
 
 .shareable-display-dark .mb-2 span.truncate {
-  padding-bottom: 4px !important; /* More bottom padding for compact team stats labels */
+  padding-bottom: 4px !important;
 }
 
-/* Force perfect alignment and centering for circular similarity badges */
 .shareable-display-dark .similarity-badge {
   display: flex !important;
   align-items: center !important;
@@ -718,6 +720,57 @@ html.light .liquid-glass-strong {
   animation: glassAppear 1s cubic-bezier(0.33, 1, 0.68, 1) both;
 }
 
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+
+@keyframes appModalBackdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes appModalPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.app-modal-backdrop {
+  animation: appModalBackdropIn 0.2s ease-out both;
+}
+
+.app-modal-panel {
+  animation: appModalPanelIn 0.28s cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in-up,
+  .app-modal-backdrop,
+  .app-modal-panel {
+    animation: none;
+  }
+}
+
 @keyframes gaugeFill {
   from {
     width: 0%;
@@ -805,7 +858,6 @@ html.light .liquid-glass-strong {
   }
 }
 
-/* Shareable Modal */
 .shareable-modal-backdrop {
   position: fixed;
   inset: 0;
@@ -892,9 +944,6 @@ html.light .liquid-glass-strong {
   color: #ffffff;
 }
 
-/* Wraps the fixed-width card and clips it to the shrunk-to-fit preview size on
-   narrow viewports. The explicit width/height (set inline) collapse the layout
-   box that the CSS transform on the card leaves behind. */
 .shareable-modal-preview {
   overflow: hidden;
   flex-shrink: 0;
@@ -906,9 +955,7 @@ html.light .liquid-glass-strong {
   border-radius: 0;
   overflow: hidden;
   flex-shrink: 0;
-  /* Hug the card's intrinsic 1200px width so it never shrinks to the
-     scaled-down preview wrapper. This keeps the measured natural width stable
-     (otherwise the fit calculation feeds back on itself and re-crops). */
+
   width: max-content;
 }
 
@@ -941,12 +988,10 @@ html.light .liquid-glass-strong {
   }
 }
 
-/* Hide background components when shareable modal is open to prevent screenshot interference */
 body.shareable-modal-open .max-w-6xl {
   visibility: hidden;
 }
 
-/* Force body and ice-background to be black to avoid light subpixel bleeding at edges */
 body.shareable-modal-open,
 body.shareable-modal-open #root,
 body.shareable-modal-open .ice-background {
