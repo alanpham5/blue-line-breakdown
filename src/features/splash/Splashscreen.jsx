@@ -277,14 +277,14 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                               `/players?player=${encodeURIComponent(player.name)}&season=${player.season}&position=${player.position}`
                             )
                           }
-                          className="snap-start flex-shrink-0 w-[170px] sm:w-[190px] liquid-glass rounded-2xl p-4 flex flex-col items-center text-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.4)] hover:scale-[1.02] select-none"
+                          className="snap-start flex-shrink-0 w-[140px] sm:w-[190px] liquid-glass rounded-2xl p-3 sm:p-4 flex flex-col items-center text-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.4)] hover:scale-[1.02] select-none"
                           style={{
                             "--player-team-glow": `${pColor}1a`,
                             boxShadow: `0 8px 32px 0 rgba(0,0,0,0.18)`,
                           }}
                         >
                           <div
-                            className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mb-3 relative flex items-center justify-center"
+                            className="w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden mb-2 sm:mb-3 relative flex items-center justify-center"
                             style={{
                               background: pColor,
                               boxShadow: `0 0 0 4px ${pColor}1f, 0 6px 16px rgba(0,0,0,0.28)`,
@@ -305,7 +305,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                             />
                           </div>
 
-                          <h3 className="text-sm font-bold text-white light:text-gray-900 line-clamp-1 w-full">
+                          <h3 className="text-xs sm:text-sm font-bold text-white light:text-gray-900 line-clamp-1 w-full">
                             {player.name}
                           </h3>
                           <div className="text-[10px] sm:text-xs font-semibold text-gray-400 light:text-slate-500">

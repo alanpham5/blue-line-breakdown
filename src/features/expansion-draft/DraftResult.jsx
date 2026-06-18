@@ -126,7 +126,7 @@ export const DraftResult = () => {
   }, [draft, viewOnly, profile, navigate]);
   const isOwnEntry = Boolean(user && draft?.ownerId === user.uid);
   const canEditCommunityEntry = Boolean(
-    user && posted && (savedId || isOwnEntry)
+    user && posted && isOwnEntry
   );
   const showLike = Boolean(savedId && (posted || viewOnly));
   const liked = Boolean(user && likedBy.includes(user.uid));
@@ -270,39 +270,46 @@ export const DraftResult = () => {
         <Header />
 
         <div className="liquid-glass-strong overflow-hidden rounded-[32px] p-6 sm:p-8">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-            <div className="min-w-0">
-              <div className="mt-2 flex flex-wrap items-center gap-3">
-                <h1 className="text-3xl font-bold tracking-[-0.04em] text-white light:text-gray-900 sm:text-4xl">
+          <div className="flex flex-col items-center gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex flex-1 flex-col items-center text-center">
+              <div className="mt-2 flex flex-col items-center gap-3 sm:flex-row">
+                <h1 className="text-3xl font-bold tracking-[-0.04em] text-white light:text-gray-900 sm:text-4xl flex flex-wrap items-baseline justify-center">
                   {draft.teamName}
-                </h1>
-                <button
-                  type="button"
-                  onClick={() => setShowShare(true)}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:text-white light:border-slate-300 light:bg-white/80 light:text-slate-600"
-                  aria-label={isMobile ? "Share image" : "Download image"}
-                >
-                  {isMobile ? (
-                    <Share className="h-4 w-4" />
-                  ) : (
-                    <Download className="h-4 w-4" />
+                  {!isOwnEntry && draft.ownerName && (
+                    <span className="ml-3 text-lg font-medium text-gray-400 light:text-gray-500">
+                      by {draft.ownerName}
+                    </span>
                   )}
-                </button>
-                {showLike && (
+                </h1>
+                <div className="flex items-center justify-center gap-3">
                   <button
                     type="button"
-                    onClick={handleLike}
-                    className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-bold transition-colors ${liked ? "bg-rose-500/15 text-rose-400" : "bg-white/10 text-gray-300 hover:bg-white/20 light:bg-slate-900/10 light:text-slate-600"}`}
-                    aria-pressed={liked}
-                    aria-label={liked ? "Unlike franchise" : "Like franchise"}
+                    onClick={() => setShowShare(true)}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:text-white light:border-slate-300 light:bg-white/80 light:text-slate-600"
+                    aria-label={isMobile ? "Share image" : "Download image"}
                   >
-                    <Heart className={`h-4 w-4 ${liked ? "fill-current" : ""}`} />
-                    {likes}
+                    {isMobile ? (
+                      <Share className="h-4 w-4" />
+                    ) : (
+                      <Download className="h-4 w-4" />
+                    )}
                   </button>
-                )}
+                  {showLike && (
+                    <button
+                      type="button"
+                      onClick={handleLike}
+                      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-bold transition-colors ${liked ? "bg-rose-500/15 text-rose-400" : "bg-white/10 text-gray-300 hover:bg-white/20 light:bg-slate-900/10 light:text-slate-600"}`}
+                      aria-pressed={liked}
+                      aria-label={liked ? "Unlike franchise" : "Like franchise"}
+                    >
+                      <Heart className={`h-4 w-4 ${liked ? "fill-current" : ""}`} />
+                      {likes}
+                    </button>
+                  )}
+                </div>
               </div>
 
-              <div className="mt-4 flex flex-wrap items-center gap-3">
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
                 <div className="flex items-baseline gap-2 rounded-2xl bg-white/5 px-4 py-2 light:bg-slate-900/5">
                   <span className="text-2xl font-extrabold tabular-nums text-sky-300 light:text-sky-600">
                     {record.display}
@@ -311,17 +318,19 @@ export const DraftResult = () => {
                     Predicted
                   </span>
                 </div>
-                {record.playoffProbability != null && (
-                  <span className="rounded-full bg-emerald-500/15 px-3 py-1.5 text-sm font-bold text-emerald-300 light:text-emerald-700">
-                    {Math.round(record.playoffProbability * 100)}% playoff odds
-                  </span>
-                )}
-                {record.outlook?.label && (
-                  <OutlookPill outlook={record.outlook} />
-                )}
+                <div className="flex items-center gap-3">
+                  {record.playoffProbability != null && (
+                    <span className="rounded-full bg-emerald-500/15 px-3 py-1.5 text-sm font-bold text-emerald-300 light:text-emerald-700">
+                      {Math.round(record.playoffProbability * 100)}% playoff odds
+                    </span>
+                  )}
+                  {record.outlook?.label && (
+                    <OutlookPill outlook={record.outlook} />
+                  )}
+                </div>
               </div>
 
-              <div className="mt-3 flex flex-wrap gap-2 text-sm font-semibold text-gray-300 light:text-gray-600">
+              <div className="mt-3 flex flex-wrap justify-center gap-2 text-sm font-semibold text-gray-300 light:text-gray-600">
                 <Pill>{counts.forwards} F</Pill>
                 <Pill>{counts.defensemen} D</Pill>
                 <Pill>{counts.goalies} G</Pill>
@@ -333,18 +342,18 @@ export const DraftResult = () => {
               </div>
             </div>
 
-            <div className="flex w-full shrink-0 flex-col gap-3 lg:w-72">
-              {!viewOnly && (
-                <SaveDraftButton
-                  mode="complete"
-                  user={user}
-                  saved={!!savedId}
-                  saveState={saveState}
-                  saveError={saveError}
-                  onSave={handleSave}
-                />
-              )}
-              {(!viewOnly || canEditCommunityEntry) && (
+            {(!viewOnly || canEditCommunityEntry) && (
+              <div className="flex w-full shrink-0 flex-col gap-3 lg:w-72">
+                {!viewOnly && (
+                  <SaveDraftButton
+                    mode="complete"
+                    user={user}
+                    saved={!!savedId}
+                    saveState={saveState}
+                    saveError={saveError}
+                    onSave={handleSave}
+                  />
+                )}
                 <LeaderboardPost
                   season={draft.season}
                   user={user}
@@ -355,8 +364,8 @@ export const DraftResult = () => {
                   onRemove={() => setBoardConfirm("remove")}
                   onSignIn={() => openAuth("signin")}
                 />
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
 
