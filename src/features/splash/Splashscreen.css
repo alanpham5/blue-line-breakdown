@@ -38,6 +38,20 @@
   animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
 }
 
+.fade-in-up-delay-3 {
+  opacity: 0;
+  animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in-up-delay-1,
+  .fade-in-up-delay-2,
+  .fade-in-up-delay-3 {
+    opacity: 1;
+    animation: none;
+  }
+}
+
 .text-gradient {
   -webkit-background-clip: text;
   background-clip: text;

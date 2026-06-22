@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Users, Filter, Info } from "lucide-react";
 import { SimilarPlayerCard } from "features/players/components/SimilarPlayerCard";
+import { AppSelect } from "components/ui/AppSelect";
 import { playerUtils } from "utils/playerUtils";
 import { Tooltip } from "components/ui/Tooltip";
 const d = new Date();
@@ -80,7 +81,8 @@ export const SimilarPlayersSection = ({
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <Filter className="h-5 w-5 shrink-0 text-amber-300 light:text-amber-600" />
-          <select
+          <AppSelect
+            placeholder="All Seasons"
             value={filterYear || ""}
             onChange={(e) => onFilterYearChange(e.target.value || null)}
             className={`${sharedFieldClassName} min-w-0 flex-1 sm:flex-initial`}
@@ -91,7 +93,7 @@ export const SimilarPlayersSection = ({
                 {playerUtils.formatSeason(year)}
               </option>
             ))}
-          </select>
+          </AppSelect>
         </div>
       </div>
       <div className="grid grid-cols-3 gap-2 sm:gap-3 md:flex md:flex-wrap md:justify-center md:gap-4">

@@ -728,11 +728,40 @@ export const playerUtils = {
       WORKLOAD: "Shots Faced / 60",
       xGA_60: "Expected Goals Against / 60",
       REB_CTRL: "Rebound Control",
-      FREEZE: "Puck Freezes / 60",
+      FREEZE: "Puck Freeze Rate",
       HD_WORK: "High-Danger Shots Faced / 60",
       GAMES: "Games Played",
     };
     return statNames[statKey] || statKey;
+  },
+  formatStatAbbr(statKey) {
+    const statAbbrs = {
+      SHOT_TAL: "Shot Tal",
+      PLAY_DRV: "Play Drv",
+      SHOT_FREQ: "Shot Tnd",
+      PASS_FREQ: "Pass Tnd",
+      PP_USAGE: "PP Use",
+      ONICE_IMP: "On-Ice",
+      POS_CTRL: "Poss",
+      BLK: "Blk",
+      HIT: "Hit",
+      TAKE: "Take",
+      CH_SUP: "Ch Sup",
+      GOAL_PREV: "Goal Prv",
+      SV_PCT: "SV%",
+      GSAX: "GSAx",
+      HD_SV: "HD SV%",
+      MD_SV: "MD SV%",
+      LD_SV: "LD SV%",
+      GA_60: "GA/60",
+      WORKLOAD: "SF/60",
+      xGA_60: "xGA/60",
+      REB_CTRL: "Reb Ctrl",
+      FREEZE: "Frz%",
+      HD_WORK: "HDSF/60",
+      GAMES: "GP",
+    };
+    return statAbbrs[statKey] || this.formatStatName(statKey);
   },
   getStatExplanation(statKey) {
     const explanations = {
@@ -765,8 +794,9 @@ export const playerUtils = {
       xGA_60:
         "Expected goals against per 60 minutes. Reflects the difficulty of shots faced.",
       REB_CTRL:
-        "Rebound control, based on rebounds allowed per 60 minutes. Inverted so fewer allowed is higher.",
-      FREEZE: "Number of puck freezes per 60 minutes to stop play.",
+        "Rebound control, based on the share of shots faced that became a rebound (rebounds ÷ shots on goal, with goals allowed in the denominator). Inverted so fewer rebounds allowed is higher.",
+      FREEZE:
+        "Share of shots faced that the goalie froze to stop play (freezes ÷ shots on goal, with goals allowed in the denominator). A volume-independent rate rather than a raw count.",
       HD_WORK: "High-danger shots faced per 60 minutes.",
       GAMES: "Total games played in the season.",
     };

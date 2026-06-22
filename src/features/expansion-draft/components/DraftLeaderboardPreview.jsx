@@ -101,7 +101,7 @@ export const DraftLeaderboardPreview = ({
           <LeaderboardAnimatedList
             items={drafts}
             reorderAnimationKey={reorderAnimationKey}
-            className="space-y-2"
+            className="space-y-2 fade-in-up"
           >
             {(draft, idx) => {
               const stats = draft.profile?.stats || {};

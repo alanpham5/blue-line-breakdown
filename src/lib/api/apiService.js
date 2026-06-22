@@ -88,6 +88,14 @@ export const apiService = {
       }
     );
   },
+  fetchLeaderboard(position, season = null, limit = null) {
+    const params = new URLSearchParams({ position });
+    if (season) params.set("season", season);
+    if (limit) params.set("limit", limit);
+    return request(`/leaderboard?${params.toString()}`, {
+      errorMessage: "Failed to fetch leaderboard",
+    });
+  },
   fetchTeams(year) {
     return request(`/teams?year=${year}`, {
       errorMessage: "Failed to fetch teams",

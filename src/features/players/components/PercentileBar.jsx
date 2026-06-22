@@ -11,6 +11,8 @@ export const PercentileBar = ({
   forceDark = false,
 }) => {
   const explanation = statKey ? playerUtils.getStatExplanation(statKey) : null;
+  const hasValue = value != null && !Number.isNaN(value);
+  const barWidth = hasValue ? value : 0;
   const color =
     type === "offensive" || type === "shotStopping"
       ? "from-cyan-500 to-sky-400"
@@ -56,7 +58,7 @@ export const PercentileBar = ({
         <span
           className={`text-sm ${!compact ? "lg:text-base" : "lg:text-xl"} font-bold shrink-0 ${valueColor} ${forceDark ? "" : ""}`}
         >
-          {value.toFixed(1)}
+          {hasValue ? value.toFixed(1) : "—"}
         </span>
       </div>
       <div
@@ -65,7 +67,7 @@ export const PercentileBar = ({
         <div
           className={`h-2.5 rounded-full bg-gradient-to-r ${color} percentile-bar-fill ${type === "offensive" || type === "shotStopping" ? "shadow-[0_0_10px_rgba(18,223,246,0.16)]" : "shadow-[0_0_10px_rgba(255,55,95,0.18)]"}`}
           style={{
-            width: `${value}%`,
+            width: `${barWidth}%`,
           }}
         />
       </div>

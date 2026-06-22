@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Players } from "features/players/Players";
+import { PlayerLeaderboard } from "features/players/leaderboard/PlayerLeaderboard";
 import { Splashscreen } from "features/splash/Splashscreen";
 import { About } from "features/about/About";
 import { TeamSummary } from "features/team-summary/TeamSummary";
@@ -45,6 +46,7 @@ const App = () => {
                   />
                 }
               />
+              <Route path="/leaderboard" element={<PlayerLeaderboard />} />
               <Route
                 path="/teams"
                 element={
@@ -65,7 +67,10 @@ const App = () => {
               <Route path="/account/drafts" element={<SavedDrafts />} />
               <Route path="/auth/verify-email" element={<VerifyEmail />} />
               <Route path="/auth/reset-password" element={<ResetPassword />} />
-              <Route path="/auth/google/callback" element={<GoogleCallback />} />
+              <Route
+                path="/auth/google/callback"
+                element={<GoogleCallback />}
+              />
               <Route path="/loader" element={<Loader />} />
             </Routes>
           </BrowserRouter>

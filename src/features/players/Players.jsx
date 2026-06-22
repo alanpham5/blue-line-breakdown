@@ -16,6 +16,7 @@ import { LoadingScreen } from "components/ui/LoadingScreen";
 import { ShareableDisplay } from "features/players/components/shareable/ShareableDisplay";
 import { ShareableModal } from "components/ui/ShareableModal";
 import { Footer } from "components/layout/Footer";
+import { TopPlayersSection } from "features/splash/components/TopPlayersSection";
 export const Players = ({ enablePageLoadAnimations = true }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [playerName, setPlayerName] = useState("");
@@ -485,15 +486,24 @@ export const Players = ({ enablePageLoadAnimations = true }) => {
                 )}
 
                 {!playerData && !loading && (
-                  <div className="relative z-0 liquid-glass rounded-[32px] mt-4 sm:mt-6 px-5 py-10 text-center">
-                    <p className="mb-3 text-2xl font-semibold tracking-display text-white light:text-slate-900 sm:text-3xl">
-                      Enter a player name to get started
-                    </p>
-                    <p className="mx-auto max-w-2xl text-sm text-gray-400 light:text-gray-500 sm:text-base">
-                      Analytics derived from MoneyPuck data (2008-
-                      {new Date().getFullYear() - 1}), with proprietary
-                      calculations and metrics.
-                    </p>
+                  <div className="relative z-0 space-y-5 sm:space-y-7">
+                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                      <TopPlayersSection
+                        title="Top Forwards"
+                        position="F"
+                        className="fade-in-up"
+                      />
+                      <TopPlayersSection
+                        title="Top Defensemen"
+                        position="D"
+                        className="fade-in-up"
+                      />
+                      <TopPlayersSection
+                        title="Top Goalies"
+                        position="G"
+                        className="fade-in-up"
+                      />
+                    </div>
                   </div>
                 )}
               </div>
