@@ -165,7 +165,16 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
                 {playerUtils.getFullTeamName(player.team, player.season)}
               </span>
               <span className="text-gray-500 light:text-gray-400">•</span>
-              <span>{playerUtils.formatSeason(player.season)}</span>
+              <span
+                className="cursor-pointer hover:opacity-80"
+                onClick={() =>
+                  navigate(
+                    `/leaderboard?position=${player.position}&season=${player.season}`
+                  )
+                }
+              >
+                {playerUtils.formatSeason(player.season)}
+              </span>
               <span className="text-gray-500 light:text-gray-400">•</span>
               <span>
                 {player.position === "F"

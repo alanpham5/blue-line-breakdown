@@ -1,6 +1,7 @@
 import { Ruler, Scale, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import { playerUtils } from "utils/playerUtils";
+import { archetypeIcons } from "features/players/components/ArchetypeBadge";
 export const PlayerHeaderCompact = ({ player, biometrics }) => {
   const teamColor = playerUtils.getTeamColor(player.team, player.season);
   const teamCardGradient = playerUtils.getTeamCardGradient(
@@ -82,16 +83,20 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
           </div>
           {archetypes.length > 0 && (
             <div className="flex flex-wrap items-center justify-start gap-2 mt-3">
-              {archetypes.map((archetype, idx) => (
-                <div
-                  key={idx}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] border border-white/10 px-2.5 py-1 text-xs sm:text-sm font-semibold text-sky-200"
-                >
-                  <span className="shareable-pill-text leading-none">
-                    {archetype}
-                  </span>
-                </div>
-              ))}
+              {archetypes.map((archetype, idx) => {
+                const Icon = archetypeIcons[archetype];
+                return (
+                  <div
+                    key={idx}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] border border-white/10 px-2.5 py-1 text-xs sm:text-sm font-semibold text-sky-200"
+                  >
+                    {Icon && (
+                      <Icon className="h-4 w-4 shrink-0 text-sky-300" />
+                    )}
+                    <span className="shareable-pill-text">{archetype}</span>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

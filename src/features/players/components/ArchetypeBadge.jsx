@@ -13,7 +13,7 @@ import {
   Activity,
 } from "lucide-react";
 import { Tooltip } from "components/ui/Tooltip";
-const archetypeIcons = {
+export const archetypeIcons = {
   Sniper: Crosshair,
   Playmaker: Wand,
   "Power Forward": Hammer,

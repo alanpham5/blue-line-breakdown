@@ -31,7 +31,7 @@ export const ShareableDisplay = ({ playerData }) => {
         className="shareable-display-dark"
         style={{
           width: 1200,
-          height: 960,
+          minHeight: 960,
           background:
             "radial-gradient(circle at 18% 0%, rgba(166, 255, 15, 0.08) 0%, rgba(166, 255, 15, 0) 26%), radial-gradient(circle at 92% 16%, rgba(18, 223, 246, 0.07) 0%, rgba(18, 223, 246, 0) 24%), radial-gradient(circle at 50% 100%, rgba(255, 55, 95, 0.05) 0%, rgba(255, 55, 95, 0) 26%), linear-gradient(180deg, #020202 0%, #070708 42%, #0b0b0d 100%)",
           display: "flex",

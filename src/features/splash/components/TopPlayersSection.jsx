@@ -8,6 +8,7 @@ import { SectionAnchor } from "features/expansion-draft/components/DraftLeaderbo
 export const TopPlayersSection = ({
   title,
   position,
+  seasonFilter = null,
   className = "",
   style,
 }) => {
@@ -20,7 +21,11 @@ export const TopPlayersSection = ({
     let cancelled = false;
     const load = async () => {
       try {
-        const data = await apiService.fetchLeaderboard(position, null, 10);
+        const data = await apiService.fetchLeaderboard(
+          position,
+          seasonFilter,
+          10
+        );
         if (cancelled) return;
         setPlayers(data.players || []);
         setSeason(data.season);
@@ -32,7 +37,7 @@ export const TopPlayersSection = ({
     return () => {
       cancelled = true;
     };
-  }, [position]);
+  }, [position, seasonFilter]);
 
   // Render nothing until the data is fully loaded, so the section fades in
   // populated rather than animating in an empty/skeleton table.

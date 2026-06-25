@@ -247,7 +247,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                   type="button"
                   onClick={handleScrollLeft}
                   disabled={scrollEdges.atStart}
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:bg-white/10 hover:text-white disabled:pointer-events-none disabled:opacity-30 light:border-slate-200 light:bg-white/80 light:text-slate-600 light:hover:bg-white"
+                  className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:bg-white/10 hover:text-white disabled:pointer-events-none disabled:opacity-30 sm:flex light:border-slate-200 light:bg-white/80 light:text-slate-600 light:hover:bg-white"
                   aria-label="Scroll players left"
                 >
                   <ChevronLeft className="h-5 w-5" />
@@ -277,7 +277,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                               `/players?player=${encodeURIComponent(player.name)}&season=${player.season}&position=${player.position}`
                             )
                           }
-                          className="snap-start flex-shrink-0 w-[140px] sm:w-[190px] liquid-glass rounded-2xl p-3 sm:p-4 flex flex-col items-center text-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.4)] hover:scale-[1.02] select-none"
+                          className="snap-start flex-shrink-0 w-[110px] sm:w-[190px] liquid-glass rounded-2xl p-3 sm:p-4 flex flex-col items-center text-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.4)] hover:scale-[1.02] select-none"
                           style={{
                             "--player-team-glow": `${pColor}1a`,
                             boxShadow: `0 8px 32px 0 rgba(0,0,0,0.18)`,
@@ -305,7 +305,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                             />
                           </div>
 
-                          <h3 className="text-xs sm:text-sm font-bold text-white light:text-gray-900 line-clamp-1 w-full">
+                          <h3 className="text-[10px] sm:text-sm font-bold text-white light:text-gray-900 w-full">
                             {player.name}
                           </h3>
                           <div className="text-[10px] sm:text-xs font-semibold text-gray-400 light:text-slate-500">
@@ -321,7 +321,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                   type="button"
                   onClick={handleScrollRight}
                   disabled={scrollEdges.atEnd}
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:bg-white/10 hover:text-white disabled:pointer-events-none disabled:opacity-30 light:border-slate-200 light:bg-white/80 light:text-slate-600 light:hover:bg-white"
+                  className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:bg-white/10 hover:text-white disabled:pointer-events-none disabled:opacity-30 sm:flex light:border-slate-200 light:bg-white/80 light:text-slate-600 light:hover:bg-white"
                   aria-label="Scroll players right"
                 >
                   <ChevronRight className="h-5 w-5" />

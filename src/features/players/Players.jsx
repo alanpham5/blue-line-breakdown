@@ -27,6 +27,7 @@ export const Players = ({ enablePageLoadAnimations = true }) => {
   const [loadingMessage, setLoadingMessage] = useState("Searching...");
   const [playerData, setPlayerData] = useState(null);
   const [error, setError] = useState("");
+  const [noMatchSeason, setNoMatchSeason] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
   const [filterYear, setFilterYear] = useState(null);
   const [initInProgress, setInitInProgress] = useState(false);
@@ -252,6 +253,7 @@ export const Players = ({ enablePageLoadAnimations = true }) => {
     setLoading(true);
     setError("");
     setSuggestions([]);
+    setNoMatchSeason(null);
     try {
       await ensureCacheInitialized(initInProgressRef.current);
       const result = await apiService.searchPlayer(
@@ -264,12 +266,14 @@ export const Players = ({ enablePageLoadAnimations = true }) => {
       setPlayerData(result);
       setError("");
       setSuggestions([]);
+      setNoMatchSeason(null);
       setHasSearched(true);
       setRenderKey((prev) => prev + 1);
     } catch (err) {
       setError(err.message);
       setSuggestions(err.suggestions || []);
       setPlayerData(null);
+      setNoMatchSeason(seasonValue || null);
     } finally {
       setLoading(false);
       isUpdatingFromUrlRef.current = false;
@@ -491,16 +495,19 @@ export const Players = ({ enablePageLoadAnimations = true }) => {
                       <TopPlayersSection
                         title="Top Forwards"
                         position="F"
+                        seasonFilter={noMatchSeason}
                         className="fade-in-up"
                       />
                       <TopPlayersSection
                         title="Top Defensemen"
                         position="D"
+                        seasonFilter={noMatchSeason}
                         className="fade-in-up"
                       />
                       <TopPlayersSection
                         title="Top Goalies"
                         position="G"
+                        seasonFilter={noMatchSeason}
                         className="fade-in-up"
                       />
                     </div>
