@@ -3,13 +3,17 @@ import { playerUtils } from "utils/playerUtils";
 import { Info } from "lucide-react";
 import { Tooltip } from "components/ui/Tooltip";
 const getColorClasses = (type) =>
-  type === "offensive"
+  type === "offensive" || type === "shotStopping"
     ? {
         iconColor: "text-cyan-300",
       }
-    : {
-        iconColor: "text-rose-400",
-      };
+    : type === "edge"
+      ? {
+          iconColor: "text-emerald-300",
+        }
+      : {
+          iconColor: "text-rose-400",
+        };
 export const StatsCard = ({
   title,
   icon: Icon,
@@ -33,7 +37,7 @@ export const StatsCard = ({
           <span className="hidden sm:inline whitespace-nowrap text-sm text-gray-400 light:text-gray-600">
             percentile vs. league
           </span>
-          {showInfo && (
+          {showInfo && type !== "edge" && (
             <Tooltip
               id={type + "-stats"}
               position="bottom"

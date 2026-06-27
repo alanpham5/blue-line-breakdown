@@ -1009,3 +1009,11 @@ body.shareable-modal-open .ice-background::before,
 body.shareable-modal-open .ice-background::after {
   display: none !important;
 }
+
+.percentile-colored {
+  color: hsl(var(--percentile-hue), 85%, 60%);
+}
+
+html.light .percentile-colored {
+  color: hsl(var(--percentile-hue), 80%, 40%);
+}

@@ -13,7 +13,7 @@ const RatingHeader = ({ icon: Icon, title, rating, accent }) => (
         <div
           className={`text-2xl sm:text-3xl font-extrabold tracking-display ${accent}`}
         >
-          {rating.toFixed(1)}%
+          {rating.toFixed(1)} %ile
         </div>
         <div className="hidden sm:block text-[0.65rem] sm:text-[0.7rem] text-gray-400 light:text-slate-500">
           Percentile Rating

@@ -39,7 +39,7 @@ const CompactStatBar = ({ label, percentile, type = "offensive" }) => {
 };
 const RatingBadge = ({ value, color }) => (
   <span className={`text-lg font-extrabold tracking-display ${color}`}>
-    {value.toFixed(1)}%
+    {value.toFixed(1)} %ile
   </span>
 );
 export const TeamShareableDisplay = ({
@@ -398,7 +398,7 @@ export const TeamShareableDisplay = ({
                         </div>
                       </div>
                       <span className="text-sm font-extrabold text-cyan-300 shrink-0">
-                        {fw.warPercentile.toFixed(1)}%
+                        {fw.warPercentile.toFixed(1)} %ile
                       </span>
                     </div>
                   ))}
@@ -437,7 +437,7 @@ export const TeamShareableDisplay = ({
                         </div>
                       </div>
                       <span className="text-sm font-extrabold text-rose-400 shrink-0">
-                        {df.warPercentile.toFixed(1)}%
+                        {df.warPercentile.toFixed(1)} %ile
                       </span>
                     </div>
                   ))}
@@ -476,7 +476,7 @@ export const TeamShareableDisplay = ({
                         </div>
                       </div>
                       <span className="text-sm font-extrabold text-amber-300 shrink-0">
-                        {gl.warPercentile.toFixed(1)}%
+                        {gl.warPercentile.toFixed(1)} %ile
                       </span>
                     </div>
                   ))}

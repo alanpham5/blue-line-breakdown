@@ -1,8 +1,65 @@
-import { Users, Target, Shield } from "lucide-react";
+import { Users, Target, Shield, Gauge } from "lucide-react";
 import { playerUtils } from "utils/playerUtils";
 import { PlayerHeaderCompact } from "features/players/components/shareable/PlayerHeaderCompact";
 import { WarPercentileCardCompact } from "features/players/components/shareable/WarPercentileCardCompact";
 import { StatsCardCompact } from "features/players/components/shareable/StatsCardCompact";
+
+const metricsOrder = [
+  "TOP_SPEED",
+  "SPEED_BURSTS",
+  "SHOT_SPEED",
+  "DIST_SKATED",
+  "DIST_GAME",
+  "OZONE",
+];
+
+const formatValue = (key, val) => {
+  if (val === undefined || val === null) return "-";
+  const num = Number(val);
+  if (isNaN(num)) return val;
+
+  switch (key) {
+    case "TOP_SPEED":
+    case "SHOT_SPEED":
+    case "DIST_SKATED":
+    case "DIST_GAME":
+      return num.toFixed(1);
+    case "SPEED_BURSTS":
+      return num.toLocaleString();
+    case "OZONE":
+      const pct = num < 1.0 ? num * 100 : num;
+      return pct.toFixed(1);
+    default:
+      return num;
+  }
+};
+
+const getPercentileStyle = (percentile) => {
+  if (percentile == null) return {};
+  const hue = Math.max(0, Math.min(120, percentile * 1.2));
+  return {
+    "--percentile-hue": `${hue}deg`,
+  };
+};
+
+const getMetricLabel = (key, isShort) => {
+  const baseName = isShort
+    ? playerUtils.formatStatAbbr(key)
+    : playerUtils.formatStatName(key);
+  switch (key) {
+    case "TOP_SPEED":
+    case "SHOT_SPEED":
+      return `${baseName} (mph)`;
+    case "DIST_SKATED":
+    case "DIST_GAME":
+      return `${baseName} (mi)`;
+    case "OZONE":
+      return `${baseName} (%)`;
+    default:
+      return baseName;
+  }
+};
+
 export const ShareableDisplay = ({ playerData }) => {
   if (!playerData) {
     return (
@@ -90,38 +147,86 @@ export const ShareableDisplay = ({ playerData }) => {
             <WarPercentileCardCompact warPercentile={player.warPercentile} />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            {player.position === "G" ? (
-              <>
-                <StatsCardCompact
-                  title="Shot Stopping"
-                  icon={Target}
-                  stats={percentiles.shotStopping}
-                  type="shotStopping"
-                />
-                <StatsCardCompact
-                  title="Workload"
-                  icon={Shield}
-                  stats={percentiles.workload}
-                  type="workload"
-                />
-              </>
-            ) : (
-              <>
-                <StatsCardCompact
-                  title="Offensive Metrics"
-                  icon={Target}
-                  stats={percentiles.offensive}
-                  type="offensive"
-                />
-                <StatsCardCompact
-                  title="Defensive Metrics"
-                  icon={Shield}
-                  stats={percentiles.defensive}
-                  type="defensive"
-                />
-              </>
-            )}
+          <div className="space-y-3">
+            {player.position !== "G" &&
+              playerData.edgeValues &&
+              percentiles.edge && (
+                <div className="liquid-glass-strong rounded-[28px] p-5">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Gauge className="h-6 w-6 shrink-0 text-emerald-300" />
+                    <h3 className="text-xl sm:text-2xl font-bold text-white whitespace-nowrap">
+                      NHL EDGE
+                    </h3>
+                  </div>
+                  <div className="grid grid-cols-6 divide-x divide-white/10 text-center">
+                    {metricsOrder.map((statKey) => {
+                      const val = playerData.edgeValues[statKey];
+                      const percentile = percentiles.edge[statKey];
+                      if (
+                        val === undefined ||
+                        val === null ||
+                        percentile === undefined ||
+                        percentile === null
+                      ) {
+                        return null;
+                      }
+
+                      return (
+                        <div
+                          key={statKey}
+                          className="flex flex-col items-center justify-end px-2"
+                        >
+                          <div className="text-[13px] text-gray-400 font-semibold leading-tight whitespace-nowrap">
+                            {getMetricLabel(statKey, true)}
+                          </div>
+                          <div
+                            className="text-[26px] font-bold leading-tight tabular-nums whitespace-nowrap percentile-colored mt-1"
+                            style={getPercentileStyle(percentile)}
+                          >
+                            {formatValue(statKey, val)}
+                          </div>
+                          <div className="text-[12px] text-gray-400 font-semibold mt-0.5">
+                            {percentile.toFixed(1)} %ile
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            <div className="grid grid-cols-2 gap-3">
+              {player.position === "G" ? (
+                <>
+                  <StatsCardCompact
+                    title="Shot Stopping"
+                    icon={Target}
+                    stats={percentiles.shotStopping}
+                    type="shotStopping"
+                  />
+                  <StatsCardCompact
+                    title="Workload"
+                    icon={Shield}
+                    stats={percentiles.workload}
+                    type="workload"
+                  />
+                </>
+              ) : (
+                <>
+                  <StatsCardCompact
+                    title="Offensive Metrics"
+                    icon={Target}
+                    stats={percentiles.offensive}
+                    type="offensive"
+                  />
+                  <StatsCardCompact
+                    title="Defensive Metrics"
+                    icon={Shield}
+                    stats={percentiles.defensive}
+                    type="defensive"
+                  />
+                </>
+              )}
+            </div>
           </div>
 
           <div className="liquid-glass-strong rounded-[28px] p-4">

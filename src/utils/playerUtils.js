@@ -731,6 +731,12 @@ export const playerUtils = {
       FREEZE: "Puck Freeze Rate",
       HD_WORK: "High-Danger Shots Faced / 60",
       GAMES: "Games Played",
+      TOP_SPEED: "Top Skating Speed",
+      SPEED_BURSTS: "Speed Bursts (20+ mph)",
+      SHOT_SPEED: "Top Shot Speed",
+      DIST_SKATED: "Distance Skated",
+      DIST_GAME: "Max Game Distance",
+      OZONE: "Offensive Zone Time",
     };
     return statNames[statKey] || statKey;
   },
@@ -760,6 +766,12 @@ export const playerUtils = {
       FREEZE: "Frz%",
       HD_WORK: "HDSF/60",
       GAMES: "GP",
+      TOP_SPEED: "Top Spd",
+      SPEED_BURSTS: "20+ mph",
+      SHOT_SPEED: "Shot Spd",
+      DIST_SKATED: "Distance",
+      DIST_GAME: "Game Dist",
+      OZONE: "OZ Time",
     };
     return statAbbrs[statKey] || this.formatStatName(statKey);
   },
@@ -799,6 +811,18 @@ export const playerUtils = {
         "Share of shots faced that the goalie froze to stop play (freezes ÷ shots on goal, with goals allowed in the denominator). A volume-independent rate rather than a raw count.",
       HD_WORK: "High-danger shots faced per 60 minutes.",
       GAMES: "Total games played in the season.",
+      TOP_SPEED:
+        "Fastest skating speed reached during the season (mph), tracked by NHL Edge.",
+      SPEED_BURSTS:
+        "Number of skating bursts over 20 mph, tracked by NHL Edge.",
+      SHOT_SPEED:
+        "Hardest shot speed recorded during the season (mph), tracked by NHL Edge.",
+      DIST_SKATED:
+        "Total distance skated over the season (miles), tracked by NHL Edge.",
+      DIST_GAME:
+        "Most distance skated in a single game (miles), tracked by NHL Edge.",
+      OZONE:
+        "Share of on-ice time spent in the offensive zone, tracked by NHL Edge.",
     };
     return (
       explanations[statKey] ||

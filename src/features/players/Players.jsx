@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Target, Shield, Loader2 } from "lucide-react";
+import { Target, Shield, Gauge, Loader2 } from "lucide-react";
 import { track } from "@vercel/analytics";
 import { apiService } from "lib/api/apiService";
 import { SearchForm } from "features/players/components/SearchForm";
@@ -9,6 +9,7 @@ import { StatsCard } from "features/players/components/StatsCard";
 import { SimilarPlayersSection } from "features/players/components/SimilarPlayersSection";
 import { WarPercentileCard } from "features/players/components/WarPercentileCard";
 import { CountingStats } from "features/players/components/CountingStats";
+import { EdgeStats } from "features/players/components/EdgeStats";
 import { Header } from "components/layout/Header";
 import { Analytics } from "@vercel/analytics/react";
 import { useIsExternal } from "hooks/useIsExternal";
@@ -426,6 +427,12 @@ export const Players = ({ enablePageLoadAnimations = true }) => {
                     </div>
                     <div className="w-full">
                       <CountingStats stats={playerData.stats} />
+                      {playerData.player.position !== "G" && playerData.edgeValues && (
+                        <EdgeStats
+                          edgeValues={playerData.edgeValues}
+                          edgePercentiles={playerData.percentiles.edge}
+                        />
+                      )}
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
@@ -463,6 +470,8 @@ export const Players = ({ enablePageLoadAnimations = true }) => {
                         </>
                       )}
                     </div>
+
+
 
                     <SimilarPlayersSection
                       players={playerData.similarPlayers}

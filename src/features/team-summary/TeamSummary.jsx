@@ -510,7 +510,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                                 </span>
                               </div>
                               <span className="text-sm font-bold text-cyan-300 light:text-cyan-700">
-                                {fw.warPercentile.toFixed(1)}%
+                                {fw.warPercentile.toFixed(1)} %ile
                               </span>
                             </div>
                             <div className="w-full bg-white/[0.06] light:bg-gray-200 rounded-full h-1.5 overflow-hidden">
@@ -557,7 +557,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                                 </span>
                               </div>
                               <span className="text-sm font-bold text-rose-400 light:text-rose-700">
-                                {df.warPercentile.toFixed(1)}%
+                                {df.warPercentile.toFixed(1)} %ile
                               </span>
                             </div>
                             <div className="w-full bg-white/[0.06] light:bg-gray-200 rounded-full h-1.5 overflow-hidden">
@@ -604,7 +604,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                                 </span>
                               </div>
                               <span className="text-sm font-bold text-amber-300 light:text-amber-700">
-                                {gl.warPercentile.toFixed(1)}%
+                                {gl.warPercentile.toFixed(1)} %ile
                               </span>
                             </div>
                             <div className="w-full bg-white/[0.06] light:bg-gray-200 rounded-full h-1.5 overflow-hidden">
