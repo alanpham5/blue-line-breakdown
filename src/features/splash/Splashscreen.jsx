@@ -47,12 +47,17 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
           let timeoutId;
           await new Promise((resolve) => {
             const checkStatus = async () => {
-              const status = await apiService.checkCacheStatus();
-              if (status.dataLoaded || status.cacheExists) {
+              try {
+                const status = await apiService.checkCacheStatus();
+                if (status.dataLoaded || status.cacheExists) {
+                  if (timeoutId) clearTimeout(timeoutId);
+                  resolve();
+                } else {
+                  timeoutId = setTimeout(checkStatus, 30000);
+                }
+              } catch (err) {
                 if (timeoutId) clearTimeout(timeoutId);
                 resolve();
-              } else {
-                timeoutId = setTimeout(checkStatus, 30000);
               }
             };
             checkStatus();
@@ -79,22 +84,25 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
           }
     );
   };
-  useEffect(() => {
-    const loadFeatured = async () => {
-      try {
-        const data = await apiService.fetchFeatured();
-        if (
-          data &&
-          data.players &&
-          data.players.length > 0 &&
-          data.featuredTeam
-        ) {
-          setFeaturedData(data);
-        }
-      } catch (err) {
+  const loadFeatured = async () => {
+    setErrorState(false);
+    try {
+      const data = await apiService.fetchFeatured();
+      if (
+        data &&
+        data.players &&
+        data.players.length > 0 &&
+        data.featuredTeam
+      ) {
+        setFeaturedData(data);
+      } else {
         setErrorState(true);
       }
-    };
+    } catch (err) {
+      setErrorState(true);
+    }
+  };
+  useEffect(() => {
     loadFeatured();
   }, []);
   useEffect(() => {
@@ -155,11 +163,37 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
     : false;
   return (
     <div className="min-h-screen ice-background px-4 pb-10 pt-5 text-white light:text-gray-900 sm:px-6 sm:py-8">
-      {!featuredData && !showSkeleton && (
+      {!featuredData && !errorState && !showSkeleton && (
         <LoadingScreen onZamboniCircleComplete={() => setShowSkeleton(true)} />
       )}
 
-      {!featuredData && showSkeleton && (
+      {errorState && !featuredData && (
+        <div className="max-w-6xl mx-auto relative z-10">
+          <Header />
+          <div className="space-y-12">
+            <div className="liquid-glass rounded-[32px] px-5 py-12 text-center">
+              <p className="text-2xl font-semibold tracking-display text-white light:text-slate-900 sm:text-3xl">
+                Featured content is unavailable right now
+              </p>
+              <p className="mx-auto mt-2 max-w-2xl text-sm text-gray-400 light:text-gray-500 sm:text-base">
+                We couldn't reach the stats server. You can still browse the
+                rest of the site, or try again in a moment.
+              </p>
+              <button
+                type="button"
+                onClick={loadFeatured}
+                className="btn-search-primary btn-search-primary-inline mt-6 inline-flex items-center gap-2"
+              >
+                Try again
+              </button>
+            </div>
+            <DraftLeaderboardPreview limit={5} />
+          </div>
+          <Footer />
+        </div>
+      )}
+
+      {!featuredData && !errorState && showSkeleton && (
         <div className="max-w-6xl mx-auto relative z-10">
           <Header />
           <div className="space-y-12 animate-pulse">
@@ -452,7 +486,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
 
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                           <div className="liquid-glass rounded-2xl p-3 text-center">
-                            <div className="text-[10px] font-boldr text-gray-400 light:text-slate-500 mb-1">
+                            <div className="text-[10px] font-bold text-gray-400 light:text-slate-500 mb-1">
                               Goals PG
                             </div>
                             <div className="text-xl font-extrabold text-white light:text-gray-900">
@@ -461,7 +495,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                           </div>
 
                           <div className="liquid-glass rounded-2xl p-3 text-center">
-                            <div className="text-[10px] font-boldr text-gray-400 light:text-slate-500 mb-1">
+                            <div className="text-[10px] font-bold text-gray-400 light:text-slate-500 mb-1">
                               Goals Against
                             </div>
                             <div className="text-xl font-extrabold text-white light:text-gray-900">
@@ -470,7 +504,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                           </div>
 
                           <div className="liquid-glass rounded-2xl p-3 text-center">
-                            <div className="text-[10px] font-boldr text-gray-400 light:text-slate-500 mb-1">
+                            <div className="text-[10px] font-bold text-gray-400 light:text-slate-500 mb-1">
                               Possession
                             </div>
                             <div className="text-xl font-extrabold text-white light:text-gray-900">
@@ -479,7 +513,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                           </div>
 
                           <div className="liquid-glass rounded-2xl p-3 text-center">
-                            <div className="text-[10px] font-boldr text-gray-400 light:text-slate-500 mb-1">
+                            <div className="text-[10px] font-bold text-gray-400 light:text-slate-500 mb-1">
                               Blocked Shots
                             </div>
                             <div className="text-xl font-extrabold text-white light:text-gray-900">

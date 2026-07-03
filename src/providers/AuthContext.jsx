@@ -24,10 +24,6 @@ export function AuthProvider({ children }) {
     mode: "signin",
   });
   useEffect(() => {
-    if (typeof window !== "undefined" && localStorage.getItem("__MOCK_USER")) {
-      setLoading(false);
-      return;
-    }
     if (!isFirebaseConfigured) {
       setLoading(false);
       return;

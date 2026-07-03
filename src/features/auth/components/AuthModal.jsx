@@ -8,6 +8,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useAuth } from "providers/AuthContext";
+import { useDialogFocus } from "hooks/useDialogFocus";
 import {
   signUpWithEmail,
   signInWithEmail,
@@ -55,6 +56,7 @@ export const AuthModal = () => {
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
   const backdropRef = useRef(null);
+  const panelRef = useDialogFocus(isOpen);
 
   useEffect(() => {
     if (isOpen) {
@@ -150,7 +152,14 @@ export const AuthModal = () => {
       onMouseDown={(e) => e.target === backdropRef.current && closeAuth()}
       className="app-modal-backdrop fixed inset-0 z-[9999] flex items-center justify-center bg-black/72 p-4 backdrop-blur-sm light:bg-black/30"
     >
-      <div className="app-modal-panel liquid-glass-strong relative w-full max-w-md rounded-[32px] p-6 sm:p-8">
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={titles[view]}
+        tabIndex={-1}
+        className="app-modal-panel liquid-glass-strong relative w-full max-w-md rounded-[32px] p-6 sm:p-8"
+      >
         <button
           type="button"
           onClick={closeAuth}

@@ -15,6 +15,7 @@ import { SavedDrafts } from "features/account/SavedDrafts";
 import { VerifyEmail } from "features/auth/components/VerifyEmail";
 import { ResetPassword } from "features/auth/components/ResetPassword";
 import { GoogleCallback } from "features/auth/components/GoogleCallback";
+import { NotFound } from "features/not-found/NotFound";
 import { ThemeProvider } from "providers/ThemeContext";
 import { TooltipProvider } from "providers/TooltipContext";
 import { GaPageTrackContext } from "providers/GaPageTrackContext";
@@ -74,6 +75,7 @@ const App = () => {
                 element={<GoogleCallback />}
               />
               <Route path="/loader" element={<Loader />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>

@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useDialogFocus } from "hooks/useDialogFocus";
 export const ConfirmDialog = ({
   open,
   title,
@@ -9,6 +11,13 @@ export const ConfirmDialog = ({
   onConfirm,
   onCancel,
 }) => {
+  const panelRef = useDialogFocus(open);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e) => e.key === "Escape" && onCancel();
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open, onCancel]);
   if (!open) return null;
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4">
@@ -18,7 +27,14 @@ export const ConfirmDialog = ({
         onClick={onCancel}
         className="app-modal-backdrop absolute inset-0 bg-black/60"
       />
-      <div className="app-modal-panel relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/10 bg-[#0b1220]/95 p-5 text-white shadow-2xl backdrop-blur light:border-slate-200 light:bg-white">
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        tabIndex={-1}
+        className="app-modal-panel relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/10 bg-[#0b1220]/95 p-5 text-white shadow-2xl backdrop-blur light:border-slate-200 light:bg-white"
+      >
         <h3 className="text-lg font-extrabold tracking-display text-white light:text-gray-900">
           {title}
         </h3>

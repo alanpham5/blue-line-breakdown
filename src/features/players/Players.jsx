@@ -129,14 +129,21 @@ export const Players = ({ enablePageLoadAnimations = true }) => {
           let timeoutId;
           await new Promise((resolve) => {
             const checkStatus = async () => {
-              const status = await apiService.checkCacheStatus();
-              if (status.dataLoaded || status.cacheExists) {
+              try {
+                const status = await apiService.checkCacheStatus();
+                if (status.dataLoaded || status.cacheExists) {
+                  if (timeoutId) clearTimeout(timeoutId);
+                  setInitInProgress(false);
+                  initInProgressRef.current = false;
+                  resolve();
+                } else {
+                  timeoutId = setTimeout(checkStatus, 30000);
+                }
+              } catch (err) {
                 if (timeoutId) clearTimeout(timeoutId);
                 setInitInProgress(false);
                 initInProgressRef.current = false;
                 resolve();
-              } else {
-                timeoutId = setTimeout(checkStatus, 30000);
               }
             };
             checkStatus();
@@ -218,8 +225,20 @@ export const Players = ({ enablePageLoadAnimations = true }) => {
             let timeoutId;
             await new Promise((resolve) => {
               const checkStatus = async () => {
-                const status = await apiService.checkCacheStatus();
-                if (status.dataLoaded || status.cacheExists) {
+                try {
+                  const status = await apiService.checkCacheStatus();
+                  if (status.dataLoaded || status.cacheExists) {
+                    if (timeoutId) clearTimeout(timeoutId);
+                    clearInterval(messageInterval);
+                    setInitializingCache(false);
+                    setLoadingMessage("Searching...");
+                    setInitInProgress(false);
+                    initInProgressRef.current = false;
+                    resolve();
+                  } else {
+                    timeoutId = setTimeout(checkStatus, 30000);
+                  }
+                } catch (err) {
                   if (timeoutId) clearTimeout(timeoutId);
                   clearInterval(messageInterval);
                   setInitializingCache(false);
@@ -227,8 +246,6 @@ export const Players = ({ enablePageLoadAnimations = true }) => {
                   setInitInProgress(false);
                   initInProgressRef.current = false;
                   resolve();
-                } else {
-                  timeoutId = setTimeout(checkStatus, 30000);
                 }
               };
               checkStatus();

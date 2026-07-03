@@ -95,13 +95,19 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
           if (initResponse.status === "loading") {
             await new Promise((resolve) => {
               const poll = async () => {
-                const status = await apiService.checkCacheStatus();
-                if (status.dataLoaded || status.cacheExists) {
+                try {
+                  const status = await apiService.checkCacheStatus();
+                  if (status.dataLoaded || status.cacheExists) {
+                    initInProgressRef.current = false;
+                    setInitInProgress(false);
+                    resolve();
+                  } else {
+                    setTimeout(poll, 30000);
+                  }
+                } catch {
                   initInProgressRef.current = false;
                   setInitInProgress(false);
                   resolve();
-                } else {
-                  setTimeout(poll, 30000);
                 }
               };
               poll();

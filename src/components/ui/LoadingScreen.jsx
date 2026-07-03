@@ -18,17 +18,18 @@ export const LoadingScreen = ({ onZamboniCircleComplete }) => {
   const indexRef = useRef(0);
   const { actualTheme } = useTheme();
   useEffect(() => {
+    let interval;
     const loaderTimeout = setTimeout(() => {
       setShowLoader(true);
       setPulse(false);
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         indexRef.current = (indexRef.current + 1) % messages.length;
         setLoadingMessage(messages[indexRef.current]);
       }, 10000);
-      return () => clearInterval(interval);
     }, 4000);
     return () => {
       clearTimeout(loaderTimeout);
+      if (interval) clearInterval(interval);
     };
   }, []);
   return (
