@@ -111,6 +111,23 @@ export const apiService = {
       errorMessage: "Failed to fetch rosters",
     });
   },
+  fetchTeamLines(team, year) {
+    return request(`/team-lines?team=${team}&year=${year}`, {
+      errorMessage: "Failed to fetch team lines",
+    });
+  },
+  simulateTeamLines({ team, year, forwardLines, defensePairs, goalies }) {
+    return request(`/team-lines/simulate`, {
+      method: "POST",
+      body: { team, year: parseInt(year), forwardLines, defensePairs, goalies },
+      errorMessage: "Failed to simulate roster",
+    });
+  },
+  fetchPlayerPool(year, position) {
+    return request(`/players/pool?year=${year}&position=${position}`, {
+      errorMessage: "Failed to fetch player pool",
+    });
+  },
   async getNhlTeamStatus(teamAbbr, season) {
     try {
       const fetchSeason = parseInt(season) + 1;

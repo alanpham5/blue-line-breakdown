@@ -1,6 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Loader2, Search, Users, Download, Share } from "lucide-react";
+import {
+  Loader2,
+  Search,
+  Users,
+  Download,
+  Share,
+  ArrowUpRight,
+} from "lucide-react";
 import { track } from "@vercel/analytics";
 import { apiService } from "lib/api/apiService";
 import { Header } from "components/layout/Header";
@@ -471,14 +478,32 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                 <TeamProfileStatsGrid stats={teamSummaryData.stats} />
 
                 <div className="liquid-glass-strong rounded-[32px] p-4 sm:p-6 lg:p-7">
-                  <div className="flex items-center gap-2 border-b border-white/10 light:border-slate-200 pb-4 mb-5">
-                    <Users className="h-6 w-6 shrink-0 text-amber-300 light:text-amber-600" />
-                    <h3 className="text-xl sm:text-2xl font-bold tracking-display text-white light:text-gray-900">
-                      Top Impact Players
-                    </h3>
+                  <div className="flex items-center justify-between gap-3 border-b border-white/10 light:border-slate-200 pb-4 mb-5">
+                    <div className="flex min-w-0 items-center gap-2">
+                      <Users className="h-6 w-6 shrink-0 text-amber-300 light:text-amber-600" />
+                      <h3 className="text-xl sm:text-2xl font-bold tracking-display text-white light:text-gray-900">
+                        Top Impact Players
+                      </h3>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        navigate(
+                          `/teams/roster?team=${encodeURIComponent(team)}&year=${season}`
+                        )
+                      }
+                      className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-sky-300 transition-colors hover:text-sky-200 light:text-sky-600 light:hover:text-sky-700"
+                    >
+                      <span className="hidden sm:inline">See Full Roster</span>
+                      <span className="sm:hidden">Roster</span>
+                      <ArrowUpRight className="h-4 w-4" />
+                    </button>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+                  <div
+                    className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8"
+                    style={{ "--team-color": teamColor }}
+                  >
                     <div>
                       <h4 className="text-md font-bold text-cyan-300 light:text-cyan-600 mb-4">
                         Forwards
@@ -499,7 +524,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                                     season
                                   )}
                                   alt={fw.name}
-                                  className="w-10 h-10 rounded-full object-cover bg-zinc-900"
+                                  className="w-10 h-10 rounded-full object-cover bg-[var(--team-color)]"
                                   onError={(e) => {
                                     e.target.src =
                                       playerUtils.getDefaultHeadshot();
@@ -546,7 +571,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                                     season
                                   )}
                                   alt={df.name}
-                                  className="w-10 h-10 rounded-full object-cover bg-zinc-900"
+                                  className="w-10 h-10 rounded-full object-cover bg-[var(--team-color)]"
                                   onError={(e) => {
                                     e.target.src =
                                       playerUtils.getDefaultHeadshot();
@@ -593,7 +618,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                                     season
                                   )}
                                   alt={gl.name}
-                                  className="w-10 h-10 rounded-full object-cover bg-zinc-900"
+                                  className="w-10 h-10 rounded-full object-cover bg-[var(--team-color)]"
                                   onError={(e) => {
                                     e.target.src =
                                       playerUtils.getDefaultHeadshot();

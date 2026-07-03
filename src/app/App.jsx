@@ -4,6 +4,7 @@ import { PlayerLeaderboard } from "features/players/leaderboard/PlayerLeaderboar
 import { Splashscreen } from "features/splash/Splashscreen";
 import { About } from "features/about/About";
 import { TeamSummary } from "features/team-summary/TeamSummary";
+import { Roster } from "features/roster/Roster";
 import { Loader } from "features/loader/Loader";
 import { ExpansionDraft } from "features/expansion-draft/ExpansionDraft";
 import { DraftResult } from "features/expansion-draft/DraftResult";
@@ -55,6 +56,7 @@ const App = () => {
                   />
                 }
               />
+              <Route path="/teams/roster" element={<Roster />} />
               <Route path="/expansion-draft" element={<ExpansionDraft />} />
               <Route path="/expansion-draft/result" element={<DraftResult />} />
               <Route
