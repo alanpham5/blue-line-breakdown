@@ -127,11 +127,17 @@ export const PlayerTendenciesCard = ({
     <section
       className={`liquid-glass-strong liquid-glass-animate flex h-full flex-col rounded-[32px] ${shareable ? "p-6" : "p-5 sm:p-6"} ${forceDark ? "force-dark-player-card" : ""}`}
     >
-      <div className={`${shareable ? "mb-3" : "mb-5"} flex items-start justify-between gap-3`}>
+      <div
+        className={`${shareable ? "mb-3" : "mb-5"} flex items-start justify-between gap-3`}
+      >
         <div className="flex min-w-0 items-center gap-2">
-          <PieChart className={`${shareable ? "h-8 w-8" : "h-6 w-6"} shrink-0 text-violet-300 light:text-violet-600`} />
+          <PieChart
+            className={`${shareable ? "h-8 w-8" : "h-6 w-6"} shrink-0 text-violet-300 light:text-violet-600`}
+          />
           <div>
-            <h3 className={`${shareable ? "text-3xl" : "text-xl sm:text-2xl"} font-bold tracking-display text-white light:text-gray-900`}>
+            <h3
+              className={`${shareable ? "shareable-icon-label text-3xl" : "text-xl sm:text-2xl"} font-bold tracking-display text-white light:text-gray-900`}
+            >
               Tendencies
             </h3>
             {!shareable && (
@@ -229,7 +235,9 @@ export const PlayerTendenciesCard = ({
           </svg>
         </div>
 
-        <div className={`grid ${shareable ? "grid-cols-1 gap-2" : "gap-2.5 lg:grid-cols-2"}`}>
+        <div
+          className={`grid ${shareable ? "grid-cols-1 gap-2" : "gap-2.5 lg:grid-cols-2"}`}
+        >
           {legendTendencies.map((tendency) => (
             <div
               key={tendency.label}
@@ -243,23 +251,39 @@ export const PlayerTendenciesCard = ({
                 }}
               />
               <div className="min-w-0 text-center">
-                <p className={`${shareable ? "text-base" : "text-sm"} truncate text-center font-semibold text-gray-200 light:text-gray-800`}>
+                <p
+                  className={`${shareable ? "text-base" : "text-sm"} truncate text-center font-semibold text-gray-200 light:text-gray-800`}
+                >
                   {tendency.label}
                 </p>
-                <div className={`${shareable ? "mt-1" : "mt-1.5"} grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] divide-x divide-white/[0.08] light:divide-slate-200`}>
-                  <div className={`${shareable ? "flex-col gap-0" : "items-baseline gap-1"} flex min-w-0 justify-center px-2 text-center`}>
-                    <span className={`${shareable ? "text-lg" : "text-base"} font-bold tabular-nums text-white light:text-gray-900`}>
+                <div
+                  className={`${shareable ? "mt-1" : "mt-1.5"} grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] divide-x divide-white/[0.08] light:divide-slate-200`}
+                >
+                  <div
+                    className={`${shareable ? "flex-col gap-0" : "items-baseline gap-1"} flex min-w-0 justify-center px-2 text-center`}
+                  >
+                    <span
+                      className={`${shareable ? "text-lg" : "text-base"} font-bold tabular-nums text-white light:text-gray-900`}
+                    >
                       {tendency.percentage}%
                     </span>
-                    <span className={`${shareable ? "text-[0.66rem] leading-tight" : "text-[0.62rem]"} font-semibold uppercase tracking-[0.06em] text-gray-500 light:text-gray-500`}>
+                    <span
+                      className={`${shareable ? "text-[0.66rem] leading-tight" : "text-[0.62rem]"} font-semibold uppercase tracking-[0.06em] text-gray-500 light:text-gray-500`}
+                    >
                       events
                     </span>
                   </div>
-                  <div className={`${shareable ? "flex-col gap-0" : "items-baseline gap-1"} flex min-w-0 justify-center px-2 text-center`}>
-                    <span className={`${shareable ? "text-lg" : "text-base"} font-bold tabular-nums text-white light:text-gray-900`}>
+                  <div
+                    className={`${shareable ? "flex-col gap-0" : "items-baseline gap-1"} flex min-w-0 justify-center px-2 text-center`}
+                  >
+                    <span
+                      className={`${shareable ? "text-lg" : "text-base"} font-bold tabular-nums text-white light:text-gray-900`}
+                    >
                       {Math.round(tendency.percentile)}
                     </span>
-                    <span className={`${shareable ? "text-[0.66rem] leading-tight" : "text-[0.62rem]"} font-semibold uppercase tracking-[0.06em] text-gray-500 light:text-gray-500`}>
+                    <span
+                      className={`${shareable ? "text-[0.66rem] leading-tight" : "text-[0.62rem]"} font-semibold uppercase tracking-[0.06em] text-gray-500 light:text-gray-500`}
+                    >
                       Percentile
                     </span>
                   </div>

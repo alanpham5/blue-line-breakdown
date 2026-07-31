@@ -24,11 +24,13 @@ import { TooltipProvider } from "providers/TooltipContext";
 import { GaPageTrackContext } from "providers/GaPageTrackContext";
 import { AuthProvider } from "providers/AuthContext";
 import { AuthModal } from "features/auth/components/AuthModal";
+import { SlowRequestOverlay } from "components/ui/SlowRequestOverlay";
 const App = () => {
   const enablePageLoadAnimations = true;
   return (
     <ThemeProvider>
       <AuthProvider>
+        <SlowRequestOverlay />
         <TooltipProvider>
           <BrowserRouter>
             <GaPageTrackContext />

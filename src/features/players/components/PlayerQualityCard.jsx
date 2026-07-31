@@ -40,11 +40,17 @@ export const PlayerQualityCard = ({
     <section
       className={`liquid-glass-strong liquid-glass-animate flex h-full flex-col rounded-[32px] ${shareable ? "min-h-0 p-5" : "min-h-[370px] p-5 sm:p-6"} ${forceDark ? "force-dark-player-card" : ""}`}
     >
-      <div className={`${shareable ? "mb-3" : "mb-5"} flex items-start justify-between gap-3`}>
+      <div
+        className={`${shareable ? "mb-3" : "mb-5"} flex items-start justify-between gap-3`}
+      >
         <div className="flex min-w-0 items-center gap-2">
-          <Icon className={`${shareable ? "h-7 w-7" : "h-6 w-6"} shrink-0 ${accentText}`} />
+          <Icon
+            className={`${shareable ? "h-7 w-7" : "h-6 w-6"} shrink-0 ${accentText}`}
+          />
           <div>
-            <h3 className={`${shareable ? "text-2xl" : "text-xl sm:text-2xl"} font-bold tracking-display text-white light:text-gray-900`}>
+            <h3
+              className={`${shareable ? "shareable-icon-label text-2xl" : "text-xl sm:text-2xl"} font-bold tracking-display text-white light:text-gray-900`}
+            >
               {title}
             </h3>
             {!shareable && (
@@ -89,7 +95,9 @@ export const PlayerQualityCard = ({
               key={stat.label}
               className="grid min-w-0 grid-rows-[auto_1fr_auto] justify-items-center gap-2"
             >
-              <span className={`${shareable ? "text-xl" : "text-base"} font-bold tabular-nums ${accentText}`}>
+              <span
+                className={`${shareable ? "text-xl" : "text-base"} font-bold tabular-nums ${accentText}`}
+              >
                 {value.toFixed(0)}
               </span>
               <div
@@ -103,7 +111,9 @@ export const PlayerQualityCard = ({
                 />
               </div>
               <div className="min-h-[3.25rem] text-center">
-                <p className={`${shareable ? "text-sm" : "text-xs sm:text-[0.82rem]"} font-semibold leading-tight text-gray-300 light:text-gray-700`}>
+                <p
+                  className={`${shareable ? "text-sm" : "text-xs sm:text-[0.82rem]"} font-semibold leading-tight text-gray-300 light:text-gray-700`}
+                >
                   {stat.label}
                 </p>
               </div>

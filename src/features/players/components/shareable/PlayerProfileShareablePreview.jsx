@@ -114,7 +114,9 @@ export const PlayerProfileShareablePreview = ({
             shareable
           />
           <PlayerQualityCard
-            title={player.position === "G" ? "Shots Faced" : "Defensive Quality"}
+            title={
+              player.position === "G" ? "Shots Faced" : "Defensive Quality"
+            }
             icon={Shield}
             stats={defensiveQuality}
             type={player.position === "G" ? "workload" : "defensive"}
@@ -129,7 +131,9 @@ export const PlayerProfileShareablePreview = ({
         <div className="liquid-glass-strong rounded-[28px] px-6 py-4">
           <div className="mb-2.5 flex items-center gap-2.5">
             <Gauge className="h-7 w-7 text-emerald-300" />
-            <h3 className="text-3xl font-bold text-white">NHL EDGE</h3>
+            <h3 className="shareable-icon-label text-3xl font-bold text-white">
+              NHL EDGE
+            </h3>
           </div>
           <div className="grid grid-cols-6 divide-x divide-white/10 text-center">
             {edgeOrder
@@ -157,7 +161,7 @@ export const PlayerProfileShareablePreview = ({
       <div className="liquid-glass-strong rounded-[28px] px-6 py-4">
         <div className="mb-2.5 flex items-center gap-2.5">
           <Users className="h-7 w-7 text-amber-300" />
-          <h3 className="text-3xl font-bold text-white">
+          <h3 className="shareable-icon-label text-3xl font-bold text-white">
             Most Similar Players
           </h3>
         </div>
@@ -181,8 +185,10 @@ export const PlayerProfileShareablePreview = ({
                     className="h-full w-full object-cover"
                   />
                 </div>
-                <div className="absolute -bottom-1 -right-1 h-9 w-9 rounded-full bg-gradient-to-b from-[#ffe57e] to-[#ffd037] text-center text-sm font-bold text-[#4f3d00] leading-9">
-                  {Math.round(similarPlayer.similarity)}
+                <div className="absolute -bottom-1 -right-1 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-b from-[#ffe57e] to-[#ffd037] text-sm font-bold leading-none text-[#4f3d00]">
+                  <span className="shareable-similarity-score block leading-none">
+                    {Math.round(similarPlayer.similarity)}
+                  </span>
                 </div>
               </div>
               <div className="mt-2 text-[18px] font-bold leading-tight text-white">

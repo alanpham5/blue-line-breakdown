@@ -231,7 +231,9 @@ export const GeneralSearch = ({
           autoComplete="off"
         />
         {loading ? (
-          <Loader2 className="absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 animate-spin text-sky-300 light:text-sky-600" />
+          <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2">
+            <Loader2 className="block h-5 w-5 animate-spin text-sky-300 light:text-sky-600" />
+          </span>
         ) : (
           query && (
             <button

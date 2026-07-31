@@ -1,3 +1,5 @@
+import { trackApiRequest } from "lib/api/requestActivity";
+
 const getApiBaseUrl = () => {
   const isLocalhost =
     typeof window !== "undefined" &&
@@ -16,23 +18,24 @@ const NHL_TO_ESPN_TEAM_MAP = {
   TBL: "TB",
   NJD: "NJ",
 };
-const request = async (path, { method = "GET", body, errorMessage } = {}) => {
-  const res = await fetch(`${API_BASE_URL}${path}`, {
-    method,
-    headers:
-      body !== undefined
-        ? {
-            "Content-Type": "application/json",
-          }
-        : undefined,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
+const request = (path, { method = "GET", body, errorMessage } = {}) =>
+  trackApiRequest(async () => {
+    const res = await fetch(`${API_BASE_URL}${path}`, {
+      method,
+      headers:
+        body !== undefined
+          ? {
+              "Content-Type": "application/json",
+            }
+          : undefined,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}));
+      throw new Error(error.error || errorMessage || "Request failed");
+    }
+    return res.json();
   });
-  if (!res.ok) {
-    const error = await res.json().catch(() => ({}));
-    throw new Error(error.error || errorMessage || "Request failed");
-  }
-  return res.json();
-};
 export const apiService = {
   async searchPlayer(
     playerName,
@@ -41,44 +44,50 @@ export const apiService = {
     numNeighbors = 9,
     filterSeason = null
   ) {
-    const response = await fetch(`${API_BASE_URL}/search`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        playerName,
-        season: parseInt(season),
-        position,
-        numNeighbors,
-        filterSeason,
-      }),
+    return trackApiRequest(async () => {
+      const response = await fetch(`${API_BASE_URL}/search`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          playerName,
+          season: parseInt(season),
+          position,
+          numNeighbors,
+          filterSeason,
+        }),
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        const errorObj = new Error(error.error || "Search failed");
+        errorObj.suggestions = error.suggestions || null;
+        throw errorObj;
+      }
+      return response.json();
     });
-    if (!response.ok) {
-      const error = await response.json();
-      const errorObj = new Error(error.error || "Search failed");
-      errorObj.suggestions = error.suggestions || null;
-      throw errorObj;
-    }
-    return response.json();
   },
-  async healthCheck() {
-    const response = await fetch(`${API_BASE_URL}/health`);
-    return response.json();
+  healthCheck() {
+    return trackApiRequest(async () => {
+      const response = await fetch(`${API_BASE_URL}/health`);
+      return response.json();
+    });
   },
   initializeCache() {
     return request("/init", {
       errorMessage: "Cache initialization failed",
     });
   },
-  async checkCacheStatus() {
-    const response = await fetch(`${API_BASE_URL}/search`);
-    if (!response.ok)
-      return {
-        cacheExists: false,
-        dataLoaded: false,
-      };
-    return response.json();
+  checkCacheStatus() {
+    return trackApiRequest(async () => {
+      const response = await fetch(`${API_BASE_URL}/search`);
+      if (!response.ok)
+        return {
+          cacheExists: false,
+          dataLoaded: false,
+        };
+      return response.json();
+    });
   },
   searchAutofill(query, limit = 5) {
     return request(

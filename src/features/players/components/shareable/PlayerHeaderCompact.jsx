@@ -90,9 +90,7 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
                     key={idx}
                     className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.08] px-3 py-1.5 text-base font-semibold text-sky-200"
                   >
-                    {Icon && (
-                      <Icon className="h-5 w-5 shrink-0 text-sky-300" />
-                    )}
+                    {Icon && <Icon className="h-5 w-5 shrink-0 text-sky-300" />}
                     <span className="shareable-pill-text">{archetype}</span>
                   </div>
                 );

@@ -70,22 +70,32 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
   useLayoutEffect(() => {
     const node = playerNameRef.current;
     if (!node) return undefined;
+
+    let frame;
+    let active = true;
     const fitName = () => {
       node.style.setProperty("--player-name-shrink", "0px");
-      for (let shrink = 1; shrink <= 5; shrink += 1) {
+      for (let shrink = 1; shrink <= 10; shrink += 1) {
         if (node.scrollWidth <= node.clientWidth) break;
         node.style.setProperty("--player-name-shrink", `${shrink}px`);
       }
     };
-    let frame = window.requestAnimationFrame(fitName);
-    const handleResize = () => {
+
+    const scheduleFit = () => {
+      if (!active) return;
       window.cancelAnimationFrame(frame);
       frame = window.requestAnimationFrame(fitName);
     };
-    window.addEventListener("resize", handleResize);
+
+    scheduleFit();
+    const resizeObserver = new ResizeObserver(scheduleFit);
+    resizeObserver.observe(node);
+    document.fonts?.ready.then(scheduleFit);
+
     return () => {
+      active = false;
       window.cancelAnimationFrame(frame);
-      window.removeEventListener("resize", handleResize);
+      resizeObserver.disconnect();
     };
   }, [player.name]);
   return (
@@ -139,7 +149,7 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
           <h2 className="mb-3 flex min-w-0 w-full items-center justify-center gap-2 text-[1.7rem] font-bold tracking-display text-white light:text-gray-900 sm:text-[1.8rem] lg:justify-start lg:text-[2.2rem]">
             <span
               ref={playerNameRef}
-              className="min-w-0 truncate"
+              className="min-w-0 flex-1 truncate"
               style={{
                 fontSize:
                   "calc(clamp(1.1rem, 4vw, 2.2rem) - var(--player-name-shrink, 0px))",

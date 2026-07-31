@@ -16,7 +16,7 @@ export const WarPercentileCardCompact = ({ warPercentile, role }) => {
       <div className="flex w-full min-w-0 flex-1 items-center gap-4">
         <Trophy className="h-7 w-7 shrink-0 text-[#7dcb48]" />
         <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:gap-2">
-          <h3 className="min-w-0 shrink whitespace-nowrap text-[1.75rem] font-bold leading-snug tracking-display text-white">
+          <h3 className="shareable-icon-label min-w-0 shrink whitespace-nowrap text-[1.75rem] font-bold leading-snug tracking-display text-white">
             Impact Rating
           </h3>
         </div>
@@ -81,11 +81,11 @@ export const WarPercentileCardCompact = ({ warPercentile, role }) => {
         <div className="mt-3 flex w-full items-center justify-between gap-3 border-t border-white/10 pt-3">
           <div className="flex items-center gap-2 text-gray-400">
             <User className="h-5 w-5 text-sky-300" />
-            <span className="text-sm font-semibold uppercase tracking-[0.12em]">
+            <span className="shareable-role-label text-sm font-semibold uppercase tracking-[0.12em]">
               Role
             </span>
           </div>
-          <div className="text-right text-xl font-semibold leading-tight text-white">
+          <div className="shareable-role-value text-right text-xl font-semibold leading-tight text-white">
             {role}
           </div>
         </div>
