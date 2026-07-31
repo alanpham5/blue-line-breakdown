@@ -20,14 +20,14 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
   const archetypes = player.archetypes;
   return (
     <div
-      className="team-card-surface-strong relative overflow-hidden rounded-[28px] px-5 py-4 liquid-glass-strong"
+      className="team-card-surface-strong relative h-full overflow-hidden rounded-[28px] px-6 py-5 liquid-glass-strong"
       style={{
         "--team-card-gradient": teamCardGradient,
       }}
     >
-      <div className="relative flex items-center gap-4">
+      <div className="relative flex h-full items-center gap-5">
         <div
-          className="w-32 h-32 rounded-full overflow-hidden shrink-0"
+          className="h-36 w-36 shrink-0 overflow-hidden rounded-full"
           style={{
             background: teamColorGradient,
           }}
@@ -50,25 +50,25 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
           />
         </div>
         <div className="min-w-0 flex-1">
-          <h2 className="text-4xl font-bold mb-0.5 text-white">
+          <h2 className="mb-0.5 text-[2.75rem] font-bold leading-tight text-white">
             {player.name}
           </h2>
 
-          <div className="text-xl font-semibold text-gray-300">
+          <div className="text-[1.35rem] font-semibold text-gray-300">
             {playerUtils.getFullTeamName(player.team, player.season)} •{" "}
             {playerUtils.formatSeason(player.season)}
           </div>
 
-          <div className="flex gap-3 mt-1.5 text-lg text-gray-300 shareable-bio-container">
+          <div className="shareable-bio-container mt-2 flex gap-4 text-xl text-gray-300">
             {biometrics?.height && (
               <span className="flex items-center gap-1">
-                <Ruler className="h-4 w-4 text-sky-300" />
+                <Ruler className="h-5 w-5 text-sky-300" />
                 <span className="shareable-bio-value">{biometrics.height}</span>
               </span>
             )}
             {biometrics?.weight && (
               <span className="flex items-center gap-1">
-                <Scale className="h-4 w-4 text-sky-300" />
+                <Scale className="h-5 w-5 text-sky-300" />
                 <span className="shareable-bio-value">
                   {Math.round(biometrics.weight)} lbs
                 </span>
@@ -76,7 +76,7 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
             )}
             {player?.age && (
               <span className="flex items-center gap-1">
-                <Calendar className="h-4 w-4 text-sky-300" />
+                <Calendar className="h-5 w-5 text-sky-300" />
                 <span className="shareable-bio-value">Age {player.age}</span>
               </span>
             )}
@@ -88,11 +88,9 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
                 return (
                   <div
                     key={idx}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.08] border border-white/10 px-2.5 py-1 text-xs sm:text-sm font-semibold text-sky-200"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.08] px-3 py-1.5 text-base font-semibold text-sky-200"
                   >
-                    {Icon && (
-                      <Icon className="h-4 w-4 shrink-0 text-sky-300" />
-                    )}
+                    {Icon && <Icon className="h-5 w-5 shrink-0 text-sky-300" />}
                     <span className="shareable-pill-text">{archetype}</span>
                   </div>
                 );
@@ -104,7 +102,7 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
         {teamLogoUrl && (
           <Link
             to={`/teams?season=${player.season}&team=${player.team}&position=${player.position}`}
-            className="relative shrink-0 w-36 h-36 flex items-center justify-center"
+            className="relative flex h-40 w-40 shrink-0 items-center justify-center"
           >
             {didWinStanleyCup && (
               <img

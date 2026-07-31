@@ -37,7 +37,11 @@ export const RosterPlayerCard = ({
     actualTheme
   );
   const pct =
-    typeof player.warPercentile === "number" ? player.warPercentile : null;
+    typeof player.impactPercentile === "number"
+      ? player.impactPercentile
+      : typeof player.warPercentile === "number"
+        ? player.warPercentile
+        : null;
   const { text: valueColor, fill } = percentileColors(pct);
   return (
     <div
@@ -83,7 +87,7 @@ export const RosterPlayerCard = ({
         </div>
         <div className="mt-1.5 flex items-center gap-1.5">
           <span className="text-[0.6rem] font-semibold uppercase tracking-wide text-gray-400 light:text-gray-500">
-            LP
+            Impact
           </span>
           <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/[0.06] light:bg-gray-200">
             <div

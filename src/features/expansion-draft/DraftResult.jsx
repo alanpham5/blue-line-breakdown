@@ -109,10 +109,10 @@ export const DraftResult = () => {
     }
     let cancelled = false;
     apiService
-      .reanalyzeDraft({
+      .analyzeTeam({
         season: draft.season,
         teamName: draft.teamName,
-        picks,
+        roster: picks,
       })
       .then((freshProfile) => {
         if (!cancelled) setProfile(freshProfile);
@@ -125,9 +125,7 @@ export const DraftResult = () => {
     };
   }, [draft, viewOnly, profile, navigate]);
   const isOwnEntry = Boolean(user && draft?.ownerId === user.uid);
-  const canEditCommunityEntry = Boolean(
-    user && posted && isOwnEntry
-  );
+  const canEditCommunityEntry = Boolean(user && posted && isOwnEntry);
   const showLike = Boolean(savedId && (posted || viewOnly));
   const liked = Boolean(user && likedBy.includes(user.uid));
   if (!draft || !profile) {
@@ -257,12 +255,8 @@ export const DraftResult = () => {
     navigate(`/teams?team=${team}&year=${season}`);
   };
   const handlePlayerClick = (player) => {
-    if (!player?.name) return;
-    const pos = (player.position || "").toUpperCase();
-    const normalizedPosition = pos === "D" ? "D" : pos === "G" ? "G" : "F";
-    navigate(
-      `/players?player=${encodeURIComponent(player.name)}&season=${draft.season}&position=${normalizedPosition}`
-    );
+    if (!player?.playerId) return;
+    navigate(`/players/v2/${player.playerId}?season=${draft.season}`);
   };
   return (
     <div className="ice-background min-h-screen px-4 pb-16 pt-5 text-white light:text-gray-900 sm:px-6 sm:py-8">
@@ -302,7 +296,9 @@ export const DraftResult = () => {
                       aria-pressed={liked}
                       aria-label={liked ? "Unlike franchise" : "Like franchise"}
                     >
-                      <Heart className={`h-4 w-4 ${liked ? "fill-current" : ""}`} />
+                      <Heart
+                        className={`h-4 w-4 ${liked ? "fill-current" : ""}`}
+                      />
                       {likes}
                     </button>
                   )}
@@ -321,7 +317,8 @@ export const DraftResult = () => {
                 <div className="flex items-center gap-3">
                   {record.playoffProbability != null && (
                     <span className="rounded-full bg-emerald-500/15 px-3 py-1.5 text-sm font-bold text-emerald-300 light:text-emerald-700">
-                      {Math.round(record.playoffProbability * 100)}% playoff odds
+                      {Math.round(record.playoffProbability * 100)}% playoff
+                      odds
                     </span>
                   )}
                   {record.outlook?.label && (
@@ -500,7 +497,8 @@ const LeaderboardPost = ({
     ) : !user.emailVerified ? (
       <p className="mt-3 flex items-start gap-2 text-sm text-amber-300 light:text-amber-700">
         <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" />
-        Verify your email to unlock posting. Check your spam folder if you haven't received the email.
+        Verify your email to unlock posting. Check your spam folder if you
+        haven't received the email.
       </p>
     ) : hasPosted ? (
       <button

@@ -148,11 +148,13 @@ export const SubstitutionModal = ({
             </p>
           ) : (
             filtered.map((p) => {
+              const impactPercentile =
+                typeof p.impactPercentile === "number"
+                  ? p.impactPercentile
+                  : p.warPercentile;
               const onRoster =
                 usedPlayerIds?.has(p.playerId) &&
                 p.playerId !== currentPlayerId;
-              // In rookie mode the profile player is added to the roster, so a
-              // player already in use can't back a rookie.
               const disabled = rookieMode && onRoster;
               return (
                 <button
@@ -205,10 +207,10 @@ export const SubstitutionModal = ({
                     </span>
                   )}
                   <span
-                    className={`shrink-0 text-sm font-bold ${percentileColor(p.warPercentile)}`}
+                    className={`shrink-0 text-sm font-bold ${percentileColor(impactPercentile)}`}
                   >
-                    {typeof p.warPercentile === "number"
-                      ? p.warPercentile.toFixed(1)
+                    {typeof impactPercentile === "number"
+                      ? impactPercentile.toFixed(1)
                       : "—"}
                   </span>
                 </button>

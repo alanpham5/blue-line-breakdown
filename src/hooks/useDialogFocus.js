@@ -3,8 +3,6 @@ import { useEffect, useRef } from "react";
 const FOCUSABLE =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-// Traps Tab focus inside the dialog panel while `active`, moves focus into the
-// panel on open, and restores it to the previously focused element on close.
 export const useDialogFocus = (active) => {
   const panelRef = useRef(null);
   useEffect(() => {

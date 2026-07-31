@@ -1,37 +1,47 @@
 import { useState, useEffect, useRef } from "react";
 import { LoadingWheel } from "components/ui/LoadingWheel";
 import { useTheme } from "providers/ThemeContext";
-export const LoadingScreen = ({ onZamboniCircleComplete }) => {
-  const messages = [
-    "Hold on, we need to refresh the data...",
-    "Turning on the lights...",
-    "Zamboni resurfacing the ice...",
-    "Players putting on their gear...",
-    "Players warming up...",
-    "Coaches reviewing the game plan...",
-    "Referees checking the lines...",
-    "Almost ready...",
-  ];
+
+const messages = [
+  "Hold on, we need to refresh the data...",
+  "Turning on the lights...",
+  "Zamboni resurfacing the ice...",
+  "Players putting on their gear...",
+  "Players warming up...",
+  "Coaches reviewing the game plan...",
+  "Referees checking the lines...",
+  "Almost ready...",
+];
+
+export const LoadingScreen = ({
+  onZamboniCircleComplete,
+  immediate = false,
+}) => {
   const [loadingMessage, setLoadingMessage] = useState(messages[0]);
-  const [showLoader, setShowLoader] = useState(false);
-  const [pulse, setPulse] = useState(true);
+  const [showLoader, setShowLoader] = useState(immediate);
+  const [pulse, setPulse] = useState(!immediate);
   const indexRef = useRef(0);
   const { actualTheme } = useTheme();
   useEffect(() => {
     let interval;
-    const loaderTimeout = setTimeout(() => {
+    const startMessageRotation = () => {
       setShowLoader(true);
       setPulse(false);
       interval = setInterval(() => {
         indexRef.current = (indexRef.current + 1) % messages.length;
         setLoadingMessage(messages[indexRef.current]);
       }, 10000);
-    }, 4000);
+    };
+    const loaderTimeout = immediate
+      ? null
+      : setTimeout(startMessageRotation, 4000);
+    if (immediate) startMessageRotation();
+
     return () => {
-      clearTimeout(loaderTimeout);
+      if (loaderTimeout) clearTimeout(loaderTimeout);
       if (interval) clearInterval(interval);
     };
-  }, []);
+  }, [immediate]);
   return (
     <div className="flex flex-col items-center pb-10 justify-center h-screen text-white light:text-gray-900 text-lg">
       <div

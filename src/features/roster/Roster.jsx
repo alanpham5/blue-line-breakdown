@@ -40,20 +40,11 @@ const getClinchStatus = (clincher) => {
   };
   return statusMap[clincher] || null;
 };
-const avgLeaguePercentile = (unit) => {
-  const values = (unit.players || [])
-    .map((p) => p.warPercentile)
-    .filter((v) => typeof v === "number");
-  if (!values.length) return -1;
-  return values.reduce((sum, v) => sum + v, 0) / values.length;
-};
-const sortByAvgPercentile = (units) =>
-  [...units].sort((a, b) => avgLeaguePercentile(b) - avgLeaguePercentile(a));
 const rosterFromData = (data) => ({
-  forwardLines: sortByAvgPercentile(data?.forwardLines || []).map((u) =>
+  forwardLines: (data?.forwardLines || []).map((u) =>
     u.players.map((p) => p.playerId)
   ),
-  defensePairs: sortByAvgPercentile(data?.defensePairs || []).map((u) =>
+  defensePairs: (data?.defensePairs || []).map((u) =>
     u.players.map((p) => p.playerId)
   ),
   goalies: (data?.goalies || []).map((g) => g.playerId),
@@ -142,10 +133,6 @@ export const Roster = () => {
       ? `${playerUtils.getFullTeamName(team, season)} Roster | Blue Line Breakdown`
       : "Roster | Blue Line Breakdown";
   }, [team, season]);
-  // When the team or season changes (Lookup Team form, similar-team link, or
-  // browser navigation), drop any in-progress modify session and stale data so
-  // the new team's header never renders alongside the previous team's roster or
-  // record. This runs synchronously (before paint) so there is no stale frame.
   useLayoutEffect(() => {
     teamSeasonRef.current = `${team}-${season}`;
     setModifying(false);
@@ -215,7 +202,6 @@ export const Roster = () => {
           defensePairs: rosterState.defensePairs,
           goalies: rosterState.goalies,
         });
-        // Ignore a response that lands after the user switched teams/season.
         if (teamSeasonRef.current !== token) return;
         setSimData(res);
       } catch (err) {
@@ -253,9 +239,6 @@ export const Roster = () => {
     const { position, unitIndex, playerIndex, currentPlayerId } = picker;
     const asRookie = !!player.rookieName;
     const currentIsRookie = rookies[currentPlayerId] !== undefined;
-    // Re-selecting the exact same player is only a no-op when it doesn't change
-    // rookie state (e.g. renaming a rookie, or reverting a rookie to the real
-    // player, both reuse the same profile id and must still apply).
     if (player.playerId === currentPlayerId && !asRookie && !currentIsRookie) {
       setPicker(null);
       return;
@@ -266,11 +249,7 @@ export const Roster = () => {
       goalies: [...roster.goalies],
     };
     const groupFor = (pos) =>
-      pos === "F"
-        ? next.forwardLines
-        : pos === "D"
-          ? next.defensePairs
-          : null;
+      pos === "F" ? next.forwardLines : pos === "D" ? next.defensePairs : null;
     const setSlot = (pos, ui, pi, id) => {
       const group = groupFor(pos);
       if (group) group[ui][pi] = id;
@@ -288,12 +267,9 @@ export const Roster = () => {
       }
       return null;
     };
-    // If the incoming player is already on the roster (same position group),
-    // swap the two players' slots instead of dropping the displaced one.
     const existing = findSlot(position, player.playerId);
     const relocatedDisplaced =
-      existing &&
-      !(existing.ui === unitIndex && existing.pi === playerIndex);
+      existing && !(existing.ui === unitIndex && existing.pi === playerIndex);
     setSlot(position, unitIndex, playerIndex, player.playerId);
     if (relocatedDisplaced) {
       setSlot(position, existing.ui, existing.pi, currentPlayerId);
@@ -301,22 +277,16 @@ export const Roster = () => {
     setRookies((prev) => {
       const nextRookies = { ...prev };
       if (asRookie) {
-        // A rookie borrows an existing player's metrics but shows a custom name
-        // and the generic headshot (handled in the display decoration).
         nextRookies[player.playerId] = player.rookieName;
       } else if (player.playerId === currentPlayerId) {
-        // Reverting the current rookie back to the real player.
         delete nextRookies[player.playerId];
       }
-      // Clear a stale rookie flag when the displaced player leaves the roster.
       if (currentPlayerId !== player.playerId && !relocatedDisplaced) {
         delete nextRookies[currentPlayerId];
       }
       return nextRookies;
     });
     if (!asRookie && player.team) {
-      // Preserve the swapped-in player's original team so their headshot keeps
-      // resolving to the correct source after re-simulation.
       setSubHeadshots((prev) => ({ ...prev, [player.playerId]: player.team }));
     }
     setRoster(next);
@@ -365,10 +335,10 @@ export const Roster = () => {
   });
   const forwardUnits = usingSim
     ? simData.forwardLines.map(decorateUnit)
-    : sortByAvgPercentile(data?.forwardLines || []);
+    : data?.forwardLines || [];
   const defenseUnits = usingSim
     ? simData.defensePairs.map(decorateUnit)
-    : sortByAvgPercentile(data?.defensePairs || []);
+    : data?.defensePairs || [];
   const goalieUnits = usingSim
     ? (simData.goalies || []).map(decoratePlayer)
     : data?.goalies || [];
@@ -388,11 +358,9 @@ export const Roster = () => {
       playerIndex: pi,
       currentPlayerId: player?.playerId,
     });
-  const navigateToPlayer = (position) => (player) => {
-    if (!player?.name) return;
-    navigate(
-      `/players?player=${encodeURIComponent(player.name)}&season=${season}&position=${position}`
-    );
+  const navigateToPlayer = () => (player) => {
+    if (!player?.playerId) return;
+    navigate(`/players/v2/${player.playerId}?season=${season}`);
   };
   const renderExtras = (label, players, position) => (
     <div className="mt-4 border-t border-white/10 pt-4 light:border-slate-200">
@@ -457,7 +425,9 @@ export const Roster = () => {
                 <option>Loading...</option>
               ) : (
                 [...teamsList]
-                  .sort((a, b) => getTeamLabel(a).localeCompare(getTeamLabel(b)))
+                  .sort((a, b) =>
+                    getTeamLabel(a).localeCompare(getTeamLabel(b))
+                  )
                   .map((t) => (
                     <option key={t} value={t}>
                       {getTeamLabel(t)}
@@ -559,7 +529,7 @@ export const Roster = () => {
                     ? "Lineup data isn't available for this team & season."
                     : modifying
                       ? "Modify mode — substitute any player to re-estimate the record & line scores"
-                      : "Most-used 5v5 units, ranked by average league percentile"}
+                      : "Most-used observed 5v5 units from MoneyPuck"}
                 </p>
               </div>
             </div>

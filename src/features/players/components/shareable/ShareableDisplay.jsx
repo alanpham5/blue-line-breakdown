@@ -144,7 +144,10 @@ export const ShareableDisplay = ({ playerData }) => {
         >
           <div className="grid grid-cols-[2fr_1fr] gap-3">
             <PlayerHeaderCompact player={player} biometrics={biometrics} />
-            <WarPercentileCardCompact warPercentile={player.warPercentile} />
+            <WarPercentileCardCompact
+              role={player.role}
+              warPercentile={player.warPercentile}
+            />
           </div>
 
           <div className="space-y-3">
@@ -186,7 +189,7 @@ export const ShareableDisplay = ({ playerData }) => {
                             {formatValue(statKey, val)}
                           </div>
                           <div className="text-[12px] text-gray-400 font-semibold mt-0.5">
-                            {percentile.toFixed(1)} %ile
+                            {percentile.toFixed(1)} Percentile
                           </div>
                         </div>
                       );

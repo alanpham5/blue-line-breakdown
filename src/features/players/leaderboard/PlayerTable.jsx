@@ -23,7 +23,14 @@ const compareValues = (a, b, dir) => {
   return dir === "asc" ? a - b : b - a;
 };
 
-const SortHeader = ({ label, title, sortKey, sort, onSort, className = "" }) => {
+const SortHeader = ({
+  label,
+  title,
+  sortKey,
+  sort,
+  onSort,
+  className = "",
+}) => {
   const active = sort.key === sortKey;
   const Icon = !active
     ? ChevronsUpDown
@@ -84,9 +91,8 @@ export const PlayerTable = ({ players, position }) => {
   };
 
   const openPlayer = (player) => {
-    navigate(
-      `/players?player=${encodeURIComponent(player.name)}&season=${player.season}&position=${player.position}`
-    );
+    if (!player?.playerId) return;
+    navigate(`/players/v2/${player.playerId}?season=${player.season}`);
   };
 
   const groupHeaderColor = (type) =>
@@ -100,7 +106,7 @@ export const PlayerTable = ({ players, position }) => {
       style={{ background: "var(--glass-bg-strong)" }}
     >
       <p className="mb-2 px-2 text-xs text-gray-400 light:text-slate-500">
-        Values represent league-wide percentiles
+        Player impact model · position-relative 5-on-5 percentiles
       </p>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-sm">
@@ -201,7 +207,9 @@ export const PlayerTable = ({ players, position }) => {
                   </td>
                   <td
                     className="px-2 py-2 text-right font-bold text-white light:text-gray-900"
-                    style={{ background: percentileTint(player.leaguePercentile) }}
+                    style={{
+                      background: percentileTint(player.leaguePercentile),
+                    }}
                   >
                     {formatPercentile(player.leaguePercentile)}
                   </td>

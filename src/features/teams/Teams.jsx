@@ -306,9 +306,8 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
     });
   };
   const handlePlayerClick = (player) => {
-    navigate(
-      `/players?player=${encodeURIComponent(player.name)}&season=${season}&position=${position}`
-    );
+    if (!player?.playerId) return;
+    navigate(`/players/v2/${player.playerId}?season=${season}`);
   };
   return (
     <div className="min-h-screen ice-background px-4 pb-10 pt-5 text-white light:text-gray-900 sm:px-6 sm:py-8">

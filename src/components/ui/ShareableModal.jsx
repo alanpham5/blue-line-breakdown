@@ -80,14 +80,11 @@ export const ShareableModal = ({ isOpen, onClose, fileName, children }) => {
       wrapper.style.cssText =
         "position: fixed; left: -100000px; top: 0; width: auto; height: auto; overflow: visible;";
     }
-    // html2canvas throws InvalidStateError if it tries to build a pattern from
-    // a 0x0 source (e.g. an SVG logo that reports no intrinsic size in the
-    // clone). Such sources are invisible anyway, so skip them instead of
-    // letting the whole export fail.
     const ctxProto = CanvasRenderingContext2D.prototype;
     const origCreatePattern = ctxProto.createPattern;
     ctxProto.createPattern = function (image, repetition) {
-      const w = image && (image.width ?? image.naturalWidth ?? image.videoWidth);
+      const w =
+        image && (image.width ?? image.naturalWidth ?? image.videoWidth);
       const h =
         image && (image.height ?? image.naturalHeight ?? image.videoHeight);
       if (!w || !h) return null;
@@ -129,33 +126,30 @@ export const ShareableModal = ({ isOpen, onClose, fileName, children }) => {
             .shareable-display-dark > div {
               overflow: visible !important;
             }
-            .shareable-export .shareable-display-dark :is(h1, h2, h3, h4, p, span, .truncate) {
-              transform: translateY(-2px) !important;
-            }
             .shareable-export .shareable-card-title-icon {
               transform: none !important;
             }
-            .shareable-export .shareable-card-title-text {
+            .shareable-export .shareable-card-title-text,
+            .shareable-export .shareable-icon-label {
               position: relative !important;
-              top: -5px !important;
+              top: -11px !important;
               transform: none !important;
             }
-            .shareable-export .shareable-bio-container {
-              transform: translateY(2px) !important;
-            }
-            .shareable-export .shareable-bio-value {
-              position: relative !important;
-              top: -1px !important;
-              transform: none !important;
-            }
-            .shareable-export .shareable-war-score {
+            .shareable-export .shareable-bio-value,
+            .shareable-export .shareable-pill-text,
+            .shareable-export .shareable-role-label {
               position: relative !important;
               top: -6px !important;
               transform: none !important;
             }
-            .shareable-export .shareable-pill-text,
+            .shareable-export .shareable-role-value,
+            .shareable-export .shareable-war-score {
+              position: relative !important;
+              top: -10px !important;
+              transform: none !important;
+            }
             .shareable-export .shareable-similarity-score {
-              transform: translateY(-1.5px) !important;
+              transform: translateY(-4px) !important;
             }
           `;
           clonedDoc.head.appendChild(style);
