@@ -39,16 +39,12 @@ export const TopPlayersSection = ({
     };
   }, [position, seasonFilter]);
 
-  // Render nothing until the data is fully loaded, so the section fades in
-  // populated rather than animating in an empty/skeleton table.
   if (!players || players.length === 0) return null;
 
   const seeAllHref = `/leaderboard?position=${position}${season ? `&season=${season}` : ""}`;
 
   const openPlayer = (player) => {
-    navigate(
-      `/players?player=${encodeURIComponent(player.name)}&season=${player.season}&position=${player.position}`
-    );
+    navigate(`/players/v2/${player.playerId}?season=${player.season}`);
   };
 
   return (

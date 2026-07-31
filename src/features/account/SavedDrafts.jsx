@@ -105,10 +105,10 @@ export const SavedDrafts = () => {
       if (action.action === "remove") {
         await removeDraftFromLeaderboard(user.uid, d.id);
       } else {
-        const profile = await apiService.reanalyzeDraft({
+        const profile = await apiService.analyzeTeam({
           season: d.season,
           teamName: d.teamName,
-          picks: d.picks,
+          roster: d.picks,
         });
         await postDraftToLeaderboard(user, {
           ...d,
@@ -139,8 +139,8 @@ export const SavedDrafts = () => {
           </Link>
 
           <h1 className="fade-in-up mb-6 flex items-center gap-2 text-3xl font-extrabold tracking-display text-white light:text-gray-900 sm:text-4xl">
-            <List className="h-7 w-7 text-amber-300 light:text-amber-600" />{" "}
-            My Drafts
+            <List className="h-7 w-7 text-amber-300 light:text-amber-600" /> My
+            Drafts
           </h1>
 
           {loading ? (

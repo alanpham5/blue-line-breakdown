@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Ruler, Scale, Calendar, Download, Share } from "lucide-react";
 import { playerUtils } from "utils/playerUtils";
@@ -52,6 +53,7 @@ const TeamLogoLink = ({
   );
 };
 export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
+  const playerNameRef = useRef(null);
   const navigate = useNavigate();
   const { actualTheme } = useTheme();
   const isMobile = useIsMobile();
@@ -65,9 +67,30 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
     player.season
   );
   const archetypes = player.archetypes || [];
+  useLayoutEffect(() => {
+    const node = playerNameRef.current;
+    if (!node) return undefined;
+    const fitName = () => {
+      node.style.setProperty("--player-name-shrink", "0px");
+      for (let shrink = 1; shrink <= 5; shrink += 1) {
+        if (node.scrollWidth <= node.clientWidth) break;
+        node.style.setProperty("--player-name-shrink", `${shrink}px`);
+      }
+    };
+    let frame = window.requestAnimationFrame(fitName);
+    const handleResize = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(fitName);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [player.name]);
   return (
     <div
-      className="team-card-surface-strong liquid-glass-strong liquid-glass-animate overflow-hidden rounded-[32px] p-5 pb-8 lg:p-6 lg:pb-8"
+      className="team-card-surface-strong liquid-glass-strong liquid-glass-animate overflow-hidden rounded-[32px] px-5 py-4 lg:px-6 lg:py-5"
       style={{
         "--team-card-gradient": teamCardGradient,
       }}
@@ -114,7 +137,16 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
         </div>
         <div className="flex min-w-0 w-full max-w-full flex-col items-center py-1 lg:items-start xl:flex-1">
           <h2 className="mb-3 flex min-w-0 w-full items-center justify-center gap-2 text-[1.7rem] font-bold tracking-display text-white light:text-gray-900 sm:text-[1.8rem] lg:justify-start lg:text-[2.2rem]">
-            <span className="min-w-0 truncate" style={{ fontSize: 'clamp(1.1rem, 4vw, 2.2rem)' }}>{player.name}</span>
+            <span
+              ref={playerNameRef}
+              className="min-w-0 truncate"
+              style={{
+                fontSize:
+                  "calc(clamp(1.1rem, 4vw, 2.2rem) - var(--player-name-shrink, 0px))",
+              }}
+            >
+              {player.name}
+            </span>
             {didWinStanleyCup && (
               <img
                 src="/stanleycup.png"

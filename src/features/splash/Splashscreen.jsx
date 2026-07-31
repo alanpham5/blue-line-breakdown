@@ -11,6 +11,7 @@ import { apiService } from "lib/api/apiService";
 import { playerUtils } from "utils/playerUtils";
 import { Header } from "components/layout/Header";
 import { Footer } from "components/layout/Footer";
+import { GeneralSearch } from "components/search/GeneralSearch";
 import { LoadingScreen } from "components/ui/LoadingScreen";
 import { useTheme } from "providers/ThemeContext";
 import {
@@ -24,7 +25,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
   const { actualTheme } = useTheme();
   useEffect(() => {
     if (searchParams.has("player")) {
-      navigate(`/players?${searchParams.toString()}`, {
+      navigate(`/players/legacy?${searchParams.toString()}`, {
         replace: true,
       });
     }
@@ -35,37 +36,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
   const scrollContainerRef = useRef(null);
   useEffect(() => {
     document.title = "Blue Line Breakdown";
-    initializeCacheInBackground();
   }, []);
-  const initializeCacheInBackground = async () => {
-    try {
-      await apiService.healthCheck().catch(() => {});
-      const cacheStatus = await apiService.checkCacheStatus();
-      if (!cacheStatus.dataLoaded && !cacheStatus.cacheExists) {
-        const initResponse = await apiService.initializeCache();
-        if (initResponse.status === "loading") {
-          let timeoutId;
-          await new Promise((resolve) => {
-            const checkStatus = async () => {
-              try {
-                const status = await apiService.checkCacheStatus();
-                if (status.dataLoaded || status.cacheExists) {
-                  if (timeoutId) clearTimeout(timeoutId);
-                  resolve();
-                } else {
-                  timeoutId = setTimeout(checkStatus, 30000);
-                }
-              } catch (err) {
-                if (timeoutId) clearTimeout(timeoutId);
-                resolve();
-              }
-            };
-            checkStatus();
-          });
-        }
-      }
-    } catch (err) {}
-  };
   const [scrollEdges, setScrollEdges] = useState({
     atStart: true,
     atEnd: true,
@@ -265,6 +236,8 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
           <Header />
 
           <div className="space-y-12">
+            <GeneralSearch compact />
+
             <section
               className={`space-y-4 ${enablePageLoadAnimations ? "fade-in-up-delay-1" : ""}`}
             >
@@ -308,7 +281,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                           key={`${player.playerId}-${player.season}`}
                           onClick={() =>
                             navigate(
-                              `/players?player=${encodeURIComponent(player.name)}&season=${player.season}&position=${player.position}`
+                              `/players/v2/${player.playerId}?season=${player.season}`
                             )
                           }
                           className="snap-start flex-shrink-0 w-[110px] sm:w-[190px] liquid-glass rounded-2xl p-3 sm:p-4 flex flex-col items-center text-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(0,0,0,0.4)] hover:scale-[1.02] select-none"

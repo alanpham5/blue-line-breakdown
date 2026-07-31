@@ -19,11 +19,17 @@ export const bookmarkHref = (bm) => {
     if (bm.season) params.set("year", bm.season);
     return `/teams?${params.toString()}`;
   }
+  if (bm.entityId) {
+    const params = new URLSearchParams();
+    if (bm.season) params.set("season", bm.season);
+    const query = params.toString();
+    return `/players/v2/${bm.entityId}${query ? `?${query}` : ""}`;
+  }
   const params = new URLSearchParams();
   if (bm.player) params.set("player", bm.player);
   if (bm.season) params.set("season", bm.season);
   if (bm.position) params.set("position", bm.position);
-  return `/players?${params.toString()}`;
+  return `/players/legacy?${params.toString()}`;
 };
 export const draftNavTarget = (d) =>
   isCompleteDraft(d)

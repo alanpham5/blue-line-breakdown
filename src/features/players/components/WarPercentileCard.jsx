@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
-import { Info, Trophy } from "lucide-react";
+import { Info, Trophy, User } from "lucide-react";
 import { Tooltip } from "components/ui/Tooltip";
-export const WarPercentileCard = ({ warPercentile, showInfo = true }) => {
+export const WarPercentileCard = ({
+  warPercentile,
+  role,
+  showInfo = true,
+  tooltipTitle = "Season Observed Value",
+  tooltipText = "Measures a player's total contribution to team wins in a given season. The value is expressed as a percentile to provide a standardized comparison across all players.",
+}) => {
   const [isAnimated, setIsAnimated] = useState(false);
   useEffect(() => {
     setIsAnimated(true);
@@ -19,27 +25,17 @@ export const WarPercentileCard = ({ warPercentile, showInfo = true }) => {
   const dashOffset = circumference * (1 - clampedPercent / 100);
   return (
     <div
-      className="liquid-glass-strong liquid-glass-animate flex h-full rounded-[32px] p-5 sm:p-6"
+      className="liquid-glass-strong liquid-glass-animate flex h-full w-full flex-col rounded-[32px] p-4 sm:p-5"
       style={{
         position: "static",
         overflow: "visible",
       }}
     >
-      <div className="flex w-full min-w-0 items-center gap-3 sm:gap-5">
+      <div className="flex w-full min-w-0 flex-1 items-center gap-3 sm:gap-4">
         <Trophy className="h-4 w-4 shrink-0 text-[#7dcb48] sm:h-5 sm:w-5" />
         <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:gap-2">
-          <h3 className="min-w-0 shrink font-bold tracking-display text-white light:text-gray-900 leading-[1.06]">
-            <span className="block text-[1.2rem] leading-snug sm:hidden whitespace-nowrap">
-              League Percentile
-            </span>
-            <span className="hidden sm:block">
-              <span className="block text-[1.48rem] lg:text-[1.88rem] xl:text-[2.1rem]">
-                League
-              </span>
-              <span className="block text-[1.48rem] lg:text-[1.88rem] xl:text-[2.1rem]">
-                Percentile
-              </span>
-            </span>
+          <h3 className="shrink-0 whitespace-nowrap text-[1.2rem] font-bold leading-snug tracking-display text-white light:text-gray-900 sm:text-[1.45rem]">
+            Impact Rating
           </h3>
           {showInfo && (
             <Tooltip
@@ -49,19 +45,15 @@ export const WarPercentileCard = ({ warPercentile, showInfo = true }) => {
               content={
                 <div className="space-y-2">
                   <div className="font-semibold text-[#7dcb48]">
-                    Season Observed Value
+                    {tooltipTitle}
                   </div>
-                  <div>
-                    Measures a player&apos;s total contribution to team wins in
-                    a given season. The value is expressed as a percentile to
-                    provide a standardized comparison across all players.
-                  </div>
+                  <div>{tooltipText}</div>
                 </div>
               }
             >
               <button
-                className="shrink-0 translate-y-px text-gray-400 transition-colors hover:text-gray-200 light:text-gray-500 light:hover:text-gray-700 sm:self-center"
-                aria-label="Info about wins above replacement"
+                className="relative -top-1 ml-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center text-gray-400 transition-colors hover:text-gray-200 light:text-gray-500 light:hover:text-gray-700"
+                aria-label={`Info about ${tooltipTitle.toLowerCase()}`}
               >
                 <Info className="h-[13px] w-[13px] sm:h-4 sm:w-4" />
               </button>
@@ -71,7 +63,7 @@ export const WarPercentileCard = ({ warPercentile, showInfo = true }) => {
         <div className="relative shrink-0 text-right">
           <div className="relative inline-flex items-center justify-center">
             <svg
-              className="h-[5.75rem] w-[5.75rem] -rotate-90 transform sm:h-[6.25rem] sm:w-[6.25rem]"
+              className="h-20 w-20 -rotate-90 transform sm:h-[5.5rem] sm:w-[5.5rem]"
               viewBox="0 0 44 44"
             >
               <circle
@@ -102,6 +94,19 @@ export const WarPercentileCard = ({ warPercentile, showInfo = true }) => {
           </div>
         </div>
       </div>
+      {role && (
+        <div className="mt-2 flex min-w-0 items-center justify-between gap-3 border-t border-white/10 pt-2.5 light:border-slate-200 sm:mt-3 sm:pt-3">
+          <div className="flex shrink-0 items-center gap-2 text-gray-400 light:text-gray-500">
+            <User className="h-4 w-4 text-sky-300 light:text-sky-600" />
+            <span className="text-xs font-semibold uppercase tracking-[0.12em]">
+              Role
+            </span>
+          </div>
+          <div className="min-w-0 text-right text-sm font-semibold leading-tight text-white light:text-gray-900 sm:text-[0.95rem]">
+            {role}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

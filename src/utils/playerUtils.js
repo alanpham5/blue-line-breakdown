@@ -707,13 +707,13 @@ export const playerUtils = {
   },
   formatStatName(statKey) {
     const statNames = {
-      SHOT_TAL: "Shooting Talent",
-      PLAY_DRV: "Play Driving",
+      SHOT_TAL: "Finishing",
+      PLAY_DRV: "Chance Creation",
       SHOT_FREQ: "Shooting Tendency",
-      PASS_FREQ: "Passing Tendency",
-      PP_USAGE: "Power Play Usage",
-      ONICE_IMP: "On-Ice Impact",
-      POS_CTRL: "Possession Control",
+      PASS_FREQ: "Offensive Buildup",
+      PP_USAGE: "Positioning",
+      ONICE_IMP: "5-on-5 Game Score Impact",
+      POS_CTRL: "Defensive Impact",
       BLK: "Shot Blocking",
       HIT: "Physical Engagement",
       TAKE: "Takeaways",
@@ -742,13 +742,13 @@ export const playerUtils = {
   },
   formatStatAbbr(statKey) {
     const statAbbrs = {
-      SHOT_TAL: "Shot Tal",
-      PLAY_DRV: "Play Drv",
+      SHOT_TAL: "Finish",
+      PLAY_DRV: "Create",
       SHOT_FREQ: "Shot Tnd",
-      PASS_FREQ: "Pass Tnd",
-      PP_USAGE: "PP Use",
-      ONICE_IMP: "On-Ice",
-      POS_CTRL: "Poss",
+      PASS_FREQ: "Buildup",
+      PP_USAGE: "Position",
+      ONICE_IMP: "Impact",
+      POS_CTRL: "Def Imp",
       BLK: "Blk",
       HIT: "Hit",
       TAKE: "Take",
@@ -778,15 +778,18 @@ export const playerUtils = {
   getStatExplanation(statKey) {
     const explanations = {
       SHOT_TAL:
-        "How well the player shoots and turns scoring chances into goals.",
-      PLAY_DRV: "How often the player creates scoring chances for teammates.",
+        "How efficiently the player converts chances compared with players at the same position.",
+      PLAY_DRV:
+        "How effectively the player creates scoring chances for themselves and teammates.",
       SHOT_FREQ: "How often the player chooses to shoot the puck.",
-      PASS_FREQ: "How often the player chooses to pass the puck.",
-      PP_USAGE: "How often the player is utilized on the power play.",
+      PASS_FREQ:
+        "Playmaking and team-offense involvement compared with positional peers.",
+      PP_USAGE:
+        "How consistently the player reaches dangerous offensive locations.",
       ONICE_IMP:
-        "How much offense the team creates when the player is on the ice.",
+        "The player's 5-on-5 Game Score rate compared with positional peers.",
       POS_CTRL:
-        "How well the team controls possession with the player on the ice.",
+        "Role-aware defensive quality across takeaways, chance suppression, and goal prevention.",
       BLK: "How often the player blocks opponent shots.",
       HIT: "How often the player uses physical contact (hits, scrums, or fights) to disrupt opponents.",
       TAKE: "How often the player takes the puck away from opponents.",

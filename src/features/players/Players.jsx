@@ -429,15 +429,16 @@ export const Players = ({ enablePageLoadAnimations = true }) => {
                     key={renderKey}
                   >
                     <div className="flex flex-col lg:flex-row lg:items-stretch gap-4 sm:gap-6">
-                      <div className="w-full lg:flex-1">
+                      <div className="w-full min-w-0 lg:flex-1">
                         <PlayerHeader
                           player={playerData.player}
                           biometrics={playerData.biometrics}
                           onShareClick={() => setShowShareableModal(true)}
                         />
                       </div>
-                      <div className="w-full lg:w-96 shrink-0">
+                      <div className="w-full shrink-0 lg:flex lg:w-96 lg:items-center">
                         <WarPercentileCard
+                          role={playerData.player.role}
                           warPercentile={playerData.player.warPercentile}
                         />
                       </div>

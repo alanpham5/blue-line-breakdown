@@ -104,7 +104,7 @@ export const EdgeStats = ({ edgeValues, edgePercentiles }) => {
                 {formatValue(statKey, val)}
               </div>
               <div className="text-[0.65rem] sm:text-[0.75rem] text-gray-500 light:text-gray-400 font-normal mt-0.5">
-                {percentile.toFixed(1)} %ile
+                {percentile.toFixed(1)} Percentile
               </div>
             </div>
           );

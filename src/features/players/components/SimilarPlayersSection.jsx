@@ -60,11 +60,11 @@ export const SimilarPlayersSection = ({
                       Player Similarity
                     </div>
                     <div className="text-xs leading-relaxed text-gray-300 light:text-gray-600">
-                      Players are compared using normalized on-ice, physical,
-                      and performance stats. Similarity scores are relative and
-                      based on how close players are statistically, not raw
-                      totals. Changing the season filter changes the comparison
-                      pool, which can shift both rankings and scores.
+                      Players are compared by playing style and calibre. The
+                      model weighs tendency and quality shape most heavily,
+                      then constrains matches by overall impact and cumulative
+                      contribution. Changing the season filter changes the
+                      comparison pool.
                     </div>
                   </div>
                 }
