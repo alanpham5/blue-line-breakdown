@@ -1,22 +1,25 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { LoadingScreen } from "components/ui/LoadingScreen";
 import { subscribeToSlowRequests } from "lib/api/requestActivity";
 
 export const SlowRequestOverlay = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const { pathname } = useLocation();
+  const shouldShow = isVisible && pathname !== "/";
 
   useEffect(() => subscribeToSlowRequests(setIsVisible), []);
 
   useEffect(() => {
-    if (!isVisible) return undefined;
+    if (!shouldShow) return undefined;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = previousOverflow;
     };
-  }, [isVisible]);
+  }, [shouldShow]);
 
-  if (!isVisible) return null;
+  if (!shouldShow) return null;
 
   return (
     <div

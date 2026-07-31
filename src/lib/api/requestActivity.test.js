@@ -21,7 +21,7 @@ describe("slow API request activity", () => {
     jest.useRealTimers();
   });
 
-  it("stays hidden for requests shorter than six seconds", async () => {
+  it("stays hidden for requests shorter than ten seconds", async () => {
     const request = deferred();
     const states = [];
     const unsubscribe = subscribeToSlowRequests((state) => states.push(state));
@@ -35,7 +35,7 @@ describe("slow API request activity", () => {
     unsubscribe();
   });
 
-  it("shows at six seconds and hides when the request finishes", async () => {
+  it("shows at ten seconds and hides when the request finishes", async () => {
     const request = deferred();
     const states = [];
     const unsubscribe = subscribeToSlowRequests((state) => states.push(state));
