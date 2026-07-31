@@ -1,4 +1,4 @@
-export const SLOW_REQUEST_DELAY_MS = 6000;
+export const SLOW_REQUEST_DELAY_MS = 10000;
 
 const listeners = new Set();
 let slowRequestCount = 0;

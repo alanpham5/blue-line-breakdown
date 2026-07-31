@@ -30,10 +30,10 @@ const App = () => {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <SlowRequestOverlay />
         <TooltipProvider>
           <BrowserRouter>
             <GaPageTrackContext />
+            <SlowRequestOverlay />
 
             <AuthModal />
             <Routes>
