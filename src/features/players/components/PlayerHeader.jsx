@@ -98,6 +98,37 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
       resizeObserver.disconnect();
     };
   }, [player.name]);
+  const playerActions = (
+    <div className="flex shrink-0 flex-nowrap items-center justify-center gap-2">
+      {onShareClick && (
+        <button
+          type="button"
+          onClick={onShareClick}
+          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:text-white light:border-slate-300 light:bg-white/80 light:text-slate-600 light:hover:text-slate-900"
+          aria-label={isMobile ? "Share image" : "Download shareable image"}
+        >
+          {isMobile ? (
+            <Share className="h-4 w-4" />
+          ) : (
+            <Download className="h-4 w-4" />
+          )}
+        </button>
+      )}
+      <BookmarkButton
+        entityType={ENTITY_TYPES.PLAYER}
+        entityId={player.playerId}
+        size="sm"
+        className="shrink-0"
+        meta={{
+          label: player.name,
+          player: player.name,
+          season: player.season,
+          position: player.position,
+          team: player.team,
+        }}
+      />
+    </div>
+  );
   return (
     <div
       className="team-card-surface-strong liquid-glass-strong liquid-glass-animate overflow-hidden rounded-[32px] px-5 py-4 lg:px-6 lg:py-5"
@@ -105,8 +136,8 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
         "--team-card-gradient": teamCardGradient,
       }}
     >
-      <div className="flex flex-col items-center gap-2 text-center lg:flex-row lg:items-center lg:gap-6 lg:text-left">
-        <div className="flex shrink-0 flex-col items-center pb-8 xl:pb-0">
+      <div className="flex flex-col items-center gap-0 text-center md:gap-2 lg:flex-row lg:items-center lg:gap-6 lg:text-left">
+        <div className="flex shrink-0 flex-col items-center pb-4 md:pb-8 xl:pb-0">
           <div className="relative shrink-0">
             <div
               className="
@@ -146,13 +177,14 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
           </div>
         </div>
         <div className="flex min-w-0 w-full max-w-full flex-col items-center py-1 lg:items-start xl:flex-1">
-          <h2 className="mb-3 flex min-w-0 w-full items-center justify-center gap-2 text-[1.7rem] font-bold tracking-display text-white light:text-gray-900 sm:text-[1.8rem] lg:justify-start lg:text-[2.2rem]">
+          <h2 className="mb-1 flex min-w-0 w-full items-center justify-center gap-2 text-[1.9rem] font-bold tracking-display text-white light:text-gray-900 sm:text-[2rem] md:mb-2 lg:mb-3 lg:justify-start lg:text-[2.2rem]">
             <span
               ref={playerNameRef}
               className="min-w-0 flex-1 truncate"
               style={{
-                fontSize:
-                  "calc(clamp(1.1rem, 4vw, 2.2rem) - var(--player-name-shrink, 0px))",
+                fontSize: isMobile
+                  ? "calc(clamp(1.65rem, 7vw, 1.9rem) - var(--player-name-shrink, 0px))"
+                  : "calc(clamp(1.1rem, 4vw, 2.2rem) - var(--player-name-shrink, 0px))",
               }}
             >
               {player.name}
@@ -164,36 +196,9 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
                 className="shrink-0 w-5 h-9 object-cover xl:hidden"
               />
             )}
-            {onShareClick && (
-              <button
-                type="button"
-                onClick={onShareClick}
-                className="shrink-0 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:text-white light:border-slate-300 light:bg-white/80 light:text-slate-600 light:hover:text-slate-900"
-                aria-label={
-                  isMobile ? "Share image" : "Download shareable image"
-                }
-              >
-                {isMobile ? (
-                  <Share className="h-4 w-4" />
-                ) : (
-                  <Download className="h-4 w-4" />
-                )}
-              </button>
-            )}
-            <BookmarkButton
-              entityType={ENTITY_TYPES.PLAYER}
-              entityId={player.playerId}
-              size="sm"
-              className="shrink-0"
-              meta={{
-                label: player.name,
-                player: player.name,
-                season: player.season,
-                position: player.position,
-                team: player.team,
-              }}
-            />
+            {!isMobile && playerActions}
           </h2>
+          {isMobile && <div className="mb-3">{playerActions}</div>}
           <div className="space-y-3">
             <div className="flex flex-wrap items-center justify-center gap-2 text-[0.8125rem] font-semibold text-gray-300 light:text-gray-600 md:gap-1 lg:justify-start lg:text-[0.9375rem]">
               <span

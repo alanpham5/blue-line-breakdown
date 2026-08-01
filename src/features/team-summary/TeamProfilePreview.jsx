@@ -93,8 +93,16 @@ const exampleProfile = {
         { label: "Takeaways / 60", value: 6.91, leagueAverage: 6.18 },
         { label: "Hits / 60", value: 21.4, leagueAverage: 19.6 },
         { label: "Attempts against / 60", value: 54.2, leagueAverage: 57.5 },
-        { label: "Blocked attempt share (%)", value: 25.6, leagueAverage: 24.8 },
-        { label: "Opponent continuation (%)", value: 36.8, leagueAverage: 39.7 },
+        {
+          label: "Blocked attempt share (%)",
+          value: 25.6,
+          leagueAverage: 24.8,
+        },
+        {
+          label: "Opponent continuation (%)",
+          value: 36.8,
+          leagueAverage: 39.7,
+        },
       ],
       confidence: "high",
     },
@@ -107,7 +115,11 @@ const exampleProfile = {
       leaguePercentile: 61,
       rawMetrics: [
         { label: "Giveaways / 60", value: 7.62, leagueAverage: 7.05 },
-        { label: "D-zone giveaway share (%)", value: 38.7, leagueAverage: 36.4 },
+        {
+          label: "D-zone giveaway share (%)",
+          value: 38.7,
+          leagueAverage: 36.4,
+        },
         { label: "Shot attempts / 60", value: 61.4, leagueAverage: 57.2 },
         { label: "Takeaways / 60", value: 6.91, leagueAverage: 6.18 },
         { label: "Penalties / 60", value: 3.28, leagueAverage: 3.12 },
@@ -139,7 +151,11 @@ const exampleProfile = {
       teamCount: 32,
       components: [
         { label: "Expected-goal share", percentile: 71, rawValue: 52.8 },
-        { label: "Expected-goal differential / 60", percentile: 67, rawValue: 0.24 },
+        {
+          label: "Expected-goal differential / 60",
+          percentile: 67,
+          rawValue: 0.24,
+        },
         { label: "Corsi share", percentile: 73, rawValue: 53.1 },
         { label: "Goal differential / 60", percentile: 55, rawValue: 0.12 },
       ],
@@ -239,18 +255,53 @@ const exampleSimilarTeams = [
 
 const exampleImpactPlayers = {
   forwards: [
-    { playerId: 8484801, name: "Macklin Celebrini", position: "Center", impact: 99 },
-    { playerId: 8482667, name: "William Eklund", position: "Left Wing", impact: 88 },
-    { playerId: 8475726, name: "Tyler Toffoli", position: "Right Wing", impact: 82 },
+    {
+      playerId: 8484801,
+      name: "Macklin Celebrini",
+      position: "Center",
+      impact: 99,
+    },
+    {
+      playerId: 8482667,
+      name: "William Eklund",
+      position: "Left Wing",
+      impact: 88,
+    },
+    {
+      playerId: 8475726,
+      name: "Tyler Toffoli",
+      position: "Right Wing",
+      impact: 82,
+    },
   ],
   defensemen: [
-    { playerId: 8479983, name: "Mario Ferraro", position: "Defense", impact: 78 },
-    { playerId: 8480043, name: "Timothy Liljegren", position: "Defense", impact: 74 },
+    {
+      playerId: 8479983,
+      name: "Mario Ferraro",
+      position: "Defense",
+      impact: 78,
+    },
+    {
+      playerId: 8480043,
+      name: "Timothy Liljegren",
+      position: "Defense",
+      impact: 74,
+    },
     { playerId: 8478013, name: "Jake Walman", position: "Defense", impact: 72 },
   ],
   goalies: [
-    { playerId: 8482137, name: "Yaroslav Askarov", position: "Goalie", impact: 84 },
-    { playerId: 8477968, name: "Alex Nedeljkovic", position: "Goalie", impact: 69 },
+    {
+      playerId: 8482137,
+      name: "Yaroslav Askarov",
+      position: "Goalie",
+      impact: 84,
+    },
+    {
+      playerId: 8477968,
+      name: "Alex Nedeljkovic",
+      position: "Goalie",
+      impact: 69,
+    },
   ],
 };
 
@@ -261,7 +312,9 @@ export const TeamProfilePreview = () => {
   const { team, identity, quality } = exampleProfile;
   const offenseQuality = quality.find((item) => item.id === "offense");
   const defenseQuality = quality.find((item) => item.id === "defense");
-  const specialTeamsQuality = quality.find((item) => item.id === "specialTeams");
+  const specialTeamsQuality = quality.find(
+    (item) => item.id === "specialTeams"
+  );
   const teamQualityValue = Math.round(
     (offenseQuality.percentile + defenseQuality.percentile) / 2
   );
@@ -339,7 +392,7 @@ export const TeamProfilePreview = () => {
               aria-label="Team overview"
             >
               <div className="relative z-10 text-center font-bold">
-                <div className="flex flex-col items-center justify-center gap-4 py-2 md:flex-row md:gap-6">
+                <div className="flex flex-col items-center justify-center gap-0 py-2 md:flex-row md:gap-6">
                   <div className="relative mx-2 flex h-36 w-36 items-center justify-center md:mx-4 md:h-40 md:w-40">
                     {didWinStanleyCup && (
                       <img
@@ -358,14 +411,18 @@ export const TeamProfilePreview = () => {
                       className={`team-logo-stroke relative z-10 h-28 object-contain md:h-32 ${didWinStanleyCup ? "scale-75" : ""}`}
                     />
                   </div>
-                  <div className="text-center text-2xl font-bold text-white light:text-gray-900 md:text-left">
-                    <h1 className="flex flex-wrap items-center justify-center gap-2 text-3xl font-extrabold tracking-display md:justify-start sm:text-4xl">
-                      <span>{playerUtils.getFullTeamName(team.id, team.season)}</span>
+                  <div className="-mt-4 text-center text-2xl font-bold text-white light:text-gray-900 md:mt-0 md:text-left">
+                    <div className="flex flex-col items-center justify-center gap-2 md:flex-row md:flex-wrap md:justify-start">
+                      <h1 className="w-full text-center text-[2.125rem] font-extrabold tracking-display md:w-auto md:text-left sm:text-4xl">
+                        {playerUtils.getFullTeamName(team.id, team.season)}
+                      </h1>
                       <button
                         type="button"
                         onClick={() => setShowShareableModal(true)}
                         className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:text-white light:border-slate-300 light:bg-white/80 light:text-slate-600 light:hover:text-slate-900"
-                        aria-label={isMobile ? "Share image" : "Download shareable image"}
+                        aria-label={
+                          isMobile ? "Share image" : "Download shareable image"
+                        }
                       >
                         {isMobile ? (
                           <Share className="h-4 w-4" />
@@ -373,7 +430,7 @@ export const TeamProfilePreview = () => {
                           <Download className="h-4 w-4" />
                         )}
                       </button>
-                    </h1>
+                    </div>
                     <div className="mt-2 flex flex-wrap items-center justify-center gap-2 text-sm font-semibold text-gray-300 light:text-gray-600 md:justify-start sm:text-base">
                       <span>2025-2026 Season</span>
                       <span>•</span>
@@ -435,7 +492,10 @@ export const TeamProfilePreview = () => {
           offenseQuality={offenseQuality}
           defenseQuality={defenseQuality}
           specialTeamsQuality={specialTeamsQuality}
-          specialUnits={[exampleSpecialUnits.offense, exampleSpecialUnits.defense]}
+          specialUnits={[
+            exampleSpecialUnits.offense,
+            exampleSpecialUnits.defense,
+          ]}
           teamQuality={teamQuality}
           impactPlayers={exampleImpactPlayers}
         />

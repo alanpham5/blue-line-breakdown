@@ -377,7 +377,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                 className="team-card-surface liquid-glass min-h-[190px] overflow-hidden rounded-[32px] px-5 py-5 sm:px-7"
                 style={{ "--team-card-gradient": teamCardGradient }}
               >
-                <div className="relative z-10 flex h-full flex-col items-center justify-center gap-5 text-center sm:flex-row sm:text-left">
+                <div className="relative z-10 flex h-full flex-col items-center justify-center gap-0 text-center md:flex-row md:gap-5 md:text-left">
                   <div className="relative flex h-36 w-36 shrink-0 items-center justify-center sm:h-40 sm:w-40">
                     {didWinStanleyCup && (
                       <img
@@ -396,9 +396,9 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                       className={`relative z-10 max-h-full max-w-full object-contain team-logo-stroke ${didWinStanleyCup ? "scale-75" : ""}`}
                     />
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-                      <h1 className="text-3xl font-extrabold tracking-display text-white light:text-gray-900 sm:text-4xl">
+                  <div className="-mt-4 min-w-0 flex-1 md:mt-0">
+                    <div className="flex flex-col items-center justify-center gap-2 md:flex-row md:flex-wrap md:justify-start">
+                      <h1 className="w-full text-center text-[2.125rem] font-extrabold tracking-display text-white light:text-gray-900 sm:text-4xl md:w-auto md:text-left">
                         {playerUtils.getFullTeamName(team, season)}
                       </h1>
                       <div className="flex shrink-0 flex-nowrap items-center gap-2">
@@ -430,7 +430,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                         />
                       </div>
                     </div>
-                    <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-sm font-semibold text-gray-300 light:text-gray-600 sm:justify-start sm:text-base">
+                    <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-sm font-semibold text-gray-300 light:text-gray-600 sm:text-base md:justify-start">
                       <span>{getSeasonName(season)} Season</span>
                       {teamRecord && (
                         <>

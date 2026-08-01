@@ -397,7 +397,7 @@ export const Roster = () => {
             className="team-card-surface liquid-glass mb-6 overflow-hidden rounded-[32px] px-5 py-6 sm:mb-8 sm:px-6"
             style={{ "--team-card-gradient": teamCardGradient }}
           >
-            <div className="relative z-10 flex flex-col items-center justify-center gap-4 text-center md:flex-row md:gap-6 md:text-left">
+            <div className="relative z-10 flex flex-col items-center justify-center gap-0 text-center md:flex-row md:gap-6 md:text-left">
               <div className="relative flex h-24 w-24 items-center justify-center md:h-28 md:w-28">
                 {didWinStanleyCup && (
                   <img
@@ -412,9 +412,11 @@ export const Roster = () => {
                   className={`relative z-10 h-24 object-contain team-logo-stroke md:h-28 ${didWinStanleyCup ? "scale-75" : ""}`}
                 />
               </div>
-              <div>
-                <h2 className="flex flex-wrap items-center justify-center gap-2 text-2xl font-extrabold tracking-display text-white light:text-gray-900 md:justify-start sm:text-3xl">
-                  <span>{playerUtils.getFullTeamName(team, season)}</span>
+              <div className="min-w-0">
+                <div className="flex flex-col items-center justify-center gap-2 md:flex-row md:flex-wrap md:justify-start">
+                  <h2 className="w-full text-center text-[2rem] font-extrabold tracking-display text-white light:text-gray-900 md:w-auto md:text-left sm:text-3xl">
+                    {playerUtils.getFullTeamName(team, season)}
+                  </h2>
                   {data && !error && !loading && (
                     <button
                       type="button"
@@ -431,7 +433,7 @@ export const Roster = () => {
                       )}
                     </button>
                   )}
-                </h2>
+                </div>
                 <div className="mt-1 flex flex-wrap items-center justify-center gap-2 text-sm font-semibold text-gray-300 light:text-gray-600 md:justify-start sm:text-base">
                   <span>{getSeasonName(season)}</span>
                   {modifying && estimated ? (
