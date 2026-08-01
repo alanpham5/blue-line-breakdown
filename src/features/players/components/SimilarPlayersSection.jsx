@@ -79,7 +79,7 @@ export const SimilarPlayersSection = ({
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="hidden items-center gap-2 w-full sm:flex sm:w-auto">
           <Filter className="h-5 w-5 shrink-0 text-amber-300 light:text-amber-600" />
           <AppSelect
             placeholder="All Seasons"

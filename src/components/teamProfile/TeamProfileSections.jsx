@@ -138,6 +138,36 @@ export const TeamQualityCard = ({
   </section>
 );
 
+const IdentityScaleBar = ({ scale }) => {
+  const markerPosition = Math.min(97, Math.max(3, clamp(scale.score)));
+  const identityValue = formatIdentityValue(scale);
+  return (
+    <div className="border-t border-white/[0.06] px-5 py-4 first:border-t-0 light:border-slate-200">
+      <div className="flex items-baseline justify-between gap-3">
+        <h3 className="text-sm font-bold text-white light:text-gray-900">
+          {scale.label}
+        </h3>
+        <span className="shrink-0 text-sm font-extrabold tabular-nums text-green-400 light:text-green-700">
+          {identityValue.percentage}
+          {identityValue.label && (
+            <span className="ml-1">{identityValue.label}</span>
+          )}
+        </span>
+      </div>
+      <div className="relative mt-3 h-2 w-full rounded-full bg-white/[0.08] shadow-inner light:bg-slate-200">
+        <span
+          className="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-green-400 shadow-[0_4px_14px_rgba(74,222,128,0.4)] light:bg-green-600"
+          style={{ left: markerPosition + "%" }}
+        />
+      </div>
+      <div className="mt-2 flex justify-between gap-3 text-xs font-semibold text-gray-400 light:text-gray-600">
+        <span>{scale.leftLabel}</span>
+        <span>{scale.rightLabel}</span>
+      </div>
+    </div>
+  );
+};
+
 export const TeamIdentityPanel = ({ identity, shareable = false }) => (
   <section
     className={`liquid-glass-strong force-dark-player-card overflow-hidden ${shareable ? "rounded-[28px]" : "h-full rounded-[32px]"}`}
@@ -157,11 +187,19 @@ export const TeamIdentityPanel = ({ identity, shareable = false }) => (
       </div>
     </div>
 
+    {!shareable && (
+      <div className="flex flex-col sm:hidden">
+        {identity.map((scale) => (
+          <IdentityScaleBar key={scale.id} scale={scale} />
+        ))}
+      </div>
+    )}
+
     <div
       className={
         shareable
           ? "grid h-[310px] grid-cols-7"
-          : "flex flex-wrap justify-center lg:h-[320px]"
+          : "hidden flex-wrap justify-center sm:flex lg:h-[320px]"
       }
     >
       {identity.map((scale) => {
@@ -201,7 +239,7 @@ export const TeamIdentityPanel = ({ identity, shareable = false }) => (
         return (
           <div
             key={scale.id}
-            className="flex min-h-[320px] w-1/2 min-w-0 flex-col items-center border-l border-t border-white/[0.06] px-3 pb-2 pt-5 first:border-l-0 light:border-slate-200 sm:w-1/4 lg:min-h-0 lg:w-[14.285714%] lg:border-t-0"
+            className="flex min-h-[320px] w-1/4 min-w-0 flex-col items-center border-l border-t border-white/[0.06] px-3 pb-2 pt-5 first:border-l-0 light:border-slate-200 lg:min-h-0 lg:w-[14.285714%] lg:border-t-0"
           >
             <h3 className="flex h-10 items-center justify-center text-center text-sm font-bold leading-tight text-white light:text-gray-900 sm:text-base">
               {scale.label}

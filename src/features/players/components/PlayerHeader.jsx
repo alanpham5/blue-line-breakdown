@@ -178,24 +178,26 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
         </div>
         <div className="flex min-w-0 w-full max-w-full flex-col items-center py-1 lg:items-start xl:flex-1">
           <h2 className="mb-1 flex min-w-0 w-full items-center justify-center gap-2 text-[1.9rem] font-bold tracking-display text-white light:text-gray-900 sm:text-[2rem] md:mb-2 lg:mb-3 lg:justify-start lg:text-[2.2rem]">
-            <span
-              ref={playerNameRef}
-              className="min-w-0 flex-1 truncate"
-              style={{
-                fontSize: isMobile
-                  ? "calc(clamp(1.65rem, 7vw, 1.9rem) - var(--player-name-shrink, 0px))"
-                  : "calc(clamp(1.1rem, 4vw, 2.2rem) - var(--player-name-shrink, 0px))",
-              }}
-            >
-              {player.name}
+            <span className="flex min-w-0 flex-1 items-center justify-center gap-1.5 lg:justify-start">
+              <span
+                ref={playerNameRef}
+                className="min-w-0 truncate"
+                style={{
+                  fontSize: isMobile
+                    ? "calc(clamp(1.65rem, 7vw, 1.9rem) - var(--player-name-shrink, 0px))"
+                    : "calc(clamp(1.1rem, 4vw, 2.2rem) - var(--player-name-shrink, 0px))",
+                }}
+              >
+                {player.name}
+              </span>
+              {didWinStanleyCup && (
+                <img
+                  src="/stanleycup.png"
+                  alt="Stanley Cup"
+                  className="shrink-0 w-5 h-9 object-cover xl:hidden"
+                />
+              )}
             </span>
-            {didWinStanleyCup && (
-              <img
-                src="/stanleycup.png"
-                alt="Stanley Cup"
-                className="shrink-0 w-5 h-9 object-cover xl:hidden"
-              />
-            )}
             {!isMobile && playerActions}
           </h2>
           {isMobile && <div className="mb-3">{playerActions}</div>}

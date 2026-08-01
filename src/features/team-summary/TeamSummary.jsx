@@ -396,7 +396,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                       className={`relative z-10 max-h-full max-w-full object-contain team-logo-stroke ${didWinStanleyCup ? "scale-75" : ""}`}
                     />
                   </div>
-                  <div className="-mt-4 min-w-0 flex-1 md:mt-0">
+                  <div className="-mt-[11px] min-w-0 flex-1 md:mt-0">
                     <div className="flex flex-col items-center justify-center gap-2 md:flex-row md:flex-wrap md:justify-start">
                       <h1 className="w-full text-center text-[2.125rem] font-extrabold tracking-display text-white light:text-gray-900 sm:text-4xl md:w-auto md:text-left">
                         {playerUtils.getFullTeamName(team, season)}

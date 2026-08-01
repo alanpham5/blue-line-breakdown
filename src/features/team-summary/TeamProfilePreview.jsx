@@ -411,7 +411,7 @@ export const TeamProfilePreview = () => {
                       className={`team-logo-stroke relative z-10 h-28 object-contain md:h-32 ${didWinStanleyCup ? "scale-75" : ""}`}
                     />
                   </div>
-                  <div className="-mt-4 text-center text-2xl font-bold text-white light:text-gray-900 md:mt-0 md:text-left">
+                  <div className="-mt-[11px] text-center text-2xl font-bold text-white light:text-gray-900 md:mt-0 md:text-left">
                     <div className="flex flex-col items-center justify-center gap-2 md:flex-row md:flex-wrap md:justify-start">
                       <h1 className="w-full text-center text-[2.125rem] font-extrabold tracking-display md:w-auto md:text-left sm:text-4xl">
                         {playerUtils.getFullTeamName(team.id, team.season)}
