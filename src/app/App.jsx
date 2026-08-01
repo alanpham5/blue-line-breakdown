@@ -7,6 +7,7 @@ import { PlayerLeaderboard } from "features/players/leaderboard/PlayerLeaderboar
 import { Splashscreen } from "features/splash/Splashscreen";
 import { About } from "features/about/About";
 import { TeamSummary } from "features/team-summary/TeamSummary";
+import { TeamProfilePreview } from "features/team-summary/TeamProfilePreview";
 import { Roster } from "features/roster/Roster";
 import { Loader } from "features/loader/Loader";
 import { ExpansionDraft } from "features/expansion-draft/ExpansionDraft";
@@ -72,6 +73,10 @@ const App = () => {
                     enablePageLoadAnimations={enablePageLoadAnimations}
                   />
                 }
+              />
+              <Route
+                path="/teams/profile-preview"
+                element={<TeamProfilePreview />}
               />
               <Route path="/teams/roster" element={<Roster />} />
               <Route path="/expansion-draft" element={<ExpansionDraft />} />

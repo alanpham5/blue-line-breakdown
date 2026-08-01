@@ -98,10 +98,7 @@ const MiniStat = ({ label, value }) => (
     <span className="text-[0.6rem] font-semibold uppercase tracking-wide text-gray-400">
       {label}
     </span>
-    <span
-      className="text-sm font-bold"
-      style={{ color: ratingColor(value) }}
-    >
+    <span className="text-sm font-bold" style={{ color: ratingColor(value) }}>
       {fmt(value)}
     </span>
   </div>
@@ -127,12 +124,16 @@ export const RosterShareableDisplay = ({
   defenseUnits = [],
   goalieUnits = [],
   recordText,
-  clinchStatus,
+  teamStatus,
   modifying = false,
   estimated,
 }) => {
   const didWinStanleyCup = playerUtils.didWinStanleyCup(team, season);
-  const teamCardGradient = playerUtils.getTeamCardGradient(team, season, "dark");
+  const teamCardGradient = playerUtils.getTeamCardGradient(
+    team,
+    season,
+    "dark"
+  );
   const teamLogoUrl = playerUtils.getCorsWrappedUrl(
     playerUtils.getTeamLogoUrl(team, season, "dark")
   );
@@ -251,11 +252,11 @@ export const RosterShareableDisplay = ({
                         <span className="text-sky-300">{recordText}</span>
                       </>
                     )}
-                    {clinchStatus && (
+                    {teamStatus && (
                       <>
                         <span>•</span>
                         <span className="text-emerald-300 whitespace-nowrap">
-                          {clinchStatus}
+                          {teamStatus}
                         </span>
                       </>
                     )}

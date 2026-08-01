@@ -13,6 +13,7 @@ export const GeneralSearch = ({
   scope = "all",
   initialQuery = "",
   targetSeason = null,
+  teamResultPath = "/teams",
 }) => {
   const navigate = useNavigate();
   const { actualTheme } = useTheme();
@@ -62,10 +63,10 @@ export const GeneralSearch = ({
             : await apiService.searchV2(trimmed);
         const nextResults = isPlayerScope
           ? (response.results || []).map((result) => ({
-                ...result,
-                type: "player",
-                team: result.latestTeam,
-              }))
+              ...result,
+              type: "player",
+              team: result.latestTeam,
+            }))
           : isTeamScope
             ? (response.results || []).map((result) => ({
                 ...result,
@@ -118,7 +119,7 @@ export const GeneralSearch = ({
       : result.latestSeason;
     if (result.type === "team") {
       navigate(
-        `/teams?team=${encodeURIComponent(result.team)}&season=${destinationSeason}`
+        `${teamResultPath}?team=${encodeURIComponent(result.team)}&season=${destinationSeason}`
       );
       return;
     }

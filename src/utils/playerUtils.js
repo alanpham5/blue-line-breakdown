@@ -695,9 +695,11 @@ export const playerUtils = {
     return `${base}/${teamCodeUpper}_${suffix}.svg`;
   },
   didWinStanleyCup(team, season) {
-    return stanleyCupChampions.hasOwnProperty(season)
-      ? stanleyCupChampions[season] === team
-      : false;
+    const seasonYear = parseInt(season);
+    const teamCode = String(team || "")
+      .trim()
+      .toUpperCase();
+    return stanleyCupChampions[seasonYear] === teamCode;
   },
   formatSeason(year) {
     const yearNum = parseInt(year);

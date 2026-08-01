@@ -16,11 +16,11 @@ import {
   RotateCcw,
   Download,
   Share,
-  Search,
 } from "lucide-react";
 import { apiService } from "lib/api/apiService";
 import { Header } from "components/layout/Header";
 import { Footer } from "components/layout/Footer";
+import { GeneralSearch } from "components/search/GeneralSearch";
 import { AppSelect } from "components/ui/AppSelect";
 import { playerUtils } from "utils/playerUtils";
 import { useTheme } from "providers/ThemeContext";
@@ -80,10 +80,6 @@ export const Roster = () => {
   const [subHeadshots, setSubHeadshots] = useState({});
   const [rookies, setRookies] = useState({});
   const [showShareableModal, setShowShareableModal] = useState(false);
-  const [tempTeam, setTempTeam] = useState(team);
-  const [tempSeason, setTempSeason] = useState(season);
-  const [teamsList, setTeamsList] = useState([]);
-  const [loadingTeams, setLoadingTeams] = useState(false);
   const teamSeasonRef = useRef(`${team}-${season}`);
   const now = new Date();
   const seasonsList = Array.from(
@@ -94,38 +90,10 @@ export const Roster = () => {
     },
     (_, i) => 2008 + i
   );
-  const getTeamLabel = (t) =>
-    parseInt(tempSeason) <= 2013 && t === "ARI" ? "PHX" : t;
-  useEffect(() => {
-    setTempTeam(team);
-    setTempSeason(season);
-  }, [team, season]);
-  useEffect(() => {
-    if (!tempSeason) {
-      setTeamsList([]);
-      return;
-    }
-    let active = true;
-    setLoadingTeams(true);
-    apiService
-      .fetchTeams(tempSeason)
-      .then((data) => {
-        if (!active) return;
-        setTeamsList(data.teams || []);
-        if (tempTeam && data.teams?.length && !data.teams.includes(tempTeam)) {
-          setTempTeam("");
-        }
-      })
-      .catch(() => active && setTeamsList([]))
-      .finally(() => active && setLoadingTeams(false));
-    return () => {
-      active = false;
-    };
-  }, [tempSeason]);
-  const handleSearch = () => {
-    if (!tempTeam || !tempSeason) return;
+  const handleSeasonChange = (nextSeason) => {
+    if (!team || !nextSeason) return;
     navigate(
-      `/teams/roster?team=${encodeURIComponent(tempTeam)}&year=${tempSeason}`
+      `/teams/roster?team=${encodeURIComponent(team)}&season=${nextSeason}`
     );
   };
   useEffect(() => {
@@ -316,6 +284,9 @@ export const Roster = () => {
     actualTheme
   );
   const didWinStanleyCup = playerUtils.didWinStanleyCup(team, season);
+  const displayedTeamStatus = didWinStanleyCup
+    ? "Stanley Cup Winners"
+    : clinchStatus;
   const estimated = simData?.estimatedRecord;
   const usingSim = modifying && simData;
   const decoratePlayer = (player) => {
@@ -394,55 +365,31 @@ export const Roster = () => {
           <ArrowLeft className="h-4 w-4" /> Back to Team
         </button>
 
-        <div
-          className="liquid-glass-strong mb-6 rounded-[32px] p-4 sm:mb-8 sm:p-6"
-          style={{ overflow: "visible" }}
-        >
-          <h2 className="mb-4 text-xl font-bold tracking-display text-white light:text-gray-900">
-            Lookup Team
-          </h2>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+        <div className="liquid-glass-strong mb-6 grid grid-cols-1 gap-3 overflow-visible rounded-[32px] p-4 sm:mb-8 sm:grid-cols-[2fr_1fr] sm:items-center sm:gap-4 sm:p-5">
+          <GeneralSearch
+            bare
+            compact
+            scope="teams"
+            initialQuery={team ? playerUtils.getFullTeamName(team, season) : ""}
+            targetSeason={season}
+            teamResultPath="/teams/roster"
+            className="w-full"
+          />
+          <label className="block w-full">
+            <span className="sr-only">Season</span>
             <AppSelect
               placeholder="Season"
-              value={tempSeason}
-              onChange={(e) => setTempSeason(e.target.value)}
-              className="app-field px-4 py-3.5 pr-10 text-base text-white light:text-gray-900"
+              value={String(season)}
+              onChange={(event) => handleSeasonChange(event.target.value)}
+              className="app-field w-full px-4 py-3.5 pr-10 text-base normal-case tracking-normal text-white light:text-gray-900"
             >
-              {[...seasonsList].reverse().map((s) => (
-                <option key={s} value={s}>
-                  {getSeasonName(s)}
+              {[...seasonsList].reverse().map((availableSeason) => (
+                <option key={availableSeason} value={availableSeason}>
+                  {getSeasonName(availableSeason)}
                 </option>
               ))}
             </AppSelect>
-            <AppSelect
-              placeholder="Team"
-              value={tempTeam}
-              onChange={(e) => setTempTeam(e.target.value)}
-              disabled={loadingTeams || !tempSeason}
-              className="app-field px-4 py-3.5 pr-10 text-base text-white light:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {loadingTeams ? (
-                <option>Loading...</option>
-              ) : (
-                [...teamsList]
-                  .sort((a, b) =>
-                    getTeamLabel(a).localeCompare(getTeamLabel(b))
-                  )
-                  .map((t) => (
-                    <option key={t} value={t}>
-                      {getTeamLabel(t)}
-                    </option>
-                  ))
-              )}
-            </AppSelect>
-          </div>
-          <button
-            onClick={handleSearch}
-            disabled={!tempSeason || !tempTeam}
-            className="btn-search-primary mt-5"
-          >
-            <Search size={20} /> Search Team
-          </button>
+          </label>
         </div>
 
         {team && season && (
@@ -513,24 +460,24 @@ export const Roster = () => {
                           </span>
                         </>
                       )}
-                      {clinchStatus && (
+                      {displayedTeamStatus && (
                         <>
                           <span>•</span>
                           <span className="whitespace-nowrap text-emerald-300 light:text-emerald-600">
-                            {clinchStatus}
+                            {displayedTeamStatus}
                           </span>
                         </>
                       )}
                     </>
                   )}
                 </div>
-                <p className="mt-1 text-xs text-gray-400 light:text-gray-500">
-                  {error
-                    ? "Lineup data isn't available for this team & season."
-                    : modifying
-                      ? "Modify mode — substitute any player to re-estimate the record & line scores"
-                      : "Most-used observed 5v5 units from MoneyPuck"}
-                </p>
+                {(error || modifying) && (
+                  <p className="mt-1 text-xs text-gray-400 light:text-gray-500">
+                    {error
+                      ? "Lineup data isn't available for this team & season."
+                      : "Modify mode — substitute any player to re-estimate the record & line scores"}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -701,7 +648,7 @@ export const Roster = () => {
           defenseUnits={defenseUnits}
           goalieUnits={goalieUnits}
           recordText={recordText}
-          clinchStatus={clinchStatus}
+          teamStatus={displayedTeamStatus}
           modifying={modifying}
           estimated={estimated}
         />

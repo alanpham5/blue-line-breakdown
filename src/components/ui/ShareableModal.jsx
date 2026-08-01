@@ -75,6 +75,12 @@ export const ShareableModal = ({ isOpen, onClose, fileName, children }) => {
     const scaled = previewScale !== 1;
     const prevNodeTransform = node.style.transform;
     const prevWrapperStyle = wrapper.getAttribute("style") || "";
+    const requestedExportScale = Number(
+      node.firstElementChild?.dataset.exportScale
+    );
+    const exportScale = Number.isFinite(requestedExportScale)
+      ? requestedExportScale
+      : 2;
     if (scaled) {
       node.style.transform = "none";
       wrapper.style.cssText =
@@ -95,7 +101,7 @@ export const ShareableModal = ({ isOpen, onClose, fileName, children }) => {
         useCORS: true,
         allowTaint: false,
         backgroundColor: "#000000",
-        scale: 2,
+        scale: exportScale,
         logging: false,
         windowWidth: 1280,
         windowHeight: node.offsetHeight,
@@ -150,6 +156,16 @@ export const ShareableModal = ({ isOpen, onClose, fileName, children }) => {
             }
             .shareable-export .shareable-similarity-score {
               transform: translateY(-4px) !important;
+            }
+            .shareable-export .shareable-team-header-text {
+              position: relative !important;
+              top: -10px !important;
+              transform: none !important;
+            }
+            .shareable-export .shareable-team-bar-value {
+              position: relative !important;
+              top: -6px !important;
+              transform: none !important;
             }
           `;
           clonedDoc.head.appendChild(style);
