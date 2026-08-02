@@ -52,7 +52,10 @@ export function Tooltip({
     ref: triggerRef,
     onMouseEnter: () => setOpenId(id),
     onMouseLeave: () => setOpenId(null),
-    onClick: () => setOpenId(open ? null : id),
+    onFocus: () => setOpenId(id),
+    onBlur: () => setOpenId(null),
+    onClick: () => setOpenId(id),
+    "aria-describedby": open ? `${id}-content` : undefined,
   });
   return (
     <>
@@ -60,7 +63,9 @@ export function Tooltip({
       {open &&
         createPortal(
           <div
+            id={`${id}-content`}
             ref={tooltipRef}
+            role="tooltip"
             className={`
               fixed z-[999999]
               ${width}

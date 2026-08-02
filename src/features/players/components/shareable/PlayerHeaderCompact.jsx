@@ -1,7 +1,10 @@
 import { Ruler, Scale, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import { playerUtils } from "utils/playerUtils";
-import { archetypeIcons } from "features/players/components/ArchetypeBadge";
+import {
+  getArchetypeBadge,
+  getArchetypeNames,
+} from "features/players/components/ArchetypeBadge";
 export const PlayerHeaderCompact = ({ player, biometrics }) => {
   const teamColor = playerUtils.getTeamColor(player.team, player.season);
   const teamCardGradient = playerUtils.getTeamCardGradient(
@@ -17,7 +20,7 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
   const teamLogoUrl = playerUtils.getCorsWrappedUrl(
     playerUtils.getTeamLogoUrl(player.team, player.season, "dark")
   );
-  const archetypes = player.archetypes;
+  const archetypes = getArchetypeNames(player.archetypes);
   return (
     <div
       className="team-card-surface-strong relative h-full overflow-hidden rounded-[28px] px-6 py-5 liquid-glass-strong"
@@ -83,15 +86,15 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
           </div>
           {archetypes.length > 0 && (
             <div className="flex flex-wrap items-center justify-start gap-2 mt-3">
-              {archetypes.map((archetype, idx) => {
-                const Icon = archetypeIcons[archetype];
+              {archetypes.map((archetype) => {
+                const { name, icon: Icon } = getArchetypeBadge(archetype);
                 return (
                   <div
-                    key={idx}
+                    key={name}
                     className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.08] px-3 py-1.5 text-base font-semibold text-sky-200"
                   >
                     {Icon && <Icon className="h-5 w-5 shrink-0 text-sky-300" />}
-                    <span className="shareable-pill-text">{archetype}</span>
+                    <span className="shareable-pill-text">{name}</span>
                   </div>
                 );
               })}

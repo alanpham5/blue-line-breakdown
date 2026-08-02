@@ -22,7 +22,7 @@ const examplePlayer = {
   age: 22,
   warPercentile: 98.7,
   role: "Playmaker",
-  archetypes: ["Playmaker", "Two-Way"],
+  archetypes: ["Magician", "200-Foot Player"],
 };
 
 const exampleTendencies = [

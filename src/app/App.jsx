@@ -3,6 +3,7 @@ import { Players } from "features/players/Players";
 import { PlayersV2 } from "features/players/PlayersV2";
 import { PlayerProfilePreview } from "features/players/PlayerProfilePreview";
 import { GoalieProfilePreview } from "features/players/GoalieProfilePreview";
+import { ArchetypeBadgePreview } from "features/players/ArchetypeBadgePreview";
 import { PlayerLeaderboard } from "features/players/leaderboard/PlayerLeaderboard";
 import { Splashscreen } from "features/splash/Splashscreen";
 import { About } from "features/about/About";
@@ -64,6 +65,10 @@ const App = () => {
               <Route
                 path="/players/goalie-profile-preview"
                 element={<GoalieProfilePreview />}
+              />
+              <Route
+                path="/players/archetype-badges"
+                element={<ArchetypeBadgePreview />}
               />
               <Route path="/leaderboard" element={<PlayerLeaderboard />} />
               <Route

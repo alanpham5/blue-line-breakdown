@@ -2,7 +2,10 @@ import { useLayoutEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Ruler, Scale, Calendar, Download, Share } from "lucide-react";
 import { playerUtils } from "utils/playerUtils";
-import { ArchetypeBadge } from "features/players/components/ArchetypeBadge";
+import {
+  ArchetypeBadge,
+  getArchetypeNames,
+} from "features/players/components/ArchetypeBadge";
 import { useTheme } from "providers/ThemeContext";
 import { useIsMobile } from "hooks/useIsMobile";
 import { BookmarkButton } from "components/ui/BookmarkButton";
@@ -66,7 +69,7 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
     player.team,
     player.season
   );
-  const archetypes = player.archetypes || [];
+  const archetypes = getArchetypeNames(player.archetypes);
   useLayoutEffect(() => {
     const node = playerNameRef.current;
     if (!node) return undefined;
@@ -251,8 +254,8 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
             )}
             {archetypes.length > 0 && (
               <div className="mt-3 flex flex-wrap items-center justify-center gap-2 lg:justify-start">
-                {archetypes.map((archetype, idx) => (
-                  <ArchetypeBadge key={idx} archetype={archetype} />
+                {archetypes.map((archetype) => (
+                  <ArchetypeBadge key={archetype} archetype={archetype} />
                 ))}
               </div>
             )}

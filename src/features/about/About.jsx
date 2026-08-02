@@ -112,7 +112,7 @@ export const About = ({ enablePageLoadAnimations = true }) => {
             <h2 className="mb-6 text-2xl font-bold text-center text-white light:text-gray-900 sm:text-3xl">
               Discover More
             </h2>
-            <div className="flex justify-center gap-12 sm:gap-16">
+            <div className="flex flex-wrap justify-center gap-8 sm:gap-12">
               <a
                 href="https://full-court-focus.vercel.app/"
                 target="_blank"
@@ -128,6 +128,24 @@ export const About = ({ enablePageLoadAnimations = true }) => {
                 </div>
                 <span className="text-sm font-semibold text-gray-300 light:text-gray-600 transition-colors duration-200 group-hover:text-[#7ee340] light:group-hover:text-[#2e6e14]">
                   Full Court Focus
+                </span>
+              </a>
+
+              <a
+                href="https://pitch-perspective.vercel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col items-center text-center focus:outline-none"
+              >
+                <div className="relative mb-3 h-20 w-20 overflow-hidden rounded-[22%] bg-white/[0.04] transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_8px_30px_rgb(0,0,0,0.4)] group-focus-visible:ring-2 group-focus-visible:ring-[#7ee340] border border-white/10 shadow-md">
+                  <img
+                    src="/pp-icon.png"
+                    alt="Pitch Perspective"
+                    className="h-full w-full scale-[1.3] object-cover"
+                  />
+                </div>
+                <span className="text-sm font-semibold text-gray-300 light:text-gray-600 transition-colors duration-200 group-hover:text-[#7ee340] light:group-hover:text-[#2e6e14]">
+                  Pitch Perspective
                 </span>
               </a>
 

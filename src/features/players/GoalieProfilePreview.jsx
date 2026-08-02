@@ -21,7 +21,7 @@ const exampleGoalie = {
   age: 31,
   warPercentile: 99.4,
   role: "Elite Starter",
-  archetypes: ["Elite Starter", "Workhorse"],
+  archetypes: ["Big Save Machine", "Workhorse"],
 };
 
 const exampleBiometrics = { height: `6' 4"`, weight: 207 };
