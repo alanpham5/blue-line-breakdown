@@ -47,9 +47,9 @@ const goaltendingQuality = [
 ];
 
 const shotsFacedQuality = [
-  { label: "Low Danger Save Pct", value: 93 },
-  { label: "Medium Danger Save Pct", value: 96 },
-  { label: "High Danger Save Pct", value: 98 },
+  { label: "Low Danger Saves", value: 93 },
+  { label: "Medium Danger Saves", value: 96 },
+  { label: "High Danger Saves", value: 98 },
 ];
 
 const similarGoalies = [
