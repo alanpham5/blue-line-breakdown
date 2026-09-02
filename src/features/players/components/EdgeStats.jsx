@@ -1,4 +1,5 @@
 import { playerUtils } from "utils/playerUtils";
+import { getPercentileHue } from "utils/percentileColor";
 import { Gauge } from "lucide-react";
 
 export const EdgeStats = ({ edgeValues, edgePercentiles }) => {
@@ -36,8 +37,8 @@ export const EdgeStats = ({ edgeValues, edgePercentiles }) => {
   };
 
   const getPercentileStyle = (percentile) => {
-    if (percentile == null) return {};
-    const hue = Math.max(0, Math.min(120, percentile * 1.2));
+    const hue = getPercentileHue(percentile);
+    if (hue == null) return {};
     return {
       "--percentile-hue": `${hue}deg`,
     };

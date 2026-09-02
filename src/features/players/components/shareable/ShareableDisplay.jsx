@@ -1,5 +1,6 @@
 import { Users, Target, Shield, Gauge } from "lucide-react";
 import { playerUtils } from "utils/playerUtils";
+import { getPercentileColor } from "utils/percentileColor";
 import { PlayerHeaderCompact } from "features/players/components/shareable/PlayerHeaderCompact";
 import { WarPercentileCardCompact } from "features/players/components/shareable/WarPercentileCardCompact";
 import { StatsCardCompact } from "features/players/components/shareable/StatsCardCompact";
@@ -32,14 +33,6 @@ const formatValue = (key, val) => {
     default:
       return num;
   }
-};
-
-const getPercentileStyle = (percentile) => {
-  if (percentile == null) return {};
-  const hue = Math.max(0, Math.min(120, percentile * 1.2));
-  return {
-    "--percentile-hue": `${hue}deg`,
-  };
 };
 
 const getMetricLabel = (key, isShort) => {
@@ -183,8 +176,8 @@ export const ShareableDisplay = ({ playerData }) => {
                             {getMetricLabel(statKey, true)}
                           </div>
                           <div
-                            className="text-[26px] font-bold leading-tight tabular-nums whitespace-nowrap percentile-colored mt-1"
-                            style={getPercentileStyle(percentile)}
+                            className="text-[26px] font-bold leading-tight tabular-nums whitespace-nowrap mt-1"
+                            style={{ color: getPercentileColor(percentile) }}
                           >
                             {formatValue(statKey, val)}
                           </div>

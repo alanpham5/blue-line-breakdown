@@ -1,5 +1,6 @@
 import { Gauge, Shield, Target, Users } from "lucide-react";
 import { playerUtils } from "utils/playerUtils";
+import { getPercentileColor } from "utils/percentileColor";
 import { PlayerHeaderCompact } from "features/players/components/shareable/PlayerHeaderCompact";
 import { WarPercentileCardCompact } from "features/players/components/shareable/WarPercentileCardCompact";
 import { PlayerTendenciesCard } from "features/players/components/PlayerTendenciesCard";
@@ -146,7 +147,10 @@ export const PlayerProfileShareablePreview = ({
                   <div className="text-[15px] font-semibold text-gray-400">
                     {label}
                   </div>
-                  <div className="mt-0.5 text-[28px] font-bold tabular-nums text-emerald-300">
+                  <div
+                    className="mt-0.5 text-[28px] font-bold tabular-nums"
+                    style={{ color: getPercentileColor(edgePercentiles[key]) }}
+                  >
                     {formatEdgeValue(key, edgeValues[key])}
                   </div>
                   <div className="text-[13px] text-gray-500">
