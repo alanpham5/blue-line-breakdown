@@ -11,6 +11,9 @@ export const playerUtils = {
     return `https://images.weserv.nl/?url=${encodeURIComponent(url)}`;
   },
   getPlayerHeadshot(playerId, team = null, season = null) {
+    if (playerId === 8475166 && parseInt(season) === 2025) {
+      return "/tavares.png";
+    }
     if (playerId === 8484801 && parseInt(season) === 2025) {
       return "/celebrini-cupcake.png";
     }
