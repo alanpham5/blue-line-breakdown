@@ -63,9 +63,20 @@ const polarPoint = (radius, angle) => {
 
 const describeWedge = (radius, startAngle, endAngle) => {
   const safeRadius = Math.max(0.01, radius);
+  const sweep = endAngle - startAngle;
+  if (sweep >= 359.99) {
+    const top = polarPoint(safeRadius, 0);
+    const bottom = polarPoint(safeRadius, 180);
+    return [
+      `M ${top.x} ${top.y}`,
+      `A ${safeRadius} ${safeRadius} 0 1 1 ${bottom.x} ${bottom.y}`,
+      `A ${safeRadius} ${safeRadius} 0 1 1 ${top.x} ${top.y}`,
+      "Z",
+    ].join(" ");
+  }
   const start = polarPoint(safeRadius, startAngle);
   const end = polarPoint(safeRadius, endAngle);
-  const largeArc = endAngle - startAngle > 180 ? 1 : 0;
+  const largeArc = sweep > 180 ? 1 : 0;
   return [
     "M 110 110",
     `L ${start.x} ${start.y}`,
