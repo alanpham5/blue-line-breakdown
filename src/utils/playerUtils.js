@@ -723,6 +723,7 @@ export const playerUtils = {
       HIT: "Physical Engagement",
       TAKE: "Takeaways",
       CH_SUP: "Chance Suppression",
+      D_EXIT: "D-Zone Exits",
       GOAL_PREV: "Goal Prevention",
       SV_PCT: "Save Percentage",
       GSAX: "Goals Saved Above Expected (GSAX/60)",
@@ -758,6 +759,7 @@ export const playerUtils = {
       HIT: "Hit",
       TAKE: "Take",
       CH_SUP: "Ch Sup",
+      D_EXIT: "D-Zone Exits",
       GOAL_PREV: "Goal Prv",
       SV_PCT: "SV%",
       GSAX: "GSAx",
@@ -799,6 +801,8 @@ export const playerUtils = {
       HIT: "How often the player uses physical contact (hits, scrums, or fights) to disrupt opponents.",
       TAKE: "How often the player takes the puck away from opponents.",
       CH_SUP: "Share of opponent scoring chances limited by the player.",
+      D_EXIT:
+        "How reliably the team gets the puck out of its own end with the player on the ice, from zone transitions across his shifts and how rarely he gives the puck away in the defensive zone.",
       GOAL_PREV: "Share of scoring attempts stopped by the player.",
       winShare:
         "The percentile rank of the player's contribution to team wins compared to other players on the team in the same position.",

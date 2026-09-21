@@ -44,12 +44,12 @@ const offensiveQuality = [
 
 const defensiveQuality = [
   { label: "Takeaways", shortLabel: "Takeaways", value: 88 },
+  { label: "D-Zone Exits", shortLabel: "D-Zone Exits", value: 72 },
   {
     label: "Chance Suppression",
     shortLabel: "Suppression",
     value: 79,
   },
-  { label: "Goal Prevention", shortLabel: "Prevention", value: 72 },
 ];
 
 const exampleSimilarPlayers = [

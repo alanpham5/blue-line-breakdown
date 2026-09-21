@@ -190,6 +190,17 @@ export const apiService = {
       errorMessage: "Failed to analyze lineup",
     });
   },
+  analyzeBuiltLine({ season, position, playerIds }) {
+    return request("/v2/line-builder/analyze", {
+      method: "POST",
+      body: {
+        season: parseInt(season),
+        position,
+        playerIds,
+      },
+      errorMessage: "Failed to analyze line",
+    });
+  },
   fetchPlayerPool(year, position) {
     const params = new URLSearchParams({
       season: String(year),

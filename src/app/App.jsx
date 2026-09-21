@@ -10,6 +10,7 @@ import { About } from "features/about/About";
 import { TeamSummary } from "features/team-summary/TeamSummary";
 import { TeamProfilePreview } from "features/team-summary/TeamProfilePreview";
 import { Roster } from "features/roster/Roster";
+import { LineBuilder } from "features/line-builder/LineBuilder";
 import { Loader } from "features/loader/Loader";
 import { ExpansionDraft } from "features/expansion-draft/ExpansionDraft";
 import { DraftResult } from "features/expansion-draft/DraftResult";
@@ -84,6 +85,7 @@ const App = () => {
                 element={<TeamProfilePreview />}
               />
               <Route path="/teams/roster" element={<Roster />} />
+              <Route path="/line-builder" element={<LineBuilder />} />
               <Route path="/expansion-draft" element={<ExpansionDraft />} />
               <Route path="/expansion-draft/result" element={<DraftResult />} />
               <Route
