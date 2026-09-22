@@ -18,7 +18,7 @@ const SKATER_METRIC_GROUPS = [
   },
   {
     type: "defensive",
-    keys: ["POS_CTRL", "BLK", "HIT", "TAKE", "CH_SUP", "GOAL_PREV"],
+    keys: ["POS_CTRL", "BLK", "HIT", "TAKE", "D_EXIT", "CH_SUP"],
   },
 ];
 

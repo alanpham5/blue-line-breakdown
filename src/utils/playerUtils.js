@@ -759,7 +759,7 @@ export const playerUtils = {
       HIT: "Hit",
       TAKE: "Take",
       CH_SUP: "Ch Sup",
-      D_EXIT: "D-Zone Exits",
+      D_EXIT: "DZ Exits",
       GOAL_PREV: "Goal Prv",
       SV_PCT: "SV%",
       GSAX: "GSAx",
