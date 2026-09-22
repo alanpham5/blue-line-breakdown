@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Activity, Loader2, Shield, Target } from "lucide-react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Header } from "components/layout/Header";
@@ -7,6 +7,7 @@ import { GeneralSearch } from "components/search/GeneralSearch";
 import { AppSelect } from "components/ui/AppSelect";
 import { ShareableModal } from "components/ui/ShareableModal";
 import { apiService } from "lib/api/apiService";
+import { buildPageTitle, trackEvent, trackPageView } from "lib/analytics";
 import { playerUtils } from "utils/playerUtils";
 import { CountingStats } from "features/players/components/CountingStats";
 import { EdgeStats } from "features/players/components/EdgeStats";
@@ -26,17 +27,26 @@ export const PlayersV2 = () => {
   const [loading, setLoading] = useState(Boolean(playerId));
   const [error, setError] = useState("");
   const [showShareableModal, setShowShareableModal] = useState(false);
+  const lastTrackedRef = useRef(null);
 
   const season = searchParams.get("season");
   const similarSeason = searchParams.get("similarSeason");
   const isGoalie = playerData?.player?.position === "G";
 
   useEffect(() => {
+    const reportPageView = (trackingKey, pageTitle) => {
+      document.title = pageTitle;
+      if (lastTrackedRef.current === trackingKey) return false;
+      lastTrackedRef.current = trackingKey;
+      trackPageView(pageTitle);
+      return true;
+    };
+
     if (!playerId) {
       setPlayerData(null);
       setLoading(false);
       setError("");
-      document.title = "Player Profiles | Blue Line Breakdown";
+      reportPageView("browse", buildPageTitle("Player Profiles"));
       return undefined;
     }
 
@@ -48,7 +58,21 @@ export const PlayersV2 = () => {
       .then((response) => {
         if (cancelled) return;
         setPlayerData(response);
-        document.title = `${response.player.name} | Blue Line Breakdown`;
+        const { player } = response;
+        const isNewView = reportPageView(
+          `player:${playerId}:${player.season}`,
+          buildPageTitle(player.name)
+        );
+        if (isNewView) {
+          trackEvent("player_view", {
+            player: player.name,
+            player_id: String(playerId),
+            season: player.season,
+            position: player.position,
+            team: player.team,
+            datetime: new Date().toISOString(),
+          });
+        }
         if (!season && response.player.season) {
           const nextParams = new URLSearchParams(searchParams);
           nextParams.set("season", String(response.player.season));
@@ -59,7 +83,10 @@ export const PlayersV2 = () => {
         if (cancelled) return;
         setPlayerData(null);
         setError(requestError.message);
-        document.title = "Player Profiles | Blue Line Breakdown";
+        reportPageView(
+          `player-error:${playerId}`,
+          buildPageTitle("Player Profiles")
+        );
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -72,7 +99,7 @@ export const PlayersV2 = () => {
 
   useEffect(
     () => () => {
-      document.title = "Blue Line Breakdown";
+      document.title = buildPageTitle();
     },
     []
   );
