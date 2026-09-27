@@ -118,8 +118,8 @@ export const LineAnalysis = ({
               {identity.headline}
             </p>
             <p className="mt-2 text-xs text-gray-400 light:text-slate-500">
-              {format(identity.confidence, 0)}% confidence · closest alternative
-              read: {identity.secondaryLabel}
+              {format(identity.confidence, 0)}% confidence · Alt:{" "}
+              {identity.secondaryLabel}
             </p>
           </div>
           <div className="shrink-0 rounded-[24px] border border-white/5 bg-white/[0.04] px-5 py-4 text-center light:border-slate-200/60 light:bg-gray-100/60">
@@ -168,8 +168,7 @@ export const LineAnalysis = ({
           icon={
             <Users className="mt-0.5 h-5 w-5 shrink-0 text-sky-300 light:text-sky-600" />
           }
-          title="Who does what"
-          subtitle="Archetype and the job each player takes on this unit"
+          title="Roles"
         >
           <div className="space-y-2">
             {analysis.players.map((player) => (
@@ -230,11 +229,11 @@ export const LineAnalysis = ({
           icon={
             <TrendingUp className="mt-0.5 h-5 w-5 shrink-0 text-emerald-300 light:text-emerald-600" />
           }
-          title="Projected 5-on-5 results"
+          title="Projected 5-on-5"
           subtitle={
             projection
-              ? `Learned from ${projection.sampleCount} observed ${season} combinations`
-              : "Not enough observed combinations to project results"
+              ? `Based on ${projection.sampleCount} ${season} lines`
+              : undefined
           }
         >
           {projection ? (
@@ -258,20 +257,12 @@ export const LineAnalysis = ({
                 />
               </div>
               <div className="mt-3">
-                <Meter
-                  label="Comparable support"
-                  value={projection.confidence}
-                />
-                <p className="mt-2 text-xs text-gray-400 light:text-slate-500">
-                  How closely real lines resemble this build. Unusual
-                  combinations score low — the projection then leans on style
-                  neighbours rather than near-matches.
-                </p>
+                <Meter label="Confidence" value={projection.confidence} />
               </div>
             </>
           ) : (
             <p className="text-sm text-gray-400 light:text-slate-500">
-              Results are rated from player profiles only for this season.
+              Not enough line data this season.
             </p>
           )}
           <div className="mt-4 border-t border-white/10 pt-3 light:border-slate-200">
@@ -288,14 +279,11 @@ export const LineAnalysis = ({
                     key={unit}
                     className="rounded-full border border-white/10 px-2.5 py-1 text-[0.65rem] font-semibold text-gray-300 light:border-slate-200 light:text-slate-600"
                   >
-                    {unit} candidate
+                    {unit}
                   </span>
                 ))}
               </div>
             )}
-            <p className="mt-2 text-[0.68rem] text-gray-500 light:text-slate-400">
-              Rating evidence: {quality.evidence}
-            </p>
           </div>
         </Section>
       </div>
@@ -305,12 +293,10 @@ export const LineAnalysis = ({
           <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-amber-300 light:text-amber-600" />
         }
         title="Traits"
-        subtitle="What stands out — and what breaks down — about this combination"
       >
         {traits.length === 0 ? (
           <p className="text-sm text-gray-400 light:text-slate-500">
-            No trait crosses a meaningful threshold. This is an average unit in
-            every direction.
+            No standout traits.
           </p>
         ) : (
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -341,8 +327,8 @@ export const LineAnalysis = ({
           icon={
             <Link2 className="mt-0.5 h-5 w-5 shrink-0 text-violet-300 light:text-violet-600" />
           }
-          title="Fit & chemistry"
-          subtitle={`Structural fit score ${format(chemistry.score)}`}
+          title="Chemistry"
+          subtitle={`Fit score ${format(chemistry.score)}`}
         >
           <div className="space-y-2.5">
             {chemistry.components.map((component) => (
@@ -384,12 +370,12 @@ export const LineAnalysis = ({
           icon={
             <History className="mt-0.5 h-5 w-5 shrink-0 text-cyan-300 light:text-cyan-600" />
           }
-          title="Lines that look like this"
-          subtitle="Real MoneyPuck combinations with the closest style profile — tap one to build it"
+          title="Similar real lines"
+          subtitle="Tap to load"
         >
           {comparables.length === 0 ? (
             <p className="text-sm text-gray-400 light:text-slate-500">
-              No observed combinations to compare against.
+              No comparable lines.
             </p>
           ) : (
             <div className="space-y-2">
@@ -432,7 +418,7 @@ export const LineAnalysis = ({
           {history.length > 0 && (
             <div className="mt-4 border-t border-white/10 pt-3 light:border-slate-200">
               <h4 className="mb-2 text-xs font-bold uppercase tracking-wide text-gray-400 light:text-slate-500">
-                This exact combination has played together
+                Played together
               </h4>
               <div className="space-y-2">
                 {history.slice(0, 4).map((entry) => (
@@ -461,7 +447,7 @@ export const LineAnalysis = ({
                       </div>
                       <div className="text-[0.62rem] text-gray-400 light:text-slate-500">
                         {entry.gamesPlayed} GP ·{" "}
-                        {format(entry.icetimeMinutes, 0)} min together
+                        {format(entry.icetimeMinutes, 0)} min
                       </div>
                     </div>
                   </button>

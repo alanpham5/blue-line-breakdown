@@ -3,6 +3,16 @@ import { X, Download, Share } from "lucide-react";
 import html2canvas from "html2canvas";
 import { useIsMobile } from "hooks/useIsMobile";
 import { shareImage, getShareUrl } from "utils/shareCard";
+const removeZeroSizeGradients = (root) => {
+  const view = root.ownerDocument.defaultView;
+  root.querySelectorAll("*").forEach((el) => {
+    const { width, height } = el.getBoundingClientRect();
+    if (width > 0 && height > 0) return;
+    if (view.getComputedStyle(el).backgroundImage.includes("gradient")) {
+      el.style.backgroundImage = "none";
+    }
+  });
+};
 export const ShareableModal = ({ isOpen, onClose, fileName, children }) => {
   const backdropRef = useRef(null);
   const contentRef = useRef(null);
@@ -169,6 +179,10 @@ export const ShareableModal = ({ isOpen, onClose, fileName, children }) => {
             }
           `;
           clonedDoc.head.appendChild(style);
+          const clonedContent = clonedDoc.querySelector(
+            ".shareable-modal-content"
+          );
+          if (clonedContent) removeZeroSizeGradients(clonedContent);
         },
       });
       return canvas.toDataURL("image/png");

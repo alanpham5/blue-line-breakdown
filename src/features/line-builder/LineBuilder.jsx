@@ -187,9 +187,7 @@ export const LineBuilder = () => {
             </span>
           </div>
           <p className="mt-1.5 max-w-2xl text-sm text-gray-300 light:text-slate-600">
-            Put any three forwards or any two defensemen from a season together
-            and see what the combination actually is — its identity, traits,
-            projected results, and the real NHL lines it most resembles.
+            Pick three forwards or two defensemen to see how they play together.
           </p>
 
           <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -273,10 +271,9 @@ export const LineBuilder = () => {
         {!isComplete && !error && (
           <div className="liquid-glass-strong rounded-[28px] p-8 text-center">
             <p className="text-sm text-gray-400 light:text-slate-500">
-              Fill {slotCount - filledIds.length} more{" "}
-              {position === "D" ? "defenseman" : "forward"}
-              {slotCount - filledIds.length === 1 ? "" : "s"} to get the full
-              breakdown.
+              Add {slotCount - filledIds.length} more{" "}
+              {position === "D" ? "defense" : "forward"}
+              {slotCount - filledIds.length === 1 ? "" : "s"}.
             </p>
           </div>
         )}
