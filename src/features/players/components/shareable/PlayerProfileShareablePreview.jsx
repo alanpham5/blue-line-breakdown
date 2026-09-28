@@ -5,6 +5,12 @@ import { PlayerHeaderCompact } from "features/players/components/shareable/Playe
 import { WarPercentileCardCompact } from "features/players/components/shareable/WarPercentileCardCompact";
 import { PlayerTendenciesCard } from "features/players/components/PlayerTendenciesCard";
 import { PlayerQualityCard } from "features/players/components/PlayerQualityCard";
+import {
+  formatCountingStat,
+  getCountingStatsLabels,
+  getCountingStatsOrder,
+  isGoalieStats,
+} from "features/players/components/CountingStats";
 
 const edgeOrder = [
   ["TOP_SPEED", "Top Speed", "mph"],
@@ -14,6 +20,43 @@ const edgeOrder = [
   ["DIST_GAME", "Max / Game", "mi"],
   ["OZONE", "O-Zone Time", "%"],
 ];
+
+const countingStatColors = {
+  gamesPlayed: "#ffffff",
+  goals: "#fb7185",
+  assists: "#7dcb48",
+  points: "#7dd3fc",
+  penaltyMinutes: "#fcd34d",
+  shotsAgainst: "#7dd3fc",
+  saves: "#7dcb48",
+  gaa: "#fb7185",
+  savePct: "#fcd34d",
+};
+
+const CountingStatsRow = ({ stats }) => {
+  if (!stats || Object.keys(stats).length === 0) return null;
+  const isGoalie = isGoalieStats(stats);
+  const labels = getCountingStatsLabels(isGoalie);
+  return (
+    <div className="liquid-glass-strong rounded-[28px] px-6 py-4">
+      <div className="grid grid-cols-5 divide-x divide-white/10 text-center">
+        {getCountingStatsOrder(isGoalie).map((statKey) => (
+          <div key={statKey} className="px-2">
+            <div className="text-[15px] font-semibold text-gray-400">
+              {labels[statKey]}
+            </div>
+            <div
+              className="mt-0.5 text-[32px] font-bold tabular-nums"
+              style={{ color: countingStatColors[statKey] }}
+            >
+              {formatCountingStat(stats, statKey)}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const formatEdgeValue = (key, value) => {
   if (key === "SPEED_BURSTS") return Number(value).toLocaleString();
@@ -30,6 +73,7 @@ export const PlayerProfileShareablePreview = ({
   tendencies,
   offensiveQuality,
   defensiveQuality,
+  stats,
   edgeValues,
   edgePercentiles,
   similarPlayers,
@@ -92,6 +136,8 @@ export const PlayerProfileShareablePreview = ({
           warPercentile={player.warPercentile}
         />
       </div>
+
+      <CountingStatsRow stats={stats} />
 
       <div className="grid min-h-[360px] grid-cols-[1.02fr_1.28fr] gap-3.5">
         <PlayerTendenciesCard

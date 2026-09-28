@@ -1,7 +1,22 @@
-export const CountingStats = ({ stats }) => {
-  if (!stats || Object.keys(stats).length === 0) return null;
-  const isGoalie = stats.savePct !== undefined || stats.saves !== undefined;
-  const labels = isGoalie
+export const isGoalieStats = (stats) =>
+  stats.savePct !== undefined || stats.saves !== undefined;
+
+export const getCountingStatsOrder = (isGoalie) =>
+  isGoalie
+    ? ["gamesPlayed", "shotsAgainst", "saves", "gaa", "savePct"]
+    : ["gamesPlayed", "goals", "assists", "points", "penaltyMinutes"];
+
+export const formatCountingStat = (stats, statKey) => {
+  const val = stats[statKey];
+  if (val === undefined || val === null) return "-";
+  if (statKey === "gaa") return val.toFixed(2);
+  if (statKey === "savePct") return val.toFixed(3);
+  if (statKey === "goalsSavedAboveExpected") return val.toFixed(1);
+  return val;
+};
+
+export const getCountingStatsLabels = (isGoalie) =>
+  isGoalie
     ? {
         gamesPlayed: "Games Played",
         shotsAgainst: "Shots Against",
@@ -18,6 +33,11 @@ export const CountingStats = ({ stats }) => {
         penaltyMinutes: "Penalty Minutes",
         points: "Points",
       };
+
+export const CountingStats = ({ stats }) => {
+  if (!stats || Object.keys(stats).length === 0) return null;
+  const isGoalie = isGoalieStats(stats);
+  const labels = getCountingStatsLabels(isGoalie);
   const mobileLabels = isGoalie
     ? {
         gamesPlayed: "Gp",
@@ -35,9 +55,7 @@ export const CountingStats = ({ stats }) => {
         penaltyMinutes: "Pim",
         points: "Pts",
       };
-  const statsOrder = isGoalie
-    ? ["gamesPlayed", "shotsAgainst", "saves", "gaa", "savePct"]
-    : ["gamesPlayed", "goals", "assists", "points", "penaltyMinutes"];
+  const statsOrder = getCountingStatsOrder(isGoalie);
   const statVisibility = {};
   const statValueClasses = isGoalie
     ? {
@@ -56,20 +74,6 @@ export const CountingStats = ({ stats }) => {
         points: "text-sky-300 light:text-sky-700",
         penaltyMinutes: "text-amber-300 light:text-amber-700",
       };
-  const formatValue = (statKey) => {
-    const val = stats[statKey];
-    if (val === undefined || val === null) return "-";
-    if (statKey === "gaa") {
-      return val.toFixed(2);
-    }
-    if (statKey === "savePct") {
-      return val.toFixed(3);
-    }
-    if (statKey === "goalsSavedAboveExpected") {
-      return val.toFixed(1);
-    }
-    return val;
-  };
   return (
     <div className="liquid-glass-strong liquid-glass-animate rounded-[32px] p-4 sm:p-6">
       <div className="grid grid-flow-col auto-cols-fr divide-x divide-white/10 light:divide-slate-200 text-center">
@@ -85,7 +89,7 @@ export const CountingStats = ({ stats }) => {
             <div
               className={`text-xl sm:text-3xl font-semibold leading-tight tabular-nums whitespace-nowrap ${statValueClasses[statKey]}`}
             >
-              {formatValue(statKey)}
+              {formatCountingStat(stats, statKey)}
             </div>
           </div>
         ))}
