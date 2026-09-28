@@ -18,10 +18,14 @@ const NHL_TO_ESPN_TEAM_MAP = {
   TBL: "TB",
   NJD: "NJ",
 };
-const request = (path, { method = "GET", body, errorMessage } = {}) =>
+const NETWORK_ERROR_MESSAGE =
+  "Couldn't reach the server. Check your connection and try again.";
+export const isAbortError = (error) => error?.name === "AbortError";
+const request = (path, { method = "GET", body, errorMessage, signal } = {}) =>
   trackApiRequest(async () => {
     const res = await fetch(`${API_BASE_URL}${path}`, {
       method,
+      signal,
       headers:
         body !== undefined
           ? {
@@ -29,6 +33,9 @@ const request = (path, { method = "GET", body, errorMessage } = {}) =>
             }
           : undefined,
       body: body !== undefined ? JSON.stringify(body) : undefined,
+    }).catch((error) => {
+      if (isAbortError(error)) throw error;
+      throw new Error(NETWORK_ERROR_MESSAGE);
     });
     if (!res.ok) {
       const error = await res.json().catch(() => ({}));
@@ -89,21 +96,23 @@ export const apiService = {
       return response.json();
     });
   },
-  searchAutofill(query, limit = 5) {
+  searchAutofill(query, limit = 5, { signal } = {}) {
     return request(
       `/search/autofill?q=${encodeURIComponent(query)}&limit=${limit}`,
       {
         errorMessage: "Failed to fetch autofill suggestions",
+        signal,
       }
     );
   },
-  searchPlayersV2(query, limit = 8) {
+  searchPlayersV2(query, limit = 8, { signal } = {}) {
     const params = new URLSearchParams({
       q: query,
       limit: String(limit),
     });
     return request(`/v2/players/search?${params.toString()}`, {
       errorMessage: "Failed to search players",
+      signal,
     });
   },
   fetchPlayerProfileV2(
@@ -124,13 +133,14 @@ export const apiService = {
       errorMessage: "Failed to inspect player data",
     });
   },
-  searchV2(query, limit = 10) {
+  searchV2(query, limit = 10, { signal } = {}) {
     const params = new URLSearchParams({
       q: query,
       limit: String(limit),
     });
     return request(`/v2/search?${params.toString()}`, {
       errorMessage: "Failed to search players and teams",
+      signal,
     });
   },
   fetchLeaderboard(position, season = null, limit = null) {
@@ -154,13 +164,14 @@ export const apiService = {
       }
     );
   },
-  searchTeamsV2(query, limit = 10) {
+  searchTeamsV2(query, limit = 10, { signal } = {}) {
     const params = new URLSearchParams({
       q: query,
       limit: String(limit),
     });
     return request(`/v2/teams/search?${params.toString()}`, {
       errorMessage: "Failed to search teams",
+      signal,
     });
   },
   fetchRosters(year, team, position) {

@@ -57,9 +57,12 @@ export const SearchForm = ({
       return;
     }
     let cancelled = false;
+    const controller = new AbortController();
     const timeoutId = setTimeout(async () => {
       try {
-        const data = await apiService.searchAutofill(query);
+        const data = await apiService.searchAutofill(query, 5, {
+          signal: controller.signal,
+        });
         if (!cancelled) {
           setAutofillResults(data.results || []);
           setShowAutofill(true);
@@ -73,6 +76,7 @@ export const SearchForm = ({
     return () => {
       cancelled = true;
       clearTimeout(timeoutId);
+      controller.abort();
     };
   }, [playerName]);
   useEffect(() => {

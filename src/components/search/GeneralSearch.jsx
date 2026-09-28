@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Loader2, Search, Shield, User, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { apiService } from "lib/api/apiService";
+import { apiService, isAbortError } from "lib/api/apiService";
 import { useTheme } from "providers/ThemeContext";
 import { playerUtils } from "utils/playerUtils";
 import { LookupHeader } from "components/search/LookupHeader";
@@ -76,15 +76,17 @@ export const GeneralSearch = ({
     }
 
     let cancelled = false;
+    const controller = new AbortController();
+    const requestOptions = { signal: controller.signal };
     const timeoutId = window.setTimeout(async () => {
       setLoading(true);
       setError("");
       try {
         const response = isPlayerScope
-          ? await apiService.searchPlayersV2(trimmed, 10)
+          ? await apiService.searchPlayersV2(trimmed, 10, requestOptions)
           : isTeamScope
-            ? await apiService.searchTeamsV2(trimmed, 10)
-            : await apiService.searchV2(trimmed);
+            ? await apiService.searchTeamsV2(trimmed, 10, requestOptions)
+            : await apiService.searchV2(trimmed, 10, requestOptions);
         const nextResults = isPlayerScope
           ? (response.results || []).map((result) => ({
               ...result,
@@ -103,7 +105,7 @@ export const GeneralSearch = ({
           setActiveIndex(-1);
         }
       } catch (requestError) {
-        if (!cancelled) {
+        if (!cancelled && !isAbortError(requestError)) {
           setResults([]);
           setError(requestError.message);
           setOpen(true);
@@ -116,6 +118,7 @@ export const GeneralSearch = ({
     return () => {
       cancelled = true;
       window.clearTimeout(timeoutId);
+      controller.abort();
     };
   }, [isPlayerScope, isTeamScope, query]);
 
