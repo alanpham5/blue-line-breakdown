@@ -1,4 +1,5 @@
 import { Repeat2 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { playerUtils } from "utils/playerUtils";
 import { useTheme } from "providers/ThemeContext";
 const percentileColors = (pct) => {
@@ -29,6 +30,7 @@ export const RosterPlayerCard = ({
   editable = false,
   swapped = false,
   onPlayerClick,
+  href,
 }) => {
   const { actualTheme } = useTheme();
   const teamColor = playerUtils.getTeamColor(
@@ -43,11 +45,12 @@ export const RosterPlayerCard = ({
         ? player.warPercentile
         : null;
   const { text: valueColor, fill } = percentileColors(pct);
+  const CardElement = href ? Link : "div";
   return (
-    <div
-      onClick={() => onPlayerClick?.(player)}
+    <CardElement
+      {...(href ? { to: href } : { onClick: () => onPlayerClick?.(player) })}
       className={`group flex items-center gap-2.5 rounded-2xl border border-white/5 bg-white/[0.03] p-2.5 transition-all duration-200 light:border-slate-200/50 light:bg-gray-100/50 ${
-        onPlayerClick
+        href || onPlayerClick
           ? "cursor-pointer hover:bg-white/[0.08] light:hover:bg-gray-100"
           : ""
       } ${editable ? "ring-1 ring-inset ring-sky-400/20" : ""}`}
@@ -99,6 +102,6 @@ export const RosterPlayerCard = ({
           </div>
         </div>
       </div>
-    </div>
+    </CardElement>
   );
 };

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { apiService } from "lib/api/apiService";
 import { playerUtils } from "utils/playerUtils";
 import { useTheme } from "providers/ThemeContext";
@@ -12,7 +12,6 @@ export const TopPlayersSection = ({
   className = "",
   style,
 }) => {
-  const navigate = useNavigate();
   const { actualTheme } = useTheme();
   const [players, setPlayers] = useState(null);
   const [season, setSeason] = useState(null);
@@ -43,10 +42,6 @@ export const TopPlayersSection = ({
 
   const seeAllHref = `/leaderboard?position=${position}${season ? `&season=${season}` : ""}`;
 
-  const openPlayer = (player) => {
-    navigate(`/players/v2/${player.playerId}?season=${player.season}`);
-  };
-
   return (
     <section className={`space-y-4 ${className}`} style={style}>
       <div className="flex items-center justify-between gap-3">
@@ -64,10 +59,9 @@ export const TopPlayersSection = ({
             actualTheme
           );
           return (
-            <button
+            <Link
               key={`${player.playerId}-${player.season}`}
-              type="button"
-              onClick={() => openPlayer(player)}
+              to={playerUtils.playerProfilePath(player.playerId, player.season)}
               className="flex w-full items-center gap-3 border-t border-white/5 px-4 py-3 text-left transition-colors first:border-t-0 hover:bg-white/5 light:border-slate-200 light:hover:bg-slate-900/5"
             >
               <span className="w-5 shrink-0 text-right text-sm font-bold text-gray-500 light:text-slate-400">
@@ -109,7 +103,7 @@ export const TopPlayersSection = ({
                   League %
                 </p>
               </div>
-            </button>
+            </Link>
           );
         })}
       </div>

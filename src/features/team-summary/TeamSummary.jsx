@@ -196,11 +196,10 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handlePlayerClick = (player) => {
-    if (player?.playerId) {
-      navigate(`/players/v2/${player.playerId}?season=${season}`);
-    }
-  };
+  const teamPlayerHref = (player) =>
+    player?.playerId
+      ? playerUtils.playerProfilePath(player.playerId, season)
+      : null;
 
   const getTeamLabel = (teamCode) =>
     Number(tempSeason) <= 2013 && teamCode === "ARI" ? "PHX" : teamCode;
@@ -478,7 +477,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
               groups={impactPlayers}
               team={team}
               season={season}
-              onPlayerClick={handlePlayerClick}
+              playerHref={teamPlayerHref}
               onRosterClick={() =>
                 navigate(
                   `/teams/roster?team=${encodeURIComponent(team)}&year=${season}`

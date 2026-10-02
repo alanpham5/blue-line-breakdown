@@ -329,11 +329,11 @@ export const Roster = () => {
       playerIndex: pi,
       currentPlayerId: player?.playerId,
     });
-  const navigateToPlayer = () => (player) => {
-    if (!player?.playerId) return;
-    navigate(`/players/v2/${player.playerId}?season=${season}`);
-  };
-  const renderExtras = (label, players, position) => (
+  const rosterPlayerHref = (player) =>
+    player?.playerId
+      ? playerUtils.playerProfilePath(player.playerId, season)
+      : null;
+  const renderExtras = (label, players) => (
     <div className="mt-4 border-t border-white/10 pt-4 light:border-slate-200">
       <h4 className="mb-2.5 text-xs font-bold uppercase tracking-wide text-gray-400 light:text-gray-500">
         {label}
@@ -345,7 +345,7 @@ export const Roster = () => {
             player={player}
             team={team}
             season={season}
-            onPlayerClick={navigateToPlayer(position)}
+            href={rosterPlayerHref(player)}
           />
         ))}
       </div>
@@ -551,13 +551,14 @@ export const Roster = () => {
                       editable={modifying}
                       swappedIds={swappedIds}
                       onPlayerClick={
-                        modifying ? openForwardPicker(i) : navigateToPlayer("F")
+                        modifying ? openForwardPicker(i) : undefined
                       }
+                      playerHref={modifying ? undefined : rosterPlayerHref}
                     />
                   ))}
                   {!modifying &&
                     forwardExtras.length > 0 &&
-                    renderExtras("Extra Forwards", forwardExtras, "F")}
+                    renderExtras("Extra Forwards", forwardExtras)}
                 </Section>
 
                 <Section
@@ -576,13 +577,14 @@ export const Roster = () => {
                       editable={modifying}
                       swappedIds={swappedIds}
                       onPlayerClick={
-                        modifying ? openDefensePicker(i) : navigateToPlayer("D")
+                        modifying ? openDefensePicker(i) : undefined
                       }
+                      playerHref={modifying ? undefined : rosterPlayerHref}
                     />
                   ))}
                   {!modifying &&
                     defenseExtras.length > 0 &&
-                    renderExtras("Extra Defensemen", defenseExtras, "D")}
+                    renderExtras("Extra Defensemen", defenseExtras)}
                 </Section>
 
                 {goalieUnits.length > 0 && (
@@ -601,6 +603,7 @@ export const Roster = () => {
                           season={season}
                           editable={modifying}
                           swapped={swappedIds.has(g.playerId)}
+                          href={modifying ? undefined : rosterPlayerHref(g)}
                           onPlayerClick={
                             modifying
                               ? () =>
@@ -610,7 +613,7 @@ export const Roster = () => {
                                     playerIndex: 0,
                                     currentPlayerId: g.playerId,
                                   })
-                              : navigateToPlayer("G")
+                              : undefined
                           }
                         />
                       ))}

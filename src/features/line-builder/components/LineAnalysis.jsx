@@ -8,6 +8,7 @@ import {
   Link2,
   ArrowUpRight,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { playerUtils } from "utils/playerUtils";
 import { useTheme } from "providers/ThemeContext";
 const TRAIT_STYLES = {
@@ -92,12 +93,7 @@ const StatTile = ({ label, value, hint }) => (
     )}
   </div>
 );
-export const LineAnalysis = ({
-  analysis,
-  season,
-  onPlayerClick,
-  onLoadUnit,
-}) => {
+export const LineAnalysis = ({ analysis, season, playerHref, onLoadUnit }) => {
   const { actualTheme } = useTheme();
   const { identity, ratings, quality, traits, chemistry, projection } =
     analysis;
@@ -172,10 +168,9 @@ export const LineAnalysis = ({
         >
           <div className="space-y-2">
             {analysis.players.map((player) => (
-              <button
+              <Link
                 key={player.playerId}
-                type="button"
-                onClick={() => onPlayerClick?.(player)}
+                to={playerHref(player)}
                 className="flex w-full items-center gap-3 rounded-2xl border border-white/5 bg-white/[0.03] p-2.5 text-left transition hover:bg-white/[0.07] light:border-slate-200/60 light:bg-gray-100/60 light:hover:bg-gray-100"
               >
                 <img
@@ -215,7 +210,7 @@ export const LineAnalysis = ({
                     {format(player.impactPercentile)}
                   </div>
                 </div>
-              </button>
+              </Link>
             ))}
           </div>
           <div className="mt-3 grid grid-cols-3 gap-2">

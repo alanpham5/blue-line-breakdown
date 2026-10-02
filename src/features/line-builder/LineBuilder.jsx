@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Loader2, Users, Shield, RotateCcw, Wand2 } from "lucide-react";
 import { apiService } from "lib/api/apiService";
+import { playerUtils } from "utils/playerUtils";
 import { Header } from "components/layout/Header";
 import { Footer } from "components/layout/Footer";
 import { AppSelect } from "components/ui/AppSelect";
@@ -28,7 +29,6 @@ const seasonOptions = () => {
 };
 export const LineBuilder = () => {
   const linesEnabled = useLinesEnabled();
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const seasons = useMemo(seasonOptions, []);
   const seasonParam = searchParams.get("season") || searchParams.get("year");
@@ -289,8 +289,8 @@ export const LineBuilder = () => {
             <LineAnalysis
               analysis={analysis}
               season={season}
-              onPlayerClick={(player) =>
-                navigate(`/players/v2/${player.playerId}?season=${season}`)
+              playerHref={(player) =>
+                playerUtils.playerProfilePath(player.playerId, season)
               }
               onLoadUnit={handleLoadUnit}
             />

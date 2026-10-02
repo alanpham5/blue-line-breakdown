@@ -24,6 +24,7 @@ export const UnitCard = ({
   editable = false,
   swappedIds,
   onPlayerClick,
+  playerHref,
 }) => {
   const r = unit.ratings || {};
   const cols =
@@ -61,7 +62,10 @@ export const UnitCard = ({
             season={season}
             editable={editable}
             swapped={!!swappedIds?.has(player.playerId)}
-            onPlayerClick={() => onPlayerClick?.(player, i)}
+            href={playerHref?.(player)}
+            onPlayerClick={
+              onPlayerClick ? () => onPlayerClick(player, i) : undefined
+            }
           />
         ))}
       </div>

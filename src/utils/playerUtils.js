@@ -36,6 +36,11 @@ export const playerUtils = {
     }
     return `https://assets.nhle.com/mugs/nhl/latest/${playerId}.png`;
   },
+  playerProfilePath(playerId, season = null) {
+    return season == null
+      ? `/players/v2/${playerId}`
+      : `/players/v2/${playerId}?season=${season}`;
+  },
   getDefaultHeadshot() {
     return "https://assets.nhle.com/mugs/nhl/default-skater.png";
   },

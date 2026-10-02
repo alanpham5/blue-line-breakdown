@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import { playerUtils } from "utils/playerUtils";
-export const SimilarPlayerCard = ({ player, onClick, animationKey }) => {
+export const SimilarPlayerCard = ({ player, href, onClick, animationKey }) => {
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const prevAnimationKeyRef = useRef(animationKey);
   const isInitialMount = useRef(true);
@@ -26,8 +27,10 @@ export const SimilarPlayerCard = ({ player, onClick, animationKey }) => {
       return () => clearTimeout(timer);
     }
   }, [animationKey, isMobile]);
+  const CardElement = href ? Link : "div";
   return (
-    <div
+    <CardElement
+      {...(href ? { to: href } : {})}
       className={`group flex min-w-0 cursor-pointer flex-col items-center py-2 text-center transition-all duration-300 touch-manipulation ${shouldAnimate ? "player-card-enter" : ""} ${isMobile ? "" : "hover:-translate-y-1"}`}
       onClick={() => onClick?.(player)}
     >
@@ -62,6 +65,6 @@ export const SimilarPlayerCard = ({ player, onClick, animationKey }) => {
           ? playerUtils.formatCareerSpan(player.firstSeason, player.lastSeason)
           : playerUtils.formatSeason(player.season)}
       </p>
-    </div>
+    </CardElement>
   );
 };

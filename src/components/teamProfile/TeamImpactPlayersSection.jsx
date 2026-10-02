@@ -1,4 +1,5 @@
 import { ArrowUpRight, Users } from "lucide-react";
+import { Link } from "react-router-dom";
 import { playerUtils } from "utils/playerUtils";
 import { useTheme } from "providers/ThemeContext";
 
@@ -26,6 +27,7 @@ export const TeamImpactPlayersSection = ({
   season,
   shareable = false,
   onPlayerClick,
+  playerHref,
   onRosterClick,
 }) => {
   const { actualTheme } = useTheme();
@@ -89,22 +91,29 @@ export const TeamImpactPlayersSection = ({
                     team,
                     season
                   );
-                  return (
-                    <div
-                      key={player.playerId}
-                      className={`flex items-center py-3 first:pt-0 last:pb-0 ${shareable ? "gap-4" : "gap-3"} ${onPlayerClick ? "cursor-pointer rounded-2xl transition hover:bg-white/[0.04]" : ""}`}
-                      onClick={() => onPlayerClick?.(player)}
-                      onKeyDown={(event) => {
-                        if (
-                          onPlayerClick &&
-                          (event.key === "Enter" || event.key === " ")
-                        ) {
-                          event.preventDefault();
-                          onPlayerClick(player);
+                  const href = shareable ? null : playerHref?.(player);
+                  const interactive = Boolean(href || onPlayerClick);
+                  const RowElement = href ? Link : "div";
+                  const rowInteraction = href
+                    ? { to: href }
+                    : onPlayerClick
+                      ? {
+                          onClick: () => onPlayerClick(player),
+                          onKeyDown: (event) => {
+                            if (event.key === "Enter" || event.key === " ") {
+                              event.preventDefault();
+                              onPlayerClick(player);
+                            }
+                          },
+                          role: "button",
+                          tabIndex: 0,
                         }
-                      }}
-                      role={onPlayerClick ? "button" : undefined}
-                      tabIndex={onPlayerClick ? 0 : undefined}
+                      : {};
+                  return (
+                    <RowElement
+                      key={player.playerId}
+                      {...rowInteraction}
+                      className={`flex items-center py-3 first:pt-0 last:pb-0 ${shareable ? "gap-4" : "gap-3"} ${interactive ? "cursor-pointer rounded-2xl transition hover:bg-white/[0.04]" : ""}`}
                     >
                       <img
                         src={
@@ -144,7 +153,7 @@ export const TeamImpactPlayersSection = ({
                           </span>
                         </div>
                       </div>
-                    </div>
+                    </RowElement>
                   );
                 })}
               </div>

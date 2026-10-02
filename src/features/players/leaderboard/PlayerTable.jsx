@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowUp, ArrowDown, ChevronsUpDown } from "lucide-react";
 import { playerUtils } from "utils/playerUtils";
 import { useTheme } from "providers/ThemeContext";
@@ -91,9 +91,18 @@ export const PlayerTable = ({ players, position }) => {
     );
   };
 
-  const openPlayer = (player) => {
-    if (!player?.playerId) return;
-    navigate(`/players/v2/${player.playerId}?season=${player.season}`);
+  const openRow = (event, href) => {
+    if (event.metaKey || event.ctrlKey) {
+      window.open(href, "_blank", "noopener");
+      return;
+    }
+    navigate(href);
+  };
+
+  const openRowInNewTab = (event, href) => {
+    if (event.button !== 1 || event.target.closest("a")) return;
+    event.preventDefault();
+    window.open(href, "_blank", "noopener");
   };
 
   const groupHeaderColor = (type) => {
@@ -165,10 +174,15 @@ export const PlayerTable = ({ players, position }) => {
                 player.season,
                 actualTheme
               );
+              const href = playerUtils.playerProfilePath(
+                player.playerId,
+                player.season
+              );
               return (
                 <tr
                   key={`${player.playerId}-${player.season}`}
-                  onClick={() => openPlayer(player)}
+                  onClick={(event) => openRow(event, href)}
+                  onAuxClick={(event) => openRowInNewTab(event, href)}
                   className="cursor-pointer border-t border-white/5 transition-colors hover:bg-white/5 light:border-slate-200 light:hover:bg-slate-900/5"
                 >
                   <td className="sticky left-0 z-10 bg-[var(--glass-bg-strong)] px-2 py-2">
@@ -196,9 +210,13 @@ export const PlayerTable = ({ players, position }) => {
                           />
                         </div>
                       )}
-                      <span className="whitespace-nowrap font-semibold text-white light:text-gray-900">
+                      <Link
+                        to={href}
+                        onClick={(event) => event.stopPropagation()}
+                        className="whitespace-nowrap font-semibold text-white hover:underline light:text-gray-900"
+                      >
                         {player.name}
-                      </span>
+                      </Link>
                     </div>
                   </td>
                   {!isMobile && (

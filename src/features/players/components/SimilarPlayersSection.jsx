@@ -17,6 +17,7 @@ const SEASON_SIMILARITY_TEXT =
 export const SimilarPlayersSection = ({
   players,
   onPlayerClick,
+  playerHref,
   filterYear = null,
   onFilterYearChange,
   title = "Most Similar Players",
@@ -108,6 +109,7 @@ export const SimilarPlayersSection = ({
           >
             <SimilarPlayerCard
               player={player}
+              href={playerHref?.(player)}
               onClick={onPlayerClick}
               animationKey={animationKey}
             />

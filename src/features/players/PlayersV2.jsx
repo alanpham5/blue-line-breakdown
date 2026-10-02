@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Activity, Loader2, Shield, Target } from "lucide-react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { Header } from "components/layout/Header";
 import { Footer } from "components/layout/Footer";
 import { GeneralSearch } from "components/search/GeneralSearch";
@@ -42,7 +42,6 @@ const IMPACT_TOOLTIPS = {
 
 export const PlayersV2 = () => {
   const { playerId } = useParams();
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [playerData, setPlayerData] = useState(null);
   const [loading, setLoading] = useState(Boolean(playerId));
@@ -179,15 +178,11 @@ export const PlayersV2 = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleSimilarCareerClick = (player) => {
-    navigate(`/players/v2/${player.playerId}`);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const handleSimilarPlayerClick = (player) => {
-    navigate(`/players/v2/${player.playerId}?season=${player.season}`);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  const similarCareerHref = (player) =>
+    playerUtils.playerProfilePath(player.playerId);
+  const similarSeasonHref = (player) =>
+    playerUtils.playerProfilePath(player.playerId, player.season);
 
   const qualityCards = playerData && (
     <>
@@ -374,7 +369,8 @@ export const PlayersV2 = () => {
                 <section className="space-y-4 sm:space-y-6">
                   <SimilarPlayersSection
                     players={playerData.similarCareers || []}
-                    onPlayerClick={handleSimilarCareerClick}
+                    playerHref={similarCareerHref}
+                    onPlayerClick={scrollToTop}
                     title="Most Similar Careers"
                     tooltipTitle="Career Similarity"
                     tooltipText="Careers are compared on ice-time-weighted playing style and impact across every eligible season, plus peak impact, longevity and per-game production, against the same position."
@@ -396,7 +392,8 @@ export const PlayersV2 = () => {
                   )}
                   <SimilarPlayersSection
                     players={playerData.similarPlayers || []}
-                    onPlayerClick={handleSimilarPlayerClick}
+                    playerHref={similarSeasonHref}
+                    onPlayerClick={scrollToTop}
                     filterYear={similarSeason}
                     onFilterYearChange={(value) =>
                       updateParam("similarSeason", value)
