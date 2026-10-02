@@ -26,6 +26,14 @@ export const playerUtils = {
     if (playerId === 8471675 && parseInt(season) === 2009) {
       return "/crosby.png";
     }
+    if (team && season) {
+      const seasonYear = parseInt(season);
+      const teamCode =
+        team.toUpperCase() === "ARI" && seasonYear <= 2013
+          ? "PHX"
+          : team.toUpperCase();
+      return `https://assets.nhle.com/mugs/nhl/${seasonYear}${seasonYear + 1}/${teamCode}/${playerId}.png`;
+    }
     return `https://assets.nhle.com/mugs/nhl/latest/${playerId}.png`;
   },
   getDefaultHeadshot() {

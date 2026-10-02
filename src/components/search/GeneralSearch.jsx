@@ -6,13 +6,41 @@ import { apiService, isAbortError } from "lib/api/apiService";
 import { useTheme } from "providers/ThemeContext";
 import { playerUtils } from "utils/playerUtils";
 import { LookupHeader } from "components/search/LookupHeader";
+import {
+  LOCAL_SEARCH_MIN_LENGTH,
+  loadSearchIndex,
+  searchIndex as matchSearchIndex,
+} from "lib/search/localSearch";
 
 const PANEL_GAP = 8;
 const SEARCH_DEBOUNCE_MS = 120;
+const INDEX_IDLE_TIMEOUT_MS = 1500;
 
-const prefetchPlayerPage = (result) => {
+const opensCurrentView = (result, currentSeason) =>
+  currentSeason != null && Number(result.latestSeason) >= currentSeason - 1;
+
+const playerPagePath = (result, currentSeason) =>
+  opensCurrentView(result, currentSeason)
+    ? `/players/v2/${result.playerId}?season=${currentSeason}`
+    : `/players/v2/${result.playerId}`;
+
+const prefetchPlayerPage = (result, currentSeason) => {
   if (result?.type !== "player" || !result.playerId) return;
-  apiService.fetchPlayerCareerV2(result.playerId).catch(() => {});
+  const request = opensCurrentView(result, currentSeason)
+    ? apiService.fetchPlayerProfileV2(result.playerId, currentSeason)
+    : apiService.fetchPlayerCareerV2(result.playerId);
+  request.catch(() => {});
+};
+
+const whenIdle = (callback) => {
+  if (window.requestIdleCallback) {
+    const handle = window.requestIdleCallback(callback, {
+      timeout: INDEX_IDLE_TIMEOUT_MS,
+    });
+    return () => window.cancelIdleCallback(handle);
+  }
+  const handle = window.setTimeout(callback, 200);
+  return () => window.clearTimeout(handle);
 };
 const PANEL_VIEWPORT_MARGIN = 12;
 const PANEL_MAX_HEIGHT = 448;
@@ -57,6 +85,16 @@ export const GeneralSearch = ({
   const [activeIndex, setActiveIndex] = useState(-1);
   const isPlayerScope = scope === "players";
   const isTeamScope = scope === "teams";
+  const [localIndex, setLocalIndex] = useState(null);
+  const currentSeason = localIndex?.currentSeason ?? null;
+
+  const ensureLocalIndex = () => {
+    loadSearchIndex()
+      .then(setLocalIndex)
+      .catch(() => {});
+  };
+
+  useEffect(() => whenIdle(ensureLocalIndex), []);
 
   useEffect(() => {
     suppressPrefilledSearchRef.current = Boolean(initialQuery);
@@ -73,12 +111,30 @@ export const GeneralSearch = ({
       return undefined;
     }
     const trimmed = query.trim();
-    if (trimmed.length < 2) {
+    if (trimmed.length < LOCAL_SEARCH_MIN_LENGTH) {
       setResults([]);
       setError("");
       setOpen(false);
       setActiveIndex(-1);
       return undefined;
+    }
+
+    if (localIndex) {
+      const localResults = matchSearchIndex(localIndex, trimmed, {
+        scope,
+        limit: 10,
+      });
+      if (localResults.length > 0) {
+        setResults(localResults);
+        setError("");
+        setLoading(false);
+        setOpen(true);
+        setActiveIndex(-1);
+        prefetchPlayerPage(localResults[0], localIndex.currentSeason);
+        return undefined;
+      }
+      setResults([]);
+      setActiveIndex(-1);
     }
 
     let cancelled = false;
@@ -107,7 +163,7 @@ export const GeneralSearch = ({
             : response.results || [];
         if (!cancelled) {
           setResults(nextResults);
-          prefetchPlayerPage(nextResults[0]);
+          prefetchPlayerPage(nextResults[0], currentSeason);
           setOpen(true);
           setActiveIndex(-1);
         }
@@ -127,7 +183,7 @@ export const GeneralSearch = ({
       window.clearTimeout(timeoutId);
       controller.abort();
     };
-  }, [isPlayerScope, isTeamScope, query]);
+  }, [currentSeason, isPlayerScope, isTeamScope, localIndex, query, scope]);
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -159,8 +215,9 @@ export const GeneralSearch = ({
   }, [open, results.length, error, loading]);
 
   useEffect(() => {
-    if (activeIndex >= 0) prefetchPlayerPage(results[activeIndex]);
-  }, [activeIndex, results]);
+    if (activeIndex >= 0)
+      prefetchPlayerPage(results[activeIndex], currentSeason);
+  }, [activeIndex, currentSeason, results]);
 
   const openResult = (result) => {
     setOpen(false);
@@ -177,7 +234,7 @@ export const GeneralSearch = ({
       );
       return;
     }
-    navigate(`/players/v2/${result.playerId}`);
+    navigate(playerPagePath(result, currentSeason));
   };
 
   const handleKeyDown = (event) => {
@@ -272,6 +329,7 @@ export const GeneralSearch = ({
             setQuery(event.target.value);
           }}
           onFocus={() => {
+            ensureLocalIndex();
             if (results.length > 0 || error) setOpen(true);
           }}
           onKeyDown={handleKeyDown}
@@ -336,7 +394,7 @@ export const GeneralSearch = ({
                     : playerUtils.getPlayerHeadshot(
                         result.playerId,
                         result.team,
-                        result.latestSeason
+                        null
                       );
                   return (
                     <button
@@ -351,7 +409,7 @@ export const GeneralSearch = ({
                       type="button"
                       onMouseEnter={() => {
                         setActiveIndex(index);
-                        prefetchPlayerPage(result);
+                        prefetchPlayerPage(result, currentSeason);
                       }}
                       onClick={() => openResult(result)}
                       className={`flex w-full items-center gap-3 rounded-[18px] px-3 py-2.5 text-left transition-colors ${

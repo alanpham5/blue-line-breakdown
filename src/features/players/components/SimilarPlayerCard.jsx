@@ -41,7 +41,7 @@ export const SimilarPlayerCard = ({ player, onClick, animationKey }) => {
             src={playerUtils.getPlayerHeadshot(
               player.playerId,
               player.team,
-              player.season
+              player.firstSeason ? null : player.season
             )}
             alt={player.name}
             className="w-full h-full object-cover"

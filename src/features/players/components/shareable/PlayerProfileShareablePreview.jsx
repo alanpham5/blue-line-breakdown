@@ -247,7 +247,7 @@ export const PlayerProfileShareablePreview = ({
                       playerUtils.getPlayerHeadshot(
                         similarPlayer.playerId,
                         similarPlayer.team,
-                        similarPlayer.season
+                        isCareer ? null : similarPlayer.season
                       )
                     )}
                     alt={similarPlayer.name}

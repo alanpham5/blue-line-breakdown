@@ -75,6 +75,10 @@ export const PlayerHeader = ({
   const didWinStanleyCup =
     !isCareer && playerUtils.didWinStanleyCup(player.team, player.season);
   const archetypes = getArchetypeNames(player.archetypes);
+  const headshotSeason =
+    isCareer || playerUtils.isCurrentSeason(player.season, currentSeason)
+      ? null
+      : player.season;
   useLayoutEffect(() => {
     const node = playerNameRef.current;
     if (!node) return undefined;
@@ -166,7 +170,7 @@ export const PlayerHeader = ({
                 src={playerUtils.getPlayerHeadshot(
                   player.playerId,
                   player.team,
-                  player.season
+                  headshotSeason
                 )}
                 alt={player.name}
                 className="w-full h-full object-cover"

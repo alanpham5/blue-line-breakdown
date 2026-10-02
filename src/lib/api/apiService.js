@@ -166,6 +166,11 @@ export const apiService = {
       }
     );
   },
+  fetchSearchIndex() {
+    return request("/v2/search/index", {
+      errorMessage: "Failed to load the search index",
+    });
+  },
   searchPlayersV2(query, limit = 8, { signal } = {}) {
     const params = new URLSearchParams({
       q: query,
