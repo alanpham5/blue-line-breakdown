@@ -43,6 +43,67 @@ const request = (path, { method = "GET", body, errorMessage, signal } = {}) =>
     }
     return res.json();
   });
+const RESPONSE_CACHE_TTL_MS = 5 * 60 * 1000;
+const RESPONSE_CACHE_LIMIT = 200;
+const responseCache = new Map();
+
+const abortError = () => new DOMException("Aborted", "AbortError");
+
+const followUnlessAborted = (promise, signal) => {
+  if (!signal) return promise;
+  if (signal.aborted) return Promise.reject(abortError());
+  return new Promise((resolve, reject) => {
+    const onAbort = () => reject(abortError());
+    signal.addEventListener("abort", onAbort, { once: true });
+    promise
+      .then(resolve, reject)
+      .finally(() => signal.removeEventListener("abort", onAbort));
+  });
+};
+
+const readCachedResponse = (path, { allowPending }) => {
+  const entry = responseCache.get(path);
+  if (!entry) return null;
+  if (entry.expiresAt <= Date.now()) {
+    responseCache.delete(path);
+    return null;
+  }
+  if (!entry.settled && !allowPending) return null;
+  responseCache.delete(path);
+  responseCache.set(path, entry);
+  return entry.promise;
+};
+
+const rememberResponse = (path, promise) => {
+  const entry = {
+    promise,
+    settled: false,
+    expiresAt: Date.now() + RESPONSE_CACHE_TTL_MS,
+  };
+  responseCache.set(path, entry);
+  promise.then(
+    () => {
+      entry.settled = true;
+    },
+    () => {
+      if (responseCache.get(path) === entry) responseCache.delete(path);
+    }
+  );
+  while (responseCache.size > RESPONSE_CACHE_LIMIT) {
+    responseCache.delete(responseCache.keys().next().value);
+  }
+};
+
+const cachedRequest = (path, { errorMessage, signal, fresh = false } = {}) => {
+  const cached = fresh
+    ? null
+    : readCachedResponse(path, { allowPending: !signal });
+  if (cached) return followUnlessAborted(cached, signal);
+  const promise = request(path, { errorMessage, signal });
+  rememberResponse(path, promise);
+  return promise;
+};
+
 export const apiService = {
   async searchPlayer(
     playerName,
@@ -97,7 +158,7 @@ export const apiService = {
     });
   },
   searchAutofill(query, limit = 5, { signal } = {}) {
-    return request(
+    return cachedRequest(
       `/search/autofill?q=${encodeURIComponent(query)}&limit=${limit}`,
       {
         errorMessage: "Failed to fetch autofill suggestions",
@@ -110,7 +171,7 @@ export const apiService = {
       q: query,
       limit: String(limit),
     });
-    return request(`/v2/players/search?${params.toString()}`, {
+    return cachedRequest(`/v2/players/search?${params.toString()}`, {
       errorMessage: "Failed to search players",
       signal,
     });
@@ -124,8 +185,19 @@ export const apiService = {
     const params = new URLSearchParams({ limit: String(limit) });
     if (season) params.set("season", String(season));
     if (similarSeason) params.set("similarSeason", String(similarSeason));
-    return request(`/v2/players/${playerId}?${params.toString()}`, {
+    return cachedRequest(`/v2/players/${playerId}?${params.toString()}`, {
       errorMessage: "Failed to fetch player profile",
+    });
+  },
+  fetchGoalieShotMap(playerId, season) {
+    return cachedRequest(
+      `/v2/players/${playerId}/goalie-shot-map?season=${encodeURIComponent(season)}`,
+      { errorMessage: "NHL EDGE shot data is unavailable" }
+    );
+  },
+  fetchPlayerCareerV2(playerId) {
+    return cachedRequest(`/v2/players/${playerId}/career`, {
+      errorMessage: "Failed to fetch player career",
     });
   },
   fetchPlayersV2Status() {
@@ -138,26 +210,27 @@ export const apiService = {
       q: query,
       limit: String(limit),
     });
-    return request(`/v2/search?${params.toString()}`, {
+    return cachedRequest(`/v2/search?${params.toString()}`, {
       errorMessage: "Failed to search players and teams",
       signal,
     });
   },
-  fetchLeaderboard(position, season = null, limit = null) {
+  fetchLeaderboard(position, season = null, limit = null, { fresh } = {}) {
     const params = new URLSearchParams({ position });
     if (season) params.set("season", season);
     if (limit) params.set("limit", limit);
-    return request(`/v2/leaderboard?${params.toString()}`, {
+    return cachedRequest(`/v2/leaderboard?${params.toString()}`, {
       errorMessage: "Failed to fetch leaderboard",
+      fresh,
     });
   },
   fetchTeams(year) {
-    return request(`/v2/teams?season=${year}`, {
+    return cachedRequest(`/v2/teams?season=${year}`, {
       errorMessage: "Failed to fetch teams",
     });
   },
   fetchTeamSummary(team, year) {
-    return request(
+    return cachedRequest(
       `/v2/teams/${encodeURIComponent(team)}?season=${encodeURIComponent(year)}`,
       {
         errorMessage: "Failed to fetch team summary",
@@ -169,7 +242,7 @@ export const apiService = {
       q: query,
       limit: String(limit),
     });
-    return request(`/v2/teams/search?${params.toString()}`, {
+    return cachedRequest(`/v2/teams/search?${params.toString()}`, {
       errorMessage: "Failed to search teams",
       signal,
     });
@@ -274,7 +347,7 @@ export const apiService = {
     }
   },
   fetchFeatured() {
-    return request("/v2/featured", {
+    return cachedRequest("/v2/featured", {
       errorMessage: "Failed to fetch featured data",
     });
   },

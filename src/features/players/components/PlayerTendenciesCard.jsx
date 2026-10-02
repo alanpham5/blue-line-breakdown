@@ -1,5 +1,6 @@
 import { Info, PieChart } from "lucide-react";
 import { Tooltip } from "components/ui/Tooltip";
+import { GoalieSaveHeatmap } from "features/players/components/GoalieSaveHeatmap";
 
 const clampPercent = (value) => Math.min(100, Math.max(0, Number(value) || 0));
 
@@ -85,12 +86,73 @@ const describeWedge = (radius, startAngle, endAngle) => {
   ].join(" ");
 };
 
+const eventShare = (tendency, totalActions, count) =>
+  totalActions > 0
+    ? (Math.max(0, Number(tendency.percentage) || 0) / totalActions) * 100
+    : 100 / count;
+
+const TendencyShareBar = ({ tendencies, totalActions }) => (
+  <div
+    className="flex h-6 w-full overflow-hidden rounded-full border border-white/10 light:border-slate-200"
+    role="img"
+    aria-label={tendencies
+      .map((tendency) => `${tendency.label}: ${tendency.percentage}% of events`)
+      .join(". ")}
+  >
+    {tendencies.map((tendency) => {
+      const share = eventShare(tendency, totalActions, tendencies.length);
+      return (
+        <div
+          key={tendency.label}
+          className="flex min-w-0 items-center justify-center gap-1 whitespace-nowrap px-1.5 text-[0.68rem] font-bold tabular-nums text-white transition-all duration-1000 ease-out"
+          style={{
+            width: `${share}%`,
+            background: `linear-gradient(135deg, ${tendency.colors.start}, ${tendency.colors.middle} 55%, ${tendency.colors.end})`,
+          }}
+        >
+          {share >= 30 && (
+            <span className="font-semibold">{tendency.label}</span>
+          )}
+          {share >= 12 && `${Math.round(share)}%`}
+        </div>
+      );
+    })}
+  </div>
+);
+
+const TendencyPercentileChips = ({ tendencies }) => (
+  <div className="grid grid-cols-2 gap-2">
+    {tendencies.map((tendency) => (
+      <div
+        key={tendency.label}
+        className="flex items-center justify-between gap-1.5 rounded-xl border border-white/[0.05] bg-white/[0.025] px-2 py-1.5 light:border-slate-200 light:bg-white/55"
+      >
+        <span className="flex min-w-0 items-center gap-1 whitespace-nowrap text-[0.7rem] font-semibold text-gray-300 light:text-gray-700">
+          <span
+            className="h-2 w-2 shrink-0 rounded-full"
+            style={{ backgroundColor: tendency.colors.middle }}
+          />
+          {tendency.label}
+        </span>
+        <span className="shrink-0 text-sm font-bold tabular-nums text-white light:text-gray-900">
+          {Math.round(tendency.percentile)}
+          <span className="ml-0.5 text-[0.55rem] font-semibold uppercase text-gray-500">
+            pctl
+          </span>
+        </span>
+      </div>
+    ))}
+  </div>
+);
+
 export const PlayerTendenciesCard = ({
   tendencies,
   showInfo = true,
   forceDark = false,
   shareable = false,
+  shotMap = null,
 }) => {
+  const isBar = Boolean(shotMap);
   const visibleTendencies = tendencies.slice(0, 4);
   const totalActions = visibleTendencies.reduce(
     (total, tendency) => total + Math.max(0, Number(tendency.percentage) || 0),
@@ -139,7 +201,7 @@ export const PlayerTendenciesCard = ({
       className={`liquid-glass-strong liquid-glass-animate flex h-full flex-col rounded-[32px] ${shareable ? "p-6" : "p-5 sm:p-6"} ${forceDark ? "force-dark-player-card" : ""}`}
     >
       <div
-        className={`${shareable ? "mb-3" : "mb-5"} flex items-start justify-between gap-3`}
+        className={`${shareable || isBar ? "mb-3" : "mb-5"} flex items-start justify-between gap-3`}
       >
         <div className="flex min-w-0 items-center gap-2">
           <PieChart
@@ -151,7 +213,7 @@ export const PlayerTendenciesCard = ({
             >
               Tendencies
             </h3>
-            {!shareable && (
+            {!shareable && !isBar && (
               <p className="mt-0.5 text-xs text-gray-400 light:text-gray-500">
                 angle = event share · radius = percentile
               </p>
@@ -169,9 +231,9 @@ export const PlayerTendenciesCard = ({
                   How to read this chart
                 </div>
                 <div>
-                  A wider slice means the action happens more often. Its reach
-                  from the center toward the outer ring shows the player&apos;s
-                  league percentile. Each action keeps a consistent color.
+                  {isBar
+                    ? "The bar splits tracked events between the two actions; a longer segment means it happens more often. Each chip shows the league percentile. The rink map colors save percentage by shot location against the league."
+                    : "A wider slice means the action happens more often. Its reach from the center toward the outer ring shows the player's league percentile. Each action keeps a consistent color."}
                 </div>
               </div>
             }
@@ -186,124 +248,142 @@ export const PlayerTendenciesCard = ({
         )}
       </div>
 
-      <div
-        className={`grid flex-1 items-center ${shareable ? "grid-cols-[250px_minmax(0,1fr)] gap-5" : "gap-6 sm:grid-cols-[minmax(210px,0.8fr)_minmax(280px,1.2fr)] lg:gap-10"}`}
-      >
-        <div className="flex justify-center">
-          <svg
-            className={`aspect-square w-full ${shareable ? "max-w-[250px]" : "max-w-[280px]"} overflow-visible drop-shadow-[0_18px_28px_rgba(0,0,0,0.24)]`}
-            viewBox="0 0 220 220"
-            role="img"
-            aria-label={chartTendencies
-              .map(
-                (tendency) =>
-                  `${tendency.label}: ${tendency.percentage}% of actions, ${getOrdinal(tendency.percentile)} league percentile`
-              )
-              .join(". ")}
-          >
-            <defs>
-              <radialGradient id="tendency-backdrop" cx="32%" cy="24%" r="88%">
-                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.13" />
-                <stop offset="58%" stopColor="#94a3b8" stopOpacity="0.08" />
-                <stop offset="100%" stopColor="#020617" stopOpacity="0.2" />
-              </radialGradient>
-              {chartTendencies.map((tendency) => (
-                <linearGradient
-                  key={tendency.gradientId}
-                  id={tendency.gradientId}
-                  x1="12%"
-                  y1="5%"
-                  x2="88%"
-                  y2="100%"
-                >
-                  <stop offset="0%" stopColor={tendency.colors.start} />
-                  <stop offset="52%" stopColor={tendency.colors.middle} />
-                  <stop offset="100%" stopColor={tendency.colors.end} />
-                </linearGradient>
-              ))}
-            </defs>
-            <circle
-              cx="110"
-              cy="110"
-              r="92"
-              fill="url(#tendency-backdrop)"
-              className="stroke-white/10 light:stroke-slate-300"
-              strokeWidth="1"
-            />
-
-            {chartTendencies.map((tendency) => (
-              <path
-                key={tendency.label}
-                d={describeWedge(
-                  92 * (clampPercent(tendency.percentile) / 100),
-                  tendency.startAngle,
-                  tendency.endAngle
-                )}
-                fill={`url(#${tendency.gradientId})`}
-                className="transition-all duration-1000 ease-out"
-              />
-            ))}
-          </svg>
+      {isBar ? (
+        <div className="flex flex-1 flex-col gap-2.5">
+          <TendencyShareBar
+            tendencies={legendTendencies}
+            totalActions={totalActions}
+          />
+          <TendencyPercentileChips tendencies={legendTendencies} />
+          <GoalieSaveHeatmap shotMap={shotMap} />
         </div>
+      ) : (
+        <>
+          <div
+            className={`grid flex-1 items-center ${shareable ? "grid-cols-[250px_minmax(0,1fr)] gap-5" : "gap-6 sm:grid-cols-[minmax(210px,0.8fr)_minmax(280px,1.2fr)] lg:gap-10"}`}
+          >
+            <div className="flex justify-center">
+              <svg
+                className={`aspect-square w-full ${shareable ? "max-w-[250px]" : "max-w-[280px]"} overflow-visible drop-shadow-[0_18px_28px_rgba(0,0,0,0.24)]`}
+                viewBox="0 0 220 220"
+                role="img"
+                aria-label={chartTendencies
+                  .map(
+                    (tendency) =>
+                      `${tendency.label}: ${tendency.percentage}% of actions, ${getOrdinal(tendency.percentile)} league percentile`
+                  )
+                  .join(". ")}
+              >
+                <defs>
+                  <radialGradient
+                    id="tendency-backdrop"
+                    cx="32%"
+                    cy="24%"
+                    r="88%"
+                  >
+                    <stop offset="0%" stopColor="#ffffff" stopOpacity="0.13" />
+                    <stop offset="58%" stopColor="#94a3b8" stopOpacity="0.08" />
+                    <stop offset="100%" stopColor="#020617" stopOpacity="0.2" />
+                  </radialGradient>
+                  {chartTendencies.map((tendency) => (
+                    <linearGradient
+                      key={tendency.gradientId}
+                      id={tendency.gradientId}
+                      x1="12%"
+                      y1="5%"
+                      x2="88%"
+                      y2="100%"
+                    >
+                      <stop offset="0%" stopColor={tendency.colors.start} />
+                      <stop offset="52%" stopColor={tendency.colors.middle} />
+                      <stop offset="100%" stopColor={tendency.colors.end} />
+                    </linearGradient>
+                  ))}
+                </defs>
+                <circle
+                  cx="110"
+                  cy="110"
+                  r="92"
+                  fill="url(#tendency-backdrop)"
+                  className="stroke-white/10 light:stroke-slate-300"
+                  strokeWidth="1"
+                />
 
-        <div
-          className={`grid ${shareable ? "grid-cols-1 gap-2" : "gap-2.5 lg:grid-cols-2"}`}
-        >
-          {legendTendencies.map((tendency) => (
+                {chartTendencies.map((tendency) => (
+                  <path
+                    key={tendency.label}
+                    d={describeWedge(
+                      92 * (clampPercent(tendency.percentile) / 100),
+                      tendency.startAngle,
+                      tendency.endAngle
+                    )}
+                    fill={`url(#${tendency.gradientId})`}
+                    className="transition-all duration-1000 ease-out"
+                  />
+                ))}
+              </svg>
+            </div>
+
             <div
-              key={tendency.label}
-              className={`relative overflow-hidden rounded-2xl border border-white/[0.05] bg-white/[0.025] light:border-slate-200 light:bg-white/55 ${shareable ? "px-5 py-2" : "px-4 py-2.5"}`}
+              className={`grid ${shareable ? "grid-cols-1 gap-2" : "gap-2.5 lg:grid-cols-2"}`}
             >
-              <span
-                className="absolute inset-y-2 left-2.5 w-1 rounded-full shadow-[0_0_12px_currentColor]"
-                style={{
-                  backgroundColor: tendency.colors.middle,
-                  color: tendency.colors.middle,
-                }}
-              />
-              <div className="min-w-0 text-center">
-                <p
-                  className={`${shareable ? "text-base" : "text-sm"} truncate text-center font-semibold text-gray-200 light:text-gray-800`}
-                >
-                  {tendency.label}
-                </p>
+              {legendTendencies.map((tendency) => (
                 <div
-                  className={`${shareable ? "mt-1" : "mt-1.5"} grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] divide-x divide-white/[0.08] light:divide-slate-200`}
+                  key={tendency.label}
+                  className={`relative overflow-hidden rounded-2xl border border-white/[0.05] bg-white/[0.025] light:border-slate-200 light:bg-white/55 ${shareable ? "px-5 py-2" : "px-4 py-2.5"}`}
                 >
-                  <div
-                    className={`${shareable ? "flex-col gap-0" : "items-baseline gap-1"} flex min-w-0 justify-center px-2 text-center`}
-                  >
-                    <span
-                      className={`${shareable ? "text-lg" : "text-base"} font-bold tabular-nums text-white light:text-gray-900`}
+                  <span
+                    className="absolute inset-y-2 left-2.5 w-1 rounded-full shadow-[0_0_12px_currentColor]"
+                    style={{
+                      backgroundColor: tendency.colors.middle,
+                      color: tendency.colors.middle,
+                    }}
+                  />
+                  <div className="min-w-0 text-center">
+                    <p
+                      className={`${shareable ? "text-base" : "text-sm"} truncate text-center font-semibold text-gray-200 light:text-gray-800`}
                     >
-                      {tendency.percentage}%
-                    </span>
-                    <span
-                      className={`${shareable ? "text-[0.66rem] leading-tight" : "text-[0.62rem]"} font-semibold uppercase tracking-[0.06em] text-gray-500 light:text-gray-500`}
+                      {tendency.label}
+                    </p>
+                    <div
+                      className={`${shareable ? "mt-1" : "mt-1.5"} grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] divide-x divide-white/[0.08] light:divide-slate-200`}
                     >
-                      events
-                    </span>
-                  </div>
-                  <div
-                    className={`${shareable ? "flex-col gap-0" : "items-baseline gap-1"} flex min-w-0 justify-center px-2 text-center`}
-                  >
-                    <span
-                      className={`${shareable ? "text-lg" : "text-base"} font-bold tabular-nums text-white light:text-gray-900`}
-                    >
-                      {Math.round(tendency.percentile)}
-                    </span>
-                    <span
-                      className={`${shareable ? "text-[0.66rem] leading-tight" : "text-[0.62rem]"} font-semibold uppercase tracking-[0.06em] text-gray-500 light:text-gray-500`}
-                    >
-                      Percentile
-                    </span>
+                      <div
+                        className={`${shareable ? "flex-col gap-0" : "items-baseline gap-1"} flex min-w-0 justify-center px-2 text-center`}
+                      >
+                        <span
+                          className={`${shareable ? "text-lg" : "text-base"} font-bold tabular-nums text-white light:text-gray-900`}
+                        >
+                          {tendency.percentage}%
+                        </span>
+                        <span
+                          className={`${shareable ? "text-[0.66rem] leading-tight" : "text-[0.62rem]"} font-semibold uppercase tracking-[0.06em] text-gray-500 light:text-gray-500`}
+                        >
+                          events
+                        </span>
+                      </div>
+                      <div
+                        className={`${shareable ? "flex-col gap-0" : "items-baseline gap-1"} flex min-w-0 justify-center px-2 text-center`}
+                      >
+                        <span
+                          className={`${shareable ? "text-lg" : "text-base"} font-bold tabular-nums text-white light:text-gray-900`}
+                        >
+                          {Math.round(tendency.percentile)}
+                        </span>
+                        <span
+                          className={`${shareable ? "text-[0.66rem] leading-tight" : "text-[0.62rem]"} font-semibold uppercase tracking-[0.06em] text-gray-500 light:text-gray-500`}
+                        >
+                          Percentile
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
+        </>
+      )}
     </section>
   );
 };

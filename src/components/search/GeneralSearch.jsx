@@ -8,6 +8,12 @@ import { playerUtils } from "utils/playerUtils";
 import { LookupHeader } from "components/search/LookupHeader";
 
 const PANEL_GAP = 8;
+const SEARCH_DEBOUNCE_MS = 120;
+
+const prefetchPlayerPage = (result) => {
+  if (result?.type !== "player" || !result.playerId) return;
+  apiService.fetchPlayerCareerV2(result.playerId).catch(() => {});
+};
 const PANEL_VIEWPORT_MARGIN = 12;
 const PANEL_MAX_HEIGHT = 448;
 
@@ -101,6 +107,7 @@ export const GeneralSearch = ({
             : response.results || [];
         if (!cancelled) {
           setResults(nextResults);
+          prefetchPlayerPage(nextResults[0]);
           setOpen(true);
           setActiveIndex(-1);
         }
@@ -113,7 +120,7 @@ export const GeneralSearch = ({
       } finally {
         if (!cancelled) setLoading(false);
       }
-    }, 200);
+    }, SEARCH_DEBOUNCE_MS);
 
     return () => {
       cancelled = true;
@@ -151,6 +158,10 @@ export const GeneralSearch = ({
     };
   }, [open, results.length, error, loading]);
 
+  useEffect(() => {
+    if (activeIndex >= 0) prefetchPlayerPage(results[activeIndex]);
+  }, [activeIndex, results]);
+
   const openResult = (result) => {
     setOpen(false);
     suppressPrefilledSearchRef.current = true;
@@ -166,7 +177,7 @@ export const GeneralSearch = ({
       );
       return;
     }
-    navigate(`/players/v2/${result.playerId}?season=${destinationSeason}`);
+    navigate(`/players/v2/${result.playerId}`);
   };
 
   const handleKeyDown = (event) => {
@@ -338,7 +349,10 @@ export const GeneralSearch = ({
                           : `player-${result.playerId}`
                       }
                       type="button"
-                      onMouseEnter={() => setActiveIndex(index)}
+                      onMouseEnter={() => {
+                        setActiveIndex(index);
+                        prefetchPlayerPage(result);
+                      }}
                       onClick={() => openResult(result)}
                       className={`flex w-full items-center gap-3 rounded-[18px] px-3 py-2.5 text-left transition-colors ${
                         index === activeIndex

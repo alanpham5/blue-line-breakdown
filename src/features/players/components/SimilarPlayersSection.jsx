@@ -11,11 +11,17 @@ const seasons = Array.from(
   },
   (_, i) => 2008 + i
 );
+const SEASON_SIMILARITY_TEXT =
+  "Players are compared by playing style and calibre. The model weighs tendency and quality shape most heavily, then constrains matches by overall impact and cumulative contribution. Changing the season filter changes the comparison pool.";
+
 export const SimilarPlayersSection = ({
   players,
   onPlayerClick,
   filterYear = null,
   onFilterYearChange,
+  title = "Most Similar Players",
+  tooltipTitle = "Player Similarity",
+  tooltipText = SEASON_SIMILARITY_TEXT,
 }) => {
   const sharedFieldClassName =
     "app-field px-4 py-3.5 pr-10 text-base text-white light:text-gray-900";
@@ -47,7 +53,7 @@ export const SimilarPlayersSection = ({
           <Users className="h-6 w-6 shrink-0 text-amber-300 light:text-amber-600" />
           <div className="flex items-center gap-1.5 sm:gap-2">
             <h3 className="text-xl sm:text-2xl font-bold tracking-display text-white light:text-gray-900 whitespace-nowrap">
-              Most Similar Players
+              {title}
             </h3>
             <div className="absolute top-[22px] right-5 sm:static sm:top-auto sm:right-auto">
               <Tooltip
@@ -57,14 +63,10 @@ export const SimilarPlayersSection = ({
                 content={
                   <div className="space-y-2">
                     <div className="mb-1 font-semibold text-amber-300 light:text-amber-600">
-                      Player Similarity
+                      {tooltipTitle}
                     </div>
                     <div className="text-xs leading-relaxed text-gray-300 light:text-gray-600">
-                      Players are compared by playing style and calibre. The
-                      model weighs tendency and quality shape most heavily,
-                      then constrains matches by overall impact and cumulative
-                      contribution. Changing the season filter changes the
-                      comparison pool.
+                      {tooltipText}
                     </div>
                   </div>
                 }
@@ -79,22 +81,24 @@ export const SimilarPlayersSection = ({
             </div>
           </div>
         </div>
-        <div className="hidden items-center gap-2 w-full sm:flex sm:w-auto">
-          <Filter className="h-5 w-5 shrink-0 text-amber-300 light:text-amber-600" />
-          <AppSelect
-            placeholder="All Seasons"
-            value={filterYear || ""}
-            onChange={(e) => onFilterYearChange(e.target.value || null)}
-            className={`${sharedFieldClassName} min-w-0 flex-1 sm:flex-initial`}
-          >
-            <option value="">All Seasons</option>
-            {[...seasons].reverse().map((year) => (
-              <option key={year} value={year}>
-                {playerUtils.formatSeason(year)}
-              </option>
-            ))}
-          </AppSelect>
-        </div>
+        {onFilterYearChange && (
+          <div className="hidden items-center gap-2 w-full sm:flex sm:w-auto">
+            <Filter className="h-5 w-5 shrink-0 text-amber-300 light:text-amber-600" />
+            <AppSelect
+              placeholder="All Seasons"
+              value={filterYear || ""}
+              onChange={(e) => onFilterYearChange(e.target.value || null)}
+              className={`${sharedFieldClassName} min-w-0 flex-1 sm:flex-initial`}
+            >
+              <option value="">All Seasons</option>
+              {[...seasons].reverse().map((year) => (
+                <option key={year} value={year}>
+                  {playerUtils.formatSeason(year)}
+                </option>
+              ))}
+            </AppSelect>
+          </div>
+        )}
       </div>
       <div className="grid grid-cols-3 gap-2 sm:gap-3 md:flex md:flex-wrap md:justify-center md:gap-4">
         {players.map((player, idx) => (

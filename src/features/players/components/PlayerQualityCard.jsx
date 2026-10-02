@@ -18,6 +18,7 @@ export const PlayerQualityCard = ({
   icon: Icon,
   stats,
   type = "offensive",
+  subtitle = "percentile vs. league",
   showInfo = true,
   forceDark = false,
   shareable = false,
@@ -55,7 +56,7 @@ export const PlayerQualityCard = ({
             </h3>
             {!shareable && (
               <p className="mt-0.5 text-xs text-gray-400 light:text-gray-500">
-                percentile vs. league
+                {subtitle}
               </p>
             )}
           </div>

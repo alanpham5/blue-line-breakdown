@@ -26,16 +26,6 @@ export const playerUtils = {
     if (playerId === 8471675 && parseInt(season) === 2009) {
       return "/crosby.png";
     }
-    if (team && season) {
-      const seasonYear = parseInt(season);
-      const nextYear = seasonYear + 1;
-      const yearRange = `${seasonYear}${nextYear}`;
-      const teamCode =
-        team.toUpperCase() == "ARI" && seasonYear <= 2013
-          ? "PHX"
-          : team.toUpperCase();
-      return `https://assets.nhle.com/mugs/nhl/${yearRange}/${teamCode}/${playerId}.png`;
-    }
     return `https://assets.nhle.com/mugs/nhl/latest/${playerId}.png`;
   },
   getDefaultHeadshot() {
@@ -704,6 +694,23 @@ export const playerUtils = {
       .toUpperCase();
     return stanleyCupChampions[seasonYear] === teamCode;
   },
+  isCurrentSeason(season, currentSeason) {
+    return currentSeason != null && Number(season) === Number(currentSeason);
+  },
+  formatSeasonLabel(season, currentSeason) {
+    return this.isCurrentSeason(season, currentSeason)
+      ? "Current"
+      : this.formatSeason(season);
+  },
+  formatCombinedSeasons(combined) {
+    return combined.seasons
+      .map((season) => this.formatSeason(season))
+      .join(" + ");
+  },
+  formatCareerSpan(firstSeason, lastSeason) {
+    if (firstSeason === lastSeason) return this.formatSeason(firstSeason);
+    return `${firstSeason}–${Number(lastSeason) + 1}`;
+  },
   formatSeason(year) {
     const yearNum = parseInt(year);
     if (isNaN(yearNum)) return year;
@@ -743,6 +750,9 @@ export const playerUtils = {
       DIST_SKATED: "Distance Skated",
       DIST_GAME: "Max Game Distance",
       OZONE: "Offensive Zone Time",
+      EDGE_HIGH_SV: "NHL EDGE Short-Range Save %",
+      EDGE_MID_SV: "NHL EDGE Mid-Range Save %",
+      EDGE_LONG_SV: "NHL EDGE Long-Range Save %",
     };
     return statNames[statKey] || statKey;
   },
@@ -779,6 +789,9 @@ export const playerUtils = {
       DIST_SKATED: "Distance",
       DIST_GAME: "Game Dist",
       OZONE: "OZ Time",
+      EDGE_HIGH_SV: "Short SV%",
+      EDGE_MID_SV: "Mid SV%",
+      EDGE_LONG_SV: "Long SV%",
     };
     return statAbbrs[statKey] || this.formatStatName(statKey);
   },

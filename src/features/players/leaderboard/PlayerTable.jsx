@@ -8,6 +8,7 @@ import {
   metricGroupsForPosition,
   metricKeysForPosition,
   formatHeight,
+  formatMetricCell,
   formatPercentile,
   percentileTint,
 } from "./leaderboardConfig";
@@ -95,10 +96,12 @@ export const PlayerTable = ({ players, position }) => {
     navigate(`/players/v2/${player.playerId}?season=${player.season}`);
   };
 
-  const groupHeaderColor = (type) =>
-    type === "offensive" || type === "shotStopping"
+  const groupHeaderColor = (type) => {
+    if (type === "edge") return "text-emerald-300 light:text-emerald-700";
+    return type === "offensive" || type === "shotStopping"
       ? "text-cyan-300 light:text-cyan-700"
       : "text-rose-400 light:text-rose-600";
+  };
 
   return (
     <div
@@ -106,7 +109,11 @@ export const PlayerTable = ({ players, position }) => {
       style={{ background: "var(--glass-bg-strong)" }}
     >
       <p className="mb-2 px-2 text-xs text-gray-400 light:text-slate-500">
-        Player impact model · position-relative 5-on-5 percentiles
+        Player impact model · position-relative 5-on-5 percentiles ·{" "}
+        <span className="text-emerald-300 light:text-emerald-700">
+          NHL EDGE
+        </span>{" "}
+        columns show the value, colored by percentile
       </p>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-sm">
@@ -221,7 +228,7 @@ export const PlayerTable = ({ players, position }) => {
                         className="px-2 py-2 text-right font-medium text-white light:text-gray-900"
                         style={{ background: percentileTint(value) }}
                       >
-                        {formatPercentile(value)}
+                        {formatMetricCell(player, key)}
                       </td>
                     );
                   })}

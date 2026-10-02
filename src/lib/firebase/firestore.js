@@ -1,26 +1,27 @@
-import {
-  collection,
-  doc,
-  setDoc,
-  deleteDoc,
-  getDoc,
-  getDocs,
-  addDoc,
-  onSnapshot,
-  query,
-  where,
-  orderBy,
-  limit,
-  serverTimestamp,
-  increment,
-  updateDoc,
-  arrayUnion,
-  arrayRemove,
-  deleteField,
-  runTransaction,
-  writeBatch,
-} from "firebase/firestore";
-import { db } from "lib/firebase/config";
+import app from "lib/firebase/config";
+
+let firestorePromise = null;
+
+const loadFirestore = () => {
+  firestorePromise ??= import("firebase/firestore").then((sdk) => ({
+    ...sdk,
+    db: sdk.getFirestore(app),
+  }));
+  return firestorePromise;
+};
+
+const subscribeWhenLoaded = (subscribe) => {
+  let unsubscribe = null;
+  let cancelled = false;
+  loadFirestore().then((fs) => {
+    if (!cancelled) unsubscribe = subscribe(fs);
+  });
+  return () => {
+    cancelled = true;
+    unsubscribe?.();
+  };
+};
+
 const sanitizeForFirestore = (value) => {
   if (value === undefined) return undefined;
   if (value === null) return null;
@@ -69,11 +70,11 @@ const slimPicksMap = (picks) => {
   }
   return out;
 };
-const ensureUserDoc = async (uid) => {
-  await setDoc(
-    doc(db, "users", uid),
+const ensureUserDoc = async (fs, uid) => {
+  await fs.setDoc(
+    fs.doc(fs.db, "users", uid),
     {
-      updatedAt: serverTimestamp(),
+      updatedAt: fs.serverTimestamp(),
     },
     {
       merge: true,
@@ -85,23 +86,25 @@ export const ENTITY_TYPES = {
   TEAM: "TEAM",
 };
 const bookmarkId = (entityType, entityId) => `${entityType}_${entityId}`;
-const bookmarksCol = (uid) => collection(db, "users", uid, "bookmarks");
-const bookmarkRef = (uid, entityType, entityId) =>
-  doc(bookmarksCol(uid), bookmarkId(entityType, entityId));
-export const subscribeBookmarks = (uid, callback) => {
-  const q = query(bookmarksCol(uid), orderBy("createdAt", "desc"));
-  return onSnapshot(
-    q,
-    (snap) => {
-      const items = snap.docs.map((d) => ({
-        id: d.id,
-        ...d.data(),
-      }));
-      callback(items);
-    },
-    () => callback([])
-  );
-};
+const bookmarksCol = (fs, uid) =>
+  fs.collection(fs.db, "users", uid, "bookmarks");
+const bookmarkRef = (fs, uid, entityType, entityId) =>
+  fs.doc(bookmarksCol(fs, uid), bookmarkId(entityType, entityId));
+export const subscribeBookmarks = (uid, callback) =>
+  subscribeWhenLoaded((fs) => {
+    const q = fs.query(bookmarksCol(fs, uid), fs.orderBy("createdAt", "desc"));
+    return fs.onSnapshot(
+      q,
+      (snap) => {
+        const items = snap.docs.map((d) => ({
+          id: d.id,
+          ...d.data(),
+        }));
+        callback(items);
+      },
+      () => callback([])
+    );
+  });
 export const toggleBookmark = async (
   uid,
   entityType,
@@ -109,21 +112,23 @@ export const toggleBookmark = async (
   meta = {},
   isActive
 ) => {
-  const ref = bookmarkRef(uid, entityType, entityId);
+  const fs = await loadFirestore();
+  const ref = bookmarkRef(fs, uid, entityType, entityId);
   if (isActive) {
-    await deleteDoc(ref);
+    await fs.deleteDoc(ref);
     return false;
   }
-  await setDoc(ref, {
+  await fs.setDoc(ref, {
     entityId: String(entityId),
     entityType,
     ...meta,
-    createdAt: serverTimestamp(),
+    createdAt: fs.serverTimestamp(),
   });
   return true;
 };
 export const getBookmark = async (uid, entityType, entityId) => {
-  const snap = await getDoc(bookmarkRef(uid, entityType, entityId));
+  const fs = await loadFirestore();
+  const snap = await fs.getDoc(bookmarkRef(fs, uid, entityType, entityId));
   return snap.exists()
     ? {
         id: snap.id,
@@ -135,7 +140,7 @@ export const DRAFT_STATUS = {
   IN_PROGRESS: "in_progress",
   COMPLETE: "complete",
 };
-const userDraftsCol = (uid) => collection(db, "users", uid, "drafts");
+const userDraftsCol = (fs, uid) => fs.collection(fs.db, "users", uid, "drafts");
 const progressDraftId = (season) => `progress_${Number(season)}`;
 export const isProgressDraftId = (id) =>
   typeof id === "string" && id.startsWith("progress_");
@@ -143,39 +148,43 @@ export const isInProgressDraft = (draft) =>
   draft?.status === DRAFT_STATUS.IN_PROGRESS || isProgressDraftId(draft?.id);
 export const isCompleteDraft = (draft) =>
   draft?.status === DRAFT_STATUS.COMPLETE && !isProgressDraftId(draft?.id);
-export const subscribeUserDrafts = (uid, callback) => {
-  const q = query(userDraftsCol(uid), orderBy("updatedAt", "desc"));
-  return onSnapshot(
-    q,
-    (snap) =>
-      callback(
-        snap.docs.map((d) => ({
-          id: d.id,
-          ...d.data(),
-        }))
-      ),
-    () => callback([])
-  );
-};
+export const subscribeUserDrafts = (uid, callback) =>
+  subscribeWhenLoaded((fs) => {
+    const q = fs.query(userDraftsCol(fs, uid), fs.orderBy("updatedAt", "desc"));
+    return fs.onSnapshot(
+      q,
+      (snap) =>
+        callback(
+          snap.docs.map((d) => ({
+            id: d.id,
+            ...d.data(),
+          }))
+        ),
+      () => callback([])
+    );
+  });
 export const saveDraftProgress = async (uid, { season, picks, teamName }) => {
-  await ensureUserDoc(uid);
+  const fs = await loadFirestore();
+  await ensureUserDoc(fs, uid);
   const storedPicks = slimPicksMap(picks);
-  const ref = doc(userDraftsCol(uid), progressDraftId(season));
-  await setDoc(ref, {
+  const ref = fs.doc(userDraftsCol(fs, uid), progressDraftId(season));
+  await fs.setDoc(ref, {
     status: DRAFT_STATUS.IN_PROGRESS,
     season: Number(season),
     teamName: teamName || "",
     picks: sanitizeForFirestore(storedPicks),
     pickCount: Object.keys(storedPicks).length,
-    updatedAt: serverTimestamp(),
+    updatedAt: fs.serverTimestamp(),
   });
   return ref.id;
 };
 export const deleteDraftProgress = async (uid, season) => {
-  await deleteDoc(doc(userDraftsCol(uid), progressDraftId(season)));
+  const fs = await loadFirestore();
+  await fs.deleteDoc(fs.doc(userDraftsCol(fs, uid), progressDraftId(season)));
 };
 export const saveCompletedDraft = async (uid, draft, existingId = null) => {
-  await ensureUserDoc(uid);
+  const fs = await loadFirestore();
+  await ensureUserDoc(fs, uid);
   const picks = sanitizeForFirestore(draft.profile?.roster || []);
   const payload = {
     status: DRAFT_STATUS.COMPLETE,
@@ -183,17 +192,17 @@ export const saveCompletedDraft = async (uid, draft, existingId = null) => {
     teamName: draft.teamName,
     picks,
     pickCount: picks.length,
-    updatedAt: serverTimestamp(),
+    updatedAt: fs.serverTimestamp(),
   };
   const docId =
     existingId && !isProgressDraftId(existingId) ? existingId : null;
   let id;
   if (docId) {
-    await setDoc(
-      doc(userDraftsCol(uid), docId),
+    await fs.setDoc(
+      fs.doc(userDraftsCol(fs, uid), docId),
       {
         ...payload,
-        profile: deleteField(),
+        profile: fs.deleteField(),
       },
       {
         merge: true,
@@ -201,9 +210,9 @@ export const saveCompletedDraft = async (uid, draft, existingId = null) => {
     );
     id = docId;
   } else {
-    const ref = await addDoc(userDraftsCol(uid), {
+    const ref = await fs.addDoc(userDraftsCol(fs, uid), {
       ...payload,
-      createdAt: serverTimestamp(),
+      createdAt: fs.serverTimestamp(),
     });
     id = ref.id;
   }
@@ -211,16 +220,17 @@ export const saveCompletedDraft = async (uid, draft, existingId = null) => {
   return id;
 };
 export const deleteUserDraft = async (uid, draftId) => {
-  const userDraftRef = doc(userDraftsCol(uid), draftId);
-  const entryRef = leaderboardRef(draftId);
-  await runTransaction(db, async (tx) => {
+  const fs = await loadFirestore();
+  const userDraftRef = fs.doc(userDraftsCol(fs, uid), draftId);
+  const entryRef = leaderboardRef(fs, draftId);
+  await fs.runTransaction(fs.db, async (tx) => {
     const entry = await tx.get(entryRef);
     tx.delete(userDraftRef);
     if (entry.exists()) tx.delete(entryRef);
   });
 };
-const draftsCol = () => collection(db, "expansion_drafts");
-const leaderboardRef = (draftId) => doc(draftsCol(), draftId);
+const draftsCol = (fs) => fs.collection(fs.db, "expansion_drafts");
+const leaderboardRef = (fs, draftId) => fs.doc(draftsCol(fs), draftId);
 const leaderboardPayload = (user, draft) => {
   const { profile } = draft;
   return {
@@ -237,9 +247,10 @@ const leaderboardPayload = (user, draft) => {
 export const postDraftToLeaderboard = async (user, draft) => {
   const draftId = draft.savedDraftId;
   if (!draftId) throw new Error("Save your franchise before posting it.");
-  const userDraftRef = doc(userDraftsCol(user.uid), draftId);
-  const entryRef = leaderboardRef(draftId);
-  await runTransaction(db, async (tx) => {
+  const fs = await loadFirestore();
+  const userDraftRef = fs.doc(userDraftsCol(fs, user.uid), draftId);
+  const entryRef = leaderboardRef(fs, draftId);
+  await fs.runTransaction(fs.db, async (tx) => {
     const existing = await tx.get(entryRef);
     if (existing.exists()) return;
     const savedDraft = await tx.get(userDraftRef);
@@ -250,59 +261,65 @@ export const postDraftToLeaderboard = async (user, draft) => {
       ...leaderboardPayload(user, draft),
       likes: 0,
       likedBy: [],
-      createdAt: serverTimestamp(),
+      createdAt: fs.serverTimestamp(),
     });
     tx.update(userDraftRef, {
       postedToLeaderboard: true,
-      updatedAt: serverTimestamp(),
+      updatedAt: fs.serverTimestamp(),
     });
   });
   return draftId;
 };
 export const removeDraftFromLeaderboard = async (uid, draftId) => {
-  const userDraftRef = doc(userDraftsCol(uid), draftId);
-  const entryRef = leaderboardRef(draftId);
-  await runTransaction(db, async (tx) => {
+  const fs = await loadFirestore();
+  const userDraftRef = fs.doc(userDraftsCol(fs, uid), draftId);
+  const entryRef = leaderboardRef(fs, draftId);
+  await fs.runTransaction(fs.db, async (tx) => {
     const entry = await tx.get(entryRef);
     tx.update(userDraftRef, {
       postedToLeaderboard: false,
-      updatedAt: serverTimestamp(),
+      updatedAt: fs.serverTimestamp(),
     });
     if (entry.exists()) tx.delete(entryRef);
   });
 };
 export const reconcileLeaderboardOrphans = async (uid, validDraftIds) => {
-  const snap = await getDocs(query(draftsCol(), where("ownerId", "==", uid)));
+  const fs = await loadFirestore();
+  const snap = await fs.getDocs(
+    fs.query(draftsCol(fs), fs.where("ownerId", "==", uid))
+  );
   const valid = new Set(validDraftIds);
   const stale = snap.docs.filter((d) => !valid.has(d.id));
   if (stale.length === 0) return;
-  const batch = writeBatch(db);
+  const batch = fs.writeBatch(fs.db);
   stale.forEach((d) => batch.delete(d.ref));
   await batch.commit();
 };
-export const subscribeLeaderboard = (season, callback) => {
-  const constraints = [];
-  if (season != null && season !== "ALL") {
-    constraints.push(where("season", "==", Number(season)));
-  }
-  constraints.push(orderBy("likes", "desc"), limit(50));
-  const q = query(draftsCol(), ...constraints);
-  return onSnapshot(
-    q,
-    (snap) =>
-      callback(
-        snap.docs.map((d) => ({
-          id: d.id,
-          ...d.data(),
-        }))
-      ),
-    () => callback([])
-  );
-};
+export const subscribeLeaderboard = (season, callback) =>
+  subscribeWhenLoaded((fs) => {
+    const constraints = [];
+    if (season != null && season !== "ALL") {
+      constraints.push(fs.where("season", "==", Number(season)));
+    }
+    constraints.push(fs.orderBy("likes", "desc"), fs.limit(50));
+    const q = fs.query(draftsCol(fs), ...constraints);
+    return fs.onSnapshot(
+      q,
+      (snap) =>
+        callback(
+          snap.docs.map((d) => ({
+            id: d.id,
+            ...d.data(),
+          }))
+        ),
+      () => callback([])
+    );
+  });
 export const toggleLike = async (draftId, uid, alreadyLiked) => {
-  const ref = doc(draftsCol(), draftId);
-  await updateDoc(ref, {
-    likes: increment(alreadyLiked ? -1 : 1),
-    likedBy: alreadyLiked ? arrayRemove(uid) : arrayUnion(uid),
+  const fs = await loadFirestore();
+  const ref = fs.doc(draftsCol(fs), draftId);
+  await fs.updateDoc(ref, {
+    likes: fs.increment(alreadyLiked ? -1 : 1),
+    likedBy: alreadyLiked ? fs.arrayRemove(uid) : fs.arrayUnion(uid),
   });
 };

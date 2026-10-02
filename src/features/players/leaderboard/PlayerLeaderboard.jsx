@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Loader2, Trophy } from "lucide-react";
 import { apiService } from "lib/api/apiService";
@@ -9,6 +9,9 @@ import { seasonSpan } from "utils/season";
 import { POSITIONS } from "./leaderboardConfig";
 import { PlayerTable } from "./PlayerTable";
 
+const EDGE_REFRESH_MS = 5000;
+const EDGE_MAX_REFRESHES = 30;
+
 const positionLabel = (value) =>
   POSITIONS.find((p) => p.value === value)?.label || "Players";
 
@@ -18,6 +21,7 @@ export const PlayerLeaderboard = () => {
   const seasonParam = searchParams.get("season");
 
   const [data, setData] = useState(null);
+  const edgeRefreshesRef = useRef(0);
   const [availableSeasons, setAvailableSeasons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -31,6 +35,7 @@ export const PlayerLeaderboard = () => {
 
   useEffect(() => {
     let cancelled = false;
+    edgeRefreshesRef.current = 0;
     const load = async () => {
       setLoading(true);
       setError("");
@@ -50,6 +55,33 @@ export const PlayerLeaderboard = () => {
       cancelled = true;
     };
   }, [position, seasonParam]);
+
+  const edgePending = data?.edgePending ?? 0;
+
+  useEffect(() => {
+    if (!edgePending || edgeRefreshesRef.current >= EDGE_MAX_REFRESHES) {
+      return undefined;
+    }
+    let cancelled = false;
+    const timer = window.setTimeout(async () => {
+      edgeRefreshesRef.current += 1;
+      try {
+        const result = await apiService.fetchLeaderboard(
+          position,
+          seasonParam,
+          null,
+          { fresh: true }
+        );
+        if (!cancelled) setData(result);
+      } catch {
+        if (!cancelled) edgeRefreshesRef.current = EDGE_MAX_REFRESHES;
+      }
+    }, EDGE_REFRESH_MS);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [data, edgePending, position, seasonParam]);
 
   const updateParams = (next) => {
     const params = new URLSearchParams(searchParams);
@@ -123,7 +155,16 @@ export const PlayerLeaderboard = () => {
           )}
 
           {!loading && !error && data && data.players.length > 0 && (
-            <PlayerTable players={data.players} position={data.position} />
+            <>
+              {edgePending > 0 && (
+                <p className="flex items-center gap-2 px-2 text-xs text-gray-400 light:text-slate-500">
+                  <Loader2 className="h-3.5 w-3.5 animate-spin text-emerald-300 light:text-emerald-600" />
+                  Loading NHL EDGE for {edgePending} goalie
+                  {edgePending === 1 ? "" : "s"}…
+                </p>
+              )}
+              <PlayerTable players={data.players} position={data.position} />
+            </>
           )}
 
           {!loading && !error && data && data.players.length === 0 && (

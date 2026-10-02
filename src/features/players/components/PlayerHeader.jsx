@@ -55,7 +55,14 @@ const TeamLogoLink = ({
     </Link>
   );
 };
-export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
+export const PlayerHeader = ({
+  player,
+  biometrics,
+  onShareClick,
+  isCareer = false,
+  combined = null,
+  currentSeason = null,
+}) => {
   const playerNameRef = useRef(null);
   const navigate = useNavigate();
   const { actualTheme } = useTheme();
@@ -65,10 +72,8 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
     player.season,
     actualTheme
   );
-  const didWinStanleyCup = playerUtils.didWinStanleyCup(
-    player.team,
-    player.season
-  );
+  const didWinStanleyCup =
+    !isCareer && playerUtils.didWinStanleyCup(player.team, player.season);
   const archetypes = getArchetypeNames(player.archetypes);
   useLayoutEffect(() => {
     const node = playerNameRef.current;
@@ -125,7 +130,7 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
         meta={{
           label: player.name,
           player: player.name,
-          season: player.season,
+          season: isCareer ? null : player.season,
           position: player.position,
           team: player.team,
         }}
@@ -134,7 +139,7 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
   );
   return (
     <div
-      className="team-card-surface-strong liquid-glass-strong liquid-glass-animate overflow-hidden rounded-[32px] px-5 py-4 lg:px-6 lg:py-5"
+      className="team-card-surface-strong liquid-glass-strong liquid-glass-animate flex w-full flex-col justify-center overflow-hidden rounded-[32px] px-5 py-4 lg:h-full lg:px-6 lg:py-5"
       style={{
         "--team-card-gradient": teamCardGradient,
       }}
@@ -217,16 +222,30 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
                 {playerUtils.getFullTeamName(player.team, player.season)}
               </span>
               <span className="text-gray-500 light:text-gray-400">•</span>
-              <span
-                className="cursor-pointer hover:opacity-80"
-                onClick={() =>
-                  navigate(
-                    `/leaderboard?position=${player.position}&season=${player.season}`
-                  )
-                }
-              >
-                {playerUtils.formatSeason(player.season)}
-              </span>
+              {isCareer ? (
+                <span>
+                  Career ·{" "}
+                  {playerUtils.formatCareerSpan(
+                    player.firstSeason,
+                    player.lastSeason
+                  )}
+                </span>
+              ) : (
+                <span
+                  className="cursor-pointer hover:opacity-80"
+                  onClick={() =>
+                    navigate(
+                      `/leaderboard?position=${player.position}&season=${player.season}`
+                    )
+                  }
+                >
+                  {playerUtils.isCurrentSeason(player.season, currentSeason)
+                    ? "Current"
+                    : combined
+                      ? playerUtils.formatCombinedSeasons(combined)
+                      : playerUtils.formatSeason(player.season)}
+                </span>
+              )}
               <span className="text-gray-500 light:text-gray-400">•</span>
               <span>
                 {player.position === "F"
@@ -263,7 +282,7 @@ export const PlayerHeader = ({ player, biometrics, onShareClick }) => {
         </div>
         <TeamLogoLink
           actualTheme={actualTheme}
-          showCup={true}
+          showCup={!isCareer}
           player={player}
           className="hidden shrink-0 transition-transform duration-300 active:scale-105 xl:flex xl:h-44 xl:w-44 xl:items-center xl:justify-center xl:hover:-translate-y-1 xl:hover:scale-105"
         />

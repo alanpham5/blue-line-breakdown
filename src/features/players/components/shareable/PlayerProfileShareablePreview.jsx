@@ -2,6 +2,7 @@ import { Gauge, Shield, Target, Users } from "lucide-react";
 import { playerUtils } from "utils/playerUtils";
 import { getPercentileColor } from "utils/percentileColor";
 import { PlayerHeaderCompact } from "features/players/components/shareable/PlayerHeaderCompact";
+import { ImpactTrendCardCompact } from "features/players/components/shareable/ImpactTrendCardCompact";
 import { WarPercentileCardCompact } from "features/players/components/shareable/WarPercentileCardCompact";
 import { PlayerTendenciesCard } from "features/players/components/PlayerTendenciesCard";
 import { PlayerQualityCard } from "features/players/components/PlayerQualityCard";
@@ -77,6 +78,10 @@ export const PlayerProfileShareablePreview = ({
   edgeValues,
   edgePercentiles,
   similarPlayers,
+  isCareer = false,
+  impactTrend = [],
+  combined = null,
+  currentSeason = null,
 }) => (
   <div
     className="shareable-display-dark"
@@ -130,11 +135,25 @@ export const PlayerProfileShareablePreview = ({
       }}
     >
       <div className="grid grid-cols-[2.15fr_1fr] gap-3.5">
-        <PlayerHeaderCompact player={player} biometrics={biometrics} />
-        <WarPercentileCardCompact
-          role={player.role}
-          warPercentile={player.warPercentile}
+        <PlayerHeaderCompact
+          player={player}
+          biometrics={biometrics}
+          isCareer={isCareer}
+          combined={combined}
+          currentSeason={currentSeason}
         />
+        {isCareer ? (
+          <ImpactTrendCardCompact
+            trend={impactTrend}
+            role={player.role}
+            currentSeason={currentSeason}
+          />
+        ) : (
+          <WarPercentileCardCompact
+            role={player.role}
+            warPercentile={player.warPercentile}
+          />
+        )}
       </div>
 
       <CountingStatsRow stats={stats} />
@@ -212,7 +231,7 @@ export const PlayerProfileShareablePreview = ({
         <div className="mb-2.5 flex items-center gap-2.5">
           <Users className="h-7 w-7 text-amber-300" />
           <h3 className="shareable-icon-label text-3xl font-bold text-white">
-            Most Similar Players
+            {isCareer ? "Most Similar Careers" : "Most Similar Players"}
           </h3>
         </div>
         <div className="grid grid-cols-5 gap-3">
@@ -245,7 +264,12 @@ export const PlayerProfileShareablePreview = ({
                 {similarPlayer.name}
               </div>
               <div className="mt-0.5 text-sm font-medium text-gray-400">
-                {playerUtils.formatSeason(similarPlayer.season)}
+                {isCareer
+                  ? playerUtils.formatCareerSpan(
+                      similarPlayer.firstSeason,
+                      similarPlayer.lastSeason
+                    )
+                  : playerUtils.formatSeason(similarPlayer.season)}
               </div>
             </div>
           ))}

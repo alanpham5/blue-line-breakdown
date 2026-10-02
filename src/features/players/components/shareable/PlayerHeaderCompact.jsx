@@ -5,7 +5,13 @@ import {
   getArchetypeBadge,
   getArchetypeNames,
 } from "features/players/components/ArchetypeBadge";
-export const PlayerHeaderCompact = ({ player, biometrics }) => {
+export const PlayerHeaderCompact = ({
+  player,
+  biometrics,
+  isCareer = false,
+  combined = null,
+  currentSeason = null,
+}) => {
   const teamColor = playerUtils.getTeamColor(player.team, player.season);
   const teamCardGradient = playerUtils.getTeamCardGradient(
     player.team,
@@ -13,10 +19,8 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
     "dark"
   );
   const teamColorGradient = playerUtils.getSurfaceGradient(teamColor, "dark");
-  const didWinStanleyCup = playerUtils.didWinStanleyCup(
-    player.team,
-    player.season
-  );
+  const didWinStanleyCup =
+    !isCareer && playerUtils.didWinStanleyCup(player.team, player.season);
   const teamLogoUrl = playerUtils.getCorsWrappedUrl(
     playerUtils.getTeamLogoUrl(player.team, player.season, "dark")
   );
@@ -59,7 +63,16 @@ export const PlayerHeaderCompact = ({ player, biometrics }) => {
 
           <div className="text-[1.35rem] font-semibold text-gray-300">
             {playerUtils.getFullTeamName(player.team, player.season)} •{" "}
-            {playerUtils.formatSeason(player.season)}
+            {isCareer
+              ? `Career · ${playerUtils.formatCareerSpan(
+                  player.firstSeason,
+                  player.lastSeason
+                )}`
+              : playerUtils.isCurrentSeason(player.season, currentSeason)
+                ? "Current"
+                : combined
+                  ? playerUtils.formatCombinedSeasons(combined)
+                  : playerUtils.formatSeason(player.season)}
           </div>
 
           <div className="shareable-bio-container mt-2 flex gap-4 text-xl text-gray-300">

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import { X, Download, Share } from "lucide-react";
-import html2canvas from "html2canvas";
 import { useIsMobile } from "hooks/useIsMobile";
 import { shareImage, getShareUrl } from "utils/shareCard";
 const removeZeroSizeGradients = (root) => {
@@ -107,6 +106,7 @@ export const ShareableModal = ({ isOpen, onClose, fileName, children }) => {
       return origCreatePattern.call(this, image, repetition);
     };
     try {
+      const { default: html2canvas } = await import("html2canvas");
       const canvas = await html2canvas(node, {
         useCORS: true,
         allowTaint: false,

@@ -58,7 +58,9 @@ export const SimilarPlayerCard = ({ player, onClick, animationKey }) => {
         {player.name}
       </p>
       <p className="mt-1 text-[10px] text-gray-400 light:text-gray-500 sm:text-[11px]">
-        {playerUtils.formatSeason(player.season)}
+        {player.firstSeason
+          ? playerUtils.formatCareerSpan(player.firstSeason, player.lastSeason)
+          : playerUtils.formatSeason(player.season)}
       </p>
     </div>
   );
