@@ -228,7 +228,6 @@ export const PlayerHeader = ({
               <span className="text-gray-500 light:text-gray-400">•</span>
               {isCareer ? (
                 <span>
-                  Career ·{" "}
                   {playerUtils.formatCareerSpan(
                     player.firstSeason,
                     player.lastSeason
