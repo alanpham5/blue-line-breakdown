@@ -75,7 +75,7 @@ export const GeneralSearch = ({
   const { actualTheme } = useTheme();
   const containerRef = useRef(null);
   const panelRef = useRef(null);
-  const suppressPrefilledSearchRef = useRef(Boolean(initialQuery));
+  const queryTypedByUserRef = useRef(false);
   const [panelPosition, setPanelPosition] = useState(null);
   const [query, setQuery] = useState(initialQuery);
   const [results, setResults] = useState([]);
@@ -97,7 +97,7 @@ export const GeneralSearch = ({
   useEffect(() => whenIdle(ensureLocalIndex), []);
 
   useEffect(() => {
-    suppressPrefilledSearchRef.current = Boolean(initialQuery);
+    queryTypedByUserRef.current = false;
     setQuery(initialQuery);
     setResults([]);
     setError("");
@@ -106,10 +106,7 @@ export const GeneralSearch = ({
   }, [initialQuery]);
 
   useEffect(() => {
-    if (suppressPrefilledSearchRef.current) {
-      suppressPrefilledSearchRef.current = false;
-      return undefined;
-    }
+    if (!queryTypedByUserRef.current) return undefined;
     const trimmed = query.trim();
     if (trimmed.length < LOCAL_SEARCH_MIN_LENGTH) {
       setResults([]);
@@ -221,7 +218,9 @@ export const GeneralSearch = ({
 
   const openResult = (result) => {
     setOpen(false);
-    suppressPrefilledSearchRef.current = true;
+    setResults([]);
+    setActiveIndex(-1);
+    queryTypedByUserRef.current = false;
     setQuery(result.name);
     const numericTargetSeason = Number(targetSeason);
     const resultSeasons = (result.seasons || []).map(Number);
@@ -259,7 +258,7 @@ export const GeneralSearch = ({
   };
 
   const clearSearch = () => {
-    suppressPrefilledSearchRef.current = false;
+    queryTypedByUserRef.current = false;
     setQuery("");
     setResults([]);
     setError("");
@@ -325,7 +324,7 @@ export const GeneralSearch = ({
           }
           value={query}
           onChange={(event) => {
-            suppressPrefilledSearchRef.current = false;
+            queryTypedByUserRef.current = true;
             setQuery(event.target.value);
           }}
           onFocus={() => {

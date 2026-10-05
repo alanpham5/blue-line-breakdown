@@ -43,6 +43,7 @@ const ArchetypeBadgePreview = lazyPage(
   "ArchetypeBadgePreview"
 );
 const About = lazyPage(() => import("features/about/About"), "About");
+const Sandbox = lazyPage(() => import("features/sandbox/Sandbox"), "Sandbox");
 const TeamProfilePreview = lazyPage(
   () => import("features/team-summary/TeamProfilePreview"),
   "TeamProfilePreview"
@@ -164,6 +165,7 @@ const App = () => {
                   element={<Leaderboard />}
                 />
                 <Route path="/about" element={<About />} />
+                <Route path="/sandbox" element={<Sandbox />} />
                 <Route path="/account" element={<AccountSettings />} />
                 <Route path="/account/bookmarks" element={<SavedBookmarks />} />
                 <Route path="/account/drafts" element={<SavedDrafts />} />
