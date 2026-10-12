@@ -345,12 +345,13 @@ export const PlayersV2 = () => {
               </section>
 
               <section className="space-y-4 sm:space-y-6">
-                {goalieShotMap ? (
+                {isGoalie ? (
                   <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
                     <div className="md:col-span-2 lg:col-span-1">
                       <PlayerTendenciesCard
                         tendencies={playerData.tendencies}
                         shotMap={goalieShotMap}
+                        bar
                       />
                     </div>
                     {qualityCards}
@@ -440,6 +441,7 @@ export const PlayersV2 = () => {
                 ? playerData.similarCareers
                 : playerData.similarPlayers) || []
             }
+            shotMap={goalieShotMap}
           />
         )}
       </ShareableModal>

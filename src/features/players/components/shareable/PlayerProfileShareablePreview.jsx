@@ -78,207 +78,217 @@ export const PlayerProfileShareablePreview = ({
   edgeValues,
   edgePercentiles,
   similarPlayers,
+  shotMap = null,
   isCareer = false,
   impactTrend = [],
   combined = null,
   currentSeason = null,
-}) => (
-  <div
-    className="shareable-display-dark"
-    style={{
-      width: 1500,
-      minHeight: 1000,
-      display: "flex",
-      color: "white",
-      overflow: "hidden",
-      background:
-        "radial-gradient(circle at 16% 0%, rgba(50, 173, 230, 0.1) 0%, rgba(50, 173, 230, 0) 27%), radial-gradient(circle at 94% 20%, rgba(175, 82, 222, 0.09) 0%, rgba(175, 82, 222, 0) 25%), radial-gradient(circle at 50% 100%, rgba(52, 199, 89, 0.06) 0%, rgba(52, 199, 89, 0) 28%), linear-gradient(180deg, #020202 0%, #070708 45%, #0b0b0d 100%)",
-    }}
-  >
-    <aside
+}) => {
+  const isGoalie = player.position === "G";
+  return (
+    <div
+      className="shareable-display-dark"
       style={{
-        width: 82,
-        position: "relative",
+        width: 1500,
+        minHeight: 1000,
         display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexShrink: 0,
-        borderRight: "1px solid rgba(255,255,255,0.06)",
-        background: "rgba(255,255,255,0.012)",
+        color: "white",
+        overflow: "hidden",
+        background:
+          "radial-gradient(circle at 16% 0%, rgba(50, 173, 230, 0.1) 0%, rgba(50, 173, 230, 0) 27%), radial-gradient(circle at 94% 20%, rgba(175, 82, 222, 0.09) 0%, rgba(175, 82, 222, 0) 25%), radial-gradient(circle at 50% 100%, rgba(52, 199, 89, 0.06) 0%, rgba(52, 199, 89, 0) 28%), linear-gradient(180deg, #020202 0%, #070708 45%, #0b0b0d 100%)",
       }}
     >
-      <div
+      <aside
         style={{
-          position: "absolute",
-          transform: "rotate(-90deg)",
-          whiteSpace: "nowrap",
+          width: 82,
+          position: "relative",
           display: "flex",
           alignItems: "center",
-          gap: 18,
-          fontSize: 32,
-          fontWeight: 800,
-          color: "#f3f4f6",
+          justifyContent: "center",
+          flexShrink: 0,
+          borderRight: "1px solid rgba(255,255,255,0.06)",
+          background: "rgba(255,255,255,0.012)",
         }}
       >
-        <img src="/blb-dark.png" alt="Logo" style={{ width: 64, height: 64 }} />
-        <span>Blue Line Breakdown</span>
-      </div>
-    </aside>
+        <div
+          style={{
+            position: "absolute",
+            transform: "rotate(-90deg)",
+            whiteSpace: "nowrap",
+            display: "flex",
+            alignItems: "center",
+            gap: 18,
+            fontSize: 32,
+            fontWeight: 800,
+            color: "#f3f4f6",
+          }}
+        >
+          <img
+            src="/blb-dark.png"
+            alt="Logo"
+            style={{ width: 64, height: 64 }}
+          />
+          <span>Blue Line Breakdown</span>
+        </div>
+      </aside>
 
-    <div
-      style={{
-        flex: 1,
-        padding: "22px 24px 20px",
-        display: "flex",
-        flexDirection: "column",
-        gap: 14,
-      }}
-    >
-      <div className="grid grid-cols-[2.15fr_1fr] gap-3.5">
-        <PlayerHeaderCompact
-          player={player}
-          biometrics={biometrics}
-          isCareer={isCareer}
-          combined={combined}
-          currentSeason={currentSeason}
-        />
-        {isCareer ? (
-          <ImpactTrendCardCompact
-            trend={impactTrend}
-            role={player.role}
+      <div
+        style={{
+          flex: 1,
+          padding: "22px 24px 20px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 14,
+        }}
+      >
+        <div className="grid grid-cols-[2.15fr_1fr] gap-3.5">
+          <PlayerHeaderCompact
+            player={player}
+            biometrics={biometrics}
+            isCareer={isCareer}
+            combined={combined}
             currentSeason={currentSeason}
           />
-        ) : (
-          <WarPercentileCardCompact
-            role={player.role}
-            warPercentile={player.warPercentile}
-          />
-        )}
-      </div>
-
-      <CountingStatsRow stats={stats} />
-
-      <div className="grid min-h-[360px] grid-cols-[1.02fr_1.28fr] gap-3.5">
-        <PlayerTendenciesCard
-          tendencies={tendencies}
-          showInfo={false}
-          forceDark
-          shareable
-        />
-        <div className="grid grid-cols-2 gap-3.5">
-          <PlayerQualityCard
-            title={
-              player.position === "G"
-                ? "Goaltending Quality"
-                : "Offensive Quality"
-            }
-            icon={Target}
-            stats={offensiveQuality}
-            type={player.position === "G" ? "shotStopping" : "offensive"}
-            showInfo={false}
-            forceDark
-            shareable
-          />
-          <PlayerQualityCard
-            title={
-              player.position === "G" ? "Shots Faced" : "Defensive Quality"
-            }
-            icon={Shield}
-            stats={defensiveQuality}
-            type={player.position === "G" ? "workload" : "defensive"}
-            showInfo={false}
-            forceDark
-            shareable
-          />
+          {isCareer ? (
+            <ImpactTrendCardCompact
+              trend={impactTrend}
+              role={player.role}
+              currentSeason={currentSeason}
+            />
+          ) : (
+            <WarPercentileCardCompact
+              role={player.role}
+              warPercentile={player.warPercentile}
+            />
+          )}
         </div>
-      </div>
 
-      {edgeValues && edgePercentiles && (
+        <CountingStatsRow stats={stats} />
+
+        <div
+          className={`grid min-h-[360px] gap-3.5 ${isGoalie ? "grid-cols-3" : "grid-cols-[1.02fr_1.28fr]"}`}
+        >
+          <PlayerTendenciesCard
+            tendencies={tendencies}
+            showInfo={false}
+            forceDark
+            shareable
+            bar={isGoalie}
+            shotMap={shotMap}
+          />
+          <div
+            className={`grid grid-cols-2 gap-3.5 ${isGoalie ? "col-span-2" : ""}`}
+          >
+            <PlayerQualityCard
+              title={isGoalie ? "Goaltending Quality" : "Offensive Quality"}
+              icon={Target}
+              stats={offensiveQuality}
+              type={isGoalie ? "shotStopping" : "offensive"}
+              showInfo={false}
+              forceDark
+              shareable
+            />
+            <PlayerQualityCard
+              title={isGoalie ? "Shots Faced" : "Defensive Quality"}
+              icon={Shield}
+              stats={defensiveQuality}
+              type={isGoalie ? "workload" : "defensive"}
+              showInfo={false}
+              forceDark
+              shareable
+            />
+          </div>
+        </div>
+
+        {edgeValues && edgePercentiles && (
+          <div className="liquid-glass-strong rounded-[28px] px-6 py-4">
+            <div className="mb-2.5 flex items-center gap-2.5">
+              <Gauge className="h-7 w-7 text-emerald-300" />
+              <h3 className="shareable-icon-label text-3xl font-bold text-white">
+                NHL EDGE
+              </h3>
+            </div>
+            <div className="grid grid-cols-6 divide-x divide-white/10 text-center">
+              {edgeOrder
+                .filter(
+                  ([key]) =>
+                    edgeValues[key] != null && edgePercentiles[key] != null
+                )
+                .map(([key, label, unit]) => (
+                  <div key={key} className="px-2">
+                    <div className="text-[15px] font-semibold text-gray-400">
+                      {label}
+                    </div>
+                    <div
+                      className="mt-0.5 text-[28px] font-bold tabular-nums"
+                      style={{
+                        color: getPercentileColor(edgePercentiles[key]),
+                      }}
+                    >
+                      {formatEdgeValue(key, edgeValues[key])}
+                    </div>
+                    <div className="text-[13px] text-gray-500">
+                      {unit} · {Math.round(edgePercentiles[key])} Percentile
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
+
         <div className="liquid-glass-strong rounded-[28px] px-6 py-4">
           <div className="mb-2.5 flex items-center gap-2.5">
-            <Gauge className="h-7 w-7 text-emerald-300" />
+            <Users className="h-7 w-7 text-amber-300" />
             <h3 className="shareable-icon-label text-3xl font-bold text-white">
-              NHL EDGE
+              {isCareer ? "Most Similar Careers" : "Most Similar Players"}
             </h3>
           </div>
-          <div className="grid grid-cols-6 divide-x divide-white/10 text-center">
-            {edgeOrder
-              .filter(
-                ([key]) =>
-                  edgeValues[key] != null && edgePercentiles[key] != null
-              )
-              .map(([key, label, unit]) => (
-                <div key={key} className="px-2">
-                  <div className="text-[15px] font-semibold text-gray-400">
-                    {label}
+          <div className="grid grid-cols-5 gap-3">
+            {similarPlayers.slice(0, 5).map((similarPlayer) => (
+              <div
+                key={`${similarPlayer.playerId}-${similarPlayer.season}`}
+                className="flex flex-col items-center text-center"
+              >
+                <div className="relative">
+                  <div className="h-[76px] w-[76px] overflow-hidden rounded-full border border-white/[0.06] bg-zinc-950/55">
+                    <img
+                      src={playerUtils.getCorsWrappedUrl(
+                        playerUtils.getPlayerHeadshot(
+                          similarPlayer.playerId,
+                          similarPlayer.team,
+                          isCareer ? null : similarPlayer.season
+                        )
+                      )}
+                      alt={similarPlayer.name}
+                      className="h-full w-full object-cover"
+                    />
                   </div>
-                  <div
-                    className="mt-0.5 text-[28px] font-bold tabular-nums"
-                    style={{ color: getPercentileColor(edgePercentiles[key]) }}
-                  >
-                    {formatEdgeValue(key, edgeValues[key])}
-                  </div>
-                  <div className="text-[13px] text-gray-500">
-                    {unit} · {Math.round(edgePercentiles[key])} Percentile
+                  <div className="absolute -bottom-1 -right-1 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-b from-[#ffe57e] to-[#ffd037] text-sm font-bold leading-none text-[#4f3d00]">
+                    <span className="shareable-similarity-score block leading-none">
+                      {Math.round(similarPlayer.similarity)}
+                    </span>
                   </div>
                 </div>
-              ))}
+                <div className="mt-2 text-[18px] font-bold leading-tight text-white">
+                  {similarPlayer.name}
+                </div>
+                <div className="mt-0.5 text-sm font-medium text-gray-400">
+                  {isCareer
+                    ? playerUtils.formatCareerSpan(
+                        similarPlayer.firstSeason,
+                        similarPlayer.lastSeason
+                      )
+                    : playerUtils.formatSeason(similarPlayer.season)}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      )}
 
-      <div className="liquid-glass-strong rounded-[28px] px-6 py-4">
-        <div className="mb-2.5 flex items-center gap-2.5">
-          <Users className="h-7 w-7 text-amber-300" />
-          <h3 className="shareable-icon-label text-3xl font-bold text-white">
-            {isCareer ? "Most Similar Careers" : "Most Similar Players"}
-          </h3>
+        <div className="text-center text-xl font-bold text-white/80">
+          Data from MoneyPuck.com and NHL.com
         </div>
-        <div className="grid grid-cols-5 gap-3">
-          {similarPlayers.slice(0, 5).map((similarPlayer) => (
-            <div
-              key={`${similarPlayer.playerId}-${similarPlayer.season}`}
-              className="flex flex-col items-center text-center"
-            >
-              <div className="relative">
-                <div className="h-[76px] w-[76px] overflow-hidden rounded-full border border-white/[0.06] bg-zinc-950/55">
-                  <img
-                    src={playerUtils.getCorsWrappedUrl(
-                      playerUtils.getPlayerHeadshot(
-                        similarPlayer.playerId,
-                        similarPlayer.team,
-                        isCareer ? null : similarPlayer.season
-                      )
-                    )}
-                    alt={similarPlayer.name}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="absolute -bottom-1 -right-1 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-b from-[#ffe57e] to-[#ffd037] text-sm font-bold leading-none text-[#4f3d00]">
-                  <span className="shareable-similarity-score block leading-none">
-                    {Math.round(similarPlayer.similarity)}
-                  </span>
-                </div>
-              </div>
-              <div className="mt-2 text-[18px] font-bold leading-tight text-white">
-                {similarPlayer.name}
-              </div>
-              <div className="mt-0.5 text-sm font-medium text-gray-400">
-                {isCareer
-                  ? playerUtils.formatCareerSpan(
-                      similarPlayer.firstSeason,
-                      similarPlayer.lastSeason
-                    )
-                  : playerUtils.formatSeason(similarPlayer.season)}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="text-center text-xl font-bold text-white/80">
-        Data from MoneyPuck.com and NHL.com
       </div>
     </div>
-  </div>
-);
+  );
+};

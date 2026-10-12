@@ -91,9 +91,9 @@ const eventShare = (tendency, totalActions, count) =>
     ? (Math.max(0, Number(tendency.percentage) || 0) / totalActions) * 100
     : 100 / count;
 
-const TendencyShareBar = ({ tendencies, totalActions }) => (
+const TendencyShareBar = ({ tendencies, totalActions, shareable }) => (
   <div
-    className="flex h-6 w-full overflow-hidden rounded-full border border-white/10 light:border-slate-200"
+    className={`flex ${shareable ? "h-9" : "h-6"} w-full overflow-hidden rounded-full border border-white/10 light:border-slate-200`}
     role="img"
     aria-label={tendencies
       .map((tendency) => `${tendency.label}: ${tendency.percentage}% of events`)
@@ -104,39 +104,51 @@ const TendencyShareBar = ({ tendencies, totalActions }) => (
       return (
         <div
           key={tendency.label}
-          className="flex min-w-0 items-center justify-center gap-1 whitespace-nowrap px-1.5 text-[0.68rem] font-bold tabular-nums text-white transition-all duration-1000 ease-out"
+          className={`flex min-w-0 items-center justify-center gap-1 whitespace-nowrap px-1.5 ${shareable ? "text-sm" : "text-[0.68rem]"} font-bold tabular-nums text-white transition-all duration-1000 ease-out`}
           style={{
             width: `${share}%`,
             background: `linear-gradient(135deg, ${tendency.colors.start}, ${tendency.colors.middle} 55%, ${tendency.colors.end})`,
           }}
         >
-          {share >= 30 && (
+          {share >= 30 && !shareable && (
             <span className="font-semibold">{tendency.label}</span>
           )}
-          {share >= 12 && `${Math.round(share)}%`}
+          {share >= 12 && (
+            <span className="shareable-tendency-bar-value">
+              {Math.round(share)}%
+            </span>
+          )}
         </div>
       );
     })}
   </div>
 );
 
-const TendencyPercentileChips = ({ tendencies }) => (
+const TendencyPercentileChips = ({ tendencies, shareable }) => (
   <div className="grid grid-cols-2 gap-2">
     {tendencies.map((tendency) => (
       <div
         key={tendency.label}
-        className="flex items-center justify-between gap-1.5 rounded-xl border border-white/[0.05] bg-white/[0.025] px-2 py-1.5 light:border-slate-200 light:bg-white/55"
+        className={`flex items-center justify-between gap-1.5 rounded-xl border border-white/[0.05] bg-white/[0.025] light:border-slate-200 light:bg-white/55 ${shareable ? "px-3 py-2.5" : "px-2 py-1.5"}`}
       >
-        <span className="flex min-w-0 items-center gap-1 whitespace-nowrap text-[0.7rem] font-semibold text-gray-300 light:text-gray-700">
+        <span
+          className={`flex min-w-0 items-center gap-1.5 whitespace-nowrap ${shareable ? "text-base" : "text-[0.7rem]"} font-semibold text-gray-300 light:text-gray-700`}
+        >
           <span
             className="h-2 w-2 shrink-0 rounded-full"
             style={{ backgroundColor: tendency.colors.middle }}
           />
-          {tendency.label}
+          <span className="shareable-tendency-chip-label min-w-0 truncate">
+            {tendency.label}
+          </span>
         </span>
-        <span className="shrink-0 text-sm font-bold tabular-nums text-white light:text-gray-900">
-          {Math.round(tendency.percentile)}
-          <span className="ml-0.5 text-[0.55rem] font-semibold uppercase text-gray-500">
+        <span className="flex shrink-0 items-baseline gap-0.5">
+          <span
+            className={`shareable-tendency-chip-value ${shareable ? "text-xl" : "text-sm"} font-bold tabular-nums text-white light:text-gray-900`}
+          >
+            {Math.round(tendency.percentile)}
+          </span>
+          <span className="shareable-tendency-chip-unit text-[0.55rem] font-semibold uppercase text-gray-500">
             pctl
           </span>
         </span>
@@ -151,8 +163,9 @@ export const PlayerTendenciesCard = ({
   forceDark = false,
   shareable = false,
   shotMap = null,
+  bar = false,
 }) => {
-  const isBar = Boolean(shotMap);
+  const isBar = bar || Boolean(shotMap);
   const visibleTendencies = tendencies.slice(0, 4);
   const totalActions = visibleTendencies.reduce(
     (total, tendency) => total + Math.max(0, Number(tendency.percentage) || 0),
@@ -232,7 +245,7 @@ export const PlayerTendenciesCard = ({
                 </div>
                 <div>
                   {isBar
-                    ? "The bar splits tracked events between the two actions; a longer segment means it happens more often. Each chip shows the league percentile. The rink map colors save percentage by shot location against the league."
+                    ? `The bar splits tracked events between the two actions; a longer segment means it happens more often. Each chip shows the league percentile.${shotMap ? " The rink map colors save percentage by shot location against the league." : ""}`
                     : "A wider slice means the action happens more often. Its reach from the center toward the outer ring shows the player's league percentile. Each action keeps a consistent color."}
                 </div>
               </div>
@@ -249,13 +262,21 @@ export const PlayerTendenciesCard = ({
       </div>
 
       {isBar ? (
-        <div className="flex flex-1 flex-col gap-2.5">
+        <div
+          className={`flex flex-1 flex-col ${shareable ? "justify-center gap-3" : "gap-2.5"}`}
+        >
           <TendencyShareBar
             tendencies={legendTendencies}
             totalActions={totalActions}
+            shareable={shareable}
           />
-          <TendencyPercentileChips tendencies={legendTendencies} />
-          <GoalieSaveHeatmap shotMap={shotMap} />
+          <TendencyPercentileChips
+            tendencies={legendTendencies}
+            shareable={shareable}
+          />
+          {shotMap && (
+            <GoalieSaveHeatmap shotMap={shotMap} forceDark={forceDark} />
+          )}
         </div>
       ) : (
         <>

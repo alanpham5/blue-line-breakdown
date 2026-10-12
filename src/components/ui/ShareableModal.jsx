@@ -172,9 +172,21 @@ export const ShareableModal = ({ isOpen, onClose, fileName, children }) => {
               top: -10px !important;
               transform: none !important;
             }
-            .shareable-export .shareable-team-bar-value {
+            .shareable-export .shareable-team-bar-value,
+            .shareable-export .shareable-tendency-bar-value,
+            .shareable-export .shareable-tendency-chip-label {
               position: relative !important;
               top: -6px !important;
+              transform: none !important;
+            }
+            .shareable-export .shareable-tendency-chip-value {
+              position: relative !important;
+              top: -8px !important;
+              transform: none !important;
+            }
+            .shareable-export .shareable-tendency-chip-unit {
+              position: relative !important;
+              top: -3px !important;
               transform: none !important;
             }
           `;

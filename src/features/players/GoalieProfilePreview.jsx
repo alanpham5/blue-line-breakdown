@@ -40,6 +40,31 @@ const goalieTendencies = [
   { label: "Rebounds", percentage: 39, percentile: 28 },
 ];
 
+const goalieShotMap = {
+  areas: [
+    { area: "Behind the Net", shotsAgainst: 5, savePct: 1.0, percentile: 42 },
+    { area: "L Corner", shotsAgainst: 0, savePct: null, percentile: null },
+    { area: "R Corner", shotsAgainst: 1, savePct: 1.0, percentile: 21 },
+    { area: "L Net Side", shotsAgainst: 34, savePct: 0.941, percentile: 73 },
+    { area: "Crease", shotsAgainst: 53, savePct: 0.868, percentile: 96 },
+    { area: "R Net Side", shotsAgainst: 42, savePct: 0.952, percentile: 65 },
+    { area: "Low Slot", shotsAgainst: 354, savePct: 0.845, percentile: 90 },
+    { area: "Outside L", shotsAgainst: 99, savePct: 0.96, percentile: 31 },
+    { area: "L Circle", shotsAgainst: 149, savePct: 0.893, percentile: 35 },
+    { area: "High Slot", shotsAgainst: 150, savePct: 0.927, percentile: 98 },
+    { area: "R Circle", shotsAgainst: 149, savePct: 0.899, percentile: 33 },
+    { area: "Outside R", shotsAgainst: 87, savePct: 0.966, percentile: 52 },
+    { area: "L Point", shotsAgainst: 138, savePct: 0.993, percentile: 83 },
+    { area: "Center Point", shotsAgainst: 141, savePct: 0.957, percentile: 50 },
+    { area: "R Point", shotsAgainst: 158, savePct: 0.981, percentile: 50 },
+  ],
+  totals: [
+    { locationCode: "high", savePct: 0.848, percentile: 94 },
+    { locationCode: "mid", savePct: 0.906, percentile: 82 },
+    { locationCode: "long", savePct: 0.977, percentile: 67 },
+  ],
+};
+
 const goaltendingQuality = [
   { label: "Save Percentage", value: 98 },
   { label: "Goals Against / 60", value: 97 },
@@ -150,23 +175,25 @@ export const GoalieProfilePreview = () => {
             <CountingStats stats={exampleStats} />
           </section>
 
-          <section className="space-y-4 sm:space-y-6">
-            <PlayerTendenciesCard tendencies={goalieTendencies} />
-
-            <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
-              <PlayerQualityCard
-                title="Goaltending Quality"
-                icon={Target}
-                stats={goaltendingQuality}
-                type="shotStopping"
-              />
-              <PlayerQualityCard
-                title="Shots Faced"
-                icon={Activity}
-                stats={shotsFacedQuality}
-                type="workload"
+          <section className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="md:col-span-2 lg:col-span-1">
+              <PlayerTendenciesCard
+                tendencies={goalieTendencies}
+                shotMap={goalieShotMap}
               />
             </div>
+            <PlayerQualityCard
+              title="Goaltending Quality"
+              icon={Target}
+              stats={goaltendingQuality}
+              type="shotStopping"
+            />
+            <PlayerQualityCard
+              title="Shots Faced"
+              icon={Activity}
+              stats={shotsFacedQuality}
+              type="workload"
+            />
           </section>
 
           <SimilarPlayersSection
@@ -193,6 +220,7 @@ export const GoalieProfilePreview = () => {
           defensiveQuality={shotsFacedQuality}
           stats={exampleStats}
           similarPlayers={similarGoalies}
+          shotMap={goalieShotMap}
         />
       </ShareableModal>
     </div>

@@ -263,9 +263,11 @@ const RangeStat = ({ label, total }) => (
   </div>
 );
 
-export const GoalieSaveHeatmap = ({ shotMap }) => {
+export const GoalieSaveHeatmap = ({ shotMap, forceDark = false }) => {
   const { actualTheme } = useTheme();
-  const palette = PALETTES[actualTheme] || PALETTES.dark;
+  const palette = forceDark
+    ? PALETTES.dark
+    : PALETTES[actualTheme] || PALETTES.dark;
   const areasByName = Object.fromEntries(
     shotMap.areas.map((area) => [area.area, area])
   );
