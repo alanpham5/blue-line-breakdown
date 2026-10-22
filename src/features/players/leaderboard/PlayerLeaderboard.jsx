@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Loader2, Trophy } from "lucide-react";
 import { apiService } from "lib/api/apiService";
@@ -6,19 +6,27 @@ import { AppSelect } from "components/ui/AppSelect";
 import { Header } from "components/layout/Header";
 import { Footer } from "components/layout/Footer";
 import { seasonSpan } from "utils/season";
+import { playerUtils } from "utils/playerUtils";
 import { POSITIONS } from "./leaderboardConfig";
 import { PlayerTable } from "./PlayerTable";
 
+const ALL_TEAMS = "ALL";
 const EDGE_REFRESH_MS = 5000;
 const EDGE_MAX_REFRESHES = 30;
 
 const positionLabel = (value) =>
   POSITIONS.find((p) => p.value === value)?.label || "Players";
 
+const teamOptions = (players, season) =>
+  [...new Set(players.map((player) => player.team).filter(Boolean))]
+    .map((code) => ({ code, name: playerUtils.getFullTeamName(code, season) }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
 export const PlayerLeaderboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const position = (searchParams.get("position") || "F").toUpperCase();
   const seasonParam = searchParams.get("season");
+  const teamParam = (searchParams.get("team") || ALL_TEAMS).toUpperCase();
 
   const [data, setData] = useState(null);
   const edgeRefreshesRef = useRef(0);
@@ -58,6 +66,20 @@ export const PlayerLeaderboard = () => {
 
   const edgePending = data?.edgePending ?? 0;
 
+  const teams = useMemo(
+    () => (data ? teamOptions(data.players, data.season) : []),
+    [data]
+  );
+  const team = teams.some((option) => option.code === teamParam)
+    ? teamParam
+    : ALL_TEAMS;
+  const visiblePlayers = useMemo(() => {
+    const players = data?.players || [];
+    return team === ALL_TEAMS
+      ? players
+      : players.filter((player) => player.team === team);
+  }, [data, team]);
+
   useEffect(() => {
     if (!edgePending || edgeRefreshesRef.current >= EDGE_MAX_REFRESHES) {
       return undefined;
@@ -89,6 +111,13 @@ export const PlayerLeaderboard = () => {
     setSearchParams(params);
   };
 
+  const handleTeamChange = (value) => {
+    const params = new URLSearchParams(searchParams);
+    if (value === ALL_TEAMS) params.delete("team");
+    else params.set("team", value);
+    setSearchParams(params);
+  };
+
   const handlePositionChange = (value) => {
     const params = new URLSearchParams(searchParams);
     params.set("position", value);
@@ -113,7 +142,7 @@ export const PlayerLeaderboard = () => {
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
               <AppSelect
                 placeholder="Position"
                 value={position}
@@ -138,6 +167,19 @@ export const PlayerLeaderboard = () => {
                   </option>
                 ))}
               </AppSelect>
+              <AppSelect
+                placeholder="Team"
+                value={team}
+                onChange={(e) => handleTeamChange(e.target.value)}
+                className={sharedFieldClassName}
+              >
+                <option value={ALL_TEAMS}>All teams</option>
+                {teams.map((option) => (
+                  <option key={option.code} value={option.code}>
+                    {option.name}
+                  </option>
+                ))}
+              </AppSelect>
             </div>
           </div>
 
@@ -154,7 +196,7 @@ export const PlayerLeaderboard = () => {
             </div>
           )}
 
-          {!loading && !error && data && data.players.length > 0 && (
+          {!loading && !error && data && visiblePlayers.length > 0 && (
             <>
               {edgePending > 0 && (
                 <p className="flex items-center gap-2 px-2 text-xs text-gray-400 light:text-slate-500">
@@ -163,11 +205,11 @@ export const PlayerLeaderboard = () => {
                   {edgePending === 1 ? "" : "s"}…
                 </p>
               )}
-              <PlayerTable players={data.players} position={data.position} />
+              <PlayerTable players={visiblePlayers} position={data.position} />
             </>
           )}
 
-          {!loading && !error && data && data.players.length === 0 && (
+          {!loading && !error && data && visiblePlayers.length === 0 && (
             <div className="liquid-glass rounded-[28px] px-5 py-10 text-center text-gray-300 light:text-slate-600 fade-in-up">
               No players available for this season.
             </div>

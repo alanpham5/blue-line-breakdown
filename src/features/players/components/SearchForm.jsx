@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 import { AppSelect } from "components/ui/AppSelect";
 import { apiService } from "lib/api/apiService";
+import { seasonRange } from "utils/season";
 const handleKeyPress = (e, onSearch) => {
   if (e.key === "Enter") {
     e.target.blur();
@@ -15,13 +16,7 @@ const isNameMatchSuggestion = (suggestions, playerName) =>
     (suggestion) =>
       suggestion.toLowerCase().trim() === playerName.toLowerCase().trim()
   );
-const d = new Date();
-const seasons = Array.from(
-  {
-    length: (d.getMonth() >= 10 ? d.getFullYear() : d.getFullYear() - 1) - 2007,
-  },
-  (_, i) => 2008 + i
-);
+const seasons = seasonRange();
 export const SearchForm = ({
   playerName,
   setPlayerName,

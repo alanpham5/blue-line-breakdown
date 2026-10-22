@@ -30,6 +30,7 @@ import { UnitCard } from "features/roster/components/UnitCard";
 import { RosterPlayerCard } from "features/roster/components/RosterPlayerCard";
 import { SubstitutionModal } from "features/roster/components/SubstitutionModal";
 import { RosterShareableDisplay } from "features/roster/components/RosterShareableDisplay";
+import { seasonRange } from "utils/season";
 const getSeasonName = (s) => `${s}-${(parseInt(s) + 1).toString().slice(-2)}`;
 const getClinchStatus = (clincher) => {
   const statusMap = {
@@ -81,15 +82,7 @@ export const Roster = () => {
   const [rookies, setRookies] = useState({});
   const [showShareableModal, setShowShareableModal] = useState(false);
   const teamSeasonRef = useRef(`${team}-${season}`);
-  const now = new Date();
-  const seasonsList = Array.from(
-    {
-      length:
-        (now.getMonth() >= 10 ? now.getFullYear() : now.getFullYear() - 1) -
-        2007,
-    },
-    (_, i) => 2008 + i
-  );
+  const seasonsList = seasonRange();
   const handleSeasonChange = (nextSeason) => {
     if (!team || !nextSeason) return;
     navigate(

@@ -23,6 +23,7 @@ import { TeamProfileShareablePreview } from "features/team-summary/components/Te
 import { playerUtils } from "utils/playerUtils";
 import { useIsMobile } from "hooks/useIsMobile";
 import { useTheme } from "providers/ThemeContext";
+import { seasonRange } from "utils/season";
 
 const getSeasonName = (season) =>
   `${season}-${(Number(season) + 1).toString().slice(-2)}`;
@@ -62,7 +63,6 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { actualTheme } = useTheme();
   const isMobile = useIsMobile();
-  const now = new Date();
   const initialTeam = searchParams.get("team") || "";
   const initialSeason =
     searchParams.get("year") || searchParams.get("season") || "";
@@ -81,14 +81,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
   const [teamClinchStatus, setTeamClinchStatus] = useState(null);
   const [error, setError] = useState("");
   const [showShareableModal, setShowShareableModal] = useState(false);
-  const seasonsList = Array.from(
-    {
-      length:
-        (now.getMonth() >= 10 ? now.getFullYear() : now.getFullYear() - 1) -
-        2007,
-    },
-    (_, index) => 2008 + index
-  );
+  const seasonsList = seasonRange();
 
   useEffect(() => {
     document.title = teamSummaryData

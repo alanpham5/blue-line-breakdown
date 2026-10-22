@@ -11,6 +11,7 @@ import { playerUtils } from "utils/playerUtils";
 import { useIsExternal } from "hooks/useIsExternal";
 import { LoadingScreen } from "components/ui/LoadingScreen";
 import { useTheme } from "providers/ThemeContext";
+import { seasonRange } from "utils/season";
 const getSeasonName = (s) => `${s}-${(parseInt(s) + 1).toString().slice(-2)}`;
 const getClinchStatus = (clincher) => {
   const statusMap = {
@@ -90,7 +91,6 @@ const SearchForm = ({
   );
 };
 export const Teams = ({ enablePageLoadAnimations = true }) => {
-  const now = new Date();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialSeason = searchParams.get("season") || "";
@@ -118,14 +118,7 @@ export const Teams = ({ enablePageLoadAnimations = true }) => {
   const isExternal = useIsExternal();
   const initInProgressRef = useRef(false);
   const teamHeaderRef = useRef(null);
-  const seasons = Array.from(
-    {
-      length:
-        (now.getMonth() >= 10 ? now.getFullYear() : now.getFullYear() - 1) -
-        2007,
-    },
-    (_, i) => 2008 + i
-  );
+  const seasons = seasonRange();
   useEffect(() => {
     checkHealth();
     initializeCacheInBackground();

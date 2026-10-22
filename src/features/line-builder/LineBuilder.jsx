@@ -12,6 +12,7 @@ import { PlayerPickerModal } from "features/line-builder/components/PlayerPicker
 import { usePlayerPool } from "features/line-builder/hooks/usePlayerPool";
 import { useLinesEnabled } from "hooks/useLinesEnabled";
 import { NotFound } from "features/not-found/NotFound";
+import { seasonRange } from "utils/season";
 const UNIT_SIZE = { F: 3, D: 2 };
 const SLOT_LABELS = {
   F: ["Left Wing", "Center", "Right Wing"],
@@ -19,14 +20,7 @@ const SLOT_LABELS = {
 };
 const getSeasonName = (season) =>
   `${season}-${(parseInt(season) + 1).toString().slice(-2)}`;
-const latestSeason = () => {
-  const now = new Date();
-  return now.getMonth() >= 10 ? now.getFullYear() : now.getFullYear() - 1;
-};
-const seasonOptions = () => {
-  const newest = latestSeason();
-  return Array.from({ length: newest - 2007 }, (_, index) => newest - index);
-};
+const seasonOptions = () => [...seasonRange()].reverse();
 export const LineBuilder = () => {
   const linesEnabled = useLinesEnabled();
   const [searchParams, setSearchParams] = useSearchParams();

@@ -4,13 +4,8 @@ import { SimilarPlayerCard } from "features/players/components/SimilarPlayerCard
 import { AppSelect } from "components/ui/AppSelect";
 import { playerUtils } from "utils/playerUtils";
 import { Tooltip } from "components/ui/Tooltip";
-const d = new Date();
-const seasons = Array.from(
-  {
-    length: (d.getMonth() >= 10 ? d.getFullYear() : d.getFullYear() - 1) - 2007,
-  },
-  (_, i) => 2008 + i
-);
+import { seasonRange } from "utils/season";
+const seasons = seasonRange();
 const SEASON_SIMILARITY_TEXT =
   "Players are compared by playing style and calibre. The model weighs tendency and quality shape most heavily, then constrains matches by overall impact and cumulative contribution. Changing the season filter changes the comparison pool.";
 
