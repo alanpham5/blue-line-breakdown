@@ -25,10 +25,7 @@ export const PlayerHeaderCompact = ({
     playerUtils.getTeamLogoUrl(player.team, player.season, "dark")
   );
   const archetypes = getArchetypeNames(player.archetypes);
-  const headshotSeason =
-    isCareer || playerUtils.isCurrentSeason(player.season, currentSeason)
-      ? null
-      : player.season;
+  const headshotSeason = isCareer ? null : player.season;
   return (
     <div
       className="team-card-surface-strong relative h-full overflow-hidden rounded-[28px] px-6 py-5 liquid-glass-strong"

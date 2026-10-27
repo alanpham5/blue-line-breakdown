@@ -75,10 +75,7 @@ export const PlayerHeader = ({
   const didWinStanleyCup =
     !isCareer && playerUtils.didWinStanleyCup(player.team, player.season);
   const archetypes = getArchetypeNames(player.archetypes);
-  const headshotSeason =
-    isCareer || playerUtils.isCurrentSeason(player.season, currentSeason)
-      ? null
-      : player.season;
+  const headshotSeason = isCareer ? null : player.season;
   useLayoutEffect(() => {
     const node = playerNameRef.current;
     if (!node) return undefined;
