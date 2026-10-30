@@ -187,7 +187,7 @@ export const ImpactTrendChart = ({
                 fontSize="8"
                 fill={palette.axisText}
               >
-                —
+                -
               </text>
             )}
             <text

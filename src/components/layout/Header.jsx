@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Users, Shield, Info, Trophy, Layers } from "lucide-react";
 import { AccountMenu } from "features/auth/components/AccountMenu";
-import { linesPath, useLinesEnabled } from "hooks/useLinesEnabled";
+import { linesPath } from "hooks/useLinesEnabled";
+const SHOW_EXPANSION_NAV = false;
 const navLinkClassName = ({ isActive }) =>
   [
     "inline-flex min-w-[5.5rem] items-center justify-center rounded-full px-4 py-2.5 text-sm font-semibold transition-all duration-200 outline-none focus:outline-none focus-visible:outline-none",
@@ -19,7 +20,6 @@ const bottomNavLinkClassName = ({ isActive }) =>
   ].join(" ");
 export const Header = () => {
   const [isVisible, setIsVisible] = useState(true);
-  const linesEnabled = useLinesEnabled();
   useEffect(() => {
     let ticking = false;
     let lastY = window.pageYOffset;
@@ -99,14 +99,30 @@ export const Header = () => {
                       Teams
                     </NavLink>
                   </li>
-                  {linesEnabled && (
+                  <li>
+                    <NavLink
+                      to={linesPath("/line-builder")}
+                      className={navLinkClassName}
+                    >
+                      <span className="flex items-center gap-1.5">
+                        Lines
+                        <span
+                          className="inline-flex items-center rounded-full px-1.5 py-0.5 text-[0.6rem] font-bold"
+                          style={{
+                            background: "var(--btn-accent)",
+                            color: "var(--btn-accent-text)",
+                          }}
+                        >
+                          Beta
+                        </span>
+                      </span>
+                    </NavLink>
+                  </li>
+                  {SHOW_EXPANSION_NAV && (
                     <li>
-                      <NavLink
-                        to={linesPath("/line-builder")}
-                        className={navLinkClassName}
-                      >
+                      <NavLink to="/expansion-draft" className={navLinkClassName}>
                         <span className="flex items-center gap-1.5">
-                          Lines
+                          Expansion
                           <span
                             className="inline-flex items-center rounded-full px-1.5 py-0.5 text-[0.6rem] font-bold"
                             style={{
@@ -120,22 +136,6 @@ export const Header = () => {
                       </NavLink>
                     </li>
                   )}
-                  <li>
-                    <NavLink to="/expansion-draft" className={navLinkClassName}>
-                      <span className="flex items-center gap-1.5">
-                        Expansion
-                        <span
-                          className="inline-flex items-center rounded-full px-1.5 py-0.5 text-[0.6rem] font-bold"
-                          style={{
-                            background: "var(--btn-accent)",
-                            color: "var(--btn-accent-text)",
-                          }}
-                        >
-                          Beta
-                        </span>
-                      </span>
-                    </NavLink>
-                  </li>
                   <li>
                     <NavLink to="/about" className={navLinkClassName}>
                       About
@@ -167,29 +167,12 @@ export const Header = () => {
             <Shield className="h-5 w-5 mb-0.5" />
             <span>Teams</span>
           </NavLink>
-          {linesEnabled && (
-            <NavLink
-              to={linesPath("/line-builder")}
-              className={bottomNavLinkClassName}
-            >
-              <div className="relative">
-                <Layers className="h-5 w-5 mb-0.5" />
-                <span
-                  className="absolute -top-1 -right-6 inline-flex items-center rounded-full px-1 text-[0.5rem] font-bold"
-                  style={{
-                    background: "var(--btn-accent)",
-                    color: "var(--btn-accent-text)",
-                  }}
-                >
-                  Beta
-                </span>
-              </div>
-              <span>Lines</span>
-            </NavLink>
-          )}
-          <NavLink to="/expansion-draft" className={bottomNavLinkClassName}>
+          <NavLink
+            to={linesPath("/line-builder")}
+            className={bottomNavLinkClassName}
+          >
             <div className="relative">
-              <Trophy className="h-5 w-5 mb-0.5" />
+              <Layers className="h-5 w-5 mb-0.5" />
               <span
                 className="absolute -top-1 -right-6 inline-flex items-center rounded-full px-1 text-[0.5rem] font-bold"
                 style={{
@@ -200,8 +183,25 @@ export const Header = () => {
                 Beta
               </span>
             </div>
-            <span>Expansion</span>
+            <span>Lines</span>
           </NavLink>
+          {SHOW_EXPANSION_NAV && (
+            <NavLink to="/expansion-draft" className={bottomNavLinkClassName}>
+              <div className="relative">
+                <Trophy className="h-5 w-5 mb-0.5" />
+                <span
+                  className="absolute -top-1 -right-6 inline-flex items-center rounded-full px-1 text-[0.5rem] font-bold"
+                  style={{
+                    background: "var(--btn-accent)",
+                    color: "var(--btn-accent-text)",
+                  }}
+                >
+                  Beta
+                </span>
+              </div>
+              <span>Expansion</span>
+            </NavLink>
+          )}
           <NavLink to="/about" className={bottomNavLinkClassName}>
             <Info className="h-5 w-5 mb-0.5" />
             <span>About</span>

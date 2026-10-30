@@ -55,14 +55,14 @@ export const metricKeysForPosition = (position) =>
   metricGroupsForPosition(position).flatMap((group) => group.keys);
 
 export const formatHeight = (inches) => {
-  if (inches == null) return "—";
+  if (inches == null) return "-";
   const feet = Math.floor(inches / 12);
   const rem = Math.round(inches % 12);
   return `${feet}'${rem}"`;
 };
 
 export const formatPercentile = (value) =>
-  value == null ? "—" : value.toFixed(1);
+  value == null ? "-" : value.toFixed(1);
 
 const formatEdgeValue = (key, value) => {
   if (key === "SPEED_BURSTS") return Math.round(value).toLocaleString();

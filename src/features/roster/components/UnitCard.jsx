@@ -5,7 +5,7 @@ const ratingColor = (value) => {
   if (value >= 40) return "text-amber-300 light:text-amber-600";
   return "text-rose-400 light:text-rose-600";
 };
-const fmt = (v) => (typeof v === "number" ? v.toFixed(0) : "—");
+const fmt = (v) => (typeof v === "number" ? v.toFixed(0) : "-");
 const MiniStat = ({ label, value }) => (
   <div className="flex items-center gap-1">
     <span className="text-xs font-semibold uppercase tracking-wide text-gray-400 light:text-gray-500">

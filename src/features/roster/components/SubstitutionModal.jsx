@@ -198,7 +198,7 @@ export const SubstitutionModal = ({
                       {p.name}
                     </div>
                     <div className="text-xs text-gray-400 light:text-slate-500">
-                      {p.team || "—"}
+                      {p.team || "-"}
                     </div>
                   </div>
                   {onRoster && !rookieMode && (
@@ -211,7 +211,7 @@ export const SubstitutionModal = ({
                   >
                     {typeof impactPercentile === "number"
                       ? impactPercentile.toFixed(1)
-                      : "—"}
+                      : "-"}
                   </span>
                 </button>
               );

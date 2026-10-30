@@ -117,7 +117,7 @@ export const AuthModal = () => {
         );
       } else if (view === VIEW.RESET) {
         await resetPassword(email);
-        setNotice("Password reset email sent. Check your inbox — and your spam folder if you don't see it.");
+        setNotice("Password reset email sent. Check your inbox, and your spam folder if you don't see it.");
       }
     } catch (err) {
       setError(mapAuthError(err));

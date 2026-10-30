@@ -234,6 +234,11 @@ export const apiService = {
       errorMessage: "Failed to fetch teams",
     });
   },
+  fetchTeamSeasons() {
+    return cachedRequest("/v2/teams/seasons", {
+      errorMessage: "Failed to fetch team seasons",
+    });
+  },
   fetchTeamSummary(team, year) {
     return cachedRequest(
       `/v2/teams/${encodeURIComponent(team)}?season=${encodeURIComponent(year)}`,

@@ -291,7 +291,7 @@ export const ExpansionDraft = () => {
       setSaveState("error");
       setSaveError(
         err?.code === "permission-denied"
-          ? "Permission denied — deploy Firestore rules (see SETUP.md)."
+          ? "Permission denied. Deploy Firestore rules (see SETUP.md)."
           : err?.message || "Couldn't save. Please try again."
       );
     }

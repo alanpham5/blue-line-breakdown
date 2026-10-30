@@ -174,7 +174,7 @@ const PointsTable = ({ points, xMetric, yMetric }) => (
                 </Link>
               </td>
               <td className="px-2 py-1.5 text-gray-300 light:text-slate-600">
-                {point.team || "—"}
+                {point.team || "-"}
               </td>
               <td className="px-2 py-1.5 text-gray-300 light:text-slate-600">
                 {point.group}

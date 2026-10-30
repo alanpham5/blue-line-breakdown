@@ -85,12 +85,12 @@ export const LineSlot = ({
             {player.name}
           </div>
           <div className="text-[0.65rem] font-semibold uppercase tracking-wide text-gray-400 light:text-slate-500">
-            {player.team || "—"}
+            {player.team || "-"}
             {player.lineRole ? ` · ${player.lineRole}` : ""}
           </div>
         </div>
         <span className={`text-sm font-extrabold ${impactColor(impact)}`}>
-          {typeof impact === "number" ? impact.toFixed(1) : "—"}
+          {typeof impact === "number" ? impact.toFixed(1) : "-"}
         </span>
       </button>
     </div>

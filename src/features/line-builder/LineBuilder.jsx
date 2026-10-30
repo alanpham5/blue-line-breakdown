@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Loader2, Users, Shield, RotateCcw, Wand2 } from "lucide-react";
+import { Loader2, Users, Shield, RotateCcw } from "lucide-react";
 import { apiService } from "lib/api/apiService";
 import { playerUtils } from "utils/playerUtils";
 import { Header } from "components/layout/Header";
@@ -136,17 +136,6 @@ export const LineBuilder = () => {
   const handleClear = () => {
     setSlots(Array.from({ length: slotCount }, () => null));
   };
-  const handleSurprise = () => {
-    if (pool.length < slotCount) return;
-    const chosen = [];
-    while (chosen.length < slotCount) {
-      const candidate = pool[Math.floor(Math.random() * pool.length)];
-      if (!chosen.some((player) => player.playerId === candidate.playerId)) {
-        chosen.push(candidate);
-      }
-    }
-    setSlots(chosen.map((player) => player.playerId));
-  };
   const playersById = useMemo(() => {
     const map = {};
     pool.forEach((player) => {
@@ -221,13 +210,6 @@ export const LineBuilder = () => {
               </AppSelect>
             </label>
             <div className="flex items-center gap-2 sm:ml-auto">
-              <button
-                type="button"
-                onClick={handleSurprise}
-                className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold text-gray-300 transition hover:bg-white/10 hover:text-white light:text-slate-600 light:hover:bg-slate-900/10"
-              >
-                <Wand2 className="h-4 w-4" /> Random
-              </button>
               <button
                 type="button"
                 onClick={handleClear}

@@ -61,7 +61,7 @@ const PALETTES = {
 };
 
 const formatSavePct = (value) =>
-  value == null ? "—" : value.toFixed(3).replace(/^0/, "");
+  value == null ? "-" : value.toFixed(3).replace(/^0/, "");
 
 const ordinal = (value) => {
   const rounded = Math.round(value);
@@ -258,7 +258,7 @@ const RangeStat = ({ label, total }) => (
       {formatSavePct(total?.savePct)}
     </p>
     <p className="text-[0.6rem] leading-tight text-gray-500">
-      {total?.percentile != null ? ordinal(total.percentile) : "—"}
+      {total?.percentile != null ? ordinal(total.percentile) : "-"}
     </p>
   </div>
 );

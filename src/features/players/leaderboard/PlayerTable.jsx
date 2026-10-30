@@ -221,14 +221,14 @@ export const PlayerTable = ({ players, position }) => {
                   </td>
                   {!isMobile && (
                     <td className="px-2 py-2 text-left text-gray-300 light:text-slate-600">
-                      {player.team || "—"}
+                      {player.team || "-"}
                     </td>
                   )}
                   <td className="px-2 py-2 text-right text-gray-300 light:text-slate-600">
                     {formatHeight(player.height)}
                   </td>
                   <td className="px-2 py-2 text-right text-gray-300 light:text-slate-600">
-                    {player.weight == null ? "—" : player.weight}
+                    {player.weight == null ? "-" : player.weight}
                   </td>
                   <td
                     className="px-2 py-2 text-right font-bold text-white light:text-gray-900"

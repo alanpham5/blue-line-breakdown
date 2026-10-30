@@ -20,8 +20,7 @@ import {
 import { apiService } from "lib/api/apiService";
 import { Header } from "components/layout/Header";
 import { Footer } from "components/layout/Footer";
-import { GeneralSearch } from "components/search/GeneralSearch";
-import { AppSelect } from "components/ui/AppSelect";
+import { TeamSeasonPicker } from "components/search/TeamSeasonPicker";
 import { playerUtils } from "utils/playerUtils";
 import { useTheme } from "providers/ThemeContext";
 import { useIsMobile } from "hooks/useIsMobile";
@@ -30,7 +29,6 @@ import { UnitCard } from "features/roster/components/UnitCard";
 import { RosterPlayerCard } from "features/roster/components/RosterPlayerCard";
 import { SubstitutionModal } from "features/roster/components/SubstitutionModal";
 import { RosterShareableDisplay } from "features/roster/components/RosterShareableDisplay";
-import { seasonRange } from "utils/season";
 const getSeasonName = (s) => `${s}-${(parseInt(s) + 1).toString().slice(-2)}`;
 const getClinchStatus = (clincher) => {
   const statusMap = {
@@ -82,13 +80,13 @@ export const Roster = () => {
   const [rookies, setRookies] = useState({});
   const [showShareableModal, setShowShareableModal] = useState(false);
   const teamSeasonRef = useRef(`${team}-${season}`);
-  const seasonsList = seasonRange();
-  const handleSeasonChange = (nextSeason) => {
-    if (!team || !nextSeason) return;
-    navigate(
-      `/teams/roster?team=${encodeURIComponent(team)}&season=${nextSeason}`
-    );
-  };
+  const handleTeamSeasonSelect = useCallback(
+    (nextTeam, nextSeason) =>
+      navigate(
+        `/teams/roster?team=${encodeURIComponent(nextTeam)}&season=${nextSeason}`
+      ),
+    [navigate]
+  );
   useEffect(() => {
     document.title = team
       ? `${playerUtils.getFullTeamName(team, season)} Roster | Blue Line Breakdown`
@@ -358,31 +356,12 @@ export const Roster = () => {
           <ArrowLeft className="h-4 w-4" /> Back to Team
         </button>
 
-        <div className="liquid-glass-strong mb-6 grid grid-cols-1 gap-3 overflow-visible rounded-[32px] p-4 sm:mb-8 sm:grid-cols-[2fr_1fr] sm:items-center sm:gap-4 sm:p-5">
-          <GeneralSearch
-            bare
-            compact
-            scope="teams"
-            initialQuery={team ? playerUtils.getFullTeamName(team, season) : ""}
-            targetSeason={season}
-            teamResultPath="/teams/roster"
-            className="w-full"
+        <div className="liquid-glass-strong relative z-50 mb-6 overflow-visible rounded-[32px] p-4 sm:mb-8 sm:p-5">
+          <TeamSeasonPicker
+            team={team}
+            season={season}
+            onSelect={handleTeamSeasonSelect}
           />
-          <label className="block w-full">
-            <span className="sr-only">Season</span>
-            <AppSelect
-              placeholder="Season"
-              value={String(season)}
-              onChange={(event) => handleSeasonChange(event.target.value)}
-              className="app-field w-full px-4 py-3.5 pr-10 text-base normal-case tracking-normal text-white light:text-gray-900"
-            >
-              {[...seasonsList].reverse().map((availableSeason) => (
-                <option key={availableSeason} value={availableSeason}>
-                  {getSeasonName(availableSeason)}
-                </option>
-              ))}
-            </AppSelect>
-          </label>
         </div>
 
         {team && season && (
@@ -470,7 +449,7 @@ export const Roster = () => {
                   <p className="mt-1 text-xs text-gray-400 light:text-gray-500">
                     {error
                       ? "Lineup data isn't available for this team & season."
-                      : "Modify mode — substitute any player to re-estimate the record & line scores"}
+                      : "Modify mode: substitute any player to re-estimate the record & line scores"}
                   </p>
                 )}
               </div>

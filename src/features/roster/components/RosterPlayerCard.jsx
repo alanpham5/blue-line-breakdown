@@ -85,7 +85,7 @@ export const RosterPlayerCard = ({
             {player.name || "Unknown"}
           </span>
           <span className={`shrink-0 text-sm font-bold ${valueColor}`}>
-            {pct != null ? pct.toFixed(1) : "—"}
+            {pct != null ? pct.toFixed(1) : "-"}
           </span>
         </div>
         <div className="mt-1.5 flex items-center gap-1.5">

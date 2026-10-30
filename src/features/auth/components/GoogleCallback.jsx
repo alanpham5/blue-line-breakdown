@@ -28,7 +28,7 @@ export const GoogleCallback = () => {
     }
 
     if (!customToken) {
-      setError("Sign-in failed — no session token received. Please try again.");
+      setError("Sign-in failed: no session token received. Please try again.");
       return;
     }
 

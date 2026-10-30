@@ -153,7 +153,7 @@ export const AccountSettings = () => {
     setError("");
     try {
       await resetPassword(user.email);
-      setNotice("Password reset email sent. Check your inbox — and your spam folder if you don't see it.");
+      setNotice("Password reset email sent. Check your inbox, and your spam folder if you don't see it.");
     } catch {
       setError("Couldn't send reset email. Please try again.");
     } finally {
@@ -166,7 +166,7 @@ export const AccountSettings = () => {
     setError("");
     try {
       await resendVerification();
-      setNotice("Verification email sent. Check your inbox — and your spam folder if you don't see it.");
+      setNotice("Verification email sent. Check your inbox, and your spam folder if you don't see it.");
     } catch {
       setError("Couldn't send verification email. Please try again.");
     } finally {

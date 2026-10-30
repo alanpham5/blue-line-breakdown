@@ -5,9 +5,14 @@ export const seasonSpan = (season) => {
 
 const FIRST_SEASON = 2008;
 const OCTOBER = 9;
+const SEASON_OPENS_DAY = 20;
+
+const seasonHasOpened = (today) =>
+  today.getMonth() > OCTOBER ||
+  (today.getMonth() === OCTOBER && today.getDate() >= SEASON_OPENS_DAY);
 
 export const currentSeasonStart = (today = new Date()) =>
-  today.getMonth() >= OCTOBER ? today.getFullYear() : today.getFullYear() - 1;
+  seasonHasOpened(today) ? today.getFullYear() : today.getFullYear() - 1;
 
 export const seasonRange = (today = new Date()) =>
   Array.from(

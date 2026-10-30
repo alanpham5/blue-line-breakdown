@@ -73,7 +73,7 @@ const ImpactColumn = ({ title, accent, players, season }) => (
             </div>
           </div>
           <span className={`text-sm font-extrabold shrink-0 ${accent}`}>
-            {p.warPercentile != null ? `${p.warPercentile.toFixed(1)}%` : "—"}
+            {p.warPercentile != null ? `${p.warPercentile.toFixed(1)}%` : "-"}
           </span>
         </div>
       ))}

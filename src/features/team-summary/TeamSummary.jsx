@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Download, Loader2, Search, Share } from "lucide-react";
 import { track } from "@vercel/analytics";
 import { apiService } from "lib/api/apiService";
 import { Header } from "components/layout/Header";
 import { Footer } from "components/layout/Footer";
-import { GeneralSearch } from "components/search/GeneralSearch";
 import { LookupHeader } from "components/search/LookupHeader";
-import { AppSelect } from "components/ui/AppSelect";
+import { TeamSeasonPicker } from "components/search/TeamSeasonPicker";
+import { TeamSeasonSelects } from "components/search/TeamSeasonSelects";
 import { SimilarTeamsSection } from "components/teamProfile/SimilarTeamsSection";
 import {
   TeamIdentityPanel,
@@ -23,7 +23,8 @@ import { TeamProfileShareablePreview } from "features/team-summary/components/Te
 import { playerUtils } from "utils/playerUtils";
 import { useIsMobile } from "hooks/useIsMobile";
 import { useTheme } from "providers/ThemeContext";
-import { seasonRange } from "utils/season";
+import { useSeasonTeams } from "hooks/useSeasonTeams";
+import { useTeamSeasons } from "hooks/useTeamSeasons";
 
 const getSeasonName = (season) =>
   `${season}-${(Number(season) + 1).toString().slice(-2)}`;
@@ -73,15 +74,14 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
   const [hasSearched, setHasSearched] = useState(
     Boolean(initialTeam && initialSeason)
   );
-  const [teamsList, setTeamsList] = useState([]);
-  const [loadingTeams, setLoadingTeams] = useState(false);
   const [loadingData, setLoadingData] = useState(false);
   const [teamSummaryData, setTeamSummaryData] = useState(null);
   const [teamRecord, setTeamRecord] = useState(null);
   const [teamClinchStatus, setTeamClinchStatus] = useState(null);
   const [error, setError] = useState("");
   const [showShareableModal, setShowShareableModal] = useState(false);
-  const seasonsList = seasonRange();
+  const seasonsList = useTeamSeasons();
+  const { teams: teamsList, loading: loadingTeams } = useSeasonTeams(tempSeason);
 
   useEffect(() => {
     document.title = teamSummaryData
@@ -90,26 +90,10 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
   }, [season, team, teamSummaryData]);
 
   useEffect(() => {
-    if (!tempSeason) {
-      setTeamsList([]);
-      return;
+    if (tempTeam && teamsList.length && !teamsList.includes(tempTeam)) {
+      setTempTeam("");
     }
-    const fetchTeams = async () => {
-      setLoadingTeams(true);
-      try {
-        const data = await apiService.fetchTeams(tempSeason);
-        setTeamsList(data.teams || []);
-        if (tempTeam && data.teams?.length && !data.teams.includes(tempTeam)) {
-          setTempTeam("");
-        }
-      } catch {
-        setTeamsList([]);
-      } finally {
-        setLoadingTeams(false);
-      }
-    };
-    fetchTeams();
-  }, [tempSeason]);
+  }, [teamsList, tempTeam]);
 
   const fetchTeamSummaryData = async (teamCode, seasonYear) => {
     setLoadingData(true);
@@ -176,11 +160,14 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
     });
   };
 
-  const handleProfileSeasonChange = (nextSeason) => {
-    if (!team || !nextSeason) return;
-    setTempSeason(nextSeason);
-    setSearchParams({ team, season: nextSeason });
-  };
+  const handleProfileSelect = useCallback(
+    (nextTeam, nextSeason) => {
+      setTempTeam(nextTeam);
+      setTempSeason(nextSeason);
+      setSearchParams({ team: nextTeam, season: nextSeason });
+    },
+    [setSearchParams]
+  );
 
   const handleSimilarTeamClick = (nextTeam, nextSeason) => {
     setTempTeam(nextTeam);
@@ -194,8 +181,6 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
       ? playerUtils.playerProfilePath(player.playerId, season)
       : null;
 
-  const getTeamLabel = (teamCode) =>
-    Number(tempSeason) <= 2013 && teamCode === "ARI" ? "PHX" : teamCode;
   const teamCardGradient = playerUtils.getTeamCardGradient(
     team,
     season,
@@ -253,35 +238,12 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
 
         <div className="relative z-50 mt-8">
           {hasSearched && teamSummaryData ? (
-            <div className="liquid-glass-strong grid grid-cols-1 gap-3 overflow-visible rounded-[32px] p-4 sm:grid-cols-[2fr_1fr] sm:items-center sm:gap-4 sm:p-5">
-              <GeneralSearch
-                bare
-                compact
-                scope="teams"
-                initialQuery={playerUtils.getFullTeamName(team, season)}
-                targetSeason={season}
-                className="w-full"
+            <div className="liquid-glass-strong overflow-visible rounded-[32px] p-4 sm:p-5">
+              <TeamSeasonPicker
+                team={team}
+                season={season}
+                onSelect={handleProfileSelect}
               />
-              <label className="block w-full">
-                <span className="sr-only">Season</span>
-                <AppSelect
-                  placeholder="Season"
-                  value={String(season)}
-                  onChange={(event) =>
-                    handleProfileSeasonChange(event.target.value)
-                  }
-                  className="app-field w-full px-4 py-3.5 pr-10 text-base normal-case tracking-normal text-white light:text-gray-900"
-                >
-                  {(
-                    teamSummaryData.availableSeasons ||
-                    [...seasonsList].reverse()
-                  ).map((availableSeason) => (
-                    <option key={availableSeason} value={availableSeason}>
-                      {getSeasonName(availableSeason)}
-                    </option>
-                  ))}
-                </AppSelect>
-              </label>
             </div>
           ) : (
             <div
@@ -289,41 +251,15 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
               style={{ overflow: "visible" }}
             >
               <LookupHeader title="Lookup Team" />
-              <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
-                <AppSelect
-                  placeholder="Season"
-                  value={tempSeason}
-                  onChange={(event) => setTempSeason(event.target.value)}
-                  className="app-field px-4 py-3.5 pr-10 text-base text-white light:text-gray-900"
-                >
-                  {[...seasonsList].reverse().map((availableSeason) => (
-                    <option key={availableSeason} value={availableSeason}>
-                      {getSeasonName(availableSeason)}
-                    </option>
-                  ))}
-                </AppSelect>
-                <AppSelect
-                  placeholder="Team"
-                  value={tempTeam}
-                  onChange={(event) => setTempTeam(event.target.value)}
-                  disabled={loadingTeams || !tempSeason}
-                  className="app-field px-4 py-3.5 pr-10 text-base text-white light:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {loadingTeams ? (
-                    <option>Loading...</option>
-                  ) : (
-                    [...teamsList]
-                      .sort((first, second) =>
-                        getTeamLabel(first).localeCompare(getTeamLabel(second))
-                      )
-                      .map((teamCode) => (
-                        <option key={teamCode} value={teamCode}>
-                          {getTeamLabel(teamCode)}
-                        </option>
-                      ))
-                  )}
-                </AppSelect>
-              </div>
+              <TeamSeasonSelects
+                seasons={seasonsList}
+                season={tempSeason}
+                onSeasonChange={setTempSeason}
+                teams={teamsList}
+                team={tempTeam}
+                onTeamChange={setTempTeam}
+                loadingTeams={loadingTeams}
+              />
               <button
                 type="button"
                 onClick={handleSearchClick}

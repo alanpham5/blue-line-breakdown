@@ -43,7 +43,7 @@ const clamp = (value) => Math.min(100, Math.max(0, Number(value) || 0));
 
 const formatValue = (value) => {
   const number = Number(value);
-  if (!Number.isFinite(number)) return "—";
+  if (!Number.isFinite(number)) return "-";
   if (Math.abs(number) >= 10) return number.toFixed(1);
   return number.toFixed(2);
 };

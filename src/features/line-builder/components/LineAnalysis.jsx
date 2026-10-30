@@ -38,7 +38,7 @@ const ratingFill = (value) => {
   return "from-rose-500 to-red-400";
 };
 const format = (value, digits = 1) =>
-  typeof value === "number" ? value.toFixed(digits) : "—";
+  typeof value === "number" ? value.toFixed(digits) : "-";
 const Section = ({ icon, title, subtitle, children }) => (
   <div className="liquid-glass-strong rounded-[28px] p-4 sm:p-5">
     <div className="mb-3.5 flex items-start gap-2">

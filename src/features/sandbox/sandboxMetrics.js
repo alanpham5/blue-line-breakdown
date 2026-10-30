@@ -20,7 +20,7 @@ const edgeValue = (key) => (player) => {
 };
 
 const formatNumber = (digits) => (value) =>
-  value == null ? "—" : Number(value).toFixed(digits);
+  value == null ? "-" : Number(value).toFixed(digits);
 
 const baseMetrics = [
   {

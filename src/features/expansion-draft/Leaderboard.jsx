@@ -108,7 +108,7 @@ export const Leaderboard = () => {
           ) : drafts.length === 0 ? (
             <div className="liquid-glass rounded-[24px] p-10 text-center text-gray-400">
               <Trophy className="mx-auto mb-3 h-10 w-10 opacity-40" />
-              No franchises posted yet. Be the first —{" "}
+              No franchises posted yet. Be the first to{" "}
               <Link
                 to="/expansion-draft"
                 className="font-semibold text-sky-300 hover:text-sky-200 light:text-sky-600"

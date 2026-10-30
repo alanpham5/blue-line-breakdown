@@ -169,7 +169,7 @@ export const DraftResult = () => {
       setSaveState("error");
       setSaveError(
         err?.code === "permission-denied"
-          ? "Permission denied — deploy Firestore rules (see SETUP.md)."
+          ? "Permission denied. Deploy Firestore rules (see SETUP.md)."
           : err?.message || "Couldn't save. Please try again."
       );
       return null;
@@ -594,7 +594,7 @@ const RosterCard = ({ player, season, actualTheme, onSelect }) => {
             League Pctile
           </span>
           <span className={`font-bold ${theme.text}`}>
-            {hasPercentile ? `${percentile.toFixed(1)}%` : "—"}
+            {hasPercentile ? `${percentile.toFixed(1)}%` : "-"}
           </span>
         </div>
         <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/[0.08] light:bg-gray-200">

@@ -98,7 +98,7 @@ export const CareerSeasonsTable = ({
                           }}
                         />
                       )}
-                      {line.team || "—"}
+                      {line.team || "-"}
                     </span>
                   </td>
                   {columns.map((column) => (
@@ -112,7 +112,7 @@ export const CareerSeasonsTable = ({
                   <td className="px-2 py-2.5 text-right font-semibold tabular-nums text-white light:text-gray-900">
                     {typeof line.impactPercentile === "number"
                       ? line.impactPercentile.toFixed(1)
-                      : "—"}
+                      : "-"}
                   </td>
                   <td className="py-2.5 pr-1 text-gray-500 light:text-slate-400">
                     <ChevronRight className="h-4 w-4" />

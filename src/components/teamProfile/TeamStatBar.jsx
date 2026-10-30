@@ -32,7 +32,7 @@ export const TeamStatBar = ({
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <span className={`text-sm lg:text-base font-bold ${valueColor}`}>
-            {hasPercentile ? safePercentile.toFixed(1) : "—"}
+            {hasPercentile ? safePercentile.toFixed(1) : "-"}
           </span>
         </div>
       </div>

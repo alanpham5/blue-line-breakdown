@@ -63,7 +63,7 @@ export const PercentileBar = ({
         <span
           className={`text-sm ${!compact ? "lg:text-base" : "lg:text-xl"} font-bold shrink-0 ${valueColor} ${forceDark ? "" : ""}`}
         >
-          {hasValue ? value.toFixed(1) : "—"}
+          {hasValue ? value.toFixed(1) : "-"}
         </span>
       </div>
       <div

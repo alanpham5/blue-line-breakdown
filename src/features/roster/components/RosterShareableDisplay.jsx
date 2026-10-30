@@ -14,7 +14,7 @@ const ratingColor = (value) => {
   if (value >= 40) return "#fcd34d";
   return "#fb7185";
 };
-const fmt = (v) => (typeof v === "number" ? v.toFixed(0) : "—");
+const fmt = (v) => (typeof v === "number" ? v.toFixed(0) : "-");
 const PlayerChip = ({ player, team, season }) => {
   const pct =
     typeof player.warPercentile === "number" ? player.warPercentile : null;

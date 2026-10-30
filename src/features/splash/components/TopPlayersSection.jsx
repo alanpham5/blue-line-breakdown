@@ -90,13 +90,13 @@ export const TopPlayersSection = ({
                   {player.name}
                 </p>
                 <p className="text-xs text-gray-400 light:text-slate-500">
-                  {player.team || "—"}
+                  {player.team || "-"}
                 </p>
               </div>
               <div className="shrink-0 text-right">
                 <p className="text-sm font-bold text-[#7ee340] light:text-[#2e6e14]">
                   {player.leaguePercentile == null
-                    ? "—"
+                    ? "-"
                     : player.leaguePercentile.toFixed(1)}
                 </p>
                 <p className="text-[10px] uppercase tracking-wide text-gray-500 light:text-slate-400">
