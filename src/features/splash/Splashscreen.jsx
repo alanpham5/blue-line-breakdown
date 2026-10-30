@@ -19,6 +19,7 @@ import {
   SectionAnchor,
 } from "features/expansion-draft/components/DraftLeaderboardPreview";
 import "./Splashscreen.css";
+const SHOW_COMMUNITY_DRAFTS = false;
 export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -158,7 +159,7 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                 Try again
               </button>
             </div>
-            <DraftLeaderboardPreview limit={5} />
+            {SHOW_COMMUNITY_DRAFTS && <DraftLeaderboardPreview limit={5} />}
           </div>
           <Footer />
         </div>
@@ -501,10 +502,12 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
               </section>
             )}
 
-            <DraftLeaderboardPreview
-              className={enablePageLoadAnimations ? "fade-in-up-delay-3" : ""}
-              limit={5}
-            />
+            {SHOW_COMMUNITY_DRAFTS && (
+              <DraftLeaderboardPreview
+                className={enablePageLoadAnimations ? "fade-in-up-delay-3" : ""}
+                limit={5}
+              />
+            )}
           </div>
 
           <Footer />
