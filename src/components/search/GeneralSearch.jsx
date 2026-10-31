@@ -16,18 +16,23 @@ const PANEL_GAP = 8;
 const SEARCH_DEBOUNCE_MS = 120;
 const INDEX_IDLE_TIMEOUT_MS = 1500;
 
-const opensCurrentView = (result, currentSeason) =>
-  currentSeason != null && Number(result.latestSeason) >= currentSeason - 1;
+const recentSeason = (result, currentSeason) =>
+  currentSeason != null && Number(result.latestSeason) >= currentSeason - 1
+    ? Number(result.latestSeason)
+    : null;
 
-const playerPagePath = (result, currentSeason) =>
-  opensCurrentView(result, currentSeason)
-    ? `/players/v2/${result.playerId}?season=${currentSeason}`
+const playerPagePath = (result, currentSeason) => {
+  const season = recentSeason(result, currentSeason);
+  return season
+    ? `/players/v2/${result.playerId}?season=${season}`
     : `/players/v2/${result.playerId}`;
+};
 
 const prefetchPlayerPage = (result, currentSeason) => {
   if (result?.type !== "player" || !result.playerId) return;
-  const request = opensCurrentView(result, currentSeason)
-    ? apiService.fetchPlayerProfileV2(result.playerId, currentSeason)
+  const season = recentSeason(result, currentSeason);
+  const request = season
+    ? apiService.fetchPlayerProfileV2(result.playerId, season)
     : apiService.fetchPlayerCareerV2(result.playerId);
   request.catch(() => {});
 };

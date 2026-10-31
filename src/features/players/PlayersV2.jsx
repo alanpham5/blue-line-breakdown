@@ -113,6 +113,11 @@ export const PlayersV2 = () => {
       })
       .catch((requestError) => {
         if (cancelled) return;
+        const latestSeason = requestError.availableSeasons?.[0];
+        if (requestError.status === 404 && season && latestSeason) {
+          setSearchParams({ season: String(latestSeason) }, { replace: true });
+          return;
+        }
         setPlayerData(null);
         setError(requestError.message);
         reportPageView(

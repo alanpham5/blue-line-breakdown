@@ -39,7 +39,10 @@ const request = (path, { method = "GET", body, errorMessage, signal } = {}) =>
     });
     if (!res.ok) {
       const error = await res.json().catch(() => ({}));
-      throw new Error(error.error || errorMessage || "Request failed");
+      throw Object.assign(
+        new Error(error.error || errorMessage || "Request failed"),
+        { status: res.status, availableSeasons: error.availableSeasons }
+      );
     }
     return res.json();
   });

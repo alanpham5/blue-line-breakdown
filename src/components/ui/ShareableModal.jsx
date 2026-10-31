@@ -195,6 +195,10 @@ export const ShareableModal = ({ isOpen, onClose, fileName, children }) => {
             ".shareable-modal-content"
           );
           if (clonedContent) removeZeroSizeGradients(clonedContent);
+          clonedDoc.querySelectorAll("[data-export-nudge]").forEach((el) => {
+            el.style.position = "relative";
+            el.style.top = `-${el.dataset.exportNudge}px`;
+          });
         },
       });
       return canvas.toDataURL("image/png");
