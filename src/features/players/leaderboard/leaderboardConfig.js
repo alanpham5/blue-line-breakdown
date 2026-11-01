@@ -6,19 +6,16 @@ export const POSITIONS = [
 
 const SKATER_METRIC_GROUPS = [
   {
+    type: "tendencies",
+    keys: ["SHOT_FREQ", "PASS_FREQ", "PHYS", "BLK"],
+  },
+  {
     type: "offensive",
-    keys: [
-      "SHOT_TAL",
-      "PLAY_DRV",
-      "SHOT_FREQ",
-      "PASS_FREQ",
-      "PP_USAGE",
-      "ONICE_IMP",
-    ],
+    keys: ["SHOT_TAL", "PLAY_DRV", "PP_USAGE", "ONICE_IMP"],
   },
   {
     type: "defensive",
-    keys: ["POS_CTRL", "BLK", "HIT", "TAKE", "D_EXIT", "CH_SUP"],
+    keys: ["POS_CTRL", "TAKE", "D_EXIT", "CH_SUP"],
   },
   {
     type: "edge",

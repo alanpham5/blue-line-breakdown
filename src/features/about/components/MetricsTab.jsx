@@ -71,7 +71,7 @@ const archetypeCriteria = {
   "Big Shot": "Goals ≥ 80th",
   "Stay at Home": "Corsi % ≤ 25th",
   Blockaholic: "Blocks/60 ≥ 80th",
-  "Battering Ram": "Hits/60 ≥ 80th",
+  "Battering Ram": "Hits per 60 defending min ≥ 80th",
   Fisticuffs: "Major penalties ≥ 90th",
   Racehorse: "Top speed + 20 mph bursts ≥ 80th",
   "Big Save Machine": "High-danger saves ≥ 80th",
@@ -100,9 +100,9 @@ const skaterTendencies = [
     label: "Physical Pressure",
     color: "#ffcc00",
     components: [
-      { label: "Hits per 60", influence: 3 },
+      { label: "Hits per 60 defending minutes", influence: 3 },
       { label: "Penalties drawn per 60", influence: 2 },
-      { label: "Takeaways per 60", influence: 1 },
+      { label: "Takeaways per 60 defending minutes", influence: 1 },
     ],
   },
   {

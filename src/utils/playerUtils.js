@@ -744,6 +744,7 @@ export const playerUtils = {
       POS_CTRL: "Defensive Impact",
       BLK: "Shot Blocking",
       HIT: "Physical Engagement",
+      PHYS: "Physical Pressure",
       TAKE: "Takeaways",
       CH_SUP: "Chance Suppression",
       D_EXIT: "D-Zone Exits",
@@ -783,6 +784,7 @@ export const playerUtils = {
       POS_CTRL: "Def Imp",
       BLK: "Blk",
       HIT: "Hit",
+      PHYS: "Phys",
       TAKE: "Take",
       CH_SUP: "Ch Sup",
       D_EXIT: "DZ Exits",
@@ -828,6 +830,7 @@ export const playerUtils = {
         "Role-aware defensive quality across takeaways, chance suppression, and goal prevention.",
       BLK: "How often the player blocks opponent shots.",
       HIT: "How often the player uses physical contact (hits, scrums, or fights) to disrupt opponents.",
+      PHYS: "Hits and takeaways per 60 minutes the opponent has the puck at 5-on-5 (ice time × (1 − Corsi %)), plus penalties drawn per 60, so players on puck-dominant teams aren't penalized for fewer chances to hit.",
       TAKE: "How often the player takes the puck away from opponents.",
       CH_SUP: "Share of opponent scoring chances limited by the player.",
       D_EXIT:
