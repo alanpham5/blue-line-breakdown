@@ -70,7 +70,7 @@ const archetypeCriteria = {
   Quarterback: "Assists or setup xG ≥ 80th",
   "Big Shot": "Goals ≥ 80th",
   "Stay at Home": "Corsi % ≤ 25th",
-  Blockaholic: "Blocks/60 ≥ 80th",
+  Blockaholic: "Blocks per shot attempt against ≥ 80th",
   "Battering Ram": "Hits per 60 defending min ≥ 80th",
   Fisticuffs: "Major penalties ≥ 90th",
   Racehorse: "Top speed + 20 mph bursts ≥ 80th",
@@ -109,7 +109,6 @@ const skaterTendencies = [
     label: "Shot Blocking",
     color: "#34c759",
     components: [
-      { label: "Blocked shots per 60", influence: 3 },
       { label: "Blocks per on-ice shot attempt against", influence: 3 },
     ],
   },

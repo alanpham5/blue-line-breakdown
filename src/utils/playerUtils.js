@@ -828,7 +828,7 @@ export const playerUtils = {
         "The player's 5-on-5 Game Score rate compared with positional peers.",
       POS_CTRL:
         "Role-aware defensive quality across takeaways, chance suppression, and goal prevention.",
-      BLK: "How often the player blocks opponent shots.",
+      BLK: "Share of opponent shot attempts the player blocks while on the ice at 5-on-5, so players who face fewer shots aren't penalized.",
       HIT: "How often the player uses physical contact (hits, scrums, or fights) to disrupt opponents.",
       PHYS: "Hits and takeaways per 60 minutes the opponent has the puck at 5-on-5 (ice time × (1 − Corsi %)), plus penalties drawn per 60, so players on puck-dominant teams aren't penalized for fewer chances to hit.",
       TAKE: "How often the player takes the puck away from opponents.",
