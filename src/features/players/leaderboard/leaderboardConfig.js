@@ -18,6 +18,10 @@ const SKATER_METRIC_GROUPS = [
     keys: ["POS_CTRL", "TAKE", "D_EXIT", "CH_SUP"],
   },
   {
+    type: "deployment",
+    keys: ["OZ_START", "NZ_START", "DZ_START", "PP_TOI", "PK_TOI", "MATES"],
+  },
+  {
     type: "edge",
     keys: [
       "TOP_SPEED",

@@ -108,6 +108,7 @@ export const PlayerTable = ({ players, position }) => {
   const groupHeaderColor = (type) => {
     if (type === "edge") return "text-emerald-300 light:text-emerald-700";
     if (type === "tendencies") return "text-violet-300 light:text-violet-700";
+    if (type === "deployment") return "text-amber-300 light:text-amber-700";
     return type === "offensive" || type === "shotStopping"
       ? "text-cyan-300 light:text-cyan-700"
       : "text-rose-400 light:text-rose-600";
@@ -148,7 +149,7 @@ export const PlayerTable = ({ players, position }) => {
                 onSort={handleSort}
               />
               <SortHeader
-                label="League %"
+                label="Impact"
                 sortKey="leaguePercentile"
                 sort={sort}
                 onSort={handleSort}

@@ -282,7 +282,7 @@ export const PlayerProfileShareablePreview = ({
               gap: 14,
             }}
           >
-            <CountingStatsRow stats={stats} />
+            {isGoalie && <CountingStatsRow stats={stats} />}
 
             <div
               className={`grid gap-3.5 ${isGoalie ? "min-h-[360px] grid-cols-3" : "grid-cols-2"}`}

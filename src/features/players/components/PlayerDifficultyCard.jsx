@@ -177,7 +177,11 @@ const TeammateHeadshot = ({ teammate, shareable }) => {
   );
   return (
     <div
-      className={`${shareable ? "h-24 w-24" : "h-20 w-20"} shrink-0 overflow-hidden rounded-full border border-white/[0.06] bg-zinc-950/55 light:border-slate-200 light:bg-slate-100`}
+      className={`shrink-0 overflow-hidden rounded-full bg-zinc-950/55 ${
+        shareable
+          ? "h-[92px] w-[92px] border border-white/[0.06]"
+          : "h-16 w-16 shadow-lg backdrop-blur-sm light:bg-slate-700/45 sm:h-20 sm:w-20"
+      }`}
     >
       <img
         src={shareable ? playerUtils.getCorsWrappedUrl(headshot) : headshot}

@@ -25,7 +25,7 @@ const formatNumber = (digits) => (value) =>
 const baseMetrics = [
   {
     key: "leaguePercentile",
-    label: "League %",
+    label: "Impact",
     group: "Overall",
     value: (player) => player.leaguePercentile,
     format: formatNumber(1),
@@ -51,6 +51,7 @@ const baseMetrics = [
 const groupLabels = {
   offensive: "Offense (percentile)",
   defensive: "Defense (percentile)",
+  deployment: "Deployment (percentile)",
   edge: "NHL EDGE",
 };
 

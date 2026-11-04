@@ -749,6 +749,12 @@ export const playerUtils = {
       CH_SUP: "Chance Suppression",
       D_EXIT: "D-Zone Exits",
       GOAL_PREV: "Goal Prevention",
+      OZ_START: "Offensive Zone Starts",
+      NZ_START: "Neutral Zone Starts",
+      DZ_START: "Defensive Zone Starts",
+      PP_TOI: "Power Play Time",
+      PK_TOI: "Penalty Kill Time",
+      MATES: "Teammate Quality",
       SV_PCT: "Save Percentage",
       GSAX: "Goals Saved Above Expected (GSAX/60)",
       HD_SV: "High-Danger Save %",
@@ -780,7 +786,7 @@ export const playerUtils = {
       SHOT_FREQ: "Shot Tnd",
       PASS_FREQ: "Buildup",
       PP_USAGE: "Position",
-      ONICE_IMP: "Impact",
+      ONICE_IMP: "GS/60",
       POS_CTRL: "Def Imp",
       BLK: "Blk",
       HIT: "Hit",
@@ -789,6 +795,12 @@ export const playerUtils = {
       CH_SUP: "Ch Sup",
       D_EXIT: "DZ Exits",
       GOAL_PREV: "Goal Prv",
+      OZ_START: "OZ St",
+      NZ_START: "NZ St",
+      DZ_START: "DZ St",
+      PP_TOI: "PP",
+      PK_TOI: "PK",
+      MATES: "Mates",
       SV_PCT: "SV%",
       GSAX: "GSAx",
       HD_SV: "HD SV%",
@@ -836,6 +848,16 @@ export const playerUtils = {
       D_EXIT:
         "How reliably the team gets the puck out of its own end with the player on the ice, from zone transitions across his shifts and how rarely he gives the puck away in the defensive zone.",
       GOAL_PREV: "Share of scoring attempts stopped by the player.",
+      OZ_START:
+        "Share of the player's 5-on-5 shifts that start in the offensive zone.",
+      NZ_START:
+        "Share of the player's 5-on-5 shifts that start in the neutral zone.",
+      DZ_START:
+        "Share of the player's 5-on-5 shifts that start in the defensive zone.",
+      PP_TOI: "Power play time per game.",
+      PK_TOI: "Penalty kill time per game.",
+      MATES:
+        "Average impact of the player's linemates or defense partners, weighted by time together.",
       winShare:
         "The percentile rank of the player's contribution to team wins compared to other players on the team in the same position.",
       SV_PCT:

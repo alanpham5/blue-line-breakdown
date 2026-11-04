@@ -100,7 +100,7 @@ export const TopPlayersSection = ({
                     : player.leaguePercentile.toFixed(1)}
                 </p>
                 <p className="text-[10px] uppercase tracking-wide text-gray-500 light:text-slate-400">
-                  League %
+                  Impact
                 </p>
               </div>
             </Link>

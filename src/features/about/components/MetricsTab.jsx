@@ -204,7 +204,7 @@ const edgeMetrics = [
 
 const similarityFacts = [
   ["Score", "0–100 match in style and calibre"],
-  ["Compared on", "Tendencies, quality, and impact"],
+  ["Compared on", "Scoring, physical play, usage, and impact"],
   ["Season filter", "Limits matches to one year"],
 ];
 

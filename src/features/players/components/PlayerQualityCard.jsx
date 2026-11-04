@@ -90,11 +90,12 @@ export const PlayerQualityCard = ({
             >
               <span
                 className={`${shareable ? (compact ? "text-xl" : "text-2xl") : "text-base"} font-bold tabular-nums ${accentText}`}
+                data-export-nudge={shareable ? 8 : undefined}
               >
                 {value.toFixed(0)}
               </span>
               <div
-                className={`relative h-full ${shareable ? "min-h-[170px] max-w-[70px]" : "min-h-[200px] max-w-[68px]"} w-full overflow-hidden rounded-2xl ${track} light:bg-slate-200`}
+                className={`relative h-full ${shareable ? `${compact ? "min-h-[170px]" : "min-h-[304px]"} max-w-[70px]` : "min-h-[200px] max-w-[68px]"} w-full overflow-hidden rounded-2xl ${track} light:bg-slate-200`}
                 role="img"
                 aria-label={`${stat.label}: ${getOrdinal(value)} league percentile`}
               >
