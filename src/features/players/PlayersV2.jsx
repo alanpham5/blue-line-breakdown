@@ -35,7 +35,7 @@ const IMPACT_TOOLTIPS = {
   skater: {
     title: "5-on-5 Player Impact",
     season:
-      "Season impact from Game Score rate, total contribution, and role-aware offensive and defensive quality, ranked against eligible players at the same position.",
+      "Season impact from Game Score rate, total contribution, role-aware offensive and defensive quality, and deployment, ranked against eligible players at the same position.",
     combined:
       "Early-season impact blends this season and last season, each ranked against eligible players at the same position and weighted by ice time.",
   },
