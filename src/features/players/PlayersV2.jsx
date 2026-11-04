@@ -14,6 +14,7 @@ import { CountingStats } from "features/players/components/CountingStats";
 import { EdgeStats } from "features/players/components/EdgeStats";
 import { ImpactTrendCard } from "features/players/components/ImpactTrendCard";
 import { PlayerHeader } from "features/players/components/PlayerHeader";
+import { PlayerDifficultyCard } from "features/players/components/PlayerDifficultyCard";
 import { PlayerQualityCard } from "features/players/components/PlayerQualityCard";
 import { PlayerTendenciesCard } from "features/players/components/PlayerTendenciesCard";
 import { SimilarPlayersSection } from "features/players/components/SimilarPlayersSection";
@@ -362,12 +363,26 @@ export const PlayersV2 = () => {
                     {qualityCards}
                   </div>
                 ) : (
-                  <>
-                    <PlayerTendenciesCard tendencies={playerData.tendencies} />
-                    <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
-                      {qualityCards}
+                  <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+                    <div
+                      className={`md:col-span-2 ${playerData.difficulty ? "lg:col-span-1" : ""}`}
+                    >
+                      <PlayerTendenciesCard
+                        tendencies={playerData.tendencies}
+                        compact={Boolean(playerData.difficulty)}
+                      />
                     </div>
-                  </>
+                    {playerData.difficulty && (
+                      <div className="md:col-span-2 lg:col-span-1">
+                        <PlayerDifficultyCard
+                          difficulty={playerData.difficulty}
+                          position={playerData.player.position}
+                          isCareer={isCareer}
+                        />
+                      </div>
+                    )}
+                    {qualityCards}
+                  </div>
                 )}
               </section>
 
@@ -438,6 +453,7 @@ export const PlayersV2 = () => {
                 ? playerData.quality.shotsFaced
                 : playerData.quality.defensive
             }
+            difficulty={playerData.difficulty}
             stats={playerData.stats}
             edgeValues={isCareer ? null : playerData.edgeValues}
             edgePercentiles={isCareer ? null : playerData.edgePercentiles}

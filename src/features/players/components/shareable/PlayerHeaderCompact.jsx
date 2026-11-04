@@ -58,11 +58,11 @@ export const PlayerHeaderCompact = ({
           />
         </div>
         <div className="min-w-0 flex-1">
-          <h2 className="mb-0.5 text-[2.75rem] font-bold leading-tight text-white">
+          <h2 className="mb-0.5 text-[3.1rem] font-bold leading-tight text-white">
             {player.name}
           </h2>
 
-          <div className="text-[1.35rem] font-semibold text-gray-300">
+          <div className="text-[1.55rem] font-semibold text-gray-300">
             {playerUtils.getFullTeamName(player.team, player.season)} •{" "}
             {isCareer
               ? `Career · ${playerUtils.formatCareerSpan(
@@ -76,7 +76,7 @@ export const PlayerHeaderCompact = ({
                   : playerUtils.formatSeason(player.season)}
           </div>
 
-          <div className="shareable-bio-container mt-2 flex gap-4 text-xl text-gray-300">
+          <div className="shareable-bio-container mt-2 flex gap-4 text-[1.4rem] text-gray-300">
             {biometrics?.height && (
               <span className="flex items-center gap-1">
                 <Ruler className="h-5 w-5 text-sky-300" />
@@ -105,7 +105,7 @@ export const PlayerHeaderCompact = ({
                 return (
                   <div
                     key={name}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.08] px-3 py-1.5 text-base font-semibold text-sky-200"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.08] px-3 py-1.5 text-lg font-semibold text-sky-200"
                   >
                     {Icon && <Icon className="h-5 w-5 shrink-0 text-sky-300" />}
                     <span className="shareable-pill-text">{name}</span>

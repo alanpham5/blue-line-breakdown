@@ -1,6 +1,7 @@
 import { Info, PieChart } from "lucide-react";
 import { Tooltip } from "components/ui/Tooltip";
 import { GoalieSaveHeatmap } from "features/players/components/GoalieSaveHeatmap";
+import { getOrdinal } from "utils/ordinal";
 
 const clampPercent = (value) => Math.min(100, Math.max(0, Number(value) || 0));
 
@@ -43,16 +44,6 @@ const fallbackColors = [
   tendencyColors["Physical Pressure"],
   tendencyColors["Shot Blocking"],
 ];
-
-const getOrdinal = (value) => {
-  const rounded = Math.round(value);
-  const mod100 = rounded % 100;
-  if (mod100 >= 11 && mod100 <= 13) return `${rounded}th`;
-  if (rounded % 10 === 1) return `${rounded}st`;
-  if (rounded % 10 === 2) return `${rounded}nd`;
-  if (rounded % 10 === 3) return `${rounded}rd`;
-  return `${rounded}th`;
-};
 
 const polarPoint = (radius, angle) => {
   const radians = (angle * Math.PI) / 180;
@@ -164,6 +155,7 @@ export const PlayerTendenciesCard = ({
   shareable = false,
   shotMap = null,
   bar = false,
+  compact = false,
 }) => {
   const isBar = bar || Boolean(shotMap);
   const visibleTendencies = tendencies.slice(0, 4);
@@ -281,11 +273,11 @@ export const PlayerTendenciesCard = ({
       ) : (
         <>
           <div
-            className={`grid flex-1 items-center ${shareable ? "grid-cols-[250px_minmax(0,1fr)] gap-5" : "gap-6 sm:grid-cols-[minmax(210px,0.8fr)_minmax(280px,1.2fr)] lg:gap-10"}`}
+            className={`grid flex-1 ${shareable ? "grid-cols-[230px_minmax(0,1fr)] gap-5" : compact ? "items-center gap-5 sm:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]" : "items-center gap-6 sm:grid-cols-[minmax(210px,0.8fr)_minmax(280px,1.2fr)] lg:gap-10"}`}
           >
-            <div className="flex justify-center">
+            <div className="flex items-center justify-center">
               <svg
-                className={`aspect-square w-full ${shareable ? "max-w-[250px]" : "max-w-[280px]"} overflow-visible drop-shadow-[0_18px_28px_rgba(0,0,0,0.24)]`}
+                className={`aspect-square w-full ${shareable ? "max-w-[230px]" : "max-w-[280px]"} overflow-visible drop-shadow-[0_18px_28px_rgba(0,0,0,0.24)]`}
                 viewBox="0 0 220 220"
                 role="img"
                 aria-label={chartTendencies
@@ -346,12 +338,12 @@ export const PlayerTendenciesCard = ({
             </div>
 
             <div
-              className={`grid ${shareable ? "grid-cols-1 gap-2" : "gap-2.5 lg:grid-cols-2"}`}
+              className={`grid ${shareable ? "auto-rows-fr grid-cols-1 gap-3" : compact ? "gap-2.5" : "gap-2.5 lg:grid-cols-2"}`}
             >
               {legendTendencies.map((tendency) => (
                 <div
                   key={tendency.label}
-                  className={`relative overflow-hidden rounded-2xl border border-white/[0.05] bg-white/[0.025] light:border-slate-200 light:bg-white/55 ${shareable ? "px-5 py-2" : "px-4 py-2.5"}`}
+                  className={`relative overflow-hidden rounded-2xl border border-white/[0.05] bg-white/[0.025] light:border-slate-200 light:bg-white/55 ${shareable ? "flex items-center px-4 py-3" : "px-4 py-2.5"}`}
                 >
                   <span
                     className="absolute inset-y-2 left-2.5 w-1 rounded-full shadow-[0_0_12px_currentColor]"
@@ -360,9 +352,9 @@ export const PlayerTendenciesCard = ({
                       color: tendency.colors.middle,
                     }}
                   />
-                  <div className="min-w-0 text-center">
+                  <div className="w-full min-w-0 text-center">
                     <p
-                      className={`${shareable ? "text-base" : "text-sm"} truncate text-center font-semibold text-gray-200 light:text-gray-800`}
+                      className={`${shareable ? "text-lg" : "text-sm"} truncate text-center font-semibold text-gray-200 light:text-gray-800`}
                     >
                       {tendency.label}
                     </p>
@@ -370,29 +362,31 @@ export const PlayerTendenciesCard = ({
                       className={`${shareable ? "mt-1" : "mt-1.5"} grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] divide-x divide-white/[0.08] light:divide-slate-200`}
                     >
                       <div
-                        className={`${shareable ? "flex-col gap-0" : "items-baseline gap-1"} flex min-w-0 justify-center px-2 text-center`}
+                        className={`${shareable ? "flex-col gap-1.5" : "items-baseline gap-1"} flex min-w-0 justify-center px-2 text-center`}
                       >
                         <span
-                          className={`${shareable ? "text-lg" : "text-base"} font-bold tabular-nums text-white light:text-gray-900`}
+                          className={`${shareable ? "text-[1.5rem] leading-tight" : "text-base"} font-bold tabular-nums text-white light:text-gray-900`}
+                          data-export-nudge={shareable ? 5 : undefined}
                         >
                           {tendency.percentage}%
                         </span>
                         <span
-                          className={`${shareable ? "text-[0.66rem] leading-tight" : "text-[0.62rem]"} font-semibold uppercase tracking-[0.06em] text-gray-500 light:text-gray-500`}
+                          className={`${shareable ? "text-[0.72rem] leading-tight" : "text-[0.62rem]"} font-semibold uppercase tracking-[0.06em] text-gray-500 light:text-gray-500`}
                         >
                           events
                         </span>
                       </div>
                       <div
-                        className={`${shareable ? "flex-col gap-0" : "items-baseline gap-1"} flex min-w-0 justify-center px-2 text-center`}
+                        className={`${shareable ? "flex-col gap-1.5" : "items-baseline gap-1"} flex min-w-0 justify-center px-2 text-center`}
                       >
                         <span
-                          className={`${shareable ? "text-lg" : "text-base"} font-bold tabular-nums text-white light:text-gray-900`}
+                          className={`${shareable ? "text-[1.5rem] leading-tight" : "text-base"} font-bold tabular-nums text-white light:text-gray-900`}
+                          data-export-nudge={shareable ? 5 : undefined}
                         >
-                          {Math.round(tendency.percentile)}
+                          {getOrdinal(tendency.percentile)}
                         </span>
                         <span
-                          className={`${shareable ? "text-[0.66rem] leading-tight" : "text-[0.62rem]"} font-semibold uppercase tracking-[0.06em] text-gray-500 light:text-gray-500`}
+                          className={`${shareable ? "text-[0.72rem] leading-tight" : "text-[0.62rem]"} font-semibold uppercase tracking-[0.06em] text-gray-500 light:text-gray-500`}
                         >
                           Percentile
                         </span>

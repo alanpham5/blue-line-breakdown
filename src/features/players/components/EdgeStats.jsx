@@ -1,4 +1,5 @@
 import { playerUtils } from "utils/playerUtils";
+import { getOrdinal } from "utils/ordinal";
 import { getPercentileHue } from "utils/percentileColor";
 import { Gauge } from "lucide-react";
 
@@ -105,7 +106,7 @@ export const EdgeStats = ({ edgeValues, edgePercentiles }) => {
                 {formatValue(statKey, val)}
               </div>
               <div className="text-[0.65rem] sm:text-[0.75rem] text-gray-500 light:text-gray-400 font-normal mt-0.5">
-                {percentile.toFixed(1)} Percentile
+                {getOrdinal(percentile)} Percentile
               </div>
             </div>
           );

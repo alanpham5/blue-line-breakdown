@@ -23,7 +23,7 @@ export const ImpactTrendCardCompact = ({
           <h3 className="shareable-icon-label whitespace-nowrap text-[1.75rem] font-bold leading-snug tracking-display text-white">
             Impact Rating
           </h3>
-          <div className="text-base font-medium text-gray-400">
+          <div className="text-lg font-medium text-gray-400">
             Last {trend.length} season{trend.length === 1 ? "" : "s"}
           </div>
         </div>
@@ -32,7 +32,7 @@ export const ImpactTrendCardCompact = ({
             <div className="shareable-war-score text-[2.25rem] font-bold leading-none tracking-display text-white">
               {latest.impactPercentile.toFixed(1)}
             </div>
-            <div className="mt-1 text-sm font-semibold uppercase tracking-[0.1em] text-gray-400">
+            <div className="mt-1 text-base font-semibold uppercase tracking-[0.1em] text-gray-400">
               {formatShortSeason(latest.season, currentSeason)}
             </div>
           </div>
@@ -50,11 +50,11 @@ export const ImpactTrendCardCompact = ({
         <div className="mt-2 flex w-full items-center justify-between gap-3 border-t border-white/10 pt-3">
           <div className="flex items-center gap-2 text-gray-400">
             <User className="h-5 w-5 text-sky-300" />
-            <span className="shareable-role-label text-sm font-semibold uppercase tracking-[0.12em]">
+            <span className="shareable-role-label text-base font-semibold uppercase tracking-[0.12em]">
               Career Role
             </span>
           </div>
-          <div className="shareable-role-value text-right text-xl font-semibold leading-tight text-white">
+          <div className="shareable-role-value text-right text-2xl font-semibold leading-tight text-white">
             {role}
           </div>
         </div>

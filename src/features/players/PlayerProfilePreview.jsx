@@ -9,6 +9,7 @@ import { CountingStats } from "features/players/components/CountingStats";
 import { EdgeStats } from "features/players/components/EdgeStats";
 import { SimilarPlayersSection } from "features/players/components/SimilarPlayersSection";
 import { PlayerTendenciesCard } from "features/players/components/PlayerTendenciesCard";
+import { PlayerDifficultyCard } from "features/players/components/PlayerDifficultyCard";
 import { PlayerQualityCard } from "features/players/components/PlayerQualityCard";
 import { ShareableModal } from "components/ui/ShareableModal";
 import { PlayerProfileShareablePreview } from "features/players/components/shareable/PlayerProfileShareablePreview";
@@ -51,6 +52,39 @@ const defensiveQuality = [
     value: 79,
   },
 ];
+
+const exampleDifficulty = {
+  zoneStarts: { offensive: 30.8, neutral: 45.5, defensive: 23.7 },
+  specialTeams: {
+    powerPlayMinutes: 381.8,
+    penaltyKillMinutes: 68.5,
+    powerPlayPerGame: 4.77,
+    penaltyKillPerGame: 0.86,
+  },
+  teammateQuality: 62.5,
+  percentiles: {
+    offensive: 66.7,
+    neutral: 54.3,
+    defensive: 33.3,
+    powerPlay: 99.7,
+    penaltyKill: 51.5,
+    teammateQuality: 69.7,
+  },
+  teammates: [
+    {
+      playerId: 8456464,
+      name: "Bill Guerin",
+      team: "PIT",
+      season: 2009,
+    },
+    {
+      playerId: 8470543,
+      name: "Chris Kunitz",
+      team: "PIT",
+      season: 2009,
+    },
+  ],
+};
 
 const exampleSimilarPlayers = [
   {
@@ -159,9 +193,16 @@ export const PlayerProfilePreview = () => {
           </section>
 
           <section className="space-y-4 sm:space-y-6">
-            <PlayerTendenciesCard tendencies={exampleTendencies} />
-
             <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+              <div className="md:col-span-2 lg:col-span-1">
+                <PlayerTendenciesCard tendencies={exampleTendencies} compact />
+              </div>
+              <div className="md:col-span-2 lg:col-span-1">
+                <PlayerDifficultyCard
+                  difficulty={exampleDifficulty}
+                  position={examplePlayer.position}
+                />
+              </div>
               <PlayerQualityCard
                 title="Offensive Quality"
                 icon={Target}
@@ -220,6 +261,7 @@ export const PlayerProfilePreview = () => {
           tendencies={exampleTendencies}
           offensiveQuality={offensiveQuality}
           defensiveQuality={defensiveQuality}
+          difficulty={exampleDifficulty}
           stats={{
             gamesPlayed: 81,
             goals: 51,

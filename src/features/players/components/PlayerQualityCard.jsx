@@ -1,17 +1,8 @@
 import { Info } from "lucide-react";
 import { Tooltip } from "components/ui/Tooltip";
+import { getOrdinal } from "utils/ordinal";
 
 const clampPercent = (value) => Math.min(100, Math.max(0, Number(value) || 0));
-
-const getOrdinal = (value) => {
-  const rounded = Math.round(value);
-  const mod100 = rounded % 100;
-  if (mod100 >= 11 && mod100 <= 13) return `${rounded}th`;
-  if (rounded % 10 === 1) return `${rounded}st`;
-  if (rounded % 10 === 2) return `${rounded}nd`;
-  if (rounded % 10 === 3) return `${rounded}rd`;
-  return `${rounded}th`;
-};
 
 export const PlayerQualityCard = ({
   title,
@@ -22,6 +13,7 @@ export const PlayerQualityCard = ({
   showInfo = true,
   forceDark = false,
   shareable = false,
+  compact = false,
 }) => {
   const isCool = type === "offensive" || type === "shotStopping";
   const accentText = isCool
@@ -46,11 +38,11 @@ export const PlayerQualityCard = ({
       >
         <div className="flex min-w-0 items-center gap-2">
           <Icon
-            className={`${shareable ? "h-7 w-7" : "h-6 w-6"} shrink-0 ${accentText}`}
+            className={`${shareable ? (compact ? "h-7 w-7" : "h-8 w-8") : "h-6 w-6"} shrink-0 ${accentText}`}
           />
           <div>
             <h3
-              className={`${shareable ? "shareable-icon-label text-2xl" : "text-xl sm:text-2xl"} font-bold tracking-display text-white light:text-gray-900`}
+              className={`${shareable ? `shareable-icon-label ${compact ? "text-2xl" : "text-3xl"}` : "text-xl sm:text-2xl"} font-bold tracking-display text-white light:text-gray-900`}
             >
               {title}
             </h3>
@@ -97,7 +89,7 @@ export const PlayerQualityCard = ({
               className="grid min-w-0 grid-rows-[auto_1fr_auto] justify-items-center gap-2"
             >
               <span
-                className={`${shareable ? "text-xl" : "text-base"} font-bold tabular-nums ${accentText}`}
+                className={`${shareable ? (compact ? "text-xl" : "text-2xl") : "text-base"} font-bold tabular-nums ${accentText}`}
               >
                 {value.toFixed(0)}
               </span>
@@ -113,7 +105,7 @@ export const PlayerQualityCard = ({
               </div>
               <div className="min-h-[3.25rem] text-center">
                 <p
-                  className={`${shareable ? "text-sm" : "text-xs sm:text-[0.82rem]"} font-semibold leading-tight text-gray-300 light:text-gray-700`}
+                  className={`${shareable ? (compact ? "text-sm" : "text-lg") : "text-xs sm:text-[0.82rem]"} font-semibold leading-tight text-gray-300 light:text-gray-700`}
                 >
                   {stat.label}
                 </p>

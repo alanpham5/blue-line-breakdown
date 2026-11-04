@@ -81,11 +81,11 @@ export const WarPercentileCardCompact = ({ warPercentile, role }) => {
         <div className="mt-3 flex w-full items-center justify-between gap-3 border-t border-white/10 pt-3">
           <div className="flex items-center gap-2 text-gray-400">
             <User className="h-5 w-5 text-sky-300" />
-            <span className="shareable-role-label text-sm font-semibold uppercase tracking-[0.12em]">
+            <span className="shareable-role-label text-base font-semibold uppercase tracking-[0.12em]">
               Role
             </span>
           </div>
-          <div className="shareable-role-value text-right text-xl font-semibold leading-tight text-white">
+          <div className="shareable-role-value text-right text-2xl font-semibold leading-tight text-white">
             {role}
           </div>
         </div>
