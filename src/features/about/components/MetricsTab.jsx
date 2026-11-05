@@ -40,7 +40,7 @@ const influenceLevels = [
 const influenceBarHeights = ["h-1.5", "h-2.5", "h-3.5"];
 
 const sections = [
-  { id: "reading", label: "Reading the Numbers" },
+  { id: "impact", label: "Impact Rating" },
   { id: "archetypes", label: "Archetypes" },
   { id: "tendencies", label: "Tendencies" },
   { id: "skater-quality", label: "Skater Quality" },
@@ -55,12 +55,46 @@ const percentileMarkers = [
   { value: 90, label: "Top 10%" },
 ];
 
-const readingPrinciples = [
-  ["0–100 percentile", "50 is the league median."],
-  ["True peers", "Same season and position group."],
-  ["5-on-5, per 60", "Rates, not totals."],
-  ["300+ minutes", "Needed to join the comparison pool."],
-  ["Small samples tempered", "Shooting and save % lean toward average."],
+const impactFactors = [
+  {
+    title: "Production",
+    accent: "emerald",
+    body: "What ends up on the scoresheet. Actual totals count, so a truly huge season stands apart from a very good one.",
+    inputs: ["Goals", "Assists", "Points", "Points Per Game", "Games Played"],
+  },
+  {
+    title: "Offense",
+    accent: "cyan",
+    body: "How a player drives offense beyond their own points, and how the team attacks with them on the ice.",
+    inputs: [
+      "Chance Creation",
+      "Shot Involvement",
+      "Shooting and Finishing",
+      "Dangerous Chances",
+      "Penalties Drawn",
+      "On-Ice Attack",
+    ],
+  },
+  {
+    title: "Defense",
+    accent: "rose",
+    body: "What the player does without the puck, and how much the other team gets while they're out there.",
+    inputs: [
+      "D-Zone Exits",
+      "Takeaways",
+      "Shot Blocking",
+      "Own-Zone Giveaways",
+      "Chances Against",
+      "Goals Against",
+      "On-Ice vs. Off-Ice Results",
+    ],
+  },
+  {
+    title: "Hard Minutes",
+    accent: "amber",
+    body: "Some jobs are tougher than the stats show, so players trusted with them earn extra credit.",
+    inputs: ["Defensive Zone Starts", "Penalty Kill Time"],
+  },
 ];
 
 const archetypeCriteria = {
@@ -195,7 +229,7 @@ const shotsFacedQuality = [
 
 const edgeMetrics = [
   ["Top Skating Speed", "mph", "Season max"],
-  ["Speed Bursts (20+ mph)", "count", "Season total"],
+  ["Speed Bursts (20+ mph)", "Count", "Season total"],
   ["Top Shot Speed", "mph", "Season max"],
   ["Distance Skated", "mi", "Season total"],
   ["Max Game Distance", "mi", "Single-game max"],
@@ -207,14 +241,6 @@ const similarityFacts = [
   ["Compared on", "Scoring, physical play, usage, and impact"],
   ["Season filter", "Limits matches to one year"],
 ];
-
-const ExpectedGoalsNote = () => (
-  <p className="text-sm text-gray-400 light:text-gray-600">
-    <span className="font-semibold text-gray-200 light:text-gray-800">xG</span>{" "}
-    = chance a shot scores, based on location and type. xGF / xGA = expected
-    goals for / against while on ice.
-  </p>
-);
 
 const SectionCard = ({ id, icon: Icon, accent, title, subtitle, children }) => (
   <section
@@ -244,7 +270,7 @@ const SectionCard = ({ id, icon: Icon, accent, title, subtitle, children }) => (
 
 const GroupLabel = ({ children, className = "mb-2.5" }) => (
   <h3
-    className={`${className} text-xs font-semibold uppercase tracking-[0.12em] text-gray-500 light:text-gray-500`}
+    className={`${className} text-sm font-semibold text-gray-500 light:text-gray-500`}
   >
     {children}
   </h3>
@@ -275,9 +301,7 @@ const InfluenceMeter = ({ influence, accent }) => (
 
 const InfluenceLegend = ({ accent }) => (
   <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-gray-400 light:text-gray-500">
-    <span className="font-semibold uppercase tracking-[0.12em] text-gray-500">
-      Influence
-    </span>
+    <span className="font-semibold text-gray-500">Influence</span>
     {influenceLevels.map(({ level, label }) => (
       <span key={level} className="inline-flex items-center gap-1.5">
         <InfluenceMeter influence={level} accent={accent} />
@@ -367,6 +391,25 @@ const PercentileScale = () => (
       ))}
     </div>
   </div>
+);
+
+const ImpactFactorCard = ({ title, accent, body, inputs }) => (
+  <InsetCard>
+    <h3 className={`text-base font-semibold ${accents[accent].text}`}>
+      {title}
+    </h3>
+    <p className="mt-1 text-sm text-gray-400 light:text-gray-600">{body}</p>
+    <ul className="mt-3 flex flex-wrap gap-1.5">
+      {inputs.map((input) => (
+        <li
+          key={input}
+          className="rounded-full bg-white/[0.05] px-2.5 py-1 text-xs font-medium text-gray-300 light:bg-slate-900/[0.05] light:text-gray-700"
+        >
+          {input}
+        </li>
+      ))}
+    </ul>
+  </InsetCard>
 );
 
 const exampleTendencyWedges = [
@@ -505,14 +548,27 @@ export const MetricsTab = () => (
     <SectionNav />
 
     <SectionCard
-      id="reading"
+      id="impact"
       icon={Percent}
       accent="sky"
-      title="Reading the Numbers"
+      title="Impact Rating"
+      subtitle="One number for how much a player helped their team over a season."
     >
+      <p className="text-sm leading-relaxed text-gray-300 light:text-gray-700 sm:text-base">
+        A rating of 90 means the player had a bigger season than 90% of players
+        at their position that year. It looks at the whole game, so a pure
+        scorer and a shutdown defender can both rate highly for different
+        reasons. The other percentiles on the site read the same way.
+      </p>
       <PercentileScale />
-      <DefinitionGrid items={readingPrinciples} accent="sky" />
-      <ExpectedGoalsNote />
+      <div>
+        <GroupLabel>What Goes Into It</GroupLabel>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {impactFactors.map((factor) => (
+            <ImpactFactorCard key={factor.title} {...factor} />
+          ))}
+        </div>
+      </div>
     </SectionCard>
 
     <SectionCard
@@ -559,21 +615,21 @@ export const MetricsTab = () => (
               <span className="h-0 w-6 shrink-0 border-t-[2.5px] border-dashed border-white light:border-slate-900" />
             }
             title="Width"
-            body="How often, vs. position average"
+            body="Share of events that fall into action type (adjusted)"
           />
           <TendencyLegendRow
             swatch={
               <span className="h-0.5 w-6 shrink-0 bg-white light:bg-slate-900" />
             }
             title="Length"
-            body="League percentile"
+            body="Frequency percentile vs. rest of the league"
           />
         </div>
       </div>
 
       <div>
         <div className="mb-2.5 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-          <GroupLabel className="">Skater actions</GroupLabel>
+          <GroupLabel className="">Skater Actions</GroupLabel>
           <InfluenceLegend accent="violet" />
         </div>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -593,7 +649,7 @@ export const MetricsTab = () => (
       </div>
 
       <div>
-        <GroupLabel>Goalie actions · per shot on goal</GroupLabel>
+        <GroupLabel>Goalie Actions · Per Shot on Goal</GroupLabel>
         <div className="grid gap-3 sm:grid-cols-2">
           {goalieTendencies.map(({ label, color, body }) => (
             <InsetCard
@@ -671,7 +727,7 @@ export const MetricsTab = () => (
                 {body}
               </p>
             </div>
-            <span className="shrink-0 rounded-full bg-white/[0.06] px-2 py-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.08em] text-gray-400 light:bg-slate-900/[0.06] light:text-gray-500">
+            <span className="shrink-0 rounded-full bg-white/[0.06] px-2 py-0.5 text-xs font-semibold text-gray-400 light:bg-slate-900/[0.06] light:text-gray-500">
               {unit}
             </span>
           </InsetCard>
