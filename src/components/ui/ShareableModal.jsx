@@ -128,6 +128,12 @@ export const ShareableModal = ({ isOpen, onClose, fileName, children }) => {
               transition-delay: 0s !important;
               transition-duration: 0s !important;
             }
+            :root {
+              --tracking-body: 0.01px;
+            }
+            .shareable-export .tabular-nums:not([class*="tracking-"]) {
+              letter-spacing: 0;
+            }
             .shareable-modal-content,
             .percentile-bar-container {
               opacity: 1 !important;
