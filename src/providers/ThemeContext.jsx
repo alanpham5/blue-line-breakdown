@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import { getHtrOverride, setHtrOverride, subscribeHtr } from "utils/htr";
 const ThemeContext = createContext();
 const getResolvedTheme = (themeMode) => {
   if (themeMode === "system") {
@@ -24,6 +31,11 @@ export function ThemeProvider({ children }) {
     return "system";
   });
   const [isTouch, setIsTouch] = useState(false);
+  const htrOverride = useSyncExternalStore(
+    subscribeHtr,
+    getHtrOverride,
+    getHtrOverride
+  );
   useEffect(() => {
     if (typeof window !== "undefined") {
       const mediaQuery = window.matchMedia("(pointer: coarse)");
@@ -90,6 +102,8 @@ export function ThemeProvider({ children }) {
     theme: isTouch ? "system" : theme,
     setTheme: handleSetTheme,
     isThemeTogglingDisabled: isTouch,
+    htrOverride,
+    setHtrOverride,
     actualTheme:
       typeof window !== "undefined"
         ? getResolvedTheme(isTouch ? "system" : theme)

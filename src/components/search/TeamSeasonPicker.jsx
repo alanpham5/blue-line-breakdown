@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { RemixToggle } from "components/search/RemixToggle";
 import { TeamSeasonSelects } from "components/search/TeamSeasonSelects";
 import { useSeasonTeams } from "hooks/useSeasonTeams";
 import { useTeamSeasons } from "hooks/useTeamSeasons";
@@ -31,6 +32,7 @@ export const TeamSeasonPicker = ({ team, season, onSelect, className }) => {
       team={shownTeam}
       onTeamChange={(nextTeam) => onSelect(nextTeam, pendingSeason)}
       loadingTeams={loading}
+      trailing={<RemixToggle team={team} season={season} />}
       className={className}
     />
   );

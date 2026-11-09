@@ -1,0 +1,343 @@
+{
+  "season": 2026,
+  "teams": {
+    "ANA": [
+      { "date": "2026-11-08", "opponent": "PIT", "home": true },
+      { "date": "2026-11-11", "opponent": "NSH", "home": true },
+      { "date": "2026-11-27", "opponent": "LAK", "home": true },
+      { "date": "2026-12-06", "opponent": "WPG", "home": true },
+      { "date": "2026-12-22", "opponent": "VGK", "home": true },
+      { "date": "2027-01-08", "opponent": "DAL", "home": true },
+      { "date": "2027-01-12", "opponent": "NYR", "home": true },
+      { "date": "2027-02-24", "opponent": "SEA", "home": true },
+      { "date": "2027-03-05", "opponent": "TBL", "home": true },
+      { "date": "2027-03-18", "opponent": "UTA", "home": true }
+    ],
+    "BOS": [
+      { "date": "2026-11-12", "opponent": "MTL", "home": true },
+      { "date": "2026-11-14", "opponent": "MIN", "home": true },
+      { "date": "2026-11-27", "opponent": "TOR", "home": true },
+      { "date": "2026-12-05", "opponent": "DET", "home": true },
+      { "date": "2026-12-12", "opponent": "NJD", "home": true },
+      { "date": "2026-12-22", "opponent": "NYI", "home": false },
+      { "date": "2027-01-06", "opponent": "MTL", "home": false },
+      { "date": "2027-01-09", "opponent": "DET", "home": false },
+      { "date": "2027-01-12", "opponent": "CAR", "home": true },
+      { "date": "2027-01-30", "opponent": "TOR", "home": true },
+      { "date": "2027-02-15", "opponent": "ANA", "home": true },
+      { "date": "2027-03-06", "opponent": "PIT", "home": true }
+    ],
+    "BUF": [
+      { "date": "2026-11-04", "opponent": "OTT", "home": true },
+      { "date": "2026-11-25", "opponent": "NYR", "home": true },
+      { "date": "2026-12-18", "opponent": "MTL", "home": true },
+      { "date": "2026-12-28", "opponent": "DET", "home": true },
+      { "date": "2027-01-16", "opponent": "NSH", "home": true },
+      { "date": "2027-01-20", "opponent": "NYI", "home": false },
+      { "date": "2027-02-26", "opponent": "OTT", "home": true },
+      { "date": "2027-03-04", "opponent": "STL", "home": true }
+    ],
+    "CGY": [
+      { "date": "2026-11-06", "opponent": "ANA", "home": true },
+      { "date": "2026-11-08", "opponent": "PHI", "home": true },
+      { "date": "2026-11-11", "opponent": "NYR", "home": true },
+      { "date": "2026-12-03", "opponent": "BUF", "home": true },
+      { "date": "2026-12-05", "opponent": "WSH", "home": true },
+      { "date": "2026-12-08", "opponent": "NSH", "home": true },
+      { "date": "2027-01-12", "opponent": "CBJ", "home": true },
+      { "date": "2027-01-14", "opponent": "SJS", "home": true },
+      { "date": "2027-01-16", "opponent": "LAK", "home": true }
+    ],
+    "CAR": [
+      { "date": "2026-11-07", "opponent": "CHI", "home": true },
+      { "date": "2026-11-21", "opponent": "EDM", "home": true },
+      { "date": "2026-11-28", "opponent": "OTT", "home": true },
+      { "date": "2026-12-05", "opponent": "TOR", "home": true },
+      { "date": "2026-12-26", "opponent": "PIT", "home": true },
+      { "date": "2027-01-02", "opponent": "NSH", "home": true },
+      { "date": "2027-01-23", "opponent": "ANA", "home": true },
+      { "date": "2027-01-30", "opponent": "LAK", "home": true },
+      { "date": "2027-02-13", "opponent": "BUF", "home": true },
+      { "date": "2027-02-27", "opponent": "TBL", "home": true },
+      { "date": "2027-03-13", "opponent": "NJD", "home": true }
+    ],
+    "CHI": [
+      { "date": "2026-11-02", "opponent": "COL", "home": true },
+      { "date": "2026-12-29", "opponent": "VGK", "home": true },
+      { "date": "2027-03-08", "opponent": "TBL", "home": true },
+      { "date": "2027-03-10", "opponent": "WSH", "home": true },
+      { "date": "2027-03-14", "opponent": "ANA", "home": true },
+      { "date": "2027-03-16", "opponent": "SJS", "home": true }
+    ],
+    "COL": [
+      { "date": "2026-11-07", "opponent": "DET", "home": true },
+      { "date": "2026-11-27", "opponent": "MIN", "home": false },
+      { "date": "2026-11-28", "opponent": "SJS", "home": true },
+      { "date": "2026-12-12", "opponent": "WSH", "home": true },
+      { "date": "2027-01-08", "opponent": "SEA", "home": true },
+      { "date": "2027-02-22", "opponent": "VGK", "home": true }
+    ],
+    "CBJ": [
+      { "date": "2026-11-03", "opponent": "COL", "home": true },
+      { "date": "2026-11-05", "opponent": "DAL", "home": true },
+      { "date": "2026-11-10", "opponent": "FLA", "home": true },
+      { "date": "2026-11-12", "opponent": "TBL", "home": true },
+      { "date": "2026-11-25", "opponent": "NJD", "home": true },
+      { "date": "2026-11-27", "opponent": "DET", "home": true },
+      { "date": "2026-12-10", "opponent": "MIN", "home": true },
+      { "date": "2026-12-15", "opponent": "CAR", "home": true },
+      { "date": "2026-12-17", "opponent": "SEA", "home": true },
+      { "date": "2026-12-19", "opponent": "LAK", "home": true },
+      { "date": "2026-12-22", "opponent": "MTL", "home": true },
+      { "date": "2026-12-27", "opponent": "EDM", "home": true },
+      { "date": "2026-12-31", "opponent": "WSH", "home": true }
+    ],
+    "DAL": [
+      { "date": "2026-11-25", "opponent": "NSH", "home": true },
+      { "date": "2026-11-27", "opponent": "STL", "home": false },
+      { "date": "2026-12-31", "opponent": "NYR", "home": true },
+      { "date": "2027-01-04", "opponent": "DET", "home": true },
+      { "date": "2027-01-30", "opponent": "MIN", "home": false }
+    ],
+    "DET": [
+      { "date": "2026-11-05", "opponent": "VGK", "home": true },
+      { "date": "2026-12-20", "opponent": "TBL", "home": true },
+      { "date": "2027-01-02", "opponent": "EDM", "home": true },
+      { "date": "2027-01-04", "opponent": "DAL", "home": false },
+      { "date": "2027-03-18", "opponent": "CBJ", "home": true },
+      { "date": "2027-03-24", "opponent": "WSH", "home": true },
+      { "date": "2027-03-27", "opponent": "NYI", "home": false },
+      { "date": "2027-03-28", "opponent": "MTL", "home": false }
+    ],
+    "EDM": [
+      { "date": "2026-11-05", "opponent": "ANA", "home": true },
+      { "date": "2026-12-03", "opponent": "WSH", "home": true },
+      { "date": "2026-12-17", "opponent": "DAL", "home": true },
+      { "date": "2027-01-07", "opponent": "FLA", "home": true },
+      { "date": "2027-01-28", "opponent": "NJD", "home": true },
+      { "date": "2027-03-11", "opponent": "NSH", "home": true },
+      { "date": "2027-03-18", "opponent": "STL", "home": true }
+    ],
+    "FLA": [
+      { "date": "2026-11-02", "opponent": "DET", "home": true },
+      { "date": "2026-11-04", "opponent": "CHI", "home": true },
+      { "date": "2026-11-28", "opponent": "TBL", "home": true },
+      { "date": "2026-12-19", "opponent": "CGY", "home": true },
+      { "date": "2026-12-26", "opponent": "TBL", "home": true },
+      { "date": "2027-01-02", "opponent": "MTL", "home": true },
+      { "date": "2027-01-16", "opponent": "VGK", "home": true },
+      { "date": "2027-02-13", "opponent": "DAL", "home": true },
+      { "date": "2027-03-06", "opponent": "TOR", "home": true },
+      { "date": "2027-03-27", "opponent": "PHI", "home": true }
+    ],
+    "LAK": [
+      { "date": "2026-11-04", "opponent": "SJS", "home": true },
+      { "date": "2026-12-09", "opponent": "SJS", "home": true },
+      { "date": "2026-12-30", "opponent": "TOR", "home": true },
+      { "date": "2027-01-06", "opponent": "WSH", "home": true },
+      { "date": "2027-01-13", "opponent": "STL", "home": true },
+      { "date": "2027-03-03", "opponent": "TBL", "home": true },
+      { "date": "2027-03-31", "opponent": "WPG", "home": true }
+    ],
+    "MIN": [
+      { "date": "2026-11-17", "opponent": "NSH", "home": true },
+      { "date": "2026-11-27", "opponent": "COL", "home": true },
+      { "date": "2026-12-10", "opponent": "CBJ", "home": false },
+      { "date": "2026-12-12", "opponent": "WPG", "home": true },
+      { "date": "2026-12-26", "opponent": "WPG", "home": true },
+      { "date": "2027-01-02", "opponent": "STL", "home": true },
+      { "date": "2027-01-14", "opponent": "FLA", "home": true },
+      { "date": "2027-01-21", "opponent": "DET", "home": true },
+      { "date": "2027-02-23", "opponent": "PIT", "home": true },
+      { "date": "2027-03-19", "opponent": "CGY", "home": true }
+    ],
+    "MTL": [
+      { "date": "2026-11-03", "opponent": "WPG", "home": true },
+      { "date": "2026-11-07", "opponent": "TOR", "home": false },
+      { "date": "2026-11-12", "opponent": "BOS", "home": false },
+      { "date": "2026-11-14", "opponent": "COL", "home": true },
+      { "date": "2026-11-23", "opponent": "LAK", "home": true },
+      { "date": "2026-12-08", "opponent": "VGK", "home": true },
+      { "date": "2026-12-27", "opponent": "DAL", "home": true },
+      { "date": "2027-01-06", "opponent": "BOS", "home": true },
+      { "date": "2027-01-23", "opponent": "CGY", "home": true },
+      { "date": "2027-03-28", "opponent": "DET", "home": true }
+    ],
+    "NSH": [
+      { "date": "2026-11-07", "opponent": "STL", "home": true },
+      { "date": "2026-11-21", "opponent": "PIT", "home": true },
+      { "date": "2026-11-25", "opponent": "DAL", "home": false },
+      { "date": "2026-12-05", "opponent": "CBJ", "home": true },
+      { "date": "2026-12-26", "opponent": "DET", "home": true },
+      { "date": "2027-01-23", "opponent": "LAK", "home": true },
+      { "date": "2027-02-13", "opponent": "ANA", "home": true },
+      { "date": "2027-02-27", "opponent": "LAK", "home": true },
+      { "date": "2027-03-06", "opponent": "MIN", "home": true },
+      { "date": "2027-03-20", "opponent": "BOS", "home": true }
+    ],
+    "NJD": [
+      { "date": "2026-11-18", "opponent": "MTL", "home": true },
+      { "date": "2026-11-27", "opponent": "CGY", "home": true },
+      { "date": "2026-11-28", "opponent": "WPG", "home": true },
+      { "date": "2026-12-15", "opponent": "NYR", "home": true },
+      { "date": "2026-12-17", "opponent": "TOR", "home": true },
+      { "date": "2027-01-16", "opponent": "NYI", "home": true },
+      { "date": "2027-01-19", "opponent": "DAL", "home": true },
+      { "date": "2027-02-23", "opponent": "CAR", "home": true },
+      { "date": "2027-03-23", "opponent": "PHI", "home": true },
+      { "date": "2027-03-29", "opponent": "CAR", "home": true }
+    ],
+    "NYI": [
+      { "date": "2026-11-05", "opponent": "CAR", "home": true },
+      { "date": "2026-11-25", "opponent": "STL", "home": true },
+      { "date": "2026-12-20", "opponent": "NYR", "home": true },
+      { "date": "2026-12-22", "opponent": "BOS", "home": true },
+      { "date": "2026-12-27", "opponent": "OTT", "home": true },
+      { "date": "2027-01-13", "opponent": "PIT", "home": true },
+      { "date": "2027-01-20", "opponent": "BUF", "home": true },
+      { "date": "2027-02-26", "opponent": "PHI", "home": true },
+      { "date": "2027-03-09", "opponent": "MTL", "home": true },
+      { "date": "2027-03-20", "opponent": "PHI", "home": true },
+      { "date": "2027-04-01", "opponent": "PIT", "home": false }
+    ],
+    "NYR": [
+      { "date": "2026-11-05", "opponent": "PHI", "home": true },
+      { "date": "2026-11-30", "opponent": "CAR", "home": true },
+      { "date": "2026-12-22", "opponent": "NJD", "home": true },
+      { "date": "2027-02-12", "opponent": "NYI", "home": true },
+      { "date": "2027-03-21", "opponent": "WSH", "home": true }
+    ],
+    "OTT": [
+      { "date": "2026-11-12", "opponent": "COL", "home": true },
+      { "date": "2026-11-21", "opponent": "LAK", "home": true },
+      { "date": "2026-12-12", "opponent": "EDM", "home": true },
+      { "date": "2026-12-14", "opponent": "BUF", "home": true },
+      { "date": "2026-12-31", "opponent": "PIT", "home": true },
+      { "date": "2027-01-23", "opponent": "CBJ", "home": true },
+      { "date": "2027-02-13", "opponent": "TOR", "home": true },
+      { "date": "2027-03-18", "opponent": "FLA", "home": true },
+      { "date": "2027-04-08", "opponent": "WSH", "home": true }
+    ],
+    "PHI": [
+      { "date": "2026-11-03", "opponent": "MIN", "home": true },
+      { "date": "2026-11-27", "opponent": "VAN", "home": true },
+      { "date": "2026-11-30", "opponent": "TOR", "home": false },
+      { "date": "2026-12-03", "opponent": "NYI", "home": true },
+      { "date": "2026-12-14", "opponent": "FLA", "home": true },
+      { "date": "2026-12-18", "opponent": "DET", "home": true },
+      { "date": "2027-01-10", "opponent": "CHI", "home": true },
+      { "date": "2027-01-23", "opponent": "NJD", "home": true },
+      { "date": "2027-02-20", "opponent": "NYR", "home": true },
+      { "date": "2027-02-26", "opponent": "NYI", "home": false },
+      { "date": "2027-03-07", "opponent": "STL", "home": true },
+      { "date": "2027-03-18", "opponent": "BOS", "home": true },
+      { "date": "2027-03-20", "opponent": "NYI", "home": false }
+    ],
+    "PIT": [
+      { "date": "2026-11-03", "opponent": "VGK", "home": true },
+      { "date": "2026-11-28", "opponent": "TOR", "home": true },
+      { "date": "2026-12-06", "opponent": "SJS", "home": true },
+      { "date": "2026-12-18", "opponent": "SEA", "home": true },
+      { "date": "2027-01-21", "opponent": "ANA", "home": true },
+      { "date": "2027-02-02", "opponent": "TBL", "home": true },
+      { "date": "2027-03-09", "opponent": "OTT", "home": true },
+      { "date": "2027-03-25", "opponent": "NJD", "home": true },
+      { "date": "2027-03-30", "opponent": "PHI", "home": false },
+      { "date": "2027-04-01", "opponent": "NYI", "home": true }
+    ],
+    "SJS": [
+      { "date": "2026-11-02", "opponent": "CGY", "home": true },
+      { "date": "2026-11-15", "opponent": "NSH", "home": true },
+      { "date": "2026-11-21", "opponent": "SEA", "home": true },
+      { "date": "2026-12-08", "opponent": "SEA", "home": true },
+      { "date": "2026-12-14", "opponent": "VAN", "home": true },
+      { "date": "2027-01-02", "opponent": "TOR", "home": true },
+      { "date": "2027-02-13", "opponent": "DET", "home": true },
+      { "date": "2027-03-20", "opponent": "CAR", "home": true }
+    ],
+    "SEA": [
+      { "date": "2026-11-04", "opponent": "CGY", "home": true },
+      { "date": "2026-11-28", "opponent": "EDM", "home": true },
+      { "date": "2027-01-02", "opponent": "NYI", "home": true },
+      { "date": "2027-01-03", "opponent": "VAN", "home": true },
+      { "date": "2027-02-13", "opponent": "STL", "home": true },
+      { "date": "2027-03-15", "opponent": "STL", "home": true }
+    ],
+    "STL": [
+      { "date": "2026-11-17", "opponent": "ANA", "home": true },
+      { "date": "2026-11-22", "opponent": "EDM", "home": true },
+      { "date": "2026-11-25", "opponent": "NYI", "home": false },
+      { "date": "2026-11-27", "opponent": "DAL", "home": true },
+      { "date": "2026-12-02", "opponent": "PIT", "home": true },
+      { "date": "2026-12-13", "opponent": "TBL", "home": true },
+      { "date": "2027-01-26", "opponent": "CHI", "home": true },
+      { "date": "2027-01-30", "opponent": "VAN", "home": true },
+      { "date": "2027-02-25", "opponent": "VAN", "home": true },
+      { "date": "2027-03-13", "opponent": "ANA", "home": true }
+    ],
+    "TBL": [
+      { "date": "2026-11-14", "opponent": "DET", "home": true },
+      { "date": "2026-12-12", "opponent": "PIT", "home": true },
+      { "date": "2027-01-02", "opponent": "BUF", "home": true },
+      { "date": "2027-01-16", "opponent": "OTT", "home": true },
+      { "date": "2027-01-30", "opponent": "NYI", "home": true },
+      { "date": "2027-02-13", "opponent": "COL", "home": true },
+      { "date": "2027-02-20", "opponent": "TOR", "home": true },
+      { "date": "2027-03-13", "opponent": "NYI", "home": true },
+      { "date": "2027-03-27", "opponent": "NYR", "home": true },
+      { "date": "2027-04-10", "opponent": "BOS", "home": true }
+    ],
+    "TOR": [
+      { "date": "2026-11-08", "opponent": "NJD", "home": true },
+      { "date": "2026-11-19", "opponent": "LAK", "home": true },
+      { "date": "2026-11-30", "opponent": "PHI", "home": true },
+      { "date": "2026-12-19", "opponent": "TBL", "home": true },
+      { "date": "2027-02-16", "opponent": "CAR", "home": true }
+    ],
+    "UTA": [
+      { "date": "2026-11-05", "opponent": "MTL", "home": false },
+      { "date": "2026-11-12", "opponent": "STL", "home": true },
+      { "date": "2026-12-02", "opponent": "WPG", "home": true },
+      { "date": "2027-02-12", "opponent": "CGY", "home": true },
+      { "date": "2027-03-13", "opponent": "PHI", "home": true }
+    ],
+    "VAN": [
+      { "date": "2026-11-13", "opponent": "NYR", "home": true },
+      { "date": "2026-11-21", "opponent": "MIN", "home": true },
+      { "date": "2026-12-04", "opponent": "BUF", "home": true },
+      { "date": "2027-02-16", "opponent": "PIT", "home": true },
+      { "date": "2027-02-20", "opponent": "COL", "home": true },
+      { "date": "2027-03-03", "opponent": "CHI", "home": true }
+    ],
+    "VGK": [
+      { "date": "2026-11-15", "opponent": "VAN", "home": true },
+      { "date": "2026-12-21", "opponent": "CAR", "home": true },
+      { "date": "2027-01-28", "opponent": "BUF", "home": true },
+      { "date": "2027-02-18", "opponent": "CBJ", "home": true },
+      { "date": "2027-03-15", "opponent": "WPG", "home": true }
+    ],
+    "WSH": [
+      { "date": "2026-11-07", "opponent": "FLA", "home": true },
+      { "date": "2026-11-25", "opponent": "PHI", "home": true },
+      { "date": "2026-12-01", "opponent": "VAN", "home": true },
+      { "date": "2026-12-28", "opponent": "EDM", "home": true },
+      { "date": "2027-01-12", "opponent": "VGK", "home": true },
+      { "date": "2027-01-14", "opponent": "CAR", "home": true },
+      { "date": "2027-02-02", "opponent": "WPG", "home": true },
+      { "date": "2027-02-23", "opponent": "NYR", "home": true },
+      { "date": "2027-03-03", "opponent": "CAR", "home": true },
+      { "date": "2027-03-15", "opponent": "TBL", "home": true },
+      { "date": "2027-03-23", "opponent": "DET", "home": true }
+    ],
+    "WPG": [
+      { "date": "2026-11-17", "opponent": "OTT", "home": true },
+      { "date": "2026-11-21", "opponent": "VGK", "home": true },
+      { "date": "2026-11-23", "opponent": "UTA", "home": true },
+      { "date": "2026-12-10", "opponent": "CHI", "home": true },
+      { "date": "2027-01-19", "opponent": "MIN", "home": true },
+      { "date": "2027-01-21", "opponent": "NYR", "home": true },
+      { "date": "2027-03-23", "opponent": "SEA", "home": true },
+      { "date": "2027-03-25", "opponent": "COL", "home": true }
+    ]
+  }
+}

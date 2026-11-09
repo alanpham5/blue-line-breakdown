@@ -14,6 +14,7 @@ export const TeamSeasonSelects = ({
   team,
   onTeamChange,
   loadingTeams = false,
+  trailing = null,
   className = "grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2",
 }) => (
   <div className={className}>
@@ -29,26 +30,33 @@ export const TeamSeasonSelects = ({
         </option>
       ))}
     </AppSelect>
-    <AppSelect
-      placeholder="Team"
-      value={team}
-      onChange={(event) => onTeamChange(event.target.value)}
-      disabled={loadingTeams || !season}
-      className="app-field px-4 py-3.5 pr-10 text-base text-white light:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
-    >
-      {loadingTeams ? (
-        <option>Loading...</option>
-      ) : (
-        [...teams]
-          .sort((first, second) =>
-            teamLabel(first, season).localeCompare(teamLabel(second, season))
-          )
-          .map((teamCode) => (
-            <option key={teamCode} value={teamCode}>
-              {teamLabel(teamCode, season)}
-            </option>
-          ))
-      )}
-    </AppSelect>
+    <div className="flex items-center gap-3">
+      <div className="min-w-0 flex-1">
+        <AppSelect
+          placeholder="Team"
+          value={team}
+          onChange={(event) => onTeamChange(event.target.value)}
+          disabled={loadingTeams || !season}
+          className="app-field px-4 py-3.5 pr-10 text-base text-white light:text-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {loadingTeams ? (
+            <option>Loading...</option>
+          ) : (
+            [...teams]
+              .sort((first, second) =>
+                teamLabel(first, season).localeCompare(
+                  teamLabel(second, season)
+                )
+              )
+              .map((teamCode) => (
+                <option key={teamCode} value={teamCode}>
+                  {teamLabel(teamCode, season)}
+                </option>
+              ))
+          )}
+        </AppSelect>
+      </div>
+      {trailing}
+    </div>
   </div>
 );

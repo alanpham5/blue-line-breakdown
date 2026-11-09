@@ -1,5 +1,5 @@
 import { stanleyCupChampions } from "data/stanleyCupData";
-const HTR_SEASON = 2026;
+import { isHtrActive } from "utils/htr";
 const NHL_LOGO_SCALE = 1.2;
 const NHL_SHAREABLE_LOGO_SCALE = 1.3;
 const LOCAL_LOGO_SCALE = 0.9;
@@ -40,30 +40,6 @@ const HTR_TEAM_COLORS = {
   WPG: { dark: "#7BAFD4", light: "#041E42" },
 };
 const HTR_THEMED_LOGO_TEAMS = new Set(["TOR", "CGY"]);
-const HTR_PARAM = "HTR";
-const HTR_STORAGE_KEY = "htrEnabled";
-const readHtrSessionFlag = () => {
-  try {
-    return sessionStorage.getItem(HTR_STORAGE_KEY) === "true";
-  } catch {
-    return false;
-  }
-};
-const writeHtrSessionFlag = (enabled) => {
-  try {
-    sessionStorage.setItem(HTR_STORAGE_KEY, String(enabled));
-  } catch {}
-};
-const isHtrEnabled = () => {
-  if (typeof window === "undefined") return false;
-  const paramValue = new URLSearchParams(window.location.search).get(HTR_PARAM);
-  if (paramValue === null) return readHtrSessionFlag();
-  const enabled = paramValue === "true";
-  writeHtrSessionFlag(enabled);
-  return enabled;
-};
-const isHtrSeason = (season) =>
-  season != null && parseInt(season) === HTR_SEASON && isHtrEnabled();
 export const playerUtils = {
   getCorsWrappedUrl(url) {
     if (!url) return url;
@@ -114,7 +90,8 @@ export const playerUtils = {
   },
   getTeamColor(teamCode, season = null, actualTheme = "dark") {
     const htrColors =
-      isHtrSeason(season) && HTR_TEAM_COLORS[String(teamCode).toUpperCase()];
+      isHtrActive(teamCode, season) &&
+      HTR_TEAM_COLORS[String(teamCode).toUpperCase()];
     if (htrColors) {
       return actualTheme === "light" ? htrColors.light : htrColors.dark;
     }
@@ -543,7 +520,7 @@ export const playerUtils = {
       path.replace(/_(?:dark)\.svg$/i, `_${suffix}.svg`);
     const base = "https://assets.nhle.com/logos/nhl/svg";
     const teamCodeUpper = teamCode.toUpperCase();
-    if (isHtrSeason(season) && HTR_TEAM_COLORS[teamCodeUpper]) {
+    if (isHtrActive(teamCodeUpper, season) && HTR_TEAM_COLORS[teamCodeUpper]) {
       if (HTR_THEMED_LOGO_TEAMS.has(teamCodeUpper)) {
         const variant = actualTheme === "light" ? "Light" : "Dark";
         return `/HTR/${teamCodeUpper}_HTR_${variant}.png`;

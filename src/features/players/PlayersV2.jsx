@@ -4,6 +4,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { Header } from "components/layout/Header";
 import { Footer } from "components/layout/Footer";
 import { GeneralSearch } from "components/search/GeneralSearch";
+import { RemixToggle } from "components/search/RemixToggle";
 import { AppSelect } from "components/ui/AppSelect";
 import { ShareableModal } from "components/ui/ShareableModal";
 import { apiService } from "lib/api/apiService";
@@ -244,29 +245,38 @@ export const PlayersV2 = () => {
                 className="w-full"
               />
               {playerData && (
-                <label className="block w-full">
-                  <span className="sr-only">Season</span>
-                  <AppSelect
-                    placeholder="Season"
-                    value={
-                      isCareer
-                        ? CAREER_OPTION
-                        : String(playerData.player.season)
-                    }
-                    onChange={(event) => handleSeasonChange(event.target.value)}
-                    className="app-field w-full px-4 py-3.5 pr-10 text-base normal-case tracking-normal text-white light:text-gray-900"
-                  >
-                    <option value={CAREER_OPTION}>Career</option>
-                    {playerData.availableSeasons.map((availableSeason) => (
-                      <option key={availableSeason} value={availableSeason}>
-                        {playerUtils.formatSeasonLabel(
-                          availableSeason,
-                          currentSeason
-                        )}
-                      </option>
-                    ))}
-                  </AppSelect>
-                </label>
+                <div className="flex items-center gap-3">
+                  <label className="block min-w-0 flex-1">
+                    <span className="sr-only">Season</span>
+                    <AppSelect
+                      placeholder="Season"
+                      value={
+                        isCareer
+                          ? CAREER_OPTION
+                          : String(playerData.player.season)
+                      }
+                      onChange={(event) =>
+                        handleSeasonChange(event.target.value)
+                      }
+                      className="app-field w-full px-4 py-3.5 pr-10 text-base normal-case tracking-normal text-white light:text-gray-900"
+                    >
+                      <option value={CAREER_OPTION}>Career</option>
+                      {playerData.availableSeasons.map((availableSeason) => (
+                        <option key={availableSeason} value={availableSeason}>
+                          {playerUtils.formatSeasonLabel(
+                            availableSeason,
+                            currentSeason
+                          )}
+                        </option>
+                      ))}
+                    </AppSelect>
+                  </label>
+                  <RemixToggle
+                    team={playerData.player.team}
+                    season={isCareer ? null : playerData.player.season}
+                    profileKey={`${playerId}-${isCareer ? "career" : playerData.player.season}`}
+                  />
+                </div>
               )}
             </div>
           ) : (
