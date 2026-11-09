@@ -41,11 +41,21 @@ const BrickWallIcon = ({ className }) => (
 
 const clamp = (value) => Math.min(100, Math.max(0, Number(value) || 0));
 
-const formatValue = (value) => {
+const formatValue = (value, unit) => {
   const number = Number(value);
   if (!Number.isFinite(number)) return "-";
+  if (unit === "percent") return `${(number * 100).toFixed(1)}%`;
   if (Math.abs(number) >= 10) return number.toFixed(1);
   return number.toFixed(2);
+};
+
+const ordinal = (rank) => {
+  const number = Number(rank);
+  if (!Number.isFinite(number) || number < 1) return "-";
+  const lastTwo = number % 100;
+  if (lastTwo >= 11 && lastTwo <= 13) return `${number}th`;
+  const suffix = { 1: "st", 2: "nd", 3: "rd" }[number % 10] || "th";
+  return `${number}${suffix}`;
 };
 
 const formatIdentityValue = (scale) => {
@@ -57,7 +67,7 @@ const formatIdentityValue = (scale) => {
   return { percentage: `${100 - score}%`, label: scale.leftLabel };
 };
 
-const ScoreRing = ({ value, color, shareable = false }) => {
+const ScoreRing = ({ value, label, color, shareable = false }) => {
   const percentile = clamp(value);
   const radius = 35;
   const circumference = 2 * Math.PI * radius;
@@ -92,7 +102,7 @@ const ScoreRing = ({ value, color, shareable = false }) => {
       <span
         className={`relative font-extrabold tabular-nums text-white light:text-gray-900 ${shareable ? "shareable-war-score text-3xl" : "text-2xl"}`}
       >
-        {Math.round(percentile)}
+        {label}
       </span>
     </div>
   );
@@ -110,30 +120,25 @@ export const TeamQualityCard = ({
     <div className="flex items-center justify-between gap-4">
       <div className="flex min-w-0 items-center gap-3">
         <Trophy className="h-7 w-7 shrink-0 text-lime-400 light:text-lime-600" />
-        <h2
-          className={`font-extrabold leading-tight tracking-display text-white light:text-gray-900 ${shareable ? "shareable-icon-label text-[1.75rem]" : "text-2xl"}`}
-        >
-          Team Quality
-        </h2>
+        <div className="min-w-0">
+          <h2
+            className={`font-extrabold leading-tight tracking-display text-white light:text-gray-900 ${shareable ? "shareable-icon-label text-[1.75rem]" : "text-2xl"}`}
+          >
+            Team Quality
+          </h2>
+          <p
+            className={`font-medium text-gray-500 ${shareable ? "text-lg" : "text-sm"}`}
+          >
+            of {teamCount} teams
+          </p>
+        </div>
       </div>
-      <ScoreRing value={value} color="#84cc16" shareable={shareable} />
-    </div>
-    <div className="mt-3 flex items-center justify-between border-t border-white/[0.07] pt-3 light:border-slate-200">
-      <span
-        className={`font-semibold uppercase tracking-[0.1em] text-gray-500 ${shareable ? "text-base" : "text-xs"}`}
-      >
-        Season Rank
-      </span>
-      <span
-        className={`font-extrabold text-white light:text-gray-900 ${shareable ? "text-2xl" : "text-xl"}`}
-      >
-        #{rank}
-        <span
-          className={`ml-1 font-medium text-gray-500 ${shareable ? "text-lg" : "text-sm"}`}
-        >
-          of {teamCount}
-        </span>
-      </span>
+      <ScoreRing
+        value={value}
+        label={ordinal(rank)}
+        color="#84cc16"
+        shareable={shareable}
+      />
     </div>
   </section>
 );
@@ -313,17 +318,12 @@ const MetricRow = ({ metric, style, stretch = false, shareable = false }) => {
           <span
             className={`tabular-nums text-gray-500 ${shareable ? "text-lg" : "text-xs"}`}
           >
-            {formatValue(metric.rawValue)}
+            {formatValue(metric.rawValue, metric.unit)}
           </span>
           <span
             className={`inline-flex items-baseline whitespace-nowrap font-bold tabular-nums ${style.accent} ${shareable ? "text-2xl" : "text-sm sm:text-base"}`}
           >
-            {Math.round(percentile)}
-            <span
-              className={`ml-1 font-semibold tracking-wide ${shareable ? "text-[15px]" : "text-[9px] sm:text-[10px]"}`}
-            >
-              Pctle
-            </span>
+            {ordinal(metric.rank)}
           </span>
         </div>
       </div>
@@ -337,7 +337,7 @@ const MetricRow = ({ metric, style, stretch = false, shareable = false }) => {
   );
 };
 
-const PanelHeader = ({ id, title, style, value, shareable = false }) => {
+const PanelHeader = ({ id, title, style, value, rank, shareable = false }) => {
   const Icon = style.icon;
   return (
     <div
@@ -352,7 +352,12 @@ const PanelHeader = ({ id, title, style, value, shareable = false }) => {
           {title}
         </h2>
       </div>
-      <ScoreRing value={value} color={style.color} shareable={shareable} />
+      <ScoreRing
+        value={value}
+        label={ordinal(rank)}
+        color={style.color}
+        shareable={shareable}
+      />
     </div>
   );
 };
@@ -374,6 +379,7 @@ export const TeamPerformancePanel = ({
         title={title}
         style={style}
         value={quality.percentile}
+        rank={quality.rank}
         shareable={shareable}
       />
       <div
@@ -428,7 +434,7 @@ export const TeamSpecialTeamsPanel = ({ units, shareable = false }) => {
               <span
                 className={`font-extrabold tabular-nums ${style.accent} ${shareable ? "text-3xl" : "text-xl sm:text-2xl"}`}
               >
-                {Math.round(unit.percentile)}
+                {ordinal(unit.rank)}
               </span>
             </div>
             <div
