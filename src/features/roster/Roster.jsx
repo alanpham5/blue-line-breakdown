@@ -275,6 +275,7 @@ export const Roster = () => {
     actualTheme
   );
   const didWinStanleyCup = playerUtils.didWinStanleyCup(team, season);
+  const teamLogoUrl = playerUtils.getTeamLogoUrl(team, season, actualTheme);
   const displayedTeamStatus = didWinStanleyCup
     ? "Stanley Cup Winners"
     : clinchStatus;
@@ -379,9 +380,15 @@ export const Roster = () => {
                   />
                 )}
                 <img
-                  src={playerUtils.getTeamLogoUrl(team, season, actualTheme)}
+                  src={teamLogoUrl}
                   alt={team}
-                  className={`relative z-10 h-24 object-contain team-logo-stroke md:h-28 ${didWinStanleyCup ? "scale-75" : ""}`}
+                  className="relative z-10 h-24 object-contain team-logo-stroke md:h-28"
+                  style={{
+                    transform: playerUtils.getTeamLogoTransform(
+                      teamLogoUrl,
+                      didWinStanleyCup
+                    ),
+                  }}
                 />
               </div>
               <div className="min-w-0">

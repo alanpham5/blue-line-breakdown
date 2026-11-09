@@ -429,6 +429,11 @@ export const GeneralSearch = ({
                           className={`h-full w-full ${
                             isTeam ? "object-contain p-1" : "object-cover"
                           }`}
+                          style={{
+                            transform: isTeam
+                              ? playerUtils.getTeamLogoTransform(logoUrl)
+                              : undefined,
+                          }}
                           onError={(event) => {
                             event.currentTarget.style.display = "none";
                           }}

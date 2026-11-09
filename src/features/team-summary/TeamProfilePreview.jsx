@@ -330,6 +330,11 @@ export const TeamProfilePreview = () => {
     teamCount: offenseQuality.teamCount,
   };
   const didWinStanleyCup = playerUtils.didWinStanleyCup(team.id, team.season);
+  const teamLogoUrl = playerUtils.getTeamLogoUrl(
+    team.id,
+    team.season,
+    actualTheme
+  );
   const teamCardGradient = playerUtils.getTeamCardGradient(
     team.id,
     team.season,
@@ -402,13 +407,15 @@ export const TeamProfilePreview = () => {
                       />
                     )}
                     <img
-                      src={playerUtils.getTeamLogoUrl(
-                        team.id,
-                        team.season,
-                        actualTheme
-                      )}
+                      src={teamLogoUrl}
                       alt={`${team.name} logo`}
-                      className={`team-logo-stroke relative z-10 h-28 object-contain md:h-32 ${didWinStanleyCup ? "scale-75" : ""}`}
+                      className="team-logo-stroke relative z-10 h-28 object-contain md:h-32"
+                      style={{
+                        transform: playerUtils.getTeamLogoTransform(
+                          teamLogoUrl,
+                          didWinStanleyCup
+                        ),
+                      }}
                     />
                   </div>
                   <div className="-mt-[11px] text-center text-2xl font-bold text-white light:text-gray-900 md:mt-0 md:text-left">

@@ -1,4 +1,69 @@
 import { stanleyCupChampions } from "data/stanleyCupData";
+const HTR_SEASON = 2026;
+const NHL_LOGO_SCALE = 1.2;
+const NHL_SHAREABLE_LOGO_SCALE = 1.3;
+const LOCAL_LOGO_SCALE = 0.9;
+const LOCAL_SHAREABLE_LOGO_SCALE = 1;
+const CUP_LOGO_SCALE = 0.75;
+const HTR_TEAM_COLORS = {
+  ANA: { dark: "#1F8A5B", light: "#1F8A5B" },
+  BOS: { dark: "#FFB81C", light: "#5C3A1E" },
+  BUF: { dark: "#2155D4", light: "#2155D4" },
+  CGY: { dark: "#D2001C", light: "#D2001C" },
+  CAR: { dark: "#989DA1", light: "#989DA1" },
+  CHI: { dark: "#1E7A46", light: "#1E7A46" },
+  COL: { dark: "#6CACE4", light: "#0F4C9C" },
+  CBJ: { dark: "#99A0A6", light: "#99A0A6" },
+  DAL: { dark: "#39E75F", light: "#39E75F" },
+  DET: { dark: "#CE1126", light: "#CE1126" },
+  EDM: { dark: "#FF4C00", light: "#C84000" },
+  FLA: { dark: "#F73F5C", light: "#F73F5C" },
+  LAK: { dark: "#7A3FBF", light: "#7A3FBF" },
+  MIN: { dark: "#2FA05A", light: "#154734" },
+  MTL: { dark: "#E23B4A", light: "#AF1E2D" },
+  NSH: { dark: "#FFB81C", light: "#041E42" },
+  NJD: { dark: "#E8333F", light: "#CE1126" },
+  NYI: { dark: "#A7CDDB", light: "#A7CDDB" },
+  NYR: { dark: "#011539", light: "#0038A8" },
+  OTT: { dark: "#C69214", light: "#C69214" },
+  PHI: { dark: "#7A7A7A", light: "#7A7A7A" },
+  PIT: { dark: "#74B9E8", light: "#041E42" },
+  SJS: { dark: "#00B5C8", light: "#00B5C8" },
+  SEA: { dark: "#E3C59C", light: "#001628" },
+  STL: { dark: "#4C9BE8", light: "#000000" },
+  TBL: { dark: "#4FB6F0", light: "#4FB6F0" },
+  TOR: { dark: "#E8DCC0", light: "#00205B" },
+  UTA: { dark: "#71AFE5", light: "#71AFE5" },
+  VAN: { dark: "#00A3E0", light: "#00205B" },
+  VGK: { dark: "#0A7F75", light: "#0A7F75" },
+  WSH: { dark: "#2E64C2", light: "#2E64C2" },
+  WPG: { dark: "#7BAFD4", light: "#041E42" },
+};
+const HTR_THEMED_LOGO_TEAMS = new Set(["TOR", "CGY"]);
+const HTR_PARAM = "HTR";
+const HTR_STORAGE_KEY = "htrEnabled";
+const readHtrSessionFlag = () => {
+  try {
+    return sessionStorage.getItem(HTR_STORAGE_KEY) === "true";
+  } catch {
+    return false;
+  }
+};
+const writeHtrSessionFlag = (enabled) => {
+  try {
+    sessionStorage.setItem(HTR_STORAGE_KEY, String(enabled));
+  } catch {}
+};
+const isHtrEnabled = () => {
+  if (typeof window === "undefined") return false;
+  const paramValue = new URLSearchParams(window.location.search).get(HTR_PARAM);
+  if (paramValue === null) return readHtrSessionFlag();
+  const enabled = paramValue === "true";
+  writeHtrSessionFlag(enabled);
+  return enabled;
+};
+const isHtrSeason = (season) =>
+  season != null && parseInt(season) === HTR_SEASON && isHtrEnabled();
 export const playerUtils = {
   getCorsWrappedUrl(url) {
     if (!url) return url;
@@ -48,6 +113,11 @@ export const playerUtils = {
     return "https://assets.nhle.com/mugs/nhl/default-skater.png";
   },
   getTeamColor(teamCode, season = null, actualTheme = "dark") {
+    const htrColors =
+      isHtrSeason(season) && HTR_TEAM_COLORS[String(teamCode).toUpperCase()];
+    if (htrColors) {
+      return actualTheme === "light" ? htrColors.light : htrColors.dark;
+    }
     const retroColors = {
       NSH: [
         {
@@ -473,6 +543,13 @@ export const playerUtils = {
       path.replace(/_(?:dark)\.svg$/i, `_${suffix}.svg`);
     const base = "https://assets.nhle.com/logos/nhl/svg";
     const teamCodeUpper = teamCode.toUpperCase();
+    if (isHtrSeason(season) && HTR_TEAM_COLORS[teamCodeUpper]) {
+      if (HTR_THEMED_LOGO_TEAMS.has(teamCodeUpper)) {
+        const variant = actualTheme === "light" ? "Light" : "Dark";
+        return `/HTR/${teamCodeUpper}_HTR_${variant}.png`;
+      }
+      return `/HTR/${teamCodeUpper}_HTR.png`;
+    }
     if (teamCodeUpper === "WSH") {
       return `${base}/${applySuffix("WSH_secondary_dark.svg")}`;
     }
@@ -702,6 +779,42 @@ export const playerUtils = {
       return `${base}/CGY_hdr_dark.svg`;
     }
     return `${base}/${teamCodeUpper}_${suffix}.svg`;
+  },
+  isNhlHostedLogo(url) {
+    return /nhle\.com(\/|%2F)logos/i.test(String(url || ""));
+  },
+  isLocalLogo(url) {
+    return String(url || "").startsWith("/");
+  },
+  getSourceLogoScale(url, nhlScale, localScale) {
+    if (this.isNhlHostedLogo(url)) return nhlScale;
+    if (this.isLocalLogo(url)) return localScale;
+    return 1;
+  },
+  buildLogoTransform(url, wonCup, baseScale, nhlScale, localScale) {
+    const scale =
+      baseScale *
+      this.getSourceLogoScale(url, nhlScale, localScale) *
+      (wonCup ? CUP_LOGO_SCALE : 1);
+    return scale === 1 ? undefined : `scale(${scale})`;
+  },
+  getTeamLogoTransform(url, wonCup = false, baseScale = 1) {
+    return this.buildLogoTransform(
+      url,
+      wonCup,
+      baseScale,
+      NHL_LOGO_SCALE,
+      LOCAL_LOGO_SCALE
+    );
+  },
+  getShareableTeamLogoTransform(url, wonCup = false, baseScale = 1) {
+    return this.buildLogoTransform(
+      url,
+      wonCup,
+      baseScale,
+      NHL_SHAREABLE_LOGO_SCALE,
+      LOCAL_SHAREABLE_LOGO_SCALE
+    );
   },
   didWinStanleyCup(team, season) {
     const seasonYear = parseInt(season);

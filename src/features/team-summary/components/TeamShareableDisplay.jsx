@@ -158,8 +158,12 @@ export const TeamShareableDisplay = ({
                 <img
                   src={teamLogoUrl}
                   alt={`${team} logo`}
-                  className={`team-logo-stroke z-10 ${didWinStanleyCup ? "scale-75" : ""}`}
+                  className="team-logo-stroke z-10"
                   style={{
+                    transform: playerUtils.getShareableTeamLogoTransform(
+                      teamLogoUrl,
+                      didWinStanleyCup
+                    ),
                     width: "auto",
                     height: "auto",
                     maxWidth: "100%",
@@ -339,9 +343,7 @@ export const TeamShareableDisplay = ({
               />
             </div>
             <div className="pt-1.5 border-t border-white/5">
-              <div className="text-xs font-bold text-gray-400 mb-1">
-                Pace
-              </div>
+              <div className="text-xs font-bold text-gray-400 mb-1">Pace</div>
               <CompactStatBar
                 label="Game Pace"
                 percentile={stats.pace_pg_pct}
@@ -525,8 +527,18 @@ export const TeamShareableDisplay = ({
                               )
                             )}
                             alt={similar.team}
-                            className="team-logo-stroke scale-110"
+                            className="team-logo-stroke"
                             style={{
+                              transform:
+                                playerUtils.getShareableTeamLogoTransform(
+                                  playerUtils.getTeamLogoUrl(
+                                    similar.team,
+                                    similar.season,
+                                    "dark"
+                                  ),
+                                  false,
+                                  1.1
+                                ),
                               width: "auto",
                               height: "auto",
                               maxWidth: "100%",

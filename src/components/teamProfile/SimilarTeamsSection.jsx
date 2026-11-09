@@ -39,6 +39,11 @@ const SimilarTeamCard = ({
     similarTeam.season,
     actualTheme
   );
+  const logoUrl = playerUtils.getTeamLogoUrl(
+    similarTeam.team,
+    similarTeam.season,
+    actualTheme
+  );
   return (
     <div
       className={`group flex min-w-0 cursor-pointer flex-col items-center py-2 text-center transition-all duration-300 touch-manipulation ${shouldAnimate ? "player-card-enter" : ""} ${isMobile ? "" : "hover:-translate-y-1"}`}
@@ -54,13 +59,12 @@ const SimilarTeamCard = ({
           }}
         >
           <img
-            src={playerUtils.getTeamLogoUrl(
-              similarTeam.team,
-              similarTeam.season,
-              actualTheme
-            )}
+            src={logoUrl}
             alt={similarTeam.team}
-            className="h-full w-full scale-110 object-contain team-logo-stroke"
+            className="h-full w-full object-contain team-logo-stroke"
+            style={{
+              transform: playerUtils.getTeamLogoTransform(logoUrl, false, 1.1),
+            }}
             onError={(e) => {
               e.target.src =
                 "https://assets.nhle.com/logos/nhl/svg/NHL_dark.svg";

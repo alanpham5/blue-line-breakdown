@@ -122,7 +122,11 @@ const Section = ({
             onClick={() => onOpen(bm)}
             className="flex min-w-0 flex-1 items-center gap-3 px-4 py-2.5 text-left"
           >
-            <BookmarkAvatar bm={bm} actualTheme={actualTheme} fallbackIcon={Icon} />
+            <BookmarkAvatar
+              bm={bm}
+              actualTheme={actualTheme}
+              fallbackIcon={Icon}
+            />
             <span className="min-w-0 flex-1 truncate text-sm font-semibold text-white light:text-gray-900">
               {bm.label || bm.player || bm.team || bm.entityId}
             </span>
@@ -147,13 +151,17 @@ const Section = ({
 );
 const BookmarkAvatar = ({ bm, actualTheme, fallbackIcon: Icon }) => {
   if (bm.entityType === ENTITY_TYPES.TEAM) {
+    const logoUrl = bm.team
+      ? playerUtils.getTeamLogoUrl(bm.team, bm.season, actualTheme)
+      : null;
     return (
       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/5 light:bg-slate-900/5">
         {bm.team ? (
           <img
-            src={playerUtils.getTeamLogoUrl(bm.team, bm.season, actualTheme)}
+            src={logoUrl}
             alt=""
             className="h-6 w-6 object-contain"
+            style={{ transform: playerUtils.getTeamLogoTransform(logoUrl) }}
             onError={(e) => {
               e.target.style.display = "none";
             }}

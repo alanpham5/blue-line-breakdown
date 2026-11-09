@@ -47,7 +47,10 @@ const TeamLogoLink = ({
       <img
         src={teamLogoUrl}
         alt={`${player.team} logo`}
-        className={`relative w-full h-full object-contain cursor-pointer team-logo-stroke ${wonCup ? "scale-75 z-10 team-logo-stroke-cup" : ""}`}
+        className={`relative w-full h-full object-contain cursor-pointer team-logo-stroke ${wonCup ? "z-10 team-logo-stroke-cup" : ""}`}
+        style={{
+          transform: playerUtils.getTeamLogoTransform(teamLogoUrl, wonCup),
+        }}
         onError={(e) => {
           e.target.style.display = "none";
         }}

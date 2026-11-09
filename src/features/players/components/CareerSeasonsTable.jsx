@@ -92,6 +92,10 @@ export const CareerSeasonsTable = ({
                           src={logoUrl}
                           alt=""
                           className="h-6 w-6 object-contain"
+                          style={{
+                            transform:
+                              playerUtils.getTeamLogoTransform(logoUrl),
+                          }}
                           loading="lazy"
                           onError={(event) => {
                             event.currentTarget.style.display = "none";

@@ -552,6 +552,7 @@ const RosterCard = ({ player, season, actualTheme, onSelect }) => {
   const theme = POSITION_BAR[player.position] || POSITION_BAR.F;
   const percentile = player.warPercentile;
   const hasPercentile = percentile != null;
+  const logoUrl = playerUtils.getTeamLogoUrl(player.team, season, actualTheme);
   return (
     <button
       type="button"
@@ -578,9 +579,10 @@ const RosterCard = ({ player, season, actualTheme, onSelect }) => {
           </p>
           <p className="flex items-center gap-1 text-xs text-gray-400 light:text-gray-500">
             <img
-              src={playerUtils.getTeamLogoUrl(player.team, season, actualTheme)}
+              src={logoUrl}
               alt=""
               className="h-3.5 w-3.5 object-contain"
+              style={{ transform: playerUtils.getTeamLogoTransform(logoUrl) }}
               onError={(e) => (e.target.style.display = "none")}
             />
             {player.teamName || player.team}

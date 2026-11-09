@@ -133,6 +133,9 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
   const teamWonCup = team
     ? playerUtils.didWinStanleyCup(team.team, team.season)
     : false;
+  const teamLogoUrl = team
+    ? playerUtils.getTeamLogoUrl(team.team, team.season, actualTheme)
+    : null;
   return (
     <div className="min-h-screen ice-background px-4 pb-10 pt-5 text-white light:text-gray-900 sm:px-6 sm:py-8">
       {!featuredData && !errorState && !showSkeleton && (
@@ -372,16 +375,15 @@ export const Splashscreen = ({ enablePageLoadAnimations = true }) => {
                         )}
 
                         <img
-                          src={
-                            team.logoUrl ||
-                            playerUtils.getTeamLogoUrl(
-                              team.team,
-                              team.season,
-                              actualTheme
-                            )
-                          }
+                          src={teamLogoUrl}
                           alt={`${team.name} Logo`}
-                          className={`relative z-10 w-full h-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.35)] ${teamWonCup ? `scale-75 ${actualTheme === "dark" ? "team-logo-stroke-cup" : ""}` : ""}`}
+                          className={`relative z-10 w-full h-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.35)] ${teamWonCup && actualTheme === "dark" ? "team-logo-stroke-cup" : ""}`}
+                          style={{
+                            transform: playerUtils.getTeamLogoTransform(
+                              teamLogoUrl,
+                              teamWonCup
+                            ),
+                          }}
                           onError={(e) => {
                             e.target.style.display = "none";
                           }}

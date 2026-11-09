@@ -81,7 +81,8 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
   const [error, setError] = useState("");
   const [showShareableModal, setShowShareableModal] = useState(false);
   const seasonsList = useTeamSeasons();
-  const { teams: teamsList, loading: loadingTeams } = useSeasonTeams(tempSeason);
+  const { teams: teamsList, loading: loadingTeams } =
+    useSeasonTeams(tempSeason);
 
   useEffect(() => {
     document.title = teamSummaryData
@@ -187,6 +188,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
     actualTheme
   );
   const didWinStanleyCup = playerUtils.didWinStanleyCup(team, season);
+  const teamLogoUrl = playerUtils.getTeamLogoUrl(team, season, actualTheme);
   const displayedTeamStatus = didWinStanleyCup
     ? "Stanley Cup Winners"
     : teamClinchStatus;
@@ -315,13 +317,15 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
                       />
                     )}
                     <img
-                      src={playerUtils.getTeamLogoUrl(
-                        team,
-                        season,
-                        actualTheme
-                      )}
+                      src={teamLogoUrl}
                       alt={`${playerUtils.getFullTeamName(team, season)} logo`}
-                      className={`relative z-10 max-h-full max-w-full object-contain team-logo-stroke ${didWinStanleyCup ? "scale-75" : ""}`}
+                      className="relative z-10 max-h-full max-w-full object-contain team-logo-stroke"
+                      style={{
+                        transform: playerUtils.getTeamLogoTransform(
+                          teamLogoUrl,
+                          didWinStanleyCup
+                        ),
+                      }}
                     />
                   </div>
                   <div className="-mt-[11px] min-w-0 flex-1 md:mt-0">

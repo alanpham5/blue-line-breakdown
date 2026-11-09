@@ -105,6 +105,8 @@ export const TeamProfileShareablePreview = ({
                     height: "auto",
                     maxWidth: didWinStanleyCup ? "75%" : "100%",
                     maxHeight: didWinStanleyCup ? "75%" : "100%",
+                    transform:
+                      playerUtils.getShareableTeamLogoTransform(logoUrl),
                   }}
                 />
               </div>

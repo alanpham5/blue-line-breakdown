@@ -12,6 +12,7 @@ export const TeamHeader = ({
   const teamHeaderRef = useRef(null);
   const didWinStanleyCup = playerUtils.didWinStanleyCup(team, season);
   const { actualTheme } = useTheme();
+  const teamLogoUrl = playerUtils.getTeamLogoUrl(team, season, actualTheme);
   const teamCardGradient = playerUtils.getTeamCardGradient(
     team,
     season,
@@ -52,16 +53,15 @@ export const TeamHeader = ({
               )}
 
               <img
-                src={playerUtils.getTeamLogoUrl(team, season, actualTheme)}
+                src={teamLogoUrl}
                 alt={team}
-                className={`relative h-32 object-contain team-logo-stroke z-10 md:h-36 ${didWinStanleyCup ? `scale-75 ${actualTheme === "dark" && "team-logo-stroke-cup"}` : ""}`}
-                style={
-                  didWinStanleyCup
-                    ? {
-                        transform: "translateZ(0) scale(0.75)",
-                      }
-                    : undefined
-                }
+                className={`relative h-32 object-contain team-logo-stroke z-10 md:h-36 ${didWinStanleyCup && actualTheme === "dark" ? "team-logo-stroke-cup" : ""}`}
+                style={{
+                  transform: playerUtils.getTeamLogoTransform(
+                    teamLogoUrl,
+                    didWinStanleyCup
+                  ),
+                }}
               />
             </div>
 

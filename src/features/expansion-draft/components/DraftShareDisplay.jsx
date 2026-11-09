@@ -44,11 +44,7 @@ const RatingBadge = ({ value, color }) => (
 );
 const ImpactColumn = ({ title, accent, players, season }) => (
   <div>
-    <h4
-      className={`text-[12px] font-bold mb-1.5 ${accent}`}
-    >
-      {title}
-    </h4>
+    <h4 className={`text-[12px] font-bold mb-1.5 ${accent}`}>{title}</h4>
     <div className="space-y-1.5">
       {players.map((p) => (
         <div
@@ -355,9 +351,7 @@ export const DraftShareDisplay = ({ draft, profile }) => {
               />
             </div>
             <div className="pt-1.5 border-t border-white/5">
-              <div className="text-xs font-bold text-gray-400 mb-1">
-                Pace
-              </div>
+              <div className="text-xs font-bold text-gray-400 mb-1">Pace</div>
               <CompactStatBar
                 label="Game Pace"
                 percentile={stats.pace_pg_pct}
@@ -442,8 +436,18 @@ export const DraftShareDisplay = ({ draft, profile }) => {
                             )
                           )}
                           alt={similar.team}
-                          className="team-logo-stroke scale-110"
+                          className="team-logo-stroke"
                           style={{
+                            transform:
+                              playerUtils.getShareableTeamLogoTransform(
+                                playerUtils.getTeamLogoUrl(
+                                  similar.team,
+                                  similar.season,
+                                  "dark"
+                                ),
+                                false,
+                                1.1
+                              ),
                             width: "auto",
                             height: "auto",
                             maxWidth: "100%",

@@ -210,8 +210,12 @@ export const RosterShareableDisplay = ({
                 <img
                   src={teamLogoUrl}
                   alt={`${team} logo`}
-                  className={`team-logo-stroke z-10 ${didWinStanleyCup ? "scale-75" : ""}`}
+                  className="team-logo-stroke z-10"
                   style={{
+                    transform: playerUtils.getShareableTeamLogoTransform(
+                      teamLogoUrl,
+                      didWinStanleyCup
+                    ),
                     width: "auto",
                     height: "auto",
                     maxWidth: "100%",

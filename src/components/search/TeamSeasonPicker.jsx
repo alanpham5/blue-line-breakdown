@@ -5,12 +5,14 @@ import { useTeamSeasons } from "hooks/useTeamSeasons";
 
 export const TeamSeasonPicker = ({ team, season, onSelect, className }) => {
   const seasons = useTeamSeasons();
-  const [pendingSeason, setPendingSeason] = useState(String(season || ""));
+  const currentSeason = String(season || "");
+  const [pendingSeason, setPendingSeason] = useState(currentSeason);
+  const [syncedSeason, setSyncedSeason] = useState(currentSeason);
+  if (syncedSeason !== currentSeason) {
+    setSyncedSeason(currentSeason);
+    setPendingSeason(currentSeason);
+  }
   const { teams, loading } = useSeasonTeams(pendingSeason);
-
-  useEffect(() => {
-    setPendingSeason(String(season || ""));
-  }, [season]);
 
   useEffect(() => {
     if (loading || !team || pendingSeason === String(season)) return;
