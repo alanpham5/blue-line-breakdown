@@ -75,6 +75,7 @@ export const GeneralSearch = ({
   initialQuery = "",
   targetSeason = null,
   teamResultPath = "/teams",
+  playerResultPath = playerPagePath,
 }) => {
   const navigate = useNavigate();
   const { actualTheme } = useTheme();
@@ -238,7 +239,7 @@ export const GeneralSearch = ({
       );
       return;
     }
-    navigate(playerPagePath(result, currentSeason));
+    navigate(playerResultPath(result, currentSeason));
   };
 
   const handleKeyDown = (event) => {

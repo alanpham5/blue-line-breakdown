@@ -54,6 +54,7 @@ export const PlayersV2 = () => {
 
   const season = searchParams.get("season");
   const similarSeason = searchParams.get("similarSeason");
+  const showAllLinesLink = searchParams.get("allLines") === "true";
   const isCareerRequest = Boolean(playerId) && !season;
   const isCareer = Boolean(playerData?.isCareer);
   const isGoalie = playerData?.player?.position === "G";
@@ -388,6 +389,15 @@ export const PlayersV2 = () => {
                           difficulty={playerData.difficulty}
                           position={playerData.player.position}
                           isCareer={isCareer}
+                          linesHref={
+                            showAllLinesLink
+                              ? `/players/v2/${playerId}/lines${
+                                  isCareer
+                                    ? ""
+                                    : `?season=${playerData.player.season}`
+                                }`
+                              : undefined
+                          }
                         />
                       </div>
                     )}

@@ -1,4 +1,4 @@
-import { Info, Mountain } from "lucide-react";
+import { ChevronRight, Info, Mountain } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Tooltip } from "components/ui/Tooltip";
 import { getOrdinal } from "utils/ordinal";
@@ -229,6 +229,7 @@ export const PlayerDifficultyCard = ({
   showInfo = true,
   forceDark = false,
   shareable = false,
+  linesHref = null,
 }) => {
   const { zoneStarts, specialTeams, teammateQuality, teammates } = difficulty;
   const percentiles = difficulty.percentiles || {};
@@ -344,10 +345,19 @@ export const PlayerDifficultyCard = ({
         )}
         {teammates?.length > 0 && (
           <div>
-            <div className="mb-2">
+            <div className="mb-2 flex items-baseline justify-between gap-3">
               <SectionLabel shareable={shareable}>
                 {isDefense ? "Most Common Partner" : "Most Common Linemates"}
               </SectionLabel>
+              {linesHref && !shareable && (
+                <Link
+                  to={linesHref}
+                  className="inline-flex shrink-0 items-center gap-0.5 text-sm font-semibold text-amber-300 transition-colors hover:text-amber-200 light:text-amber-600 light:hover:text-amber-700"
+                >
+                  {isDefense ? "All Pairings" : "All Lines"}
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
+              )}
             </div>
             <div
               className={`grid gap-3 ${teammates.length > 1 ? "grid-cols-2" : "grid-cols-1"}`}

@@ -208,6 +208,21 @@ export const apiService = {
       errorMessage: "Failed to fetch player career",
     });
   },
+  fetchPlayerLinesV2(playerId, season = null) {
+    const params = new URLSearchParams();
+    if (season) params.set("season", String(season));
+    return cachedRequest(`/v2/players/${playerId}/lines?${params.toString()}`, {
+      errorMessage: "Failed to fetch player lines",
+    });
+  },
+  fetchPlayerWithWithoutV2(playerId, teammateId, season = null) {
+    const params = new URLSearchParams({ teammate: String(teammateId) });
+    if (season) params.set("season", String(season));
+    return cachedRequest(
+      `/v2/players/${playerId}/with-without?${params.toString()}`,
+      { errorMessage: "Failed to compare minutes together and apart" }
+    );
+  },
   fetchPlayersV2Status() {
     return request("/v2/players/status", {
       errorMessage: "Failed to inspect player data",

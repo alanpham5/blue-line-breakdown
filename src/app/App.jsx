@@ -18,6 +18,10 @@ const PlayersV2 = lazyPage(
   () => import(/* webpackPrefetch: true */ "features/players/PlayersV2"),
   "PlayersV2"
 );
+const PlayerLines = lazyPage(
+  () => import("features/players/PlayerLines"),
+  "PlayerLines"
+);
 const PlayerLeaderboard = lazyPage(
   () =>
     import(
@@ -128,6 +132,10 @@ const App = () => {
                 />
                 <Route path="/players/v2" element={<PlayersV2 />} />
                 <Route path="/players/v2/:playerId" element={<PlayersV2 />} />
+                <Route
+                  path="/players/v2/:playerId/lines"
+                  element={<PlayerLines />}
+                />
                 <Route
                   path="/players/profile-preview"
                   element={<PlayerProfilePreview />}
