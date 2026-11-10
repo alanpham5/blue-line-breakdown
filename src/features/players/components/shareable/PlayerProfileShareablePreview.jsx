@@ -226,7 +226,7 @@ export const PlayerProfileShareablePreview = ({
             display: "flex",
             alignItems: "center",
             gap: 18,
-            fontSize: 32,
+            fontSize: 34,
             fontWeight: 800,
             color: "#f3f4f6",
           }}
@@ -236,7 +236,7 @@ export const PlayerProfileShareablePreview = ({
             alt="Logo"
             style={{ width: 64, height: 64 }}
           />
-          <span>Blue Line Breakdown</span>
+          <span data-export-nudge={15}>Blue Line Breakdown</span>
         </div>
       </aside>
 
