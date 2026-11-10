@@ -10,10 +10,12 @@ import {
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { Header } from "components/layout/Header";
 import { GeneralSearch } from "components/search/GeneralSearch";
+import { RemixToggle } from "components/search/RemixToggle";
 import { Footer } from "components/layout/Footer";
 import { AppSelect } from "components/ui/AppSelect";
 import { ShareableModal } from "components/ui/ShareableModal";
 import { useIsMobile } from "hooks/useIsMobile";
+import { useTheme } from "providers/ThemeContext";
 import { apiService } from "lib/api/apiService";
 import { buildPageTitle } from "lib/analytics";
 import { playerUtils } from "utils/playerUtils";
@@ -36,6 +38,56 @@ const linesPagePath = (result) =>
   result.position === "Goalie"
     ? `/players/v2/${result.playerId}`
     : `/players/v2/${result.playerId}/lines?season=${result.latestSeason}`;
+const TeamHeadshot = ({ player, isCareer }) => {
+  const teamColor = playerUtils.getTeamColor(player.team, player.season);
+  return (
+    <div
+      className="h-16 w-16 shrink-0 overflow-hidden rounded-full shadow-[0_12px_28px_rgba(0,0,0,0.3)] sm:h-20 sm:w-20"
+      style={{
+        background: playerUtils.getSurfaceGradient(teamColor, "dark"),
+        boxShadow: `0 0 0 5px ${teamColor}20`,
+      }}
+    >
+      <img
+        src={playerUtils.getPlayerHeadshot(
+          player.playerId,
+          player.team,
+          isCareer ? null : player.season
+        )}
+        alt=""
+        className="h-full w-full object-cover"
+        onError={(event) => {
+          event.target.src = playerUtils.getDefaultHeadshot();
+        }}
+      />
+    </div>
+  );
+};
+
+const TeamLogo = ({ player, actualTheme }) => {
+  const logoUrl = player.team
+    ? playerUtils.getTeamLogoUrl(player.team, player.season, actualTheme)
+    : null;
+  if (!logoUrl) return null;
+  return (
+    <Link
+      to={`/teams?season=${player.season}&team=${player.team}&position=${player.position}`}
+      className="hidden h-14 w-14 shrink-0 items-center justify-center transition-transform duration-300 hover:scale-105 sm:flex sm:h-16 sm:w-16"
+      aria-label={`${playerUtils.getFullTeamName(player.team, player.season)} team page`}
+    >
+      <img
+        src={logoUrl}
+        alt=""
+        className="team-logo-stroke h-full w-full object-contain"
+        style={{ transform: playerUtils.getTeamLogoTransform(logoUrl, false) }}
+        onError={(event) => {
+          event.target.style.display = "none";
+        }}
+      />
+    </Link>
+  );
+};
+
 const TABS = [
   { id: "lines", icon: ListOrdered },
   { id: "wowy", label: "With / Without", icon: ArrowLeftRight },
@@ -84,6 +136,7 @@ export const PlayerLines = () => {
   const [minMinutes, setMinMinutes] = useState(MIN_LINE_MINUTES);
   const [showShareable, setShowShareable] = useState(false);
   const isMobile = useIsMobile();
+  const { actualTheme } = useTheme();
 
   useEffect(() => {
     let cancelled = false;
@@ -169,48 +222,55 @@ export const PlayerLines = () => {
               playerResultPath={linesPagePath}
             />
             {data && (
-              <label className="block min-w-0">
-                <span className="sr-only">Season</span>
-                <AppSelect
-                  value={isCareer ? CAREER_OPTION : String(data.season)}
-                  onChange={(event) =>
-                    updateParams({
-                      season:
-                        event.target.value === CAREER_OPTION
-                          ? null
-                          : event.target.value,
-                      with: null,
-                    })
-                  }
-                  className="app-field w-full px-4 py-3.5 pr-10 text-base normal-case tracking-normal text-white light:text-gray-900"
-                >
-                  <option value={CAREER_OPTION}>Career</option>
-                  {data.availableSeasons.map((availableSeason) => (
-                    <option key={availableSeason} value={availableSeason}>
-                      {playerUtils.formatSeason(availableSeason)}
-                    </option>
-                  ))}
-                </AppSelect>
-              </label>
+              <div className="flex items-center gap-3">
+                <label className="block min-w-0 flex-1">
+                  <span className="sr-only">Season</span>
+                  <AppSelect
+                    value={isCareer ? CAREER_OPTION : String(data.season)}
+                    onChange={(event) =>
+                      updateParams({
+                        season:
+                          event.target.value === CAREER_OPTION
+                            ? null
+                            : event.target.value,
+                        with: null,
+                      })
+                    }
+                    className="app-field w-full px-4 py-3.5 pr-10 text-base normal-case tracking-normal text-white light:text-gray-900"
+                  >
+                    <option value={CAREER_OPTION}>Career</option>
+                    {data.availableSeasons.map((availableSeason) => (
+                      <option key={availableSeason} value={availableSeason}>
+                        {playerUtils.formatSeason(availableSeason)}
+                      </option>
+                    ))}
+                  </AppSelect>
+                </label>
+                <RemixToggle
+                  team={data.player.team}
+                  season={isCareer ? null : data.player.season}
+                  profileKey={`lines-${playerId}-${isCareer ? "career" : data.season}`}
+                />
+              </div>
             )}
           </div>
 
-          <section className="liquid-glass-strong flex items-center justify-between gap-4 rounded-[32px] p-5 sm:p-6">
+          <section
+            className="team-card-surface-strong liquid-glass-strong flex items-center justify-between gap-4 overflow-hidden rounded-[32px] p-5 sm:p-6"
+            style={
+              player
+                ? {
+                    "--team-card-gradient": playerUtils.getTeamCardGradient(
+                      player.team,
+                      player.season,
+                      actualTheme
+                    ),
+                  }
+                : undefined
+            }
+          >
             <div className="flex min-w-0 items-center gap-4">
-              {player && (
-                <img
-                  src={playerUtils.getPlayerHeadshot(
-                    player.playerId,
-                    player.team,
-                    player.season
-                  )}
-                  alt=""
-                  className="h-16 w-16 shrink-0 rounded-full bg-zinc-950/55 object-cover shadow-lg light:bg-slate-700/45 sm:h-20 sm:w-20"
-                  onError={(event) => {
-                    event.target.src = playerUtils.getDefaultHeadshot();
-                  }}
-                />
-              )}
+              {player && <TeamHeadshot player={player} isCareer={isCareer} />}
               <div className="min-w-0">
                 <Link
                   to={playerUtils.playerProfilePath(
@@ -234,22 +294,25 @@ export const PlayerLines = () => {
                 )}
               </div>
             </div>
-            {canShare && (
-              <button
-                type="button"
-                onClick={() => setShowShareable(true)}
-                className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:text-white light:border-slate-300 light:bg-white/80 light:text-slate-700 light:hover:text-slate-900"
-                aria-label={
-                  isMobile ? "Share image" : "Download shareable image"
-                }
-              >
-                {isMobile ? (
-                  <Share className="h-4 w-4" />
-                ) : (
-                  <Download className="h-4 w-4" />
-                )}
-              </button>
-            )}
+            <div className="flex shrink-0 items-center gap-3 sm:gap-4">
+              {player && <TeamLogo player={player} actualTheme={actualTheme} />}
+              {canShare && (
+                <button
+                  type="button"
+                  onClick={() => setShowShareable(true)}
+                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:text-white light:border-slate-300 light:bg-white/80 light:text-slate-700 light:hover:text-slate-900"
+                  aria-label={
+                    isMobile ? "Share image" : "Download shareable image"
+                  }
+                >
+                  {isMobile ? (
+                    <Share className="h-4 w-4" />
+                  ) : (
+                    <Download className="h-4 w-4" />
+                  )}
+                </button>
+              )}
+            </div>
           </section>
 
           <TabToggle

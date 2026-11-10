@@ -144,9 +144,14 @@ const PlayerColumnLabel = ({ playerName, stat, icon, shareable }) => {
     <span
       className={`flex min-w-0 flex-col items-center text-center leading-tight ${shareable ? shareableSize : ""}`}
     >
-      <span className="max-w-full truncate">{surname}</span>
+      <span
+        className="max-w-full truncate"
+        data-export-nudge={shareable ? 8 : undefined}
+      >
+        {surname}
+      </span>
       <span className="flex items-center gap-0.5">
-        {stat}
+        <span data-export-nudge={shareable ? 8 : undefined}>{stat}</span>
         {icon}
       </span>
     </span>
@@ -175,7 +180,10 @@ const HeaderCell = ({ column, sort, mode, playerName, onSort, shareable }) => {
     />
   ) : (
     <>
-      <span className={shareable ? "" : "sm:hidden"}>
+      <span
+        className={shareable ? "" : "sm:hidden"}
+        data-export-nudge={shareable ? 8 : undefined}
+      >
         {shareable ? label : columnShort(column, mode)}
       </span>
       {!shareable && <span className="hidden sm:inline">{label}</span>}
@@ -184,11 +192,7 @@ const HeaderCell = ({ column, sort, mode, playerName, onSort, shareable }) => {
   );
 
   if (shareable) {
-    return (
-      <span className={`${layout} text-lg`} data-export-nudge={6}>
-        {content}
-      </span>
-    );
+    return <span className={`${layout} text-lg`}>{content}</span>;
   }
   return (
     <button
@@ -216,13 +220,13 @@ export const LinesHeader = ({
   >
     <span
       className={`font-semibold text-gray-500 ${shareable ? "text-lg" : "text-[11px] light:text-slate-600 sm:text-xs"}`}
-      data-export-nudge={shareable ? 6 : undefined}
+      data-export-nudge={shareable ? 8 : undefined}
     >
       #
     </span>
     <span
       className={`font-semibold text-gray-400 ${shareable ? "text-lg" : "text-[11px] light:text-slate-600 sm:text-xs"}`}
-      data-export-nudge={shareable ? 6 : undefined}
+      data-export-nudge={shareable ? 8 : undefined}
     >
       {unitType === "pairing" ? "Pairing" : "Line"}
     </span>
@@ -250,7 +254,13 @@ const Headshot = ({ player, shareable }) => {
     <img
       src={shareable ? playerUtils.getCorsWrappedUrl(headshot) : headshot}
       alt=""
-      className={`shrink-0 rounded-full border-2 border-[#1b1c20] bg-zinc-950/55 object-cover ${shareable ? "h-14 w-14" : "h-10 w-10 light:border-white light:bg-slate-700/45"}`}
+      className={`shrink-0 rounded-full border-2 border-[#1b1c20] object-cover ${shareable ? "h-14 w-14" : "h-10 w-10 light:border-white"}`}
+      style={{
+        background: playerUtils.getSurfaceGradient(
+          playerUtils.getTeamColor(player.team, player.season),
+          "dark"
+        ),
+      }}
       onError={(event) => {
         event.target.src = playerUtils.getDefaultHeadshot();
       }}

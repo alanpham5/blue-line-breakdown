@@ -47,7 +47,7 @@ const BrandRail = () => (
       }}
     >
       <img src="/blb-dark.png" alt="Logo" style={{ width: 64, height: 64 }} />
-      <span>Blue Line Breakdown</span>
+      <span data-export-nudge={14}>Blue Line Breakdown</span>
     </div>
   </aside>
 );
@@ -83,7 +83,13 @@ const TeammateStrip = ({ player, teammate }) => (
         )
       )}
       alt=""
-      className="h-20 w-20 shrink-0 rounded-full bg-zinc-950/55 object-cover"
+      className="h-20 w-20 shrink-0 rounded-full object-cover"
+      style={{
+        background: playerUtils.getSurfaceGradient(
+          playerUtils.getTeamColor(teammate.team, teammate.season),
+          "dark"
+        ),
+      }}
     />
     <div className="min-w-0">
       <h3 className="shareable-icon-label text-[1.9rem] font-bold tracking-display text-white">
@@ -203,7 +209,7 @@ export const PlayerLinesShareablePreview = ({
         )}
 
         <div className="text-center text-2xl font-bold text-white/80">
-          Data from MoneyPuck.com
+          Data from MoneyPuck.com and NHL.com
         </div>
       </div>
     </div>

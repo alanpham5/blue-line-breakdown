@@ -199,7 +199,13 @@ export const WithWithoutPanel = ({
               teammate.season
             )}
             alt=""
-            className="h-14 w-14 shrink-0 rounded-full bg-zinc-950/55 object-cover light:bg-slate-700/45"
+            className="h-14 w-14 shrink-0 rounded-full object-cover"
+            style={{
+              background: playerUtils.getSurfaceGradient(
+                playerUtils.getTeamColor(teammate.team, teammate.season),
+                "dark"
+              ),
+            }}
             onError={(event) => {
               event.target.src = playerUtils.getDefaultHeadshot();
             }}
