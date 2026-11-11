@@ -200,7 +200,11 @@ const defensiveQuality = [
   {
     label: "D-Zone Exits",
     components: [
-      { label: "Shifts that end outside the defensive zone", influence: 3 },
+      {
+        label:
+          "Shifts that end outside the defensive zone, vs. expected for zone starts and team",
+        influence: 3,
+      },
       { label: "Fewer D-zone giveaways per 60", influence: 3 },
     ],
   },

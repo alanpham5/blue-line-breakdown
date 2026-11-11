@@ -412,9 +412,13 @@ export const PlayersV2 = () => {
                     players={playerData.similarCareers || []}
                     playerHref={similarCareerHref}
                     onPlayerClick={scrollToTop}
-                    title="Most Similar Careers"
+                    title={
+                      playerData.similarCareersThroughAge
+                        ? `Most Similar Careers Through Age ${playerData.similarCareersThroughAge}`
+                        : "Most Similar Careers"
+                    }
                     tooltipTitle="Career Similarity"
-                    tooltipText="Careers are compared on ice-time-weighted playing style and impact across every eligible season, plus peak impact, longevity and per-game production, against the same position."
+                    tooltipText="Careers are compared through the same age: this player's seasons so far against every other player's seasons up to that age, on ice-time-weighted playing style and impact, plus peak impact, longevity and per-game production, against the same position. Players must have played at that age and have data from about the same starting age."
                   />
                   <CareerSeasonsTable
                     seasons={playerData.seasons}
