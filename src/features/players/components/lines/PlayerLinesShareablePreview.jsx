@@ -9,10 +9,7 @@ import {
   SORT_OPTIONS,
   lastName,
 } from "features/players/components/lines/PlayerLinesList";
-import {
-  SplitCards,
-  SAMPLE_NOTE,
-} from "features/players/components/lines/WithWithoutPanel";
+import { SplitCards } from "features/players/components/lines/WithWithoutPanel";
 import { formatToi } from "features/players/components/lines/ShareBar";
 
 export const SHAREABLE_LINE_COUNT = 10;
@@ -96,7 +93,7 @@ const TeammateStrip = ({ player, teammate }) => (
         With and Without {teammate.name}
       </h3>
       <p className="text-lg text-gray-400" data-export-nudge={6}>
-        5-on-5 results together and apart. {SAMPLE_NOTE}
+        5-on-5 results together and apart.
       </p>
     </div>
   </div>

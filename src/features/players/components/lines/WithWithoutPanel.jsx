@@ -166,9 +166,6 @@ export const SplitCards = ({ player, teammate, result, shareable = false }) => (
   </div>
 );
 
-export const SAMPLE_NOTE =
-  "Both the with and without samples only include linemates with over 10 minutes together at 5-on-5.";
-
 export const WithWithoutPanel = ({
   player,
   teammates,
@@ -213,8 +210,7 @@ export const WithWithoutPanel = ({
               With and Without
             </h2>
             <p className="text-sm text-gray-400 light:text-slate-600">
-              5-on-5 results with {teammate.name} and apart.{" "}
-              {SAMPLE_NOTE}
+              5-on-5 results with {teammate.name} and apart.
             </p>
           </div>
         </div>
@@ -227,7 +223,7 @@ export const WithWithoutPanel = ({
           >
             {teammates.map((option) => (
               <option key={option.playerId} value={option.playerId}>
-                {option.name} · {formatToi(option.minutes)} together
+                {option.name}
               </option>
             ))}
           </AppSelect>
