@@ -45,11 +45,15 @@ const CountingStatsRow = ({ stats }) => {
       <div className="grid grid-cols-5 divide-x divide-white/10 text-center">
         {getCountingStatsOrder(isGoalie).map((statKey) => (
           <div key={statKey} className="px-2">
-            <div className="text-[18px] font-semibold text-gray-400">
+            <div
+              className="text-[18px] font-semibold text-gray-400"
+              data-export-nudge={4}
+            >
               {labels[statKey]}
             </div>
             <div
               className="mt-0.5 text-[38px] font-bold tabular-nums"
+              data-export-nudge={12}
               style={{ color: countingStatColors[statKey] }}
             >
               {formatCountingStat(stats, statKey)}

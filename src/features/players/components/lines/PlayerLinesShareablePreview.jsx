@@ -11,7 +11,7 @@ import {
 } from "features/players/components/lines/PlayerLinesList";
 import {
   SplitCards,
-  positionNote,
+  SAMPLE_NOTE,
 } from "features/players/components/lines/WithWithoutPanel";
 import { formatToi } from "features/players/components/lines/ShareBar";
 
@@ -96,7 +96,7 @@ const TeammateStrip = ({ player, teammate }) => (
         With and Without {teammate.name}
       </h3>
       <p className="text-lg text-gray-400" data-export-nudge={6}>
-        5-on-5 results together and apart. {positionNote(player.position)}
+        5-on-5 results together and apart. {SAMPLE_NOTE}
       </p>
     </div>
   </div>

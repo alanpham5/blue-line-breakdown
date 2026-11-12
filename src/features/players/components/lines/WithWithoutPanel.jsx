@@ -166,10 +166,8 @@ export const SplitCards = ({ player, teammate, result, shareable = false }) => (
   </div>
 );
 
-export const positionNote = (position) =>
-  position === "D"
-    ? "Defensemen are compared with defense partners."
-    : "Forwards are compared with forward linemates.";
+export const SAMPLE_NOTE =
+  "Both the with and without samples only include linemates with over 10 minutes together at 5-on-5.";
 
 export const WithWithoutPanel = ({
   player,
@@ -216,7 +214,7 @@ export const WithWithoutPanel = ({
             </h2>
             <p className="text-sm text-gray-400 light:text-slate-600">
               5-on-5 results with {teammate.name} and apart.{" "}
-              {positionNote(player.position)}
+              {SAMPLE_NOTE}
             </p>
           </div>
         </div>
