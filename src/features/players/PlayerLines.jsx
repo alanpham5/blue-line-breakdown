@@ -282,7 +282,7 @@ export const PlayerLines = () => {
                   <ArrowLeft className="h-4 w-4" />
                   Back to profile
                 </Link>
-                <h1 className="mt-1 truncate text-2xl font-extrabold tracking-display text-white light:text-gray-900 sm:text-3xl">
+                <h1 className="mt-1 text-xl font-extrabold leading-tight tracking-display text-white [overflow-wrap:anywhere] light:text-gray-900 sm:truncate sm:text-3xl">
                   {player ? player.name : "Player"} · {linesLabel}
                 </h1>
                 {player && (

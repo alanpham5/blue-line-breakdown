@@ -81,6 +81,12 @@ export const ShareTooltipContent = ({ stat, values }) => {
         <span>Share of {stat.name}</span>
         <span className="font-semibold">{formatShare(values.value)}</span>
       </div>
+      {values.adjusted != null && (
+        <div className="flex justify-between gap-3 tabular-nums">
+          <span>Sample-adjusted</span>
+          <span className="font-semibold">{formatShare(values.adjusted)}</span>
+        </div>
+      )}
       {values.percentile != null && (
         <div className="flex justify-between gap-3 tabular-nums">
           <span>League percentile</span>
@@ -208,7 +214,7 @@ const ringLabel = (display) => {
 
 const RingBody = ({ display, shareable = false }) => (
   <span
-    className={`relative flex shrink-0 items-center justify-center ${shareable ? "h-[74px] w-[74px]" : "h-10 w-10 sm:h-[52px] sm:w-[52px]"}`}
+    className={`relative flex shrink-0 items-center justify-center ${shareable ? "h-[74px] w-[74px]" : "h-9 w-9 sm:h-[52px] sm:w-[52px]"}`}
   >
     <svg
       className="absolute inset-0 h-full w-full"

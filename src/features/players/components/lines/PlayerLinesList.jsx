@@ -57,7 +57,7 @@ const HEADER_VISIBILITY = { sm: "hidden sm:flex", lg: "hidden lg:flex" };
 const CELL_VISIBILITY = { sm: "hidden sm:block", lg: "hidden lg:block" };
 
 const PAGE_GRID =
-  "grid-cols-[1.1rem_minmax(0,1fr)_2.9rem_repeat(3,2.5rem)] gap-x-2 px-4 sm:grid-cols-[1.5rem_minmax(0,1fr)_3.75rem_2.5rem_repeat(3,3.75rem)_3.75rem] sm:gap-x-3 sm:px-6 lg:grid-cols-[1.5rem_minmax(0,1fr)_4.5rem_2.75rem_repeat(3,4.5rem)_repeat(3,4.75rem)]";
+  "grid-cols-[0.9rem_minmax(0,1fr)_2.75rem_repeat(3,2.25rem)] gap-x-1.5 px-3 sm:grid-cols-[1.5rem_minmax(0,1fr)_3.75rem_2.5rem_repeat(3,3.75rem)_3.75rem] sm:gap-x-3 sm:px-6 lg:grid-cols-[1.5rem_minmax(0,1fr)_4.5rem_2.75rem_repeat(3,4.5rem)_repeat(3,4.75rem)]";
 const SHAREABLE_GRID =
   "grid-cols-[2.25rem_minmax(0,1fr)_6rem_3.5rem_repeat(3,5.25rem)_repeat(3,5rem)] gap-x-3.5 px-7";
 
@@ -102,7 +102,7 @@ export const ModeToggle = ({ mode, onChange }) => (
   <div
     role="radiogroup"
     aria-label="Circle scale"
-    className="inline-flex gap-1 rounded-full bg-black/20 p-1 backdrop-blur-sm light:bg-white/80"
+    className="flex w-full gap-1 rounded-full bg-black/20 p-1 backdrop-blur-sm light:bg-white/80 sm:inline-flex sm:w-auto"
   >
     {MODES.map((option) => {
       const active = option.value === mode;
@@ -113,7 +113,7 @@ export const ModeToggle = ({ mode, onChange }) => (
           role="radio"
           aria-checked={active}
           onClick={() => onChange(option.value)}
-          className={`rounded-full px-3.5 py-1.5 text-sm font-semibold outline-none transition-all duration-200 ease-out focus-visible:ring-2 focus-visible:ring-[#7ee340] ${
+          className={`flex-1 rounded-full px-3.5 py-2 text-sm font-semibold sm:flex-none sm:py-1.5 outline-none transition-all duration-200 ease-out focus-visible:ring-2 focus-visible:ring-[#7ee340] ${
             active
               ? "bg-white/10 text-[#7ee340] light:bg-slate-900/10 light:text-[#2e6e14]"
               : "text-slate-400 hover:bg-white/5 hover:text-slate-100 light:text-slate-700 light:hover:bg-slate-900/5 light:hover:text-slate-800"
@@ -299,13 +299,16 @@ const PlayerNames = ({ unit, shareable }) => {
   }
   return (
     <>
-      <div className="flex flex-col text-[13px] font-bold leading-snug text-white light:text-gray-900 sm:hidden">
-        {unit.players.map((player) => (
-          <span key={player.playerId} className="truncate">
+      <p className="text-[13px] font-bold leading-snug text-white [overflow-wrap:anywhere] light:text-gray-900 sm:hidden">
+        {unit.players.map((player, index) => (
+          <span key={player.playerId}>
+            {index > 0 && (
+              <span className="text-gray-500 light:text-slate-500"> · </span>
+            )}
             <PlayerName player={player} season={unit.season} />
           </span>
         ))}
-      </div>
+      </p>
       <p className="hidden truncate whitespace-nowrap font-bold text-white light:text-gray-900 sm:block sm:text-[15px] lg:text-sm xl:text-base">
         {unit.players.map((player, index) => (
           <span key={player.playerId}>
@@ -471,7 +474,7 @@ const TypedToiValue = ({ value, max, onChange }) => {
 };
 
 const MinimumToiSlider = ({ value, max, onChange }) => (
-  <div className="flex min-w-0 flex-1 items-center gap-3 sm:max-w-sm">
+  <div className="flex min-w-0 basis-full items-center gap-3 sm:max-w-sm sm:flex-1 sm:basis-0">
     <label
       htmlFor="min-toi-slider"
       className="shrink-0 text-sm font-semibold text-gray-400 light:text-slate-600"
