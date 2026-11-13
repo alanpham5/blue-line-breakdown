@@ -41,7 +41,7 @@ const COLUMNS = [
   ...SHARE_STATS.map((stat) => ({
     key: stat.key,
     label: stat.label,
-    short: stat.short,
+    short: stat.key === "goals" ? "GF/GA" : stat.short,
     measured: `${stat.short}%`,
   })),
   ...PLAYER_SCORING.map((item) => ({

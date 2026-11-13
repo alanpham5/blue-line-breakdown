@@ -205,63 +205,84 @@ export const ShareBar = ({
 const RING_RADIUS = 18;
 const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 
-const ringLabel = (display) => {
+const showsGoalCounts = (stat, display, values) =>
+  display.showPercentile &&
+  stat?.key === "goals" &&
+  values?.for != null &&
+  values?.against != null;
+
+const ringLabel = (stat, display, values) => {
+  if (showsGoalCounts(stat, display, values)) {
+    return `${formatCount(values.for, 0)}/${formatCount(values.against, 0)}`;
+  }
   if (display.amount == null) return "-";
   return display.showPercentile
     ? String(Math.round(display.amount))
     : display.amount.toFixed(1);
 };
 
-const RingBody = ({ display, shareable = false }) => (
-  <span
-    className={`relative flex shrink-0 items-center justify-center ${shareable ? "h-[74px] w-[74px]" : "h-9 w-9 sm:h-[52px] sm:w-[52px]"}`}
-  >
-    <svg
-      className="absolute inset-0 h-full w-full"
-      viewBox="0 0 44 44"
-      aria-hidden="true"
+const ringTextSize = (label, display, shareable) => {
+  if (shareable) return label.length > 5 ? "text-lg" : "text-[1.35rem]";
+  if (label.length > 4) return "text-[9px] tracking-tighter sm:text-xs";
+  if (label.length > 3 || !display.showPercentile) {
+    return "text-[10px] tracking-tight sm:text-sm sm:tracking-normal";
+  }
+  return "text-[11px] sm:text-sm";
+};
+
+const RingBody = ({ stat, values, display, shareable = false }) => {
+  const label = ringLabel(stat, display, values);
+  return (
+    <span
+      className={`relative flex shrink-0 items-center justify-center ${shareable ? "h-[74px] w-[74px]" : "h-9 w-9 sm:h-[52px] sm:w-[52px]"}`}
     >
-      <g transform="rotate(-90 22 22)">
-        <circle
-          cx="22"
-          cy="22"
-          r={RING_RADIUS}
-          fill="none"
-          stroke="rgba(255,255,255,0.08)"
-          className={shareable ? undefined : "light:stroke-slate-300"}
-          strokeWidth="4"
-        />
-        {display.amount != null && (
+      <svg
+        className="absolute inset-0 h-full w-full"
+        viewBox="0 0 44 44"
+        aria-hidden="true"
+      >
+        <g transform="rotate(-90 22 22)">
           <circle
             cx="22"
             cy="22"
             r={RING_RADIUS}
             fill="none"
-            stroke={display.color}
+            stroke="rgba(255,255,255,0.08)"
+            className={shareable ? undefined : "light:stroke-slate-300"}
             strokeWidth="4"
-            strokeLinecap="round"
-            strokeDasharray={RING_CIRCUMFERENCE}
-            strokeDashoffset={RING_CIRCUMFERENCE * (1 - display.width / 100)}
-            className="transition-[stroke-dashoffset] duration-700 ease-out"
           />
-        )}
-      </g>
-    </svg>
-    <span
-      className={`relative font-bold text-white ${shareable ? "text-[1.35rem]" : `light:text-gray-900 ${display.showPercentile ? "text-[11px]" : "text-[10px] tracking-tight"} tabular-nums sm:text-sm sm:tracking-normal`}`}
-      data-export-nudge={shareable ? 8 : undefined}
-    >
-      {ringLabel(display)}
+          {display.amount != null && (
+            <circle
+              cx="22"
+              cy="22"
+              r={RING_RADIUS}
+              fill="none"
+              stroke={display.color}
+              strokeWidth="4"
+              strokeLinecap="round"
+              strokeDasharray={RING_CIRCUMFERENCE}
+              strokeDashoffset={RING_CIRCUMFERENCE * (1 - display.width / 100)}
+              className="transition-[stroke-dashoffset] duration-700 ease-out"
+            />
+          )}
+        </g>
+      </svg>
+      <span
+        className={`relative whitespace-nowrap font-bold text-white ${shareable ? "" : "light:text-gray-900 tabular-nums"} ${ringTextSize(label, display, shareable)}`}
+        data-export-nudge={shareable ? 8 : undefined}
+      >
+        {label}
+      </span>
     </span>
-  </span>
-);
+  );
+};
 
 export const ShareRing = ({ id, stat, values, mode, shareable = false }) => {
   const display = barDisplay(values, mode, useOnLight(shareable));
   if (shareable) {
     return (
       <div className="flex justify-center">
-        <RingBody display={display} shareable />
+        <RingBody stat={stat} values={values} display={display} shareable />
       </div>
     );
   }
@@ -275,9 +296,13 @@ export const ShareRing = ({ id, stat, values, mode, shareable = false }) => {
         <button
           type="button"
           className="cursor-default rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[#7ee340]"
-          aria-label={`${stat.label}: ${display.label}`}
+          aria-label={`${stat.label}: ${
+            showsGoalCounts(stat, display, values)
+              ? `${ringLabel(stat, display, values)} GF/GA, ${display.label} percentile`
+              : display.label
+          }`}
         >
-          <RingBody display={display} />
+          <RingBody stat={stat} values={values} display={display} />
         </button>
       </Tooltip>
     </div>
