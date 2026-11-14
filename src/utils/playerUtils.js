@@ -866,6 +866,11 @@ export const playerUtils = {
       EDGE_HIGH_SV: "NHL EDGE Short-Range Save %",
       EDGE_MID_SV: "NHL EDGE Mid-Range Save %",
       EDGE_LONG_SV: "NHL EDGE Long-Range Save %",
+      SHOT_WRIST: "Wrist Shots",
+      SHOT_SNAP: "Snap Shots",
+      SHOT_SLAP: "Slap Shots",
+      SHOT_BACK: "Backhands",
+      SHOT_TIP: "Tips & Deflections",
     };
     return statNames[statKey] || statKey;
   },
@@ -912,6 +917,11 @@ export const playerUtils = {
       EDGE_HIGH_SV: "Short SV%",
       EDGE_MID_SV: "Mid SV%",
       EDGE_LONG_SV: "Long SV%",
+      SHOT_WRIST: "Wrist",
+      SHOT_SNAP: "Snap",
+      SHOT_SLAP: "Slap",
+      SHOT_BACK: "Back",
+      SHOT_TIP: "Tip",
     };
     return statAbbrs[statKey] || this.formatStatName(statKey);
   },
@@ -979,6 +989,16 @@ export const playerUtils = {
         "Most distance skated in a single game (miles), tracked by NHL Edge.",
       OZONE:
         "Share of on-ice time spent in the offensive zone, tracked by NHL Edge.",
+      SHOT_WRIST:
+        "Unblocked wrist shots in all situations, from NHL play-by-play. Colored by the league percentile of that count.",
+      SHOT_SNAP:
+        "Unblocked snap shots in all situations, from NHL play-by-play. Colored by the league percentile of that count.",
+      SHOT_SLAP:
+        "Unblocked slap shots in all situations, from NHL play-by-play. Colored by the league percentile of that count.",
+      SHOT_BACK:
+        "Unblocked backhands in all situations, from NHL play-by-play. Colored by the league percentile of that count.",
+      SHOT_TIP:
+        "Unblocked tip-ins and deflections in all situations, from NHL play-by-play. Colored by the league percentile of that count.",
     };
     return (
       explanations[statKey] ||

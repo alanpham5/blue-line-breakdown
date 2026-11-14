@@ -107,6 +107,7 @@ export const PlayerTable = ({ players, position }) => {
 
   const groupHeaderColor = (type) => {
     if (type === "edge") return "text-emerald-300 light:text-emerald-700";
+    if (type === "shotMix") return "text-sky-300 light:text-sky-700";
     if (type === "tendencies") return "text-violet-300 light:text-violet-700";
     if (type === "deployment") return "text-amber-300 light:text-amber-700";
     return type === "offensive" || type === "shotStopping"
@@ -121,6 +122,7 @@ export const PlayerTable = ({ players, position }) => {
     >
       <p className="mb-2 px-2 text-xs text-gray-400 light:text-slate-500">
         Player impact model · position-relative 5-on-5 percentiles ·{" "}
+        <span className="text-sky-300 light:text-sky-700">Shot type</span> and{" "}
         <span className="text-emerald-300 light:text-emerald-700">
           NHL EDGE
         </span>{" "}

@@ -10,6 +10,10 @@ const SKATER_METRIC_GROUPS = [
     keys: ["SHOT_FREQ", "PASS_FREQ", "PHYS", "BLK"],
   },
   {
+    type: "shotMix",
+    keys: ["SHOT_WRIST", "SHOT_SNAP", "SHOT_SLAP", "SHOT_BACK", "SHOT_TIP"],
+  },
+  {
     type: "offensive",
     keys: ["SHOT_TAL", "PLAY_DRV", "PP_USAGE", "ONICE_IMP"],
   },
@@ -75,6 +79,8 @@ const formatEdgeValue = (key, value) => {
 };
 
 export const formatMetricCell = (player, key) => {
+  const countValue = player.countValues?.[key];
+  if (countValue != null) return countValue.toLocaleString();
   const edgeValue = player.edgeValues?.[key];
   if (edgeValue != null) return formatEdgeValue(key, edgeValue);
   return formatPercentile(player.metrics?.[key]);

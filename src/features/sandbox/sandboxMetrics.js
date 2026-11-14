@@ -19,6 +19,8 @@ const edgeValue = (key) => (player) => {
   return key === "OZONE" && value < 1 ? value * 100 : value;
 };
 
+const countValue = (key) => (player) => player.countValues?.[key] ?? null;
+
 const formatNumber = (digits) => (value) =>
   value == null ? "-" : Number(value).toFixed(digits);
 
@@ -53,30 +55,41 @@ const groupLabels = {
   defensive: "Defense (percentile)",
   deployment: "Deployment (percentile)",
   edge: "NHL EDGE",
+  shotMix: "Shot Type (count)",
 };
+
+const shotMixMetric = (key) => ({
+  key,
+  label: playerUtils.formatStatName(key),
+  group: groupLabels.shotMix,
+  value: countValue(key),
+  format: formatNumber(0),
+});
 
 export const SKATER_METRICS = [
   ...baseMetrics,
   ...metricGroupsForPosition("F").flatMap((group) =>
     group.keys.map((key) =>
-      group.type === "edge"
-        ? {
-            key,
-            label: `${playerUtils.formatStatName(key)} (${EDGE_UNITS[key]})`,
-            group: groupLabels.edge,
-            value: edgeValue(key),
-            format: formatNumber(
-              key === "DIST_GAME" ? 2 : key === "SPEED_BURSTS" ? 0 : 1
-            ),
-          }
-        : {
-            key,
-            label: playerUtils.formatStatName(key),
-            group: groupLabels[group.type],
-            value: (player) => player.metrics?.[key],
-            format: formatNumber(1),
-            domain: [0, 100],
-          }
+      group.type === "shotMix"
+        ? shotMixMetric(key)
+        : group.type === "edge"
+          ? {
+              key,
+              label: `${playerUtils.formatStatName(key)} (${EDGE_UNITS[key]})`,
+              group: groupLabels.edge,
+              value: edgeValue(key),
+              format: formatNumber(
+                key === "DIST_GAME" ? 2 : key === "SPEED_BURSTS" ? 0 : 1
+              ),
+            }
+          : {
+              key,
+              label: playerUtils.formatStatName(key),
+              group: groupLabels[group.type],
+              value: (player) => player.metrics?.[key],
+              format: formatNumber(1),
+              domain: [0, 100],
+            }
     )
   ),
 ];
