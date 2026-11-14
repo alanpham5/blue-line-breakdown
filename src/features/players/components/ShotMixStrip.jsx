@@ -21,6 +21,9 @@ const chartedShots = (shotMix) =>
 const percentileLabel = (percentile) =>
   percentile == null ? "–" : getOrdinal(percentile);
 
+const shareLabel = (share) =>
+  share == null ? "–" : `${Math.round(Number(share))}%`;
+
 const exportNudge = (shareable, amount) => (shareable ? amount : undefined);
 
 const ShotMixBar = ({ shots, shareable }) => {
@@ -32,7 +35,7 @@ const ShotMixBar = ({ shots, shareable }) => {
       aria-label={shots
         .map(
           (shot) =>
-            `${shot.label}: ${shot.attempts} shots, ${percentileLabel(shot.percentile)} percentile`
+            `${shot.label}: ${shot.attempts} shots, ${shareLabel(shot.share)} of shot mix, ${percentileLabel(shot.percentile)} percentile`
         )
         .join(". ")}
     >
@@ -77,10 +80,15 @@ const ShotTile = ({ shot, shareable }) => (
       )}
     </div>
     <div
-      className={`font-medium tabular-nums text-white ${shareable ? "text-2xl leading-tight" : "mt-0.5 text-sm light:text-gray-900"}`}
+      className={`flex items-baseline justify-center gap-1 whitespace-nowrap font-bold tabular-nums text-white ${shareable ? "text-2xl leading-tight" : "mt-0.5 text-sm light:text-gray-900"}`}
       data-export-nudge={exportNudge(shareable, 8)}
     >
       {shot.attempts}
+      <span
+        className={`font-medium text-gray-400 light:text-gray-500 ${shareable ? "text-lg" : "text-xs"}`}
+      >
+        {shareLabel(shot.share)}
+      </span>
     </div>
     <div
       className={`whitespace-nowrap font-medium tabular-nums text-gray-400 ${shareable ? "text-lg leading-tight" : "text-xs light:text-gray-500"}`}
