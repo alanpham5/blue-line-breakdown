@@ -183,6 +183,7 @@ export const PlayerProfileShareablePreview = ({
   player,
   biometrics,
   tendencies,
+  shotMix = null,
   offensiveQuality,
   defensiveQuality,
   difficulty = null,
@@ -299,6 +300,7 @@ export const PlayerProfileShareablePreview = ({
                   shareable
                   bar={isGoalie}
                   shotMap={shotMap}
+                  shotMix={shotMix}
                 />
               </div>
               {!isGoalie && difficulty && (

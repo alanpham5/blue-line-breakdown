@@ -1,7 +1,11 @@
+import { useState } from "react";
 import { Info, PieChart } from "lucide-react";
 import { Tooltip } from "components/ui/Tooltip";
 import { GoalieSaveHeatmap } from "features/players/components/GoalieSaveHeatmap";
+import { ShotMixStrip } from "features/players/components/ShotMixStrip";
 import { getOrdinal } from "utils/ordinal";
+
+const SHOOT_LABEL = "Shoot";
 
 const clampPercent = (value) => Math.min(100, Math.max(0, Number(value) || 0));
 
@@ -156,8 +160,20 @@ export const PlayerTendenciesCard = ({
   shotMap = null,
   bar = false,
   compact = false,
+  shotMix = null,
 }) => {
+  const [shootLinked, setShootLinked] = useState(false);
   const isBar = bar || Boolean(shotMap);
+  const linksShotMix = Boolean(shotMix) && !shareable && !isBar;
+  const isShoot = (tendency) => tendency.label === SHOOT_LABEL;
+  const dimmed = (tendency) => shootLinked && !isShoot(tendency);
+  const shootHover = (tendency) =>
+    linksShotMix && isShoot(tendency)
+      ? {
+          onMouseEnter: () => setShootLinked(true),
+          onMouseLeave: () => setShootLinked(false),
+        }
+      : {};
   const visibleTendencies = tendencies.slice(0, 4);
   const totalActions = visibleTendencies.reduce(
     (total, tendency) => total + Math.max(0, Number(tendency.percentage) || 0),
@@ -238,7 +254,10 @@ export const PlayerTendenciesCard = ({
                 <div>
                   {isBar
                     ? `The bar splits tracked events between the two actions; a longer segment means it happens more often. Each chip shows the league percentile.${shotMap ? " The rink map colors save percentage by shot location against the league." : ""}`
-                    : "A wider slice means the action happens more often. Its reach from the center toward the outer ring shows the player's league percentile. Each action keeps a consistent color."}
+                    : "A wider slice means the action makes up more of the player's events. Its reach toward the outer ring is the league percentile of how many times the player did it. Each action keeps a consistent color."}
+                  {shotMix &&
+                    !isBar &&
+                    " The shot mix bar splits unblocked attempts by shot type, with each type's percentile against the same position."}
                 </div>
               </div>
             }
@@ -283,7 +302,7 @@ export const PlayerTendenciesCard = ({
                 aria-label={chartTendencies
                   .map(
                     (tendency) =>
-                      `${tendency.label}: ${tendency.percentage}% of actions, ${getOrdinal(tendency.percentile)} league percentile`
+                      `${tendency.label}: ${tendency.percentage}% of events, ${getOrdinal(tendency.percentile)} league percentile`
                   )
                   .join(". ")}
               >
@@ -331,7 +350,9 @@ export const PlayerTendenciesCard = ({
                       tendency.endAngle
                     )}
                     fill={`url(#${tendency.gradientId})`}
-                    className="transition-all duration-1000 ease-out"
+                    className="transition-all duration-700 ease-out"
+                    style={{ opacity: dimmed(tendency) ? 0.25 : 1 }}
+                    {...shootHover(tendency)}
                   />
                 ))}
               </svg>
@@ -343,7 +364,8 @@ export const PlayerTendenciesCard = ({
               {legendTendencies.map((tendency) => (
                 <div
                   key={tendency.label}
-                  className={`relative overflow-hidden rounded-2xl border border-white/[0.05] bg-white/[0.025] light:border-slate-200 light:bg-white/55 ${shareable ? "flex items-center px-4 py-3" : "px-4 py-2.5"}`}
+                  className={`relative overflow-hidden rounded-2xl border border-white/[0.05] bg-white/[0.025] transition-all duration-300 light:border-slate-200 light:bg-white/55 ${shareable ? "flex items-center px-4 py-3" : "px-4 py-2.5"} ${dimmed(tendency) ? "opacity-40" : ""} ${shootLinked && isShoot(tendency) ? "ring-1 ring-[#32ade6]/50" : ""}`}
+                  {...shootHover(tendency)}
                 >
                   <span
                     className="absolute inset-y-2 left-2.5 w-1 rounded-full shadow-[0_0_12px_currentColor]"
@@ -397,6 +419,14 @@ export const PlayerTendenciesCard = ({
               ))}
             </div>
           </div>
+          {shotMix && (
+            <ShotMixStrip
+              shotMix={shotMix}
+              shareable={shareable}
+              linked={shootLinked}
+              onLinkChange={linksShotMix ? setShootLinked : undefined}
+            />
+          )}
         </>
       )}
     </section>

@@ -1,0 +1,728 @@
+[
+  {
+    "playerId": 8484801,
+    "name": "Macklin Celebrini",
+    "position": "F",
+    "attempts": 411,
+    "shots": [
+      {
+        "label": "Wrist",
+        "share": 59.1,
+        "percentile": 97,
+        "leagueShare": 42.3,
+        "attempts": 243,
+        "goals": 27
+      },
+      {
+        "label": "Snap",
+        "share": 15.1,
+        "percentile": 14,
+        "leagueShare": 24.4,
+        "attempts": 62,
+        "goals": 11
+      },
+      {
+        "label": "Slap",
+        "share": 13.1,
+        "percentile": 91,
+        "leagueShare": 6.5,
+        "attempts": 54,
+        "goals": 5
+      },
+      {
+        "label": "Backhand",
+        "share": 5.6,
+        "percentile": 15,
+        "leagueShare": 9.3,
+        "attempts": 23,
+        "goals": 1
+      },
+      {
+        "label": "Tip & Deflection",
+        "share": 6.8,
+        "percentile": 7,
+        "leagueShare": 15.6,
+        "attempts": 28,
+        "goals": 1
+      },
+      {
+        "label": "Other",
+        "share": 0.2,
+        "percentile": 6,
+        "leagueShare": 2.0,
+        "attempts": 1,
+        "goals": 0
+      }
+    ],
+    "tendencies": [
+      {
+        "key": "shoot",
+        "label": "Shoot",
+        "percentage": 25.8,
+        "percentile": 78.6,
+        "rawPercentage": 63.3
+      },
+      {
+        "key": "offensiveBuildup",
+        "label": "Offensive Buildup",
+        "percentage": 41.1,
+        "percentile": 87.0,
+        "rawPercentage": 12.1
+      },
+      {
+        "key": "physicalPressure",
+        "label": "Physical Pressure",
+        "percentage": 10.5,
+        "percentile": 44.8,
+        "rawPercentage": 14.9
+      },
+      {
+        "key": "shotBlocking",
+        "label": "Shot Blocking",
+        "percentage": 22.6,
+        "percentile": 60.9,
+        "rawPercentage": 9.7
+      }
+    ],
+    "difficulty": {
+      "percentiles": {
+        "defensive": 8.4,
+        "neutral": 60.2,
+        "offensive": 85.9,
+        "penaltyKill": 43.2,
+        "powerPlay": 97.3,
+        "teammateQuality": 65.7
+      },
+      "specialTeams": {
+        "penaltyKillMinutes": 14.2,
+        "penaltyKillPerGame": 0.17,
+        "powerPlayMinutes": 285.5,
+        "powerPlayPerGame": 3.48
+      },
+      "teammateQuality": 62.7,
+      "teammates": [
+        {
+          "name": "Will Smith",
+          "playerId": 8484227,
+          "season": 2025,
+          "team": "SJS"
+        },
+        {
+          "name": "Collin Graf",
+          "playerId": 8484911,
+          "season": 2025,
+          "team": "SJS"
+        }
+      ],
+      "zoneStarts": {
+        "defensive": 17.9,
+        "neutral": 44.7,
+        "offensive": 37.4
+      }
+    },
+    "playerPosition": "F"
+  },
+  {
+    "playerId": 8478402,
+    "name": "Connor McDavid",
+    "position": "F",
+    "attempts": 424,
+    "shots": [
+      {
+        "label": "Wrist",
+        "share": 52.1,
+        "percentile": 83,
+        "leagueShare": 42.3,
+        "attempts": 221,
+        "goals": 26
+      },
+      {
+        "label": "Snap",
+        "share": 22.9,
+        "percentile": 50,
+        "leagueShare": 24.4,
+        "attempts": 97,
+        "goals": 13
+      },
+      {
+        "label": "Slap",
+        "share": 1.4,
+        "percentile": 6,
+        "leagueShare": 6.5,
+        "attempts": 6,
+        "goals": 0
+      },
+      {
+        "label": "Backhand",
+        "share": 14.4,
+        "percentile": 92,
+        "leagueShare": 9.3,
+        "attempts": 61,
+        "goals": 5
+      },
+      {
+        "label": "Tip & Deflection",
+        "share": 5.7,
+        "percentile": 4,
+        "leagueShare": 15.6,
+        "attempts": 24,
+        "goals": 1
+      },
+      {
+        "label": "Other",
+        "share": 3.5,
+        "percentile": 90,
+        "leagueShare": 2.0,
+        "attempts": 15,
+        "goals": 2
+      }
+    ],
+    "tendencies": [
+      {
+        "key": "shoot",
+        "label": "Shoot",
+        "percentage": 31.2,
+        "percentile": 74.5,
+        "rawPercentage": 67.8
+      },
+      {
+        "key": "offensiveBuildup",
+        "label": "Offensive Buildup",
+        "percentage": 41.4,
+        "percentile": 98.4,
+        "rawPercentage": 10.8
+      },
+      {
+        "key": "physicalPressure",
+        "label": "Physical Pressure",
+        "percentage": 12.6,
+        "percentile": 38.0,
+        "rawPercentage": 15.8
+      },
+      {
+        "key": "shotBlocking",
+        "label": "Shot Blocking",
+        "percentage": 14.8,
+        "percentile": 10.5,
+        "rawPercentage": 5.6
+      }
+    ],
+    "difficulty": {
+      "percentiles": {
+        "defensive": 12.5,
+        "neutral": 64.3,
+        "offensive": 80.0,
+        "penaltyKill": 65.7,
+        "powerPlay": 96.6,
+        "teammateQuality": 77.3
+      },
+      "specialTeams": {
+        "penaltyKillMinutes": 83.3,
+        "penaltyKillPerGame": 1.02,
+        "powerPlayMinutes": 283.0,
+        "powerPlayPerGame": 3.45
+      },
+      "teammateQuality": 68.7,
+      "teammates": [
+        {
+          "name": "Zach Hyman",
+          "playerId": 8475786,
+          "season": 2025,
+          "team": "EDM"
+        },
+        {
+          "name": "Ryan Nugent-Hopkins",
+          "playerId": 8476454,
+          "season": 2025,
+          "team": "EDM"
+        }
+      ],
+      "zoneStarts": {
+        "defensive": 19.2,
+        "neutral": 45.0,
+        "offensive": 35.7
+      }
+    },
+    "playerPosition": "F"
+  },
+  {
+    "playerId": 8471214,
+    "name": "Alex Ovechkin",
+    "position": "F",
+    "attempts": 390,
+    "shots": [
+      {
+        "label": "Wrist",
+        "share": 21.5,
+        "percentile": 2,
+        "leagueShare": 42.3,
+        "attempts": 84,
+        "goals": 8
+      },
+      {
+        "label": "Snap",
+        "share": 35.1,
+        "percentile": 88,
+        "leagueShare": 24.4,
+        "attempts": 137,
+        "goals": 17
+      },
+      {
+        "label": "Slap",
+        "share": 27.4,
+        "percentile": 100,
+        "leagueShare": 6.5,
+        "attempts": 107,
+        "goals": 3
+      },
+      {
+        "label": "Backhand",
+        "share": 2.8,
+        "percentile": 2,
+        "leagueShare": 9.3,
+        "attempts": 11,
+        "goals": 1
+      },
+      {
+        "label": "Tip & Deflection",
+        "share": 12.6,
+        "percentile": 34,
+        "leagueShare": 15.6,
+        "attempts": 49,
+        "goals": 3
+      },
+      {
+        "label": "Other",
+        "share": 0.5,
+        "percentile": 10,
+        "leagueShare": 2.0,
+        "attempts": 2,
+        "goals": 0
+      }
+    ],
+    "tendencies": [
+      {
+        "key": "shoot",
+        "label": "Shoot",
+        "percentage": 36.5,
+        "percentile": 97.7,
+        "rawPercentage": 64.7
+      },
+      {
+        "key": "offensiveBuildup",
+        "label": "Offensive Buildup",
+        "percentage": 28.6,
+        "percentile": 68.9,
+        "rawPercentage": 6.1
+      },
+      {
+        "key": "physicalPressure",
+        "label": "Physical Pressure",
+        "percentage": 25.7,
+        "percentile": 45.7,
+        "rawPercentage": 26.4
+      },
+      {
+        "key": "shotBlocking",
+        "label": "Shot Blocking",
+        "percentage": 9.2,
+        "percentile": 1.8,
+        "rawPercentage": 2.8
+      }
+    ],
+    "difficulty": {
+      "percentiles": {
+        "defensive": 0.0,
+        "neutral": 15.7,
+        "offensive": 100.0,
+        "penaltyKill": 10.2,
+        "powerPlay": 100.0,
+        "teammateQuality": 41.4
+      },
+      "specialTeams": {
+        "penaltyKillMinutes": 0.3,
+        "penaltyKillPerGame": 0.0,
+        "powerPlayMinutes": 348.8,
+        "powerPlayPerGame": 4.25
+      },
+      "teammateQuality": 49.2,
+      "teammates": [
+        {
+          "name": "Dylan Strome",
+          "playerId": 8478440,
+          "season": 2025,
+          "team": "WSH"
+        },
+        {
+          "name": "Anthony Beauvillier",
+          "playerId": 8478463,
+          "season": 2025,
+          "team": "WSH"
+        }
+      ],
+      "zoneStarts": {
+        "defensive": 1.2,
+        "neutral": 39.0,
+        "offensive": 59.8
+      }
+    },
+    "playerPosition": "F"
+  },
+  {
+    "playerId": 8480069,
+    "name": "Cale Makar",
+    "position": "D",
+    "attempts": 326,
+    "shots": [
+      {
+        "label": "Wrist",
+        "share": 64.1,
+        "percentile": 94,
+        "leagueShare": 46.1,
+        "attempts": 209,
+        "goals": 8
+      },
+      {
+        "label": "Snap",
+        "share": 19.9,
+        "percentile": 40,
+        "leagueShare": 24.7,
+        "attempts": 65,
+        "goals": 11
+      },
+      {
+        "label": "Slap",
+        "share": 12.0,
+        "percentile": 10,
+        "leagueShare": 23.9,
+        "attempts": 39,
+        "goals": 0
+      },
+      {
+        "label": "Backhand",
+        "share": 1.2,
+        "percentile": 16,
+        "leagueShare": 2.9,
+        "attempts": 4,
+        "goals": 0
+      },
+      {
+        "label": "Tip & Deflection",
+        "share": 0.6,
+        "percentile": 14,
+        "leagueShare": 1.8,
+        "attempts": 2,
+        "goals": 0
+      },
+      {
+        "label": "Other",
+        "share": 2.1,
+        "percentile": 97,
+        "leagueShare": 0.5,
+        "attempts": 7,
+        "goals": 1
+      }
+    ],
+    "tendencies": [
+      {
+        "key": "shoot",
+        "label": "Shoot",
+        "percentage": 31.9,
+        "percentile": 97.9,
+        "rawPercentage": 66.5
+      },
+      {
+        "key": "offensiveBuildup",
+        "label": "Offensive Buildup",
+        "percentage": 39.0,
+        "percentile": 90.7,
+        "rawPercentage": 8.3
+      },
+      {
+        "key": "physicalPressure",
+        "label": "Physical Pressure",
+        "percentage": 11.0,
+        "percentile": 52.1,
+        "rawPercentage": 9.3
+      },
+      {
+        "key": "shotBlocking",
+        "label": "Shot Blocking",
+        "percentage": 18.1,
+        "percentile": 39.4,
+        "rawPercentage": 15.9
+      }
+    ],
+    "difficulty": {
+      "percentiles": {
+        "defensive": 4.7,
+        "neutral": 6.8,
+        "offensive": 97.9,
+        "penaltyKill": 68.6,
+        "powerPlay": 100.0,
+        "teammateQuality": 90.3
+      },
+      "specialTeams": {
+        "penaltyKillMinutes": 143.5,
+        "penaltyKillPerGame": 1.91,
+        "powerPlayMinutes": 294.4,
+        "powerPlayPerGame": 3.93
+      },
+      "teammateQuality": 78.5,
+      "teammates": [
+        {
+          "name": "Devon Toews",
+          "playerId": 8478038,
+          "season": 2025,
+          "team": "COL"
+        }
+      ],
+      "zoneStarts": {
+        "defensive": 19.4,
+        "neutral": 40.7,
+        "offensive": 39.8
+      }
+    },
+    "playerPosition": "D"
+  },
+  {
+    "playerId": 8475184,
+    "name": "Chris Kreider",
+    "position": "F",
+    "attempts": 227,
+    "shots": [
+      {
+        "label": "Wrist",
+        "share": 27.3,
+        "percentile": 8,
+        "leagueShare": 42.3,
+        "attempts": 62,
+        "goals": 5
+      },
+      {
+        "label": "Snap",
+        "share": 24.7,
+        "percentile": 58,
+        "leagueShare": 24.4,
+        "attempts": 56,
+        "goals": 6
+      },
+      {
+        "label": "Slap",
+        "share": 4.0,
+        "percentile": 35,
+        "leagueShare": 6.5,
+        "attempts": 9,
+        "goals": 1
+      },
+      {
+        "label": "Backhand",
+        "share": 8.4,
+        "percentile": 41,
+        "leagueShare": 9.3,
+        "attempts": 19,
+        "goals": 2
+      },
+      {
+        "label": "Tip & Deflection",
+        "share": 33.0,
+        "percentile": 100,
+        "leagueShare": 15.6,
+        "attempts": 75,
+        "goals": 8
+      },
+      {
+        "label": "Other",
+        "share": 2.6,
+        "percentile": 73,
+        "leagueShare": 2.0,
+        "attempts": 6,
+        "goals": 0
+      }
+    ],
+    "tendencies": [
+      {
+        "key": "shoot",
+        "label": "Shoot",
+        "percentage": 31.6,
+        "percentile": 58.4,
+        "rawPercentage": 63.6
+      },
+      {
+        "key": "offensiveBuildup",
+        "label": "Offensive Buildup",
+        "percentage": 34.9,
+        "percentile": 85.0,
+        "rawPercentage": 8.4
+      },
+      {
+        "key": "physicalPressure",
+        "label": "Physical Pressure",
+        "percentage": 19.7,
+        "percentile": 32.7,
+        "rawPercentage": 23.1
+      },
+      {
+        "key": "shotBlocking",
+        "label": "Shot Blocking",
+        "percentage": 13.8,
+        "percentile": 3.2,
+        "rawPercentage": 4.9
+      }
+    ],
+    "difficulty": {
+      "percentiles": {
+        "defensive": 8.9,
+        "neutral": 75.5,
+        "offensive": 78.9,
+        "penaltyKill": 50.5,
+        "powerPlay": 88.4,
+        "teammateQuality": 92.0
+      },
+      "specialTeams": {
+        "penaltyKillMinutes": 40.7,
+        "penaltyKillPerGame": 0.54,
+        "powerPlayMinutes": 232.6,
+        "powerPlayPerGame": 3.1
+      },
+      "teammateQuality": 77.8,
+      "teammates": [
+        {
+          "name": "Leo Carlsson",
+          "playerId": 8484153,
+          "season": 2025,
+          "team": "ANA"
+        },
+        {
+          "name": "Troy Terry",
+          "playerId": 8478873,
+          "season": 2025,
+          "team": "ANA"
+        }
+      ],
+      "zoneStarts": {
+        "defensive": 18.1,
+        "neutral": 46.6,
+        "offensive": 35.3
+      }
+    },
+    "playerPosition": "F"
+  },
+  {
+    "playerId": 8480803,
+    "name": "Evan Bouchard",
+    "position": "D",
+    "attempts": 312,
+    "shots": [
+      {
+        "label": "Wrist",
+        "share": 31.1,
+        "percentile": 10,
+        "leagueShare": 46.1,
+        "attempts": 97,
+        "goals": 5
+      },
+      {
+        "label": "Snap",
+        "share": 21.2,
+        "percentile": 44,
+        "leagueShare": 24.7,
+        "attempts": 66,
+        "goals": 8
+      },
+      {
+        "label": "Slap",
+        "share": 45.8,
+        "percentile": 98,
+        "leagueShare": 23.9,
+        "attempts": 143,
+        "goals": 8
+      },
+      {
+        "label": "Backhand",
+        "share": 1.3,
+        "percentile": 19,
+        "leagueShare": 2.9,
+        "attempts": 4,
+        "goals": 0
+      },
+      {
+        "label": "Tip & Deflection",
+        "share": 0.6,
+        "percentile": 17,
+        "leagueShare": 1.8,
+        "attempts": 2,
+        "goals": 0
+      },
+      {
+        "label": "Other",
+        "share": 0.0,
+        "percentile": 25,
+        "leagueShare": 0.5,
+        "attempts": 0,
+        "goals": 0
+      }
+    ],
+    "tendencies": [
+      {
+        "key": "shoot",
+        "label": "Shoot",
+        "percentage": 27.3,
+        "percentile": 87.3,
+        "rawPercentage": 64.4
+      },
+      {
+        "key": "offensiveBuildup",
+        "label": "Offensive Buildup",
+        "percentage": 48.4,
+        "percentile": 100.0,
+        "rawPercentage": 11.7
+      },
+      {
+        "key": "physicalPressure",
+        "label": "Physical Pressure",
+        "percentage": 9.0,
+        "percentile": 31.4,
+        "rawPercentage": 8.6
+      },
+      {
+        "key": "shotBlocking",
+        "label": "Shot Blocking",
+        "percentage": 15.3,
+        "percentile": 22.5,
+        "rawPercentage": 15.3
+      }
+    ],
+    "difficulty": {
+      "percentiles": {
+        "defensive": 10.6,
+        "neutral": 57.2,
+        "offensive": 84.3,
+        "penaltyKill": 62.3,
+        "powerPlay": 98.7,
+        "teammateQuality": 94.1
+      },
+      "specialTeams": {
+        "penaltyKillMinutes": 139.4,
+        "penaltyKillPerGame": 1.7,
+        "powerPlayMinutes": 285.2,
+        "powerPlayPerGame": 3.48
+      },
+      "teammateQuality": 82.1,
+      "teammates": [
+        {
+          "name": "Mattias Ekholm",
+          "playerId": 8475218,
+          "season": 2025,
+          "team": "EDM"
+        }
+      ],
+      "zoneStarts": {
+        "defensive": 21.6,
+        "neutral": 47.1,
+        "offensive": 31.3
+      }
+    },
+    "playerPosition": "D"
+  }
+]

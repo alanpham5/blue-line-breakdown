@@ -380,6 +380,7 @@ export const PlayersV2 = () => {
                       <PlayerTendenciesCard
                         tendencies={playerData.tendencies}
                         compact={Boolean(playerData.difficulty)}
+                        shotMix={playerData.shotMix}
                       />
                     </div>
                     {playerData.difficulty && (
@@ -462,6 +463,7 @@ export const PlayersV2 = () => {
             player={playerData.player}
             biometrics={playerData.biometrics}
             tendencies={playerData.tendencies}
+            shotMix={isGoalie ? null : playerData.shotMix}
             offensiveQuality={
               isGoalie
                 ? playerData.quality.goaltending

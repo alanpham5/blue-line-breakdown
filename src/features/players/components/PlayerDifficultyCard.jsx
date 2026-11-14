@@ -34,7 +34,7 @@ const exportNudge = (shareable, pixels) =>
 const LeaguePercentile = ({ value, shareable }) =>
   value == null ? null : (
     <span
-      className={`${shareable ? "text-xl" : "text-[0.8rem] md:text-sm"} whitespace-nowrap font-medium tabular-nums text-gray-400 light:text-gray-500`}
+      className={`${shareable ? "text-xl" : "text-sm md:text-base"} whitespace-nowrap font-medium tabular-nums text-gray-400 light:text-gray-500`}
     >
       {getOrdinal(value)}
     </span>
@@ -86,7 +86,7 @@ const SegmentLegend = ({ segments, shareable }) => (
             {...exportNudge(shareable, 9)}
           >
             <span
-              className={`${shareable ? "text-xl" : "text-[0.8rem] md:text-sm"} whitespace-nowrap font-semibold text-gray-200 light:text-gray-800`}
+              className={`${shareable ? "text-xl" : "text-sm md:text-base"} whitespace-nowrap font-semibold text-gray-200 light:text-gray-800`}
             >
               {segment.shortLabel && !shareable ? (
                 <>
@@ -104,7 +104,7 @@ const SegmentLegend = ({ segments, shareable }) => (
           </span>
         </div>
         <p
-          className={`${shareable ? "text-2xl" : "text-base"} font-medium tabular-nums text-white light:text-gray-900`}
+          className={`${shareable ? "text-3xl" : "text-lg"} font-medium tabular-nums text-white light:text-gray-900`}
           {...exportNudge(shareable, 9)}
         >
           {segment.detail}
@@ -116,7 +116,7 @@ const SegmentLegend = ({ segments, shareable }) => (
 
 const SectionLabel = ({ children, shareable }) => (
   <p
-    className={`${shareable ? "text-xl" : "text-sm"} font-semibold text-gray-400 light:text-gray-500`}
+    className={`${shareable ? "text-2xl" : "text-base"} font-semibold text-gray-400 light:text-gray-500`}
     {...exportNudge(shareable, 5)}
   >
     {children}
@@ -145,7 +145,7 @@ const TeammateQuality = ({ title, value, percentile, shareable }) => {
           </span>
         </span>
         <span
-          className={`${shareable ? "text-2xl" : "text-base"} font-bold tabular-nums`}
+          className={`${shareable ? "text-3xl" : "text-lg"} font-bold tabular-nums`}
           style={{ color: getPercentileColor(quality) }}
           {...exportNudge(shareable, 9)}
         >
@@ -179,8 +179,8 @@ const TeammateHeadshot = ({ teammate, shareable }) => {
     <div
       className={`shrink-0 overflow-hidden rounded-full bg-zinc-950/55 ${
         shareable
-          ? "h-[92px] w-[92px] border border-white/[0.06]"
-          : "h-16 w-16 shadow-lg backdrop-blur-sm light:bg-slate-700/45 sm:h-20 sm:w-20"
+          ? "h-[108px] w-[108px] border border-white/[0.06]"
+          : "h-[72px] w-[72px] shadow-lg backdrop-blur-sm light:bg-slate-700/45 lg:h-24 lg:w-24"
       }`}
     >
       <img
@@ -200,14 +200,14 @@ const Teammate = ({ teammate, isCareer, shareable }) => {
     <>
       <TeammateHeadshot teammate={teammate} shareable={shareable} />
       <span
-        className={`${shareable ? "text-xl" : "text-sm"} font-bold leading-tight text-white light:text-gray-900`}
+        className={`${shareable ? "text-2xl" : "text-base"} font-bold leading-tight text-white light:text-gray-900`}
         {...exportNudge(shareable, 5)}
       >
         {teammate.name}
       </span>
     </>
   );
-  const className = "flex min-w-0 flex-col items-center gap-1.5 text-center";
+  const className = `flex min-w-0 flex-col items-center text-center ${shareable ? "gap-3" : "gap-2"}`;
   if (shareable) return <div className={className}>{content}</div>;
   return (
     <Link
@@ -302,7 +302,8 @@ export const PlayerDifficultyCard = ({
                   5-on-5 linemates or partners, weighted by time together.
                 </div>
                 <div>
-                  Grey numbers are league percentiles against the same position.
+                  Grey numbers are league percentiles against the same position:
+                  how many starts in each zone, and special teams time per game.
                   A higher number means more of that usage, not better.
                 </div>
               </div>
@@ -318,9 +319,7 @@ export const PlayerDifficultyCard = ({
         )}
       </div>
 
-      <div
-        className={`flex flex-1 flex-col justify-between ${shareable ? "gap-3" : "gap-4"}`}
-      >
+      <div className={`flex flex-1 flex-col ${shareable ? "gap-6" : "gap-5"}`}>
         {zoneSegments && (
           <SegmentSection
             title="Shift Starts"
@@ -344,7 +343,7 @@ export const PlayerDifficultyCard = ({
           />
         )}
         {teammates?.length > 0 && (
-          <div>
+          <div className="flex flex-1 flex-col">
             <div className="mb-2 flex items-baseline justify-between gap-3">
               <SectionLabel shareable={shareable}>
                 {isDefense ? "Most Common Partner" : "Most Common Linemates"}
@@ -360,7 +359,7 @@ export const PlayerDifficultyCard = ({
               )}
             </div>
             <div
-              className={`grid gap-3 ${teammates.length > 1 ? "grid-cols-2" : "grid-cols-1"}`}
+              className={`grid flex-1 content-center items-center gap-3 ${teammates.length > 1 ? "grid-cols-2" : "grid-cols-1"}`}
             >
               {teammates.map((teammate) => (
                 <Teammate

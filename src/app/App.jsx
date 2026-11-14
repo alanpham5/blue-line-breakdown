@@ -38,6 +38,10 @@ const PlayerProfilePreview = lazyPage(
   () => import("features/players/PlayerProfilePreview"),
   "PlayerProfilePreview"
 );
+const ShotMixPreview = lazyPage(
+  () => import("features/players/ShotMixPreview"),
+  "ShotMixPreview"
+);
 const GoalieProfilePreview = lazyPage(
   () => import("features/players/GoalieProfilePreview"),
   "GoalieProfilePreview"
@@ -135,6 +139,10 @@ const App = () => {
                 <Route
                   path="/players/v2/:playerId/lines"
                   element={<PlayerLines />}
+                />
+                <Route
+                  path="/players/shot-mix-preview"
+                  element={<ShotMixPreview />}
                 />
                 <Route
                   path="/players/profile-preview"
