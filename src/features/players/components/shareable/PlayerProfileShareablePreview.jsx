@@ -133,7 +133,7 @@ const SimilarPlayersRow = ({ players, isCareer }) => (
     <div className="mb-2.5 flex items-center gap-2.5">
       <Users className="h-7 w-7 text-amber-300" />
       <h3 className="shareable-icon-label text-3xl font-bold text-white">
-        {isCareer ? "Most Similar Careers" : "Most Similar Players"}
+        {isCareer ? "Most Similar Careers" : "Similar Goalies"}
       </h3>
     </div>
     <div className="grid grid-cols-5 gap-3">

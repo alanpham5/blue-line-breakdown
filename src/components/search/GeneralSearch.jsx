@@ -76,6 +76,9 @@ export const GeneralSearch = ({
   targetSeason = null,
   teamResultPath = "/teams",
   playerResultPath = playerPagePath,
+  onResultSelect = null,
+  headerAction = null,
+  placeholder = null,
 }) => {
   const navigate = useNavigate();
   const { actualTheme } = useTheme();
@@ -227,7 +230,11 @@ export const GeneralSearch = ({
     setResults([]);
     setActiveIndex(-1);
     queryTypedByUserRef.current = false;
-    setQuery(result.name);
+    setQuery(onResultSelect ? "" : result.name);
+    if (onResultSelect) {
+      onResultSelect(result);
+      return;
+    }
     const numericTargetSeason = Number(targetSeason);
     const resultSeasons = (result.seasons || []).map(Number);
     const destinationSeason = resultSeasons.includes(numericTargetSeason)
@@ -290,20 +297,24 @@ export const GeneralSearch = ({
       }
     >
       {!compact && (
-        <LookupHeader
-          title={
-            isPlayerScope
-              ? "Lookup Player"
-              : isTeamScope
-                ? "Lookup Team"
-                : "Search Blue Line Breakdown"
-          }
-          subtext={
-            !isPlayerScope && !isTeamScope
-              ? "Find any player or NHL team from one place."
-              : ""
-          }
-        />
+        <div className="mb-5 flex items-start justify-between gap-3">
+          <LookupHeader
+            className="min-w-0"
+            title={
+              isPlayerScope
+                ? "Lookup Player"
+                : isTeamScope
+                  ? "Lookup Team"
+                  : "Search Blue Line Breakdown"
+            }
+            subtext={
+              !isPlayerScope && !isTeamScope
+                ? "Find any player or NHL team from one place."
+                : ""
+            }
+          />
+          {headerAction}
+        </div>
       )}
 
       <div ref={containerRef} className="relative">
@@ -339,11 +350,12 @@ export const GeneralSearch = ({
           }}
           onKeyDown={handleKeyDown}
           placeholder={
-            isPlayerScope
+            placeholder ||
+            (isPlayerScope
               ? "Player Name"
               : isTeamScope
                 ? "Team Name"
-                : "Search players or teams"
+                : "Search players or teams")
           }
           className="app-field w-full py-3.5 pl-12 pr-12 text-base text-white light:text-gray-900"
           autoComplete="off"

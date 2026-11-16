@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Download, Loader2, Search, Share } from "lucide-react";
 import { track } from "@vercel/analytics";
 import { apiService } from "lib/api/apiService";
@@ -60,7 +60,6 @@ const normalizePlayers = (players = []) =>
   }));
 
 export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { actualTheme } = useTheme();
   const isMobile = useIsMobile();
@@ -411,11 +410,10 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
               team={team}
               season={season}
               playerHref={teamPlayerHref}
-              onRosterClick={() =>
-                navigate(
-                  `/teams/roster?team=${encodeURIComponent(team)}&year=${season}`
-                )
+              tableHref={(position) =>
+                `/leaderboard?${new URLSearchParams({ position, season, team })}`
               }
+              rosterHref={`/teams/roster?team=${encodeURIComponent(team)}&year=${season}`}
             />
 
             <SimilarTeamsSection

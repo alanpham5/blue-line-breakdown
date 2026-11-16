@@ -41,11 +41,19 @@ const SKATER_METRIC_GROUPS = [
 const GOALIE_METRIC_GROUPS = [
   {
     type: "shotStopping",
-    keys: ["SV_PCT", "GSAX", "HD_SV", "MD_SV", "LD_SV", "GA_60"],
+    keys: ["SV_PCT", "GSAX", "LD_SV", "MD_SV", "HD_SV", "GA_60"],
   },
   {
     type: "workload",
-    keys: ["WORKLOAD", "xGA_60", "REB_CTRL", "FREEZE", "HD_WORK", "GAMES"],
+    keys: [
+      "WORKLOAD",
+      "LD_SA",
+      "MD_SA",
+      "HD_SA",
+      "xGA_60",
+      "REB_CTRL",
+      "FREEZE",
+    ],
   },
   {
     type: "edge",
@@ -69,9 +77,12 @@ export const formatHeight = (inches) => {
 export const formatPercentile = (value) =>
   value == null ? "-" : value.toFixed(1);
 
+const isSavePercentageKey = (key) => key.endsWith("_SV");
+
+const formatSavePercentage = (value) => value.toFixed(3).replace(/^0/, "");
+
 const formatEdgeValue = (key, value) => {
   if (key === "SPEED_BURSTS") return Math.round(value).toLocaleString();
-  if (key.endsWith("_SV")) return value.toFixed(3).replace(/^0/, "");
   if (key === "OZONE")
     return `${(value < 1 ? value * 100 : value).toFixed(1)}%`;
   if (key === "DIST_GAME") return value.toFixed(2);
@@ -82,8 +93,15 @@ export const formatMetricCell = (player, key) => {
   const countValue = player.countValues?.[key];
   if (countValue != null) return countValue.toLocaleString();
   const edgeValue = player.edgeValues?.[key];
-  if (edgeValue != null) return formatEdgeValue(key, edgeValue);
+  if (edgeValue != null && !isSavePercentageKey(key))
+    return formatEdgeValue(key, edgeValue);
   return formatPercentile(player.metrics?.[key]);
+};
+
+export const metricCellTitle = (player, key) => {
+  const edgeValue = player.edgeValues?.[key];
+  if (edgeValue == null || !isSavePercentageKey(key)) return undefined;
+  return `${formatSavePercentage(edgeValue)} save %`;
 };
 
 export const percentileTint = (value) => {

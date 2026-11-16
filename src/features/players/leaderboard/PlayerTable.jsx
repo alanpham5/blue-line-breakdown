@@ -5,15 +5,39 @@ import { playerUtils } from "utils/playerUtils";
 import { useTheme } from "providers/ThemeContext";
 import { useIsMobile } from "hooks/useIsMobile";
 import {
+  POSITIONS,
   metricGroupsForPosition,
   metricKeysForPosition,
   formatHeight,
   formatMetricCell,
   formatPercentile,
+  metricCellTitle,
   percentileTint,
 } from "./leaderboardConfig";
 
 const PAGE_SIZE = 25;
+
+const positionPlural = (position) =>
+  (
+    POSITIONS.find((option) => option.value === position)?.label || "players"
+  ).toLowerCase();
+
+const TableNote = ({ position }) =>
+  position === "G" ? (
+    <>
+      Percentiles vs. qualified goalies in the same season · Ht, Wt and GP are
+      raw · Shots-against columns (SF/60, Danger SA/60, xGA/60) rank workload,
+      not quality
+    </>
+  ) : (
+    <>
+      Percentiles vs. qualified {positionPlural(position)} in the same season,
+      mostly from 5-on-5 play · Ht, Wt and GP are raw ·{" "}
+      <span className="text-sky-300 light:text-sky-700">Shot type</span> and{" "}
+      <span className="text-emerald-300 light:text-emerald-700">NHL EDGE</span>{" "}
+      columns show the raw value, shaded by percentile
+    </>
+  );
 
 const compareValues = (a, b, dir) => {
   const aNull = a == null;
@@ -68,6 +92,7 @@ export const PlayerTable = ({ players, position }) => {
       if (sort.key === "leaguePercentile") return player.leaguePercentile;
       if (sort.key === "height") return player.height;
       if (sort.key === "weight") return player.weight;
+      if (sort.key === "gamesPlayed") return player.gamesPlayed;
       return player.metrics?.[sort.key];
     };
     return [...players].sort((a, b) =>
@@ -121,12 +146,7 @@ export const PlayerTable = ({ players, position }) => {
       style={{ background: "var(--glass-bg-strong)" }}
     >
       <p className="mb-2 px-2 text-xs text-gray-400 light:text-slate-500">
-        Player impact model · position-relative 5-on-5 percentiles ·{" "}
-        <span className="text-sky-300 light:text-sky-700">Shot type</span> and{" "}
-        <span className="text-emerald-300 light:text-emerald-700">
-          NHL EDGE
-        </span>{" "}
-        columns show the value, colored by percentile
+        <TableNote position={position} />
       </p>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-sm">
@@ -147,6 +167,13 @@ export const PlayerTable = ({ players, position }) => {
               <SortHeader
                 label="Wt"
                 sortKey="weight"
+                sort={sort}
+                onSort={handleSort}
+              />
+              <SortHeader
+                label="GP"
+                title="Games Played"
+                sortKey="gamesPlayed"
                 sort={sort}
                 onSort={handleSort}
               />
@@ -234,6 +261,9 @@ export const PlayerTable = ({ players, position }) => {
                   <td className="px-2 py-2 text-right text-gray-300 light:text-slate-600">
                     {player.weight == null ? "-" : player.weight}
                   </td>
+                  <td className="px-2 py-2 text-right text-gray-300 light:text-slate-600">
+                    {player.gamesPlayed == null ? "-" : player.gamesPlayed}
+                  </td>
                   <td
                     className="px-2 py-2 text-right font-bold text-white light:text-gray-900"
                     style={{
@@ -249,6 +279,7 @@ export const PlayerTable = ({ players, position }) => {
                         key={key}
                         className="px-2 py-2 text-right font-medium text-white light:text-gray-900"
                         style={{ background: percentileTint(value) }}
+                        title={metricCellTitle(player, key)}
                       >
                         {formatMetricCell(player, key)}
                       </td>

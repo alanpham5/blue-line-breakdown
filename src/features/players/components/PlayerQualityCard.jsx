@@ -1,6 +1,10 @@
 import { Info } from "lucide-react";
 import { Tooltip } from "components/ui/Tooltip";
 import { getOrdinal } from "utils/ordinal";
+import {
+  DangerShotPairs,
+  hasDangerShotPercentiles,
+} from "features/players/components/DangerShotPairs";
 
 const clampPercent = (value) => Math.min(100, Math.max(0, Number(value) || 0));
 
@@ -15,6 +19,8 @@ export const PlayerQualityCard = ({
   shareable = false,
   compact = false,
 }) => {
+  const showsDangerPairs =
+    type === "workload" && hasDangerShotPercentiles(stats);
   const isCool = type === "offensive" || type === "shotStopping";
   const accentText = isCool
     ? "text-cyan-300 light:text-cyan-600"
@@ -59,15 +65,28 @@ export const PlayerQualityCard = ({
             position="bottom"
             width="w-64 sm:w-72"
             content={
-              <div className="space-y-2">
-                <div className={`font-semibold ${accentText}`}>
-                  Quality percentile
+              showsDangerPairs ? (
+                <div className="space-y-2">
+                  <div className={`font-semibold ${accentText}`}>
+                    Shots against vs. saves
+                  </div>
+                  <div>
+                    For each danger tier, SA is the league percentile for shots
+                    faced per 60 (higher means a heavier workload) and SV is the
+                    league percentile for save percentage.
+                  </div>
                 </div>
-                <div>
-                  Each bar isolates how well the player performs in that area,
-                  adjusted for ice time and compared with league peers.
+              ) : (
+                <div className="space-y-2">
+                  <div className={`font-semibold ${accentText}`}>
+                    Quality percentile
+                  </div>
+                  <div>
+                    Each bar isolates how well the player performs in that area,
+                    adjusted for ice time and compared with league peers.
+                  </div>
                 </div>
-              </div>
+              )
             }
           >
             <button
@@ -80,41 +99,49 @@ export const PlayerQualityCard = ({
         )}
       </div>
 
-      <div className="grid flex-1 grid-cols-3 gap-3 sm:gap-4">
-        {stats.map((stat) => {
-          const value = clampPercent(stat.value);
-          return (
-            <div
-              key={stat.label}
-              className="grid min-w-0 grid-rows-[auto_1fr_auto] justify-items-center gap-2"
-            >
-              <span
-                className={`${shareable ? (compact ? "text-xl" : "text-2xl") : "text-base"} font-bold tabular-nums ${accentText}`}
-                data-export-nudge={shareable ? 8 : undefined}
-              >
-                {value.toFixed(0)}
-              </span>
+      {showsDangerPairs ? (
+        <DangerShotPairs
+          stats={stats}
+          shareable={shareable}
+          compact={compact}
+        />
+      ) : (
+        <div className="grid flex-1 grid-cols-3 gap-3 sm:gap-4">
+          {stats.map((stat) => {
+            const value = clampPercent(stat.value);
+            return (
               <div
-                className={`relative h-full ${shareable ? `${compact ? "min-h-[170px]" : "min-h-[304px]"} max-w-[70px]` : "min-h-[200px] max-w-[68px]"} w-full overflow-hidden rounded-2xl ${track} light:bg-slate-200`}
-                role="img"
-                aria-label={`${stat.label}: ${getOrdinal(value)} league percentile`}
+                key={stat.label}
+                className="grid min-w-0 grid-rows-[auto_1fr_auto] justify-items-center gap-2"
               >
-                <div
-                  className={`absolute inset-x-0 bottom-0 rounded-2xl bg-gradient-to-t ${barGradient} ${glow} transition-[height] duration-1000 ease-out`}
-                  style={{ height: `${value}%` }}
-                />
-              </div>
-              <div className="min-h-[3.25rem] text-center">
-                <p
-                  className={`${shareable ? (compact ? "text-sm" : "text-lg") : "text-xs sm:text-[0.82rem]"} font-semibold leading-tight text-gray-300 light:text-gray-700`}
+                <span
+                  className={`${shareable ? (compact ? "text-xl" : "text-2xl") : "text-base"} font-bold tabular-nums ${accentText}`}
+                  data-export-nudge={shareable ? 8 : undefined}
                 >
-                  {stat.label}
-                </p>
+                  {value.toFixed(0)}
+                </span>
+                <div
+                  className={`relative h-full ${shareable ? `${compact ? "min-h-[170px]" : "min-h-[304px]"} max-w-[70px]` : "min-h-[200px] max-w-[68px]"} w-full overflow-hidden rounded-2xl ${track} light:bg-slate-200`}
+                  role="img"
+                  aria-label={`${stat.label}: ${getOrdinal(value)} league percentile`}
+                >
+                  <div
+                    className={`absolute inset-x-0 bottom-0 rounded-2xl bg-gradient-to-t ${barGradient} ${glow} transition-[height] duration-1000 ease-out`}
+                    style={{ height: `${value}%` }}
+                  />
+                </div>
+                <div className="min-h-[3.25rem] text-center">
+                  <p
+                    className={`${shareable ? (compact ? "text-sm" : "text-lg") : "text-xs sm:text-[0.82rem]"} font-semibold leading-tight text-gray-300 light:text-gray-700`}
+                  >
+                    {stat.label}
+                  </p>
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </section>
   );
 };

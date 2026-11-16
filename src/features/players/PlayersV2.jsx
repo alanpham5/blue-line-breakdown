@@ -22,8 +22,17 @@ import { SimilarPlayersSection } from "features/players/components/SimilarPlayer
 import { WarPercentileCard } from "features/players/components/WarPercentileCard";
 import { TopPlayersSection } from "features/splash/components/TopPlayersSection";
 import { PlayerProfileShareablePreview } from "features/players/components/shareable/PlayerProfileShareablePreview";
+import { PlayerComparisonShareablePreview } from "features/players/components/shareable/PlayerComparisonShareablePreview";
+import { PlayerComparison } from "features/players/components/PlayerComparison";
+import { useComparison } from "features/players/hooks/useComparison";
 
 const CAREER_OPTION = "career";
+
+const SIMILAR_SEASON_TITLES = {
+  G: "Similar Goalies",
+  F: "Similar Forwards",
+  D: "Similar Defensemen",
+};
 
 const IMPACT_TOOLTIPS = {
   goalie: {
@@ -50,6 +59,9 @@ export const PlayersV2 = () => {
   const [error, setError] = useState("");
   const [showShareableModal, setShowShareableModal] = useState(false);
   const [goalieShotMap, setGoalieShotMap] = useState(null);
+  const comparison = useComparison({ searchParams, setSearchParams });
+  const compareMode = comparison.enabled;
+  const compareEntries = comparison.entries;
   const lastTrackedRef = useRef(null);
 
   const season = searchParams.get("season");
@@ -164,10 +176,18 @@ export const PlayersV2 = () => {
   );
 
   const shareFileName = useMemo(() => {
+    if (compareMode && compareEntries.every((entry) => entry?.data)) {
+      const names = compareEntries.map((entry) =>
+        entry.data.player.name.replace(/\s+/g, "-").toLowerCase()
+      );
+      const seasons = compareEntries.map((entry) => entry.data.player.season);
+      const players = names[0] === names[1] ? names[0] : names.join("-vs-");
+      return `${players}-${seasons.join("-vs-")}`;
+    }
     if (!playerData) return "player-profile";
     const slug = playerData.player.name.replace(/\s+/g, "-").toLowerCase();
     return `${slug}-${playerData.isCareer ? "career" : playerData.player.season}`;
-  }, [playerData]);
+  }, [compareEntries, compareMode, playerData]);
 
   const updateParam = (key, value) => {
     const params = new URLSearchParams(searchParams);
@@ -190,6 +210,54 @@ export const PlayersV2 = () => {
     playerUtils.playerProfilePath(player.playerId);
   const similarSeasonHref = (player) =>
     playerUtils.playerProfilePath(player.playerId, player.season);
+
+  const handleCompareToggle = () => {
+    if (compareMode) {
+      comparison.disable();
+      return;
+    }
+    const seedSeason = isCareer
+      ? playerData?.availableSeasons?.[0]
+      : playerData?.player?.season;
+    comparison.enable(
+      playerData && seedSeason
+        ? {
+            playerId: String(playerData.player.playerId || playerId),
+            season: Number(seedSeason),
+          }
+        : null
+    );
+  };
+
+  const compareToggle = (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={compareMode}
+      onClick={handleCompareToggle}
+      className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-1.5 py-1.5 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/60 ${
+        compareMode
+          ? "text-lime-300 light:text-lime-700"
+          : "text-gray-400 hover:text-white light:text-slate-600 light:hover:text-slate-900"
+      }`}
+    >
+      <span>Compare</span>
+      <span
+        className={`relative h-5 w-9 rounded-full border transition-colors ${
+          compareMode
+            ? "border-lime-400 bg-lime-400 light:border-lime-600 light:bg-lime-600"
+            : "border-white/10 bg-white/10 light:border-slate-300 light:bg-slate-300"
+        }`}
+        aria-hidden="true"
+      >
+        <span
+          className={`absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform ${
+            compareMode ? "translate-x-4" : "translate-x-0"
+          }`}
+        />
+      </span>
+    </button>
+  );
 
   const qualityCards = playerData && (
     <>
@@ -241,65 +309,96 @@ export const PlayersV2 = () => {
                 bare
                 compact
                 scope="players"
-                initialQuery={playerData?.player?.name || ""}
                 className="w-full"
+                initialQuery={compareMode ? "" : playerData?.player?.name || ""}
+                onResultSelect={compareMode ? comparison.addPlayer : null}
+                placeholder={compareMode ? "Add a player to compare" : null}
               />
               {playerData && (
-                <div className="flex items-center gap-3">
-                  <label className="block min-w-0 flex-1">
-                    <span className="sr-only">Season</span>
-                    <AppSelect
-                      placeholder="Season"
-                      value={
-                        isCareer
-                          ? CAREER_OPTION
-                          : String(playerData.player.season)
-                      }
-                      onChange={(event) =>
-                        handleSeasonChange(event.target.value)
-                      }
-                      className="app-field w-full px-4 py-3.5 pr-10 text-base normal-case tracking-normal text-white light:text-gray-900"
-                    >
-                      <option value={CAREER_OPTION}>Career</option>
-                      {playerData.availableSeasons.map((availableSeason) => (
-                        <option key={availableSeason} value={availableSeason}>
-                          {playerUtils.formatSeasonLabel(
-                            availableSeason,
-                            currentSeason
+                <div className="flex flex-wrap items-center gap-3">
+                  {!compareMode && (
+                    <>
+                      <label className="block min-w-[9rem] flex-1">
+                        <span className="sr-only">Season</span>
+                        <AppSelect
+                          placeholder="Season"
+                          value={
+                            isCareer
+                              ? CAREER_OPTION
+                              : String(playerData.player.season)
+                          }
+                          onChange={(event) =>
+                            handleSeasonChange(event.target.value)
+                          }
+                          className="app-field w-full px-4 py-3.5 pr-10 text-base normal-case tracking-normal text-white light:text-gray-900"
+                        >
+                          <option value={CAREER_OPTION}>Career</option>
+                          {playerData.availableSeasons.map(
+                            (availableSeason) => (
+                              <option
+                                key={availableSeason}
+                                value={availableSeason}
+                              >
+                                {playerUtils.formatSeasonLabel(
+                                  availableSeason,
+                                  currentSeason
+                                )}
+                              </option>
+                            )
                           )}
-                        </option>
-                      ))}
-                    </AppSelect>
-                  </label>
-                  <RemixToggle
-                    team={playerData.player.team}
-                    season={isCareer ? null : playerData.player.season}
-                    profileKey={`${playerId}-${isCareer ? "career" : playerData.player.season}`}
-                  />
+                        </AppSelect>
+                      </label>
+                      <RemixToggle
+                        team={playerData.player.team}
+                        season={isCareer ? null : playerData.player.season}
+                        profileKey={`${playerId}-${isCareer ? "career" : playerData.player.season}`}
+                      />
+                    </>
+                  )}
+                  {compareToggle}
                 </div>
               )}
             </div>
           ) : (
             <>
-              <GeneralSearch scope="players" />
-              <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                <TopPlayersSection
-                  title="Top Forwards"
-                  position="F"
-                  className="fade-in-up"
-                />
-                <TopPlayersSection
-                  title="Top Defensemen"
-                  position="D"
-                  className="fade-in-up"
-                />
-                <TopPlayersSection
-                  title="Top Goalies"
-                  position="G"
-                  className="fade-in-up"
-                />
-              </div>
+              <GeneralSearch
+                scope="players"
+                onResultSelect={compareMode ? comparison.addPlayer : null}
+                headerAction={compareToggle}
+                placeholder={compareMode ? "Add a player to compare" : null}
+              />
+              {!compareMode && (
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                  <TopPlayersSection
+                    title="Top Forwards"
+                    position="F"
+                    className="fade-in-up"
+                  />
+                  <TopPlayersSection
+                    title="Top Defensemen"
+                    position="D"
+                    className="fade-in-up"
+                  />
+                  <TopPlayersSection
+                    title="Top Goalies"
+                    position="G"
+                    className="fade-in-up"
+                  />
+                </div>
+              )}
             </>
+          )}
+
+          {compareMode && (
+            <PlayerComparison
+              entries={compareEntries}
+              error={comparison.error}
+              onRemove={comparison.remove}
+              onReset={comparison.reset}
+              onSeasonChange={comparison.changeSeason}
+              onSwap={comparison.swap}
+              onShareClick={() => setShowShareableModal(true)}
+            />
           )}
 
           {error && (
@@ -314,7 +413,7 @@ export const PlayersV2 = () => {
             </div>
           )}
 
-          {playerData && (
+          {playerData && !compareMode && (
             <>
               <section
                 className="space-y-4 sm:space-y-6"
@@ -433,6 +532,7 @@ export const PlayersV2 = () => {
                   )}
                   <SimilarPlayersSection
                     players={playerData.similarPlayers || []}
+                    title={SIMILAR_SEASON_TITLES[playerData.player.position]}
                     playerHref={similarSeasonHref}
                     onPlayerClick={scrollToTop}
                     filterYear={similarSeason}
@@ -454,37 +554,41 @@ export const PlayersV2 = () => {
         onClose={() => setShowShareableModal(false)}
         fileName={shareFileName}
       >
-        {playerData && (
-          <PlayerProfileShareablePreview
-            isCareer={isCareer}
-            combined={combined}
-            currentSeason={currentSeason}
-            impactTrend={playerData.impactTrend}
-            player={playerData.player}
-            biometrics={playerData.biometrics}
-            tendencies={playerData.tendencies}
-            shotMix={isGoalie ? null : playerData.shotMix}
-            offensiveQuality={
-              isGoalie
-                ? playerData.quality.goaltending
-                : playerData.quality.offensive
-            }
-            defensiveQuality={
-              isGoalie
-                ? playerData.quality.shotsFaced
-                : playerData.quality.defensive
-            }
-            difficulty={playerData.difficulty}
-            stats={playerData.stats}
-            edgeValues={isCareer ? null : playerData.edgeValues}
-            edgePercentiles={isCareer ? null : playerData.edgePercentiles}
-            similarPlayers={
-              (isCareer
-                ? playerData.similarCareers
-                : playerData.similarPlayers) || []
-            }
-            shotMap={goalieShotMap}
-          />
+        {compareMode && compareEntries.every((entry) => entry?.data) ? (
+          <PlayerComparisonShareablePreview entries={compareEntries} />
+        ) : (
+          playerData && (
+            <PlayerProfileShareablePreview
+              isCareer={isCareer}
+              combined={combined}
+              currentSeason={currentSeason}
+              impactTrend={playerData.impactTrend}
+              player={playerData.player}
+              biometrics={playerData.biometrics}
+              tendencies={playerData.tendencies}
+              shotMix={isGoalie ? null : playerData.shotMix}
+              offensiveQuality={
+                isGoalie
+                  ? playerData.quality.goaltending
+                  : playerData.quality.offensive
+              }
+              defensiveQuality={
+                isGoalie
+                  ? playerData.quality.shotsFaced
+                  : playerData.quality.defensive
+              }
+              difficulty={playerData.difficulty}
+              stats={playerData.stats}
+              edgeValues={isCareer ? null : playerData.edgeValues}
+              edgePercentiles={isCareer ? null : playerData.edgePercentiles}
+              similarPlayers={
+                (isCareer
+                  ? playerData.similarCareers
+                  : playerData.similarPlayers) || []
+              }
+              shotMap={goalieShotMap}
+            />
+          )
         )}
       </ShareableModal>
     </div>

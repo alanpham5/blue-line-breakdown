@@ -307,6 +307,7 @@ export const Roster = () => {
     : data?.goalies || [];
   const forwardExtras = data?.forwardExtras || [];
   const defenseExtras = data?.defenseExtras || [];
+  const goalieExtras = data?.goalieExtras || [];
   const openForwardPicker = (i) => (player, pi) =>
     setPicker({
       position: "F",
@@ -597,6 +598,9 @@ export const Roster = () => {
                         />
                       ))}
                     </div>
+                    {!modifying &&
+                      goalieExtras.length > 0 &&
+                      renderExtras("Extra Goalies", goalieExtras)}
                   </Section>
                 )}
               </div>
