@@ -23,7 +23,7 @@ const SHORT_LABELS = {
 
 export const EDGE_METRICS = [
   { key: "TOP_SPEED", label: "Top skating speed", short: "Top Speed", unit: "mph" },
-  { key: "SPEED_BURSTS", label: "Speed bursts (20+ mph)", short: "Bursts", unit: "" },
+  { key: "SPEED_BURSTS", label: "Bursts (20+ mph) per 60", short: "Bursts/60", unit: "" },
   { key: "DIST_GAME", label: "Distance per game", short: "Distance", unit: "mi" },
   { key: "SHOT_SPEED", label: "Top shot speed", short: "Shot Speed", unit: "mph" },
   { key: "OZONE", label: "Offensive zone time", short: "O-Zone", unit: "%" },

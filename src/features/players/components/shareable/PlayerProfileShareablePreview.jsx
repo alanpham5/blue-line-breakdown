@@ -17,9 +17,9 @@ import {
 
 const edgeOrder = [
   ["TOP_SPEED", "Top Speed", "mph"],
-  ["SPEED_BURSTS", "Speed Bursts", "20+ mph"],
+  ["SPEED_BURSTS", "Bursts / 60", "20+ mph"],
   ["SHOT_SPEED", "Shot Speed", "mph"],
-  ["DIST_SKATED", "Distance", "mi"],
+  ["DIST_SKATED", "Distance / 60", "mi"],
   ["DIST_GAME", "Max / Game", "mi"],
   ["OZONE", "O-Zone Time", "%"],
 ];
@@ -66,7 +66,6 @@ const CountingStatsRow = ({ stats }) => {
 };
 
 const formatEdgeValue = (key, value) => {
-  if (key === "SPEED_BURSTS") return Number(value).toLocaleString();
   const numericValue = Number(value);
   if (key === "OZONE") {
     return (numericValue < 1 ? numericValue * 100 : numericValue).toFixed(1);
@@ -351,18 +350,19 @@ export const PlayerProfileShareablePreview = ({
                     )
                     .map(([key, label, unit]) => (
                       <div key={key} className="px-2">
-                        <div className="text-[18px] font-semibold text-gray-400">
+                        <div className="text-[18px] font-semibold leading-tight text-gray-400">
                           {label}
                         </div>
                         <div
-                          className="mt-0.5 text-[34px] font-bold tabular-nums"
+                          className="text-[34px] font-bold leading-tight tabular-nums"
+                          data-export-nudge={6}
                           style={{
                             color: getPercentileColor(edgePercentiles[key]),
                           }}
                         >
                           {formatEdgeValue(key, edgeValues[key])}
                         </div>
-                        <div className="whitespace-nowrap text-lg text-gray-400">
+                        <div className="whitespace-nowrap text-lg leading-tight text-gray-400">
                           {unit} · {getOrdinal(edgePercentiles[key])} pctl
                         </div>
                       </div>

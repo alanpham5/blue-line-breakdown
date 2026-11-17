@@ -78,9 +78,7 @@ export const SKATER_METRICS = [
               label: `${playerUtils.formatStatName(key)} (${EDGE_UNITS[key]})`,
               group: groupLabels.edge,
               value: edgeValue(key),
-              format: formatNumber(
-                key === "DIST_GAME" ? 2 : key === "SPEED_BURSTS" ? 0 : 1
-              ),
+              format: formatNumber(key === "DIST_GAME" ? 2 : 1),
             }
           : {
               key,

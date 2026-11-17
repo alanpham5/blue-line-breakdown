@@ -345,7 +345,6 @@ const formatEdgeValue = (key, value) => {
   const number = toNumber(value);
   if (number == null) return "—";
   if (key === "OZONE") return (number <= 1 ? number * 100 : number).toFixed(1);
-  if (key === "SPEED_BURSTS") return String(Math.round(number));
   return number.toFixed(1);
 };
 

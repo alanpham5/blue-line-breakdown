@@ -26,9 +26,8 @@ export const EdgeStats = ({ edgeValues, edgePercentiles }) => {
       case "SHOT_SPEED":
       case "DIST_SKATED":
       case "DIST_GAME":
-        return num.toFixed(1);
       case "SPEED_BURSTS":
-        return num.toLocaleString();
+        return num.toFixed(1);
       case "OZONE":
         const pct = num < 1.0 ? num * 100 : num;
         return pct.toFixed(1);

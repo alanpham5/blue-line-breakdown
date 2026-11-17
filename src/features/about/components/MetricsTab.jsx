@@ -233,9 +233,9 @@ const shotsFacedQuality = [
 
 const edgeMetrics = [
   ["Top Skating Speed", "mph", "Season max"],
-  ["Speed Bursts (20+ mph)", "Count", "Season total"],
+  ["Bursts (20+ mph)", "Per 60", "All-situations ice time"],
   ["Top Shot Speed", "mph", "Season max"],
-  ["Distance Skated", "mi", "Season total"],
+  ["Distance Skated", "mi per 60", "All-situations ice time"],
   ["Max Game Distance", "mi", "Single-game max"],
   ["Offensive Zone Time", "%", "Share of on-ice time"],
 ];

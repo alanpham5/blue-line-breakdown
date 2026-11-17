@@ -860,9 +860,9 @@ export const playerUtils = {
       FREEZE: "Puck Freeze Rate",
       GAMES: "Games Played",
       TOP_SPEED: "Top Skating Speed",
-      SPEED_BURSTS: "Speed Bursts (20+ mph)",
+      SPEED_BURSTS: "Bursts (20+ mph) / 60",
       SHOT_SPEED: "Top Shot Speed",
-      DIST_SKATED: "Distance Skated",
+      DIST_SKATED: "Distance Skated / 60",
       DIST_GAME: "Max Game Distance",
       OZONE: "Offensive Zone Time",
       EDGE_HIGH_SV: "NHL EDGE Short-Range Save %",
@@ -913,9 +913,9 @@ export const playerUtils = {
       FREEZE: "Frz%",
       GAMES: "GP",
       TOP_SPEED: "Top Spd",
-      SPEED_BURSTS: "20+ mph",
+      SPEED_BURSTS: "Bursts/60",
       SHOT_SPEED: "Shot Spd",
-      DIST_SKATED: "Distance",
+      DIST_SKATED: "Dist/60",
       DIST_GAME: "Game Dist",
       OZONE: "OZ Time",
       EDGE_HIGH_SV: "Short SV%",
@@ -989,11 +989,11 @@ export const playerUtils = {
       TOP_SPEED:
         "Fastest skating speed reached during the season (mph), tracked by NHL Edge.",
       SPEED_BURSTS:
-        "Number of skating bursts over 20 mph, tracked by NHL Edge.",
+        "Skating bursts over 20 mph per 60 minutes of all-situations ice time, tracked by NHL Edge.",
       SHOT_SPEED:
         "Hardest shot speed recorded during the season (mph), tracked by NHL Edge.",
       DIST_SKATED:
-        "Total distance skated over the season (miles), tracked by NHL Edge.",
+        "Miles skated per 60 minutes of all-situations ice time, tracked by NHL Edge.",
       DIST_GAME:
         "Most distance skated in a single game (miles), tracked by NHL Edge.",
       OZONE:

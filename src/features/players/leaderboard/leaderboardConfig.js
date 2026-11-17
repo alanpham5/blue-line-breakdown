@@ -82,7 +82,6 @@ const isSavePercentageKey = (key) => key.endsWith("_SV");
 const formatSavePercentage = (value) => value.toFixed(3).replace(/^0/, "");
 
 const formatEdgeValue = (key, value) => {
-  if (key === "SPEED_BURSTS") return Math.round(value).toLocaleString();
   if (key === "OZONE")
     return `${(value < 1 ? value * 100 : value).toFixed(1)}%`;
   if (key === "DIST_GAME") return value.toFixed(2);
