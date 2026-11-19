@@ -66,6 +66,8 @@ export const PlayersV2 = () => {
 
   const season = searchParams.get("season");
   const similarSeason = searchParams.get("similarSeason");
+  const showCompareToggle =
+    searchParams.get("compareEnabled") === "true" || compareMode;
   const isCareerRequest = Boolean(playerId) && !season;
   const isCareer = Boolean(playerData?.isCareer);
   const isGoalie = playerData?.player?.position === "G";
@@ -229,7 +231,7 @@ export const PlayersV2 = () => {
     );
   };
 
-  const compareToggle = (
+  const compareToggle = showCompareToggle && (
     <button
       type="button"
       role="switch"
