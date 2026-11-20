@@ -12,7 +12,6 @@ const ZONE_SEGMENTS = [
     shortLabel: "O-Zone",
     color: "#0891b2",
   },
-  { key: "neutral", label: "Neutral", shortLabel: "N-Zone", color: "#64748b" },
   {
     key: "defensive",
     label: "Defensive",
@@ -296,14 +295,15 @@ export const PlayerDifficultyCard = ({
                   How the player was used
                 </div>
                 <div>
-                  Shift starts split 5-on-5 zone starts, leaving out shifts
-                  started on the fly. Special teams compares 5-on-4 and 4-on-5
-                  ice time. Teammate quality averages the impact percentile of
-                  5-on-5 linemates or partners, weighted by time together.
+                  Shift starts split 5-on-5 offensive and defensive zone starts,
+                  leaving out neutral zone starts and shifts started on the fly.
+                  Special teams compares 5-on-4 and 4-on-5 ice time. Teammate
+                  quality averages the impact percentile of 5-on-5 linemates or
+                  partners, weighted by time together.
                 </div>
                 <div>
                   Grey numbers are league percentiles against the same position:
-                  how many starts in each zone, and special teams time per game.
+                  share of starts in each zone, and special teams time per game.
                   A higher number means more of that usage, not better.
                 </div>
               </div>

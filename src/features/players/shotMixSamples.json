@@ -87,7 +87,6 @@
     "difficulty": {
       "percentiles": {
         "defensive": 8.4,
-        "neutral": 60.2,
         "offensive": 85.9,
         "penaltyKill": 43.2,
         "powerPlay": 97.3,
@@ -115,9 +114,8 @@
         }
       ],
       "zoneStarts": {
-        "defensive": 17.9,
-        "neutral": 44.7,
-        "offensive": 37.4
+        "defensive": 32.4,
+        "offensive": 67.6
       }
     },
     "playerPosition": "F"
@@ -210,7 +208,6 @@
     "difficulty": {
       "percentiles": {
         "defensive": 12.5,
-        "neutral": 64.3,
         "offensive": 80.0,
         "penaltyKill": 65.7,
         "powerPlay": 96.6,
@@ -238,9 +235,8 @@
         }
       ],
       "zoneStarts": {
-        "defensive": 19.2,
-        "neutral": 45.0,
-        "offensive": 35.7
+        "defensive": 35.0,
+        "offensive": 65.0
       }
     },
     "playerPosition": "F"
@@ -333,7 +329,6 @@
     "difficulty": {
       "percentiles": {
         "defensive": 0.0,
-        "neutral": 15.7,
         "offensive": 100.0,
         "penaltyKill": 10.2,
         "powerPlay": 100.0,
@@ -361,9 +356,8 @@
         }
       ],
       "zoneStarts": {
-        "defensive": 1.2,
-        "neutral": 39.0,
-        "offensive": 59.8
+        "defensive": 2.0,
+        "offensive": 98.0
       }
     },
     "playerPosition": "F"
@@ -456,7 +450,6 @@
     "difficulty": {
       "percentiles": {
         "defensive": 4.7,
-        "neutral": 6.8,
         "offensive": 97.9,
         "penaltyKill": 68.6,
         "powerPlay": 100.0,
@@ -478,9 +471,8 @@
         }
       ],
       "zoneStarts": {
-        "defensive": 19.4,
-        "neutral": 40.7,
-        "offensive": 39.8
+        "defensive": 32.8,
+        "offensive": 67.2
       }
     },
     "playerPosition": "D"
@@ -573,7 +565,6 @@
     "difficulty": {
       "percentiles": {
         "defensive": 8.9,
-        "neutral": 75.5,
         "offensive": 78.9,
         "penaltyKill": 50.5,
         "powerPlay": 88.4,
@@ -601,9 +592,8 @@
         }
       ],
       "zoneStarts": {
-        "defensive": 18.1,
-        "neutral": 46.6,
-        "offensive": 35.3
+        "defensive": 33.9,
+        "offensive": 66.1
       }
     },
     "playerPosition": "F"
@@ -696,7 +686,6 @@
     "difficulty": {
       "percentiles": {
         "defensive": 10.6,
-        "neutral": 57.2,
         "offensive": 84.3,
         "penaltyKill": 62.3,
         "powerPlay": 98.7,
@@ -718,9 +707,8 @@
         }
       ],
       "zoneStarts": {
-        "defensive": 21.6,
-        "neutral": 47.1,
-        "offensive": 31.3
+        "defensive": 40.8,
+        "offensive": 59.2
       }
     },
     "playerPosition": "D"

@@ -26,7 +26,6 @@ const SHOT_LABELS = { "Tip & Deflection": "Tip", Backhand: "Back" };
 
 const ZONES = [
   { key: "offensive", label: "Offensive", short: "O-Zone", shade: 100 },
-  { key: "neutral", label: "Neutral", short: "N-Zone", shade: 55 },
   { key: "defensive", label: "Defensive", short: "D-Zone", shade: 28 },
 ];
 

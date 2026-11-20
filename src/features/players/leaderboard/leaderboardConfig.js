@@ -23,7 +23,7 @@ const SKATER_METRIC_GROUPS = [
   },
   {
     type: "deployment",
-    keys: ["OZ_START", "NZ_START", "DZ_START", "PP_TOI", "PK_TOI", "MATES"],
+    keys: ["OZ_START", "DZ_START", "PP_TOI", "PK_TOI", "MATES"],
   },
   {
     type: "edge",

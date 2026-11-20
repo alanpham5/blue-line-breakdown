@@ -54,7 +54,7 @@ const defensiveQuality = [
 ];
 
 const exampleDifficulty = {
-  zoneStarts: { offensive: 30.8, neutral: 45.5, defensive: 23.7 },
+  zoneStarts: { offensive: 56.5, defensive: 43.5 },
   specialTeams: {
     powerPlayMinutes: 381.8,
     penaltyKillMinutes: 68.5,
@@ -64,7 +64,6 @@ const exampleDifficulty = {
   teammateQuality: 62.5,
   percentiles: {
     offensive: 66.7,
-    neutral: 54.3,
     defensive: 33.3,
     powerPlay: 99.7,
     penaltyKill: 51.5,
