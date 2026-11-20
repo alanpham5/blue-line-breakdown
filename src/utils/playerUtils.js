@@ -837,7 +837,9 @@ export const playerUtils = {
       PHYS: "Physical Pressure",
       TAKE: "Takeaways",
       CH_SUP: "Chance Suppression",
-      D_EXIT: "D-Zone Exits",
+      O_ENTRY: "pO-zone Entries",
+      BLK_SHARE: "Block Shares",
+      D_EXIT_P: "pD-zone Exits",
       GOAL_PREV: "Goal Prevention",
       OZ_START: "Offensive Zone Starts",
       DZ_START: "Defensive Zone Starts",
@@ -889,7 +891,9 @@ export const playerUtils = {
       PHYS: "Phys",
       TAKE: "Take",
       CH_SUP: "Ch Sup",
-      D_EXIT: "DZ Exits",
+      O_ENTRY: "pOZ Entries",
+      BLK_SHARE: "Block Shares",
+      D_EXIT_P: "pDZ Exits",
       GOAL_PREV: "Goal Prv",
       OZ_START: "OZ St",
       DZ_START: "DZ St",
@@ -947,8 +951,12 @@ export const playerUtils = {
       PHYS: "Hits and takeaways per 60 minutes the opponent has the puck at 5-on-5 (ice time × (1 − Corsi %)), plus penalties drawn per 60, so players on puck-dominant teams aren't penalized for fewer chances to hit.",
       TAKE: "How often the player takes the puck away from opponents.",
       CH_SUP: "Share of opponent scoring chances limited by the player.",
-      D_EXIT:
-        "How reliably the team gets the puck out of its own end with the player on the ice, from zone transitions across his shifts and how rarely he gives the puck away in the defensive zone.",
+      O_ENTRY:
+        "Proxied 5-on-5 offensive zone entries per game, inferred from NHL play-by-play (the player on the first event in the zone after play was outside it, or whose takeaway set it up) and scaled to match manually tracked entries.",
+      BLK_SHARE:
+        "Share of on-ice shot attempts against that the player blocks.",
+      D_EXIT_P:
+        "Proxied 5-on-5 defensive zone exits per game, inferred from NHL play-by-play (the player on the first event out of the zone after play was in it, or whose takeaway set it up) and scaled to match tracked exits.",
       GOAL_PREV: "Share of scoring attempts stopped by the player.",
       OZ_START:
         "Share of the player's 5-on-5 offensive and defensive zone starts that are in the offensive zone.",

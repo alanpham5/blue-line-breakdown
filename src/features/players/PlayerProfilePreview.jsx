@@ -41,16 +41,18 @@ const offensiveQuality = [
   },
   { label: "Positioning", shortLabel: "Positioning", value: 91 },
   { label: "Finishing", shortLabel: "Finishing", value: 86 },
+  { key: "zoneEntriesProxy", label: "pO-zone Entries", value: 94 },
 ];
 
 const defensiveQuality = [
   { label: "Takeaways", shortLabel: "Takeaways", value: 88 },
-  { label: "D-Zone Exits", shortLabel: "D-Zone Exits", value: 72 },
   {
     label: "Chance Suppression",
     shortLabel: "Suppression",
     value: 79,
   },
+  { key: "blockShare", label: "Block Shares", value: 41 },
+  { key: "zoneExitsProxy", label: "pD-zone Exits", value: 83 },
 ];
 
 const exampleDifficulty = {

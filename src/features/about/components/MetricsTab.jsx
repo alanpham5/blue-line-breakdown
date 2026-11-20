@@ -188,6 +188,16 @@ const offensiveQuality = [
       { label: "High-danger conversion", influence: 1 },
     ],
   },
+  {
+    label: "pO-zone Entries",
+    components: [
+      {
+        label:
+          "Proxied 5-on-5 entries per game: the first event in the offensive zone after play was outside it, or a takeaway that set it up",
+        influence: 3,
+      },
+    ],
+  },
 ];
 
 const defensiveQuality = [
@@ -201,23 +211,28 @@ const defensiveQuality = [
     ],
   },
   {
-    label: "D-Zone Exits",
-    components: [
-      {
-        label:
-          "Shifts that end outside the defensive zone, vs. expected for zone starts and team",
-        influence: 3,
-      },
-      { label: "Fewer D-zone giveaways per 60", influence: 3 },
-    ],
-  },
-  {
     label: "Chance Suppression",
     components: [
       { label: "Fewer xGA per 60", influence: 3 },
       { label: "Fewer high-danger xGA per 60", influence: 2 },
       { label: "Relative on-ice xGA per 60", influence: 2 },
       { label: "Fewer shot attempts against per 60", influence: 1 },
+    ],
+  },
+  {
+    label: "Block Shares",
+    components: [
+      { label: "Blocks per on-ice shot attempt against", influence: 3 },
+    ],
+  },
+  {
+    label: "pD-zone Exits",
+    components: [
+      {
+        label:
+          "Proxied 5-on-5 exits per game: the first event out of the defensive zone after play was in it, or a takeaway that set it up",
+        influence: 3,
+      },
     ],
   },
 ];

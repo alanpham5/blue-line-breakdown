@@ -8,6 +8,34 @@ import {
 
 const clampPercent = (value) => Math.min(100, Math.max(0, Number(value) || 0));
 
+const PROXIED_KEYS = new Set([
+  "zoneEntriesProxy",
+  "zoneExitsProxy",
+  "blockShare",
+]);
+
+const hasProxiedBars = (stats) =>
+  (stats || []).some((stat) => PROXIED_KEYS.has(stat.key));
+
+const SOFT_HYPHEN = "­";
+const BREAK_POINTS = {
+  Takeaways: ["Take", "aways"],
+  Suppression: ["Sup", "pres", "sion"],
+  Positioning: ["Posi", "tion", "ing"],
+};
+
+const breakableLabel = (label) =>
+  label
+    .split(" ")
+    .map((word) => (BREAK_POINTS[word] || [word]).join(SOFT_HYPHEN))
+    .join(" ");
+
+const labelSize = (shareable, compact, crowded) => {
+  if (shareable) return compact ? "text-sm" : "text-lg";
+  if (crowded) return "text-[0.65rem] sm:text-[0.82rem]";
+  return "text-xs sm:text-[0.82rem]";
+};
+
 export const PlayerQualityCard = ({
   title,
   icon: Icon,
@@ -85,6 +113,14 @@ export const PlayerQualityCard = ({
                     Each bar isolates how well the player performs in that area,
                     adjusted for ice time and compared with league peers.
                   </div>
+                  {hasProxiedBars(stats) && (
+                    <div>
+                      A leading p means proxied: entries and exits are inferred
+                      from NHL play-by-play, which never records who carries the
+                      puck, and ranked per game. Block Shares is the share of
+                      on-ice shot attempts against that the player blocks.
+                    </div>
+                  )}
                 </div>
               )
             }
@@ -106,7 +142,12 @@ export const PlayerQualityCard = ({
           compact={compact}
         />
       ) : (
-        <div className="grid flex-1 grid-cols-3 gap-3 sm:gap-4">
+        <div
+          className={`grid flex-1 ${stats.length > 4 ? "gap-2 sm:gap-3" : "gap-3 sm:gap-4"}`}
+          style={{
+            gridTemplateColumns: `repeat(${stats.length}, minmax(0, 1fr))`,
+          }}
+        >
           {stats.map((stat) => {
             const value = clampPercent(stat.value);
             return (
@@ -132,9 +173,10 @@ export const PlayerQualityCard = ({
                 </div>
                 <div className="min-h-[3.25rem] text-center">
                   <p
-                    className={`${shareable ? (compact ? "text-sm" : "text-lg") : "text-xs sm:text-[0.82rem]"} font-semibold leading-tight text-gray-300 light:text-gray-700`}
+                    className={`${labelSize(shareable, compact, stats.length >= 4)} font-semibold leading-tight text-gray-300 light:text-gray-700`}
+                    data-export-nudge={shareable ? 6 : undefined}
                   >
-                    {stat.label}
+                    {shareable ? stat.label : breakableLabel(stat.label)}
                   </p>
                 </div>
               </div>

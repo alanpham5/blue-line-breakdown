@@ -15,11 +15,11 @@ const SKATER_METRIC_GROUPS = [
   },
   {
     type: "offensive",
-    keys: ["SHOT_TAL", "PLAY_DRV", "PP_USAGE", "ONICE_IMP"],
+    keys: ["SHOT_TAL", "PLAY_DRV", "PP_USAGE", "ONICE_IMP", "O_ENTRY"],
   },
   {
     type: "defensive",
-    keys: ["POS_CTRL", "TAKE", "D_EXIT", "CH_SUP"],
+    keys: ["POS_CTRL", "TAKE", "CH_SUP", "BLK_SHARE", "D_EXIT_P"],
   },
   {
     type: "deployment",
@@ -104,6 +104,8 @@ export const formatMetricCell = (player, key) => {
   if (countValue != null) return countValue.toLocaleString();
   const shareValue = player.shareValues?.[key];
   if (shareValue != null) return `${shareValue.toFixed(1)}%`;
+  const perGameValue = player.perGameValues?.[key];
+  if (perGameValue != null) return perGameValue.toFixed(2);
   const secondsPerGame = player.timePerGameValues?.[key];
   if (secondsPerGame != null) return formatMinutesSeconds(secondsPerGame);
   const edgeValue = player.edgeValues?.[key];
