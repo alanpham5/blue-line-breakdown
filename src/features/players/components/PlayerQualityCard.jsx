@@ -17,19 +17,6 @@ const PROXIED_KEYS = new Set([
 const hasProxiedBars = (stats) =>
   (stats || []).some((stat) => PROXIED_KEYS.has(stat.key));
 
-const SOFT_HYPHEN = "­";
-const BREAK_POINTS = {
-  Takeaways: ["Take", "aways"],
-  Suppression: ["Sup", "pres", "sion"],
-  Positioning: ["Posi", "tion", "ing"],
-};
-
-const breakableLabel = (label) =>
-  label
-    .split(" ")
-    .map((word) => (BREAK_POINTS[word] || [word]).join(SOFT_HYPHEN))
-    .join(" ");
-
 const labelSize = (shareable, compact, crowded) => {
   if (shareable) return compact ? "text-sm" : "text-lg";
   if (crowded) return "text-[0.65rem] sm:text-[0.82rem]";
@@ -173,10 +160,10 @@ export const PlayerQualityCard = ({
                 </div>
                 <div className="min-h-[3.25rem] text-center">
                   <p
-                    className={`${labelSize(shareable, compact, stats.length >= 4)} font-semibold leading-tight text-gray-300 light:text-gray-700`}
+                    className={`${labelSize(shareable, compact, stats.length >= 4)} font-semibold leading-tight text-gray-300 hyphens-none break-normal light:text-gray-700`}
                     data-export-nudge={shareable ? 6 : undefined}
                   >
-                    {shareable ? stat.label : breakableLabel(stat.label)}
+                    {stat.label}
                   </p>
                 </div>
               </div>
