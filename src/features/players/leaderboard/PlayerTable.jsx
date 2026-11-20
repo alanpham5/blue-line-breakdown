@@ -5,39 +5,26 @@ import { playerUtils } from "utils/playerUtils";
 import { useTheme } from "providers/ThemeContext";
 import { useIsMobile } from "hooks/useIsMobile";
 import {
-  POSITIONS,
   metricGroupsForPosition,
   metricKeysForPosition,
   formatHeight,
   formatMetricCell,
   formatPercentile,
+  formatSignedValue,
+  SHIFT_VALUE_TITLE,
   metricCellTitle,
   percentileTint,
 } from "./leaderboardConfig";
 
 const PAGE_SIZE = 25;
 
-const positionPlural = (position) =>
-  (
-    POSITIONS.find((option) => option.value === position)?.label || "players"
-  ).toLowerCase();
-
-const TableNote = ({ position }) =>
-  position === "G" ? (
-    <>
-      Percentiles vs. qualified goalies in the same season · Ht, Wt and GP are
-      raw · Shots-against columns (SF/60, Danger SA/60, xGA/60) rank workload,
-      not quality
-    </>
-  ) : (
-    <>
-      Percentiles vs. qualified {positionPlural(position)} in the same season,
-      mostly from 5-on-5 play · Ht, Wt and GP are raw ·{" "}
-      <span className="text-sky-300 light:text-sky-700">Shot type</span> and{" "}
-      <span className="text-emerald-300 light:text-emerald-700">NHL EDGE</span>{" "}
-      columns show the raw value, shaded by percentile
-    </>
-  );
+const PLAYER_SORT_KEYS = new Set([
+  "leaguePercentile",
+  "shiftValueAdded",
+  "height",
+  "weight",
+  "gamesPlayed",
+]);
 
 const compareValues = (a, b, dir) => {
   const aNull = a == null;
@@ -48,14 +35,7 @@ const compareValues = (a, b, dir) => {
   return dir === "asc" ? a - b : b - a;
 };
 
-const SortHeader = ({
-  label,
-  title,
-  sortKey,
-  sort,
-  onSort,
-  className = "",
-}) => {
+const SortButton = ({ label, title, sortKey, sort, onSort }) => {
   const active = sort.key === sortKey;
   const Icon = !active
     ? ChevronsUpDown
@@ -63,19 +43,23 @@ const SortHeader = ({
       ? ArrowUp
       : ArrowDown;
   return (
-    <th className={`px-2 py-2 text-right font-semibold ${className}`}>
-      <button
-        type="button"
-        onClick={() => onSort(sortKey)}
-        title={title || label}
-        className={`inline-flex items-center gap-1 transition-colors ${active ? "text-[#7ee340] light:text-[#2e6e14]" : "text-gray-300 hover:text-white light:text-slate-600 light:hover:text-slate-900"}`}
-      >
-        <span className="whitespace-nowrap">{label}</span>
-        <Icon className="h-3.5 w-3.5 shrink-0" />
-      </button>
-    </th>
+    <button
+      type="button"
+      onClick={() => onSort(sortKey)}
+      title={title || label}
+      className={`inline-flex items-center gap-1 transition-colors ${active ? "text-[#7ee340] light:text-[#2e6e14]" : "text-gray-300 hover:text-white light:text-slate-600 light:hover:text-slate-900"}`}
+    >
+      <span className="whitespace-nowrap">{label}</span>
+      <Icon className="h-3.5 w-3.5 shrink-0" />
+    </button>
   );
 };
+
+const SortHeader = ({ className = "", ...button }) => (
+  <th className={`px-2 py-2 text-right font-semibold ${className}`}>
+    <SortButton {...button} />
+  </th>
+);
 
 export const PlayerTable = ({ players, position }) => {
   const navigate = useNavigate();
@@ -86,15 +70,13 @@ export const PlayerTable = ({ players, position }) => {
 
   const metricGroups = metricGroupsForPosition(position);
   const metricKeys = metricKeysForPosition(position);
+  const showShiftValue = position !== "G";
 
   const sortedPlayers = useMemo(() => {
-    const getValue = (player) => {
-      if (sort.key === "leaguePercentile") return player.leaguePercentile;
-      if (sort.key === "height") return player.height;
-      if (sort.key === "weight") return player.weight;
-      if (sort.key === "gamesPlayed") return player.gamesPlayed;
-      return player.metrics?.[sort.key];
-    };
+    const getValue = (player) =>
+      PLAYER_SORT_KEYS.has(sort.key)
+        ? player[sort.key]
+        : player.metrics?.[sort.key];
     return [...players].sort((a, b) =>
       compareValues(getValue(a), getValue(b), sort.dir)
     );
@@ -145,9 +127,6 @@ export const PlayerTable = ({ players, position }) => {
       className="liquid-glass-strong rounded-[28px] p-3 sm:p-5 fade-in-up [&::before]:!opacity-0"
       style={{ background: "var(--glass-bg-strong)" }}
     >
-      <p className="mb-2 px-2 text-xs text-gray-400 light:text-slate-500">
-        <TableNote position={position} />
-      </p>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-sm">
           <thead>
@@ -183,6 +162,15 @@ export const PlayerTable = ({ players, position }) => {
                 sort={sort}
                 onSort={handleSort}
               />
+              {showShiftValue && (
+                <SortHeader
+                  label="SVA/60"
+                  title={SHIFT_VALUE_TITLE}
+                  sortKey="shiftValueAdded"
+                  sort={sort}
+                  onSort={handleSort}
+                />
+              )}
               {metricGroups.flatMap((group) =>
                 group.keys.map((key) => (
                   <SortHeader
@@ -272,6 +260,18 @@ export const PlayerTable = ({ players, position }) => {
                   >
                     {formatPercentile(player.leaguePercentile)}
                   </td>
+                  {showShiftValue && (
+                    <td
+                      className="px-2 py-2 text-right font-medium text-white light:text-gray-900"
+                      style={{
+                        background: percentileTint(
+                          player.shiftValueAddedPercentile
+                        ),
+                      }}
+                    >
+                      {formatSignedValue(player.shiftValueAdded)}
+                    </td>
+                  )}
                   {metricKeys.map((key) => {
                     const value = player.metrics?.[key];
                     return (

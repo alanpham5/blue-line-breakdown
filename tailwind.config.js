@@ -14,7 +14,11 @@ module.exports = {
   },
   plugins: [
     plugin(function ({ addVariant }) {
-      addVariant("light", "html.light &");
+      addVariant(
+        "light",
+        "html.light &:not(.shareable-display-dark .comparison-root *)"
+      );
+      addVariant("export", ".shareable-display-dark &");
     }),
   ],
 };

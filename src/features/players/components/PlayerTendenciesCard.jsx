@@ -3,6 +3,10 @@ import { Info, PieChart } from "lucide-react";
 import { Tooltip } from "components/ui/Tooltip";
 import { GoalieSaveHeatmap } from "features/players/components/GoalieSaveHeatmap";
 import { ShotMixStrip } from "features/players/components/ShotMixStrip";
+import {
+  describeWedge,
+  layoutWedges,
+} from "features/players/components/tendencyChart";
 import { getOrdinal } from "utils/ordinal";
 
 const SHOOT_LABEL = "Shoot";
@@ -48,38 +52,6 @@ const fallbackColors = [
   tendencyColors["Physical Pressure"],
   tendencyColors["Shot Blocking"],
 ];
-
-const polarPoint = (radius, angle) => {
-  const radians = (angle * Math.PI) / 180;
-  return {
-    x: 110 + radius * Math.sin(radians),
-    y: 110 - radius * Math.cos(radians),
-  };
-};
-
-const describeWedge = (radius, startAngle, endAngle) => {
-  const safeRadius = Math.max(0.01, radius);
-  const sweep = endAngle - startAngle;
-  if (sweep >= 359.99) {
-    const top = polarPoint(safeRadius, 0);
-    const bottom = polarPoint(safeRadius, 180);
-    return [
-      `M ${top.x} ${top.y}`,
-      `A ${safeRadius} ${safeRadius} 0 1 1 ${bottom.x} ${bottom.y}`,
-      `A ${safeRadius} ${safeRadius} 0 1 1 ${top.x} ${top.y}`,
-      "Z",
-    ].join(" ");
-  }
-  const start = polarPoint(safeRadius, startAngle);
-  const end = polarPoint(safeRadius, endAngle);
-  const largeArc = sweep > 180 ? 1 : 0;
-  return [
-    "M 110 110",
-    `L ${start.x} ${start.y}`,
-    `A ${safeRadius} ${safeRadius} 0 ${largeArc} 1 ${end.x} ${end.y}`,
-    "Z",
-  ].join(" ");
-};
 
 const eventShare = (tendency, totalActions, count) =>
   totalActions > 0
@@ -179,43 +151,12 @@ export const PlayerTendenciesCard = ({
     (total, tendency) => total + Math.max(0, Number(tendency.percentage) || 0),
     0
   );
-  const offensiveActionShare = visibleTendencies
-    .slice(0, 2)
-    .reduce(
-      (total, tendency) =>
-        total + Math.max(0, Number(tendency.percentage) || 0),
-      0
-    );
-  const offensiveArc =
-    totalActions > 0 ? (offensiveActionShare / totalActions) * 360 : 180;
   const legendTendencies = visibleTendencies.map((tendency, index) => ({
     ...tendency,
     colors: tendencyColors[tendency.label] || fallbackColors[index],
     gradientId: `tendency-gradient-${index}`,
   }));
-  const chartOrder =
-    legendTendencies.length === 4
-      ? [
-          legendTendencies[0],
-          legendTendencies[1],
-          legendTendencies[3],
-          legendTendencies[2],
-        ]
-      : legendTendencies;
-  let currentAngle = -offensiveArc / 2;
-  const chartTendencies = chartOrder.map((tendency) => {
-    const angularSize =
-      totalActions > 0
-        ? (Math.max(0, Number(tendency.percentage) || 0) / totalActions) * 360
-        : 360 / visibleTendencies.length;
-    const chartTendency = {
-      ...tendency,
-      startAngle: currentAngle,
-      endAngle: currentAngle + angularSize,
-    };
-    currentAngle += angularSize;
-    return chartTendency;
-  });
+  const chartTendencies = layoutWedges(legendTendencies);
 
   return (
     <section

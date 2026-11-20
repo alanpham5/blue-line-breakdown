@@ -74,6 +74,12 @@ export const formatHeight = (inches) => {
   return `${feet}'${rem}"`;
 };
 
+export const SHIFT_VALUE_TITLE =
+  "Shift Value Added: net shot attempts per 60 a player adds at 5-on-5, from the situation they inherit to the one they leave, separated from teammates and opponents";
+
+export const formatSignedValue = (value) =>
+  value == null ? "-" : `${value > 0 ? "+" : ""}${value.toFixed(1)}`;
+
 export const formatPercentile = (value) =>
   value == null ? "-" : value.toFixed(1);
 
@@ -88,9 +94,18 @@ const formatEdgeValue = (key, value) => {
   return value.toFixed(1);
 };
 
+const formatMinutesSeconds = (seconds) => {
+  const rounded = Math.round(seconds);
+  return `${Math.floor(rounded / 60)}:${String(rounded % 60).padStart(2, "0")}`;
+};
+
 export const formatMetricCell = (player, key) => {
   const countValue = player.countValues?.[key];
   if (countValue != null) return countValue.toLocaleString();
+  const shareValue = player.shareValues?.[key];
+  if (shareValue != null) return `${shareValue.toFixed(1)}%`;
+  const secondsPerGame = player.timePerGameValues?.[key];
+  if (secondsPerGame != null) return formatMinutesSeconds(secondsPerGame);
   const edgeValue = player.edgeValues?.[key];
   if (edgeValue != null && !isSavePercentageKey(key))
     return formatEdgeValue(key, edgeValue);
@@ -103,8 +118,12 @@ export const metricCellTitle = (player, key) => {
   return `${formatSavePercentage(edgeValue)} save %`;
 };
 
-export const percentileTint = (value) => {
-  if (value == null) return "transparent";
-  const hue = Math.max(0, Math.min(120, value * 1.2));
-  return `hsla(${hue}, 70%, 45%, 0.22)`;
-};
+const percentileHue = (value) => Math.max(0, Math.min(120, value * 1.2));
+
+export const percentileTint = (value) =>
+  value == null
+    ? "transparent"
+    : `hsla(${percentileHue(value)}, 70%, 45%, 0.22)`;
+
+export const percentileColor = (value) =>
+  value == null ? "transparent" : `hsl(${percentileHue(value)}, 70%, 45%)`;

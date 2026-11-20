@@ -448,6 +448,12 @@ export const PlayersV2 = () => {
                           playerData.player.impactPercentile ??
                           playerData.player.warPercentile
                         }
+                        shiftValue={
+                          isBlended ? null : playerData.player.shiftValueAdded
+                        }
+                        shiftValuePercentile={
+                          playerData.player.shiftValueAddedPercentile
+                        }
                         tooltipTitle={impactTooltip.title}
                         tooltipText={
                           isBlended

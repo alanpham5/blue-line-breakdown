@@ -1,8 +1,69 @@
 import { useState, useEffect } from "react";
-import { Info, Trophy, User } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ArrowRightLeft, Info, Trophy, User } from "lucide-react";
 import { Tooltip } from "components/ui/Tooltip";
+import {
+  formatPercentile,
+  formatSignedValue,
+  percentileColor,
+} from "features/players/leaderboard/leaderboardConfig";
+
+export const SHIFT_VALUE_ABOUT_PATH = "/about?tab=metrics#shift-value-added";
+
+const ShiftValueRow = ({ value, percentile }) => (
+  <div className="mt-2 flex w-full min-w-0 items-center justify-between gap-3 border-t border-white/10 pt-2.5 light:border-slate-200 sm:mt-3 sm:pt-3">
+    <div className="flex shrink-0 items-center gap-2 text-gray-400 light:text-gray-500">
+      <ArrowRightLeft className="h-4 w-4 text-[#7dcb48]" />
+      <span className="text-xs font-semibold uppercase tracking-[0.12em]">
+        SVA/60
+      </span>
+      <Tooltip
+        id="shift-value-added"
+        position="bottom"
+        width="w-56 max-w-xs"
+        interactive
+        content={
+          <div className="space-y-1.5">
+            <div className="font-semibold text-[#7dcb48]">
+              Shift Value Added
+            </div>
+            <div className="text-sm font-semibold text-white light:text-gray-900">
+              {formatPercentile(percentile)} percentile
+            </div>
+            <Link
+              to={SHIFT_VALUE_ABOUT_PATH}
+              className="inline-flex font-medium text-sky-300 underline-offset-2 hover:underline light:text-sky-700"
+            >
+              What is SVA?
+            </Link>
+          </div>
+        }
+      >
+        <button
+          type="button"
+          className="inline-flex h-5 w-5 shrink-0 items-center justify-center text-gray-400 transition-colors hover:text-gray-200 light:text-gray-500 light:hover:text-gray-700"
+          aria-label="Info about shift value added"
+        >
+          <Info className="h-[13px] w-[13px] sm:h-4 sm:w-4" />
+        </button>
+      </Tooltip>
+    </div>
+    <div className="flex items-center gap-2">
+      <span
+        className="h-3 w-3 shrink-0 rounded-full"
+        style={{ background: percentileColor(percentile) }}
+      />
+      <span className="text-xl font-bold tabular-nums tracking-display text-white light:text-gray-900 sm:text-[1.4rem]">
+        {formatSignedValue(value)}
+      </span>
+    </div>
+  </div>
+);
+
 export const WarPercentileCard = ({
   warPercentile,
+  shiftValue,
+  shiftValuePercentile,
   role,
   showInfo = true,
   tooltipTitle = "Season Observed Value",
@@ -94,6 +155,9 @@ export const WarPercentileCard = ({
           </div>
         </div>
       </div>
+      {shiftValue != null && (
+        <ShiftValueRow value={shiftValue} percentile={shiftValuePercentile} />
+      )}
       {role && (
         <div className="mt-2 flex min-w-0 items-center justify-between gap-3 border-t border-white/10 pt-2.5 light:border-slate-200 sm:mt-3 sm:pt-3">
           <div className="flex shrink-0 items-center gap-2 text-gray-400 light:text-gray-500">

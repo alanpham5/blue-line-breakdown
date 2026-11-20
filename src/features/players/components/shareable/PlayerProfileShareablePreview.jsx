@@ -272,6 +272,12 @@ export const PlayerProfileShareablePreview = ({
             <WarPercentileCardCompact
               role={player.role}
               warPercentile={player.warPercentile}
+              shiftValue={
+                (combined?.seasons?.length ?? 0) > 1
+                  ? null
+                  : player.shiftValueAdded
+              }
+              shiftValuePercentile={player.shiftValueAddedPercentile}
             />
           )}
         </div>

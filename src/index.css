@@ -1048,25 +1048,16 @@ html.light .percentile-colored {
 }
 
 .comparison-root {
-  --subject-0: #f5b942;
-  --subject-1: #b69cff;
-  --subject-ink: #0b0b0d;
   --comparison-track: rgba(255, 255, 255, 0.07);
   --comparison-blend: screen;
 }
 
 html.light .comparison-root {
-  --subject-0: #b56d00;
-  --subject-1: #6d4bd1;
-  --subject-ink: #ffffff;
   --comparison-track: rgba(15, 23, 42, 0.08);
   --comparison-blend: multiply;
 }
 
 html .shareable-display-dark .comparison-root {
-  --subject-0: #f5b942;
-  --subject-1: #b69cff;
-  --subject-ink: #0b0b0d;
   --comparison-track: rgba(255, 255, 255, 0.07);
   --comparison-blend: screen;
 }

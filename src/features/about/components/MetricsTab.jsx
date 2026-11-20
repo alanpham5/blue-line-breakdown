@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import {
   Activity,
+  ArrowRightLeft,
   Gauge,
   Percent,
   PieChart,
@@ -41,6 +43,7 @@ const influenceBarHeights = ["h-1.5", "h-2.5", "h-3.5"];
 
 const sections = [
   { id: "impact", label: "Impact Rating" },
+  { id: "shift-value-added", label: "Shift Value Added" },
   { id: "archetypes", label: "Archetypes" },
   { id: "tendencies", label: "Tendencies" },
   { id: "skater-quality", label: "Skater Quality" },
@@ -238,6 +241,21 @@ const edgeMetrics = [
   ["Distance Skated", "mi per 60", "All-situations ice time"],
   ["Max Game Distance", "mi", "Single-game max"],
   ["Offensive Zone Time", "%", "Share of on-ice time"],
+];
+
+const shiftValueSteps = [
+  [
+    "Inherits",
+    "The situation when they step on: the zone of the faceoff, or what just happened in play, like a takeaway or a giveaway.",
+  ],
+  [
+    "Plays",
+    "Shot attempts for minus shot attempts against while they are on the ice at 5-on-5.",
+  ],
+  [
+    "Hands off",
+    "The situation they leave for the next group. Changing after pinning the other team in its zone beats leaving your own team stuck in its end. Being on for a goal against counts as finishing in your own end.",
+  ],
 ];
 
 const similarityFacts = [
@@ -547,221 +565,265 @@ const SectionNav = () => (
   </nav>
 );
 
-export const MetricsTab = () => (
-  <div className="space-y-5 sm:space-y-6">
-    <SectionNav />
+const useScrollToHashSection = () => {
+  useEffect(() => {
+    const id = window.location.hash.slice(1);
+    if (!id) return undefined;
+    const frame = requestAnimationFrame(() =>
+      document.getElementById(id)?.scrollIntoView({ block: "start" })
+    );
+    return () => cancelAnimationFrame(frame);
+  }, []);
+};
 
-    <SectionCard
-      id="impact"
-      icon={Percent}
-      accent="sky"
-      title="Impact Rating"
-      subtitle="One number for how much a player helped their team over a season."
-    >
-      <p className="text-sm leading-relaxed text-gray-300 light:text-gray-700 sm:text-base">
-        A rating of 90 means the player had a bigger season than 90% of players
-        at their position that year. It looks at the whole game, so a pure
-        scorer and a shutdown defender can both rate highly for different
-        reasons. The other percentiles on the site read the same way.
-      </p>
-      <PercentileScale />
-      <div>
-        <GroupLabel>What Goes Into It</GroupLabel>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {impactFactors.map((factor) => (
-            <ImpactFactorCard key={factor.title} {...factor} />
-          ))}
-        </div>
-      </div>
-    </SectionCard>
+export const MetricsTab = () => {
+  useScrollToHashSection();
+  return (
+    <div className="space-y-5 sm:space-y-6">
+      <SectionNav />
 
-    <SectionCard
-      id="archetypes"
-      icon={Tags}
-      accent="sky"
-      title="Archetypes"
-      subtitle="Percentile thresholds to earn each badge."
-    >
-      {archetypeBadgeGroups.map(({ label, archetypes }) => (
-        <div key={label}>
-          <GroupLabel>{label}</GroupLabel>
-          <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
-            {archetypes.map((archetype) => {
-              const { name, icon: Icon } = getArchetypeBadge(archetype);
-              return (
-                <InsetCard key={name} className="!p-3.5">
-                  <div className="mb-1.5 inline-flex items-center gap-1.5 rounded-full bg-white/[0.05] px-2.5 py-1 text-sm font-medium text-sky-200 light:bg-sky-100 light:text-sky-800">
-                    {Icon && <Icon size={14} className="shrink-0" />}
-                    {name}
-                  </div>
-                  <p className="text-sm text-gray-400 light:text-gray-600">
-                    {archetypeCriteria[name]}
-                  </p>
-                </InsetCard>
-              );
-            })}
+      <SectionCard
+        id="impact"
+        icon={Percent}
+        accent="sky"
+        title="Impact Rating"
+        subtitle="One number for how much a player helped their team over a season."
+      >
+        <p className="text-sm leading-relaxed text-gray-300 light:text-gray-700 sm:text-base">
+          A rating of 90 means the player had a bigger season than 90% of
+          players at their position that year. It looks at the whole game, so a
+          pure scorer and a shutdown defender can both rate highly for different
+          reasons. The other percentiles on the site read the same way.
+        </p>
+        <PercentileScale />
+        <div>
+          <GroupLabel>What Goes Into It</GroupLabel>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {impactFactors.map((factor) => (
+              <ImpactFactorCard key={factor.title} {...factor} />
+            ))}
           </div>
         </div>
-      ))}
-    </SectionCard>
+      </SectionCard>
 
-    <SectionCard
-      id="tendencies"
-      icon={PieChart}
-      accent="violet"
-      title="Tendencies"
-    >
-      <div className="grid items-center gap-5 md:grid-cols-[220px_1fr] md:gap-8">
-        <TendencyDiagram />
-        <div className="space-y-3">
-          <TendencyLegendRow
-            swatch={
-              <span className="h-0 w-6 shrink-0 border-t-[2.5px] border-dashed border-white light:border-slate-900" />
-            }
-            title="Width"
-            body="Share of events that fall into action type (adjusted)"
-          />
-          <TendencyLegendRow
-            swatch={
-              <span className="h-0.5 w-6 shrink-0 bg-white light:bg-slate-900" />
-            }
-            title="Length"
-            body="Frequency percentile vs. rest of the league"
-          />
+      <SectionCard
+        id="shift-value-added"
+        icon={ArrowRightLeft}
+        accent="emerald"
+        title="Shift Value Added (SVA)"
+        subtitle="Does a skater leave the ice with their team in a better spot than they found it?"
+      >
+        <p className="text-sm leading-relaxed text-gray-300 light:text-gray-700 sm:text-base">
+          Every time a skater steps on, they inherit a situation, play their
+          shift, and hand a situation to whoever comes on next. SVA credits the
+          shot attempts their team wins while they are out there, plus how much
+          better the situation they hand off is than the one they inherited. A
+          skater who starts in their own end and changes after an offensive-zone
+          faceoff gains, even with few shots; one who gets every offensive-zone
+          start has to win the shot battle to break even.
+        </p>
+        <div>
+          <GroupLabel>Each Shift</GroupLabel>
+          <DefinitionGrid items={shiftValueSteps} accent="emerald" />
         </div>
-      </div>
+        <p className="text-sm leading-relaxed text-gray-300 light:text-gray-700 sm:text-base">
+          Ten skaters share every shift, so SVA is worked out across all of them
+          at once. That separates a skater from their linemates, their defense
+          partner and the lines they play against, so playing on a strong team
+          or against weak competition does not inflate it. Early in a season the
+          number leans on the skater's previous season until enough games are
+          played.
+        </p>
+      </SectionCard>
 
-      <div>
-        <div className="mb-2.5 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-          <GroupLabel className="">Skater Actions</GroupLabel>
-          <InfluenceLegend accent="violet" />
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {skaterTendencies.map(({ label, color, components }) => (
-            <InsetCard key={label} className="relative overflow-hidden pl-6">
-              <span
-                className="absolute inset-y-3 left-2.5 w-1 rounded-full"
-                style={{ backgroundColor: color }}
-              />
-              <h4 className="mb-3 font-semibold text-gray-100 light:text-gray-900">
-                {label}
-              </h4>
-              <InfluenceBreakdown components={components} accent="violet" />
-            </InsetCard>
-          ))}
-        </div>
-      </div>
+      <SectionCard
+        id="archetypes"
+        icon={Tags}
+        accent="sky"
+        title="Archetypes"
+        subtitle="Percentile thresholds to earn each badge."
+      >
+        {archetypeBadgeGroups.map(({ label, archetypes }) => (
+          <div key={label}>
+            <GroupLabel>{label}</GroupLabel>
+            <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
+              {archetypes.map((archetype) => {
+                const { name, icon: Icon } = getArchetypeBadge(archetype);
+                return (
+                  <InsetCard key={name} className="!p-3.5">
+                    <div className="mb-1.5 inline-flex items-center gap-1.5 rounded-full bg-white/[0.05] px-2.5 py-1 text-sm font-medium text-sky-200 light:bg-sky-100 light:text-sky-800">
+                      {Icon && <Icon size={14} className="shrink-0" />}
+                      {name}
+                    </div>
+                    <p className="text-sm text-gray-400 light:text-gray-600">
+                      {archetypeCriteria[name]}
+                    </p>
+                  </InsetCard>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </SectionCard>
 
-      <div>
-        <GroupLabel>Goalie Actions · Per Shot on Goal</GroupLabel>
-        <div className="grid gap-3 sm:grid-cols-2">
-          {goalieTendencies.map(({ label, color, body }) => (
+      <SectionCard
+        id="tendencies"
+        icon={PieChart}
+        accent="violet"
+        title="Tendencies"
+      >
+        <div className="grid items-center gap-5 md:grid-cols-[220px_1fr] md:gap-8">
+          <TendencyDiagram />
+          <div className="space-y-3">
+            <TendencyLegendRow
+              swatch={
+                <span className="h-0 w-6 shrink-0 border-t-[2.5px] border-dashed border-white light:border-slate-900" />
+              }
+              title="Width"
+              body="Share of events that fall into action type (adjusted)"
+            />
+            <TendencyLegendRow
+              swatch={
+                <span className="h-0.5 w-6 shrink-0 bg-white light:bg-slate-900" />
+              }
+              title="Length"
+              body="Frequency percentile vs. rest of the league"
+            />
+          </div>
+        </div>
+
+        <div>
+          <div className="mb-2.5 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+            <GroupLabel className="">Skater Actions</GroupLabel>
+            <InfluenceLegend accent="violet" />
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {skaterTendencies.map(({ label, color, components }) => (
+              <InsetCard key={label} className="relative overflow-hidden pl-6">
+                <span
+                  className="absolute inset-y-3 left-2.5 w-1 rounded-full"
+                  style={{ backgroundColor: color }}
+                />
+                <h4 className="mb-3 font-semibold text-gray-100 light:text-gray-900">
+                  {label}
+                </h4>
+                <InfluenceBreakdown components={components} accent="violet" />
+              </InsetCard>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <GroupLabel>Goalie Actions · Per Shot on Goal</GroupLabel>
+          <div className="grid gap-3 sm:grid-cols-2">
+            {goalieTendencies.map(({ label, color, body }) => (
+              <InsetCard
+                key={label}
+                className="relative overflow-hidden !py-3 pl-6"
+              >
+                <span
+                  className="absolute inset-y-3 left-2.5 w-1 rounded-full"
+                  style={{ backgroundColor: color }}
+                />
+                <h4 className="text-sm font-semibold text-gray-100 light:text-gray-900">
+                  {label}
+                </h4>
+                <p className="text-sm text-gray-400 light:text-gray-600">
+                  {body}
+                </p>
+              </InsetCard>
+            ))}
+          </div>
+        </div>
+      </SectionCard>
+
+      <SectionCard
+        id="skater-quality"
+        icon={Target}
+        accent="cyan"
+        title="Offensive & Defensive Quality"
+      >
+        <QualityGroup
+          title="Offensive Quality"
+          items={offensiveQuality}
+          accent="cyan"
+        />
+        <QualityGroup
+          title="Defensive Quality"
+          items={defensiveQuality}
+          accent="rose"
+        />
+      </SectionCard>
+
+      <SectionCard
+        id="goalie-quality"
+        icon={Activity}
+        accent="cyan"
+        title="Goaltending Quality & Shots Faced"
+      >
+        <div>
+          <GroupLabel>Goaltending Quality</GroupLabel>
+          <DefinitionGrid items={goaltendingQuality} accent="cyan" />
+        </div>
+        <div>
+          <GroupLabel>Shots Faced</GroupLabel>
+          <DefinitionGrid items={shotsFacedQuality} accent="rose" />
+        </div>
+      </SectionCard>
+
+      <SectionCard
+        id="edge"
+        icon={Gauge}
+        accent="emerald"
+        title="NHL EDGE"
+        subtitle="NHL tracking data. Color shows the league percentile."
+      >
+        <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+          {edgeMetrics.map(([label, unit, body]) => (
             <InsetCard
               key={label}
-              className="relative overflow-hidden !py-3 pl-6"
+              className="flex items-center justify-between gap-3 !p-3.5"
             >
-              <span
-                className="absolute inset-y-3 left-2.5 w-1 rounded-full"
-                style={{ backgroundColor: color }}
-              />
-              <h4 className="text-sm font-semibold text-gray-100 light:text-gray-900">
-                {label}
-              </h4>
-              <p className="text-sm text-gray-400 light:text-gray-600">
-                {body}
-              </p>
+              <div className="min-w-0">
+                <h4 className="text-sm font-semibold text-emerald-300 light:text-emerald-600">
+                  {label}
+                </h4>
+                <p className="text-sm text-gray-400 light:text-gray-600">
+                  {body}
+                </p>
+              </div>
+              <span className="shrink-0 rounded-full bg-white/[0.06] px-2 py-0.5 text-xs font-semibold text-gray-400 light:bg-slate-900/[0.06] light:text-gray-500">
+                {unit}
+              </span>
             </InsetCard>
           ))}
         </div>
-      </div>
-    </SectionCard>
+      </SectionCard>
 
-    <SectionCard
-      id="skater-quality"
-      icon={Target}
-      accent="cyan"
-      title="Offensive & Defensive Quality"
-    >
-      <QualityGroup
-        title="Offensive Quality"
-        items={offensiveQuality}
-        accent="cyan"
-      />
-      <QualityGroup
-        title="Defensive Quality"
-        items={defensiveQuality}
-        accent="rose"
-      />
-    </SectionCard>
-
-    <SectionCard
-      id="goalie-quality"
-      icon={Activity}
-      accent="cyan"
-      title="Goaltending Quality & Shots Faced"
-    >
-      <div>
-        <GroupLabel>Goaltending Quality</GroupLabel>
-        <DefinitionGrid items={goaltendingQuality} accent="cyan" />
-      </div>
-      <div>
-        <GroupLabel>Shots Faced</GroupLabel>
-        <DefinitionGrid items={shotsFacedQuality} accent="rose" />
-      </div>
-    </SectionCard>
-
-    <SectionCard
-      id="edge"
-      icon={Gauge}
-      accent="emerald"
-      title="NHL EDGE"
-      subtitle="NHL tracking data. Color shows the league percentile."
-    >
-      <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
-        {edgeMetrics.map(([label, unit, body]) => (
-          <InsetCard
-            key={label}
-            className="flex items-center justify-between gap-3 !p-3.5"
-          >
-            <div className="min-w-0">
-              <h4 className="text-sm font-semibold text-emerald-300 light:text-emerald-600">
-                {label}
-              </h4>
-              <p className="text-sm text-gray-400 light:text-gray-600">
-                {body}
-              </p>
-            </div>
-            <span className="shrink-0 rounded-full bg-white/[0.06] px-2 py-0.5 text-xs font-semibold text-gray-400 light:bg-slate-900/[0.06] light:text-gray-500">
-              {unit}
-            </span>
-          </InsetCard>
-        ))}
-      </div>
-    </SectionCard>
-
-    <SectionCard
-      id="similar"
-      icon={Users}
-      accent="amber"
-      title="Most Similar Players"
-    >
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-[#ffe57e] to-[#ffd037] text-sm font-bold text-[#4f3d00]">
-          92
+      <SectionCard
+        id="similar"
+        icon={Users}
+        accent="amber"
+        title="Most Similar Players"
+      >
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-[#ffe57e] to-[#ffd037] text-sm font-bold text-[#4f3d00]">
+            92
+          </div>
+          <dl className="grid flex-1 gap-2.5 sm:grid-cols-3">
+            {similarityFacts.map(([label, body]) => (
+              <div key={label}>
+                <dt className="text-sm font-semibold text-amber-300 light:text-amber-600">
+                  {label}
+                </dt>
+                <dd className="text-sm text-gray-400 light:text-gray-600">
+                  {body}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
-        <dl className="grid flex-1 gap-2.5 sm:grid-cols-3">
-          {similarityFacts.map(([label, body]) => (
-            <div key={label}>
-              <dt className="text-sm font-semibold text-amber-300 light:text-amber-600">
-                {label}
-              </dt>
-              <dd className="text-sm text-gray-400 light:text-gray-600">
-                {body}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-    </SectionCard>
-  </div>
-);
+      </SectionCard>
+    </div>
+  );
+};

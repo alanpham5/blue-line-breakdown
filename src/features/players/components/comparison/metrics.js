@@ -54,7 +54,7 @@ export const mergeByLabel = (leftItems, rightItems, readValue) => {
   }));
 };
 
-const shortLabel = (label) => SHORT_LABELS[label] || label;
+export const shortLabel = (label) => SHORT_LABELS[label] || label;
 
 export const buildRadarAxes = (left, right, isGoalie) => {
   const style = mergeByLabel(
@@ -129,17 +129,4 @@ export const buildVerdict = (left, right, axes) => {
   });
 
   return { total: scored.length, wins, ties, biggestEdges, strongestGroup };
-};
-
-export const shapeMatch = (axes) => {
-  const usable = axes.filter((axis) =>
-    axis.values.every((value) => value != null)
-  );
-  if (!usable.length) return null;
-  const overlap = usable.reduce(
-    (sum, axis) => sum + Math.min(...axis.values),
-    0
-  );
-  const union = usable.reduce((sum, axis) => sum + Math.max(...axis.values), 0);
-  return union > 0 ? Math.round((overlap / union) * 100) : null;
 };

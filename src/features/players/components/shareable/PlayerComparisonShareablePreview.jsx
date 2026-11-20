@@ -4,6 +4,7 @@ export const PlayerComparisonShareablePreview = ({ entries }) => (
   <div
     className="shareable-display-dark"
     data-export-scale="1"
+    data-export-true-baseline="true"
     style={{
       width: 1500,
       minHeight: 1000,

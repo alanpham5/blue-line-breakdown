@@ -12,6 +12,14 @@ const removeZeroSizeGradients = (root) => {
     }
   });
 };
+const HTML2CANVAS_BASELINE_PROBE =
+  'img[src^="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP"]';
+const keepBaselineProbeInline = () => {
+  const style = document.createElement("style");
+  style.textContent = `${HTML2CANVAS_BASELINE_PROBE} { display: inline !important; }`;
+  document.head.appendChild(style);
+  return () => style.remove();
+};
 export const ShareableModal = ({ isOpen, onClose, fileName, children }) => {
   const backdropRef = useRef(null);
   const contentRef = useRef(null);
@@ -90,6 +98,10 @@ export const ShareableModal = ({ isOpen, onClose, fileName, children }) => {
     const exportScale = Number.isFinite(requestedExportScale)
       ? requestedExportScale
       : 2;
+    const restoreBaselineProbe =
+      node.firstElementChild?.dataset.exportTrueBaseline === "true"
+        ? keepBaselineProbeInline()
+        : () => {};
     if (scaled) {
       node.style.transform = "none";
       wrapper.style.cssText =
@@ -209,6 +221,7 @@ export const ShareableModal = ({ isOpen, onClose, fileName, children }) => {
       });
       return canvas.toDataURL("image/png");
     } finally {
+      restoreBaselineProbe();
       ctxProto.createPattern = origCreatePattern;
       if (scaled) {
         node.style.transform = prevNodeTransform;

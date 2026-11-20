@@ -9,11 +9,26 @@ export function Tooltip({
   offset = 8,
   children,
   forceDark = false,
+  interactive = false,
 }) {
   const { openId, setOpenId } = useTooltipManager();
   const open = openId === id;
   const triggerRef = useRef(null);
   const tooltipRef = useRef(null);
+  const closeTimer = useRef(null);
+  const show = () => {
+    clearTimeout(closeTimer.current);
+    setOpenId(id);
+  };
+  const hide = () => {
+    clearTimeout(closeTimer.current);
+    if (!interactive) {
+      setOpenId(null);
+      return;
+    }
+    closeTimer.current = setTimeout(() => setOpenId(null), 150);
+  };
+  useEffect(() => () => clearTimeout(closeTimer.current), []);
   const [coords, setCoords] = useState({
     top: 0,
     left: 0,
@@ -50,11 +65,11 @@ export function Tooltip({
   }, [open]);
   const child = cloneElement(children, {
     ref: triggerRef,
-    onMouseEnter: () => setOpenId(id),
-    onMouseLeave: () => setOpenId(null),
-    onFocus: () => setOpenId(id),
-    onBlur: () => setOpenId(null),
-    onClick: () => setOpenId(id),
+    onMouseEnter: show,
+    onMouseLeave: hide,
+    onFocus: show,
+    onBlur: hide,
+    onClick: show,
     "aria-describedby": open ? `${id}-content` : undefined,
   });
   return (
@@ -66,10 +81,12 @@ export function Tooltip({
             id={`${id}-content`}
             ref={tooltipRef}
             role="tooltip"
+            onMouseEnter={interactive ? show : undefined}
+            onMouseLeave={interactive ? hide : undefined}
             className={`
               fixed z-[999999]
               ${width}
-              pointer-events-none rounded-2xl border p-3 text-xs shadow-lg
+              ${interactive ? "" : "pointer-events-none"} rounded-2xl border p-3 text-xs shadow-lg
               border backdrop-blur-sm
               bg-[#17181b]/95 border-white/10 text-gray-200
               ${forceDark ? "" : "light:bg-white/95 light:border-slate-200 light:text-gray-700 light:shadow-xl"}

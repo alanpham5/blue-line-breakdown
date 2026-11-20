@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { Download, RotateCcw, Share } from "lucide-react";
 import { FaceoffHero } from "features/players/components/comparison/FaceoffHero";
-import { ProfileRadar } from "features/players/components/comparison/ProfileRadar";
 import {
   TaleOfTheTape,
   Verdict,
@@ -10,7 +9,7 @@ import {
   DeploymentComparison,
   EdgeComparison,
   QualityComparison,
-  StyleComparison,
+  TendenciesComparison,
 } from "features/players/components/comparison/DetailSections";
 import {
   buildRadarAxes,
@@ -18,40 +17,26 @@ import {
 } from "features/players/components/comparison/metrics";
 import {
   buildSubjectLabels,
-  compactSeason,
   isGoalieData,
   subjectColor,
 } from "features/players/components/comparison/shared";
+import { buildSubjectPalette } from "features/players/components/comparison/subjectPalette";
+import { useTheme } from "providers/ThemeContext";
 
 const headerButtonClass =
-  "inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border border-white/10 bg-white/5 text-gray-300 transition hover:bg-white/10 hover:text-white light:border-slate-300 light:bg-white light:text-slate-600 light:hover:text-slate-900";
+  "inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full bg-white/10 text-gray-200 transition hover:bg-white/15 hover:text-white light:bg-slate-900/[0.06] light:text-slate-700 light:hover:bg-slate-900/10 light:hover:text-slate-900";
 
-const ComparisonTitle = ({ left, right, labels, isSamePlayer }) => {
-  if (!left || !right) {
-    return (
-      <>
-        <h2 className="text-xl font-bold tracking-display text-white light:text-gray-900 sm:text-3xl">
-          Head-to-head
-        </h2>
-        <p className="mt-0.5 text-xs text-gray-400 light:text-gray-600 sm:text-sm">
-          Pick two players, or two seasons of the same player.
-        </p>
-      </>
-    );
-  }
+const titleClass =
+  "text-2xl font-bold tracking-display text-white light:text-gray-900 sm:text-3xl";
+
+const ComparisonTitle = ({ ready, labels, isSamePlayer }) => {
+  if (!ready) return <h2 className={titleClass}>Head-to-head</h2>;
   return (
-    <>
-      <h2 className="text-xl font-bold tracking-display text-white light:text-gray-900 sm:text-3xl">
-        <span style={{ color: subjectColor(0) }}>{labels[0]}</span>
-        <span className="mx-2 text-gray-500">{isSamePlayer ? "→" : "vs"}</span>
-        <span style={{ color: subjectColor(1) }}>{labels[1]}</span>
-      </h2>
-      <p className="mt-0.5 text-xs text-gray-400 light:text-gray-600 sm:text-sm">
-        {isSamePlayer
-          ? `${left.player.name}, season over season at 5-on-5.`
-          : `${compactSeason(left.player.season)} vs ${compactSeason(right.player.season)} · 5-on-5, percentiles within position.`}
-      </p>
-    </>
+    <h2 className={titleClass}>
+      <span style={{ color: subjectColor(0) }}>{labels[0]}</span>
+      <span className="mx-2 text-gray-500">{isSamePlayer ? "→" : "vs"}</span>
+      <span style={{ color: subjectColor(1) }}>{labels[1]}</span>
+    </h2>
   );
 };
 
@@ -65,6 +50,7 @@ export const PlayerComparison = ({
   onShareClick,
   shareable = false,
 }) => {
+  const { actualTheme } = useTheme();
   const [leftEntry, rightEntry] = entries;
   const left = leftEntry?.data || null;
   const right = rightEntry?.data || null;
@@ -82,15 +68,21 @@ export const PlayerComparison = ({
     [ready, left, right, axes]
   );
 
+  const palette = buildSubjectPalette(
+    left?.player,
+    right?.player,
+    shareable ? "dark" : actualTheme
+  );
+
   return (
     <div
       className={`comparison-root ${shareable ? "force-dark-player-card" : ""}`}
+      style={palette}
     >
-      <div className="mb-4 flex items-start justify-between gap-3 px-1 sm:mb-5">
+      <div className="mb-4 flex items-center justify-between gap-3 px-1 sm:mb-5">
         <div className="min-w-0">
           <ComparisonTitle
-            left={left}
-            right={right}
+            ready={ready}
             labels={labels}
             isSamePlayer={isSamePlayer}
           />
@@ -121,7 +113,7 @@ export const PlayerComparison = ({
       </div>
 
       {error && (
-        <div className="mb-4 rounded-2xl border border-rose-400/20 bg-rose-400/10 px-4 py-3 text-sm font-medium text-rose-200 light:text-rose-700">
+        <div className="mb-4 rounded-2xl bg-rose-400/10 px-4 py-3 text-sm font-medium text-rose-200 light:text-rose-700">
           {error}
         </div>
       )}
@@ -136,7 +128,7 @@ export const PlayerComparison = ({
       />
 
       {!ready && (
-        <p className="px-4 pb-4 pt-6 text-center text-sm text-gray-400 light:text-gray-600">
+        <p className="px-4 pb-4 pt-6 text-center text-sm font-medium text-gray-400 light:text-gray-600">
           Search for {left ? "one more player" : "two players"} to start the
           comparison.
         </p>
@@ -144,11 +136,11 @@ export const PlayerComparison = ({
 
       {ready && (
         <div className="mt-4 space-y-4 sm:mt-6 sm:space-y-6">
-          <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-5">
-            <div className="lg:col-span-2">
+          <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-5 export:grid-cols-5">
+            <div className="lg:col-span-2 export:col-span-2">
               <Verdict verdict={verdict} labels={labels} />
             </div>
-            <div className="lg:col-span-3">
+            <div className="lg:col-span-3 export:col-span-3">
               <TaleOfTheTape
                 left={left}
                 right={right}
@@ -157,11 +149,23 @@ export const PlayerComparison = ({
               />
             </div>
           </div>
-          <ProfileRadar axes={axes} labels={labels} shareable={shareable} />
-          {!isGoalie && (
-            <DeploymentComparison left={left} right={right} labels={labels} />
-          )}
-          <StyleComparison left={left} right={right} labels={labels} />
+          <div
+            className={
+              shareable && !isGoalie
+                ? "grid grid-cols-2 items-stretch gap-6"
+                : "space-y-4 sm:space-y-6"
+            }
+          >
+            <TendenciesComparison left={left} right={right} labels={labels} />
+            {!isGoalie && (
+              <DeploymentComparison
+                left={left}
+                right={right}
+                labels={labels}
+                shareable={shareable}
+              />
+            )}
+          </div>
           <QualityComparison
             left={left}
             right={right}

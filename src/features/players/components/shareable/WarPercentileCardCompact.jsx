@@ -1,5 +1,16 @@
-import { Trophy, User } from "lucide-react";
-export const WarPercentileCardCompact = ({ warPercentile, role }) => {
+import { ArrowRightLeft, Trophy, User } from "lucide-react";
+import {
+  formatSignedValue,
+  percentileColor,
+} from "features/players/leaderboard/leaderboardConfig";
+import { getOrdinal } from "utils/ordinal";
+
+export const WarPercentileCardCompact = ({
+  warPercentile,
+  shiftValue,
+  shiftValuePercentile,
+  role,
+}) => {
   if (warPercentile == null) return null;
   const percent = Math.min(100, Math.max(0, warPercentile));
   const radius = 18;
@@ -77,6 +88,30 @@ export const WarPercentileCardCompact = ({ warPercentile, role }) => {
           </div>
         </div>
       </div>
+      {shiftValue != null && (
+        <div className="mt-3 flex w-full items-center justify-between gap-3 border-t border-white/10 pt-3">
+          <div className="flex items-center gap-2 text-gray-400">
+            <ArrowRightLeft className="h-5 w-5 text-[#7dcb48]" />
+            <span className="shareable-role-label text-base font-semibold uppercase tracking-[0.12em]">
+              SVA/60
+            </span>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="shareable-role-value text-2xl font-bold leading-tight tabular-nums text-white">
+              {formatSignedValue(shiftValue)}
+            </span>
+            {shiftValuePercentile != null && (
+              <span
+                className="text-lg font-bold tabular-nums"
+                data-export-nudge="7"
+                style={{ color: percentileColor(shiftValuePercentile) }}
+              >
+                {getOrdinal(shiftValuePercentile)}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
       {role && (
         <div className="mt-3 flex w-full items-center justify-between gap-3 border-t border-white/10 pt-3">
           <div className="flex items-center gap-2 text-gray-400">
