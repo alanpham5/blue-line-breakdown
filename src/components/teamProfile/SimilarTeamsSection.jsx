@@ -126,9 +126,9 @@ export const SimilarTeamsSection = ({ similarTeams, onTeamClick }) => {
                   Team Similarity
                 </div>
                 <div className="text-xs leading-relaxed text-gray-300 light:text-gray-600">
-                  Teams are compared using normalized offensive, defensive, and
-                  pacing statistics. Similarity scores indicate how closely
-                  their statistical profiles match in these areas.
+                  Teams are compared on their offensive, defensive, and pacing
+                  statistics and on their playstyle, weighted equally.
+                  Similarity scores indicate how closely they match.
                 </div>
               </div>
             }
