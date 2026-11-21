@@ -139,6 +139,7 @@ const exampleProfile = {
       leftTag: "Gives up the cycle",
       rightTag: "Gives up the rush",
       score: 97,
+      goalsScore: 84,
       rawMetrics: [
         {
           label: "Chances allowed off the cycle",

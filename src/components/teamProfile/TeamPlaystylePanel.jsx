@@ -13,6 +13,8 @@ const exportNudge = (shareable, pixels) =>
 
 const clamp = (value) => Math.min(100, Math.max(0, Number(value) || 0));
 
+const hasScore = (value) => value !== null && value !== undefined;
+
 const leanSide = (score) => {
   const distance = clamp(score) - 50;
   if (Math.abs(distance) < SLIGHT_LEAN) return null;
@@ -50,23 +52,44 @@ const poleClass = (active, shareable) =>
     ? `font-bold text-emerald-300 ${shareable ? "" : "light:text-emerald-600"}`
     : `font-medium text-gray-400 ${shareable ? "" : "light:text-gray-500"}`;
 
-const DivergingBar = ({ score, shareable }) => {
+const GoalsMarker = ({ score, shareable }) => (
+  <div
+    className="absolute -inset-y-0.5 -ml-[1.5px] w-[3px]"
+    style={{ left: `${Math.min(98.5, Math.max(1.5, clamp(score)))}%` }}
+  >
+    <span
+      className={`block h-full w-full rounded-full bg-white/75 ring-1 ring-black/25 ${shareable ? "" : "light:bg-slate-600/80 light:ring-white/60"}`}
+    />
+    <span
+      className={`absolute bottom-full left-1/2 -ml-6 mb-px w-12 text-center font-semibold leading-none text-gray-300 ${shareable ? "text-xs" : "text-[0.6rem] light:text-slate-600"}`}
+    >
+      <span {...exportNudge(shareable, 4)}>Goals</span>
+    </span>
+  </div>
+);
+
+const DivergingBar = ({ score, goalsScore, shareable }) => {
   const position = clamp(score);
   const rightward = position >= 50;
   return (
-    <div
-      className={`relative h-2.5 w-full overflow-hidden rounded-full bg-[rgba(6,78,59,0.85)] backdrop-blur-sm ${shareable ? "" : "light:bg-slate-200"}`}
-    >
+    <div className="relative">
       <div
-        className={`absolute inset-y-0 rounded-full from-emerald-500 to-teal-400 shadow-[0_0_10px_rgba(16,185,129,0.18)] ${rightward ? "bg-gradient-to-r" : "bg-gradient-to-l"}`}
-        style={{
-          left: `${Math.min(50, position)}%`,
-          width: `${Math.abs(position - 50)}%`,
-        }}
-      />
-      <span
-        className={`absolute inset-y-0 left-1/2 w-0.5 -translate-x-1/2 bg-white/30 ${shareable ? "" : "light:bg-slate-400/60"}`}
-      />
+        className={`relative h-2.5 w-full overflow-hidden rounded-full bg-[rgba(6,78,59,0.85)] backdrop-blur-sm ${shareable ? "" : "light:bg-slate-200"}`}
+      >
+        <div
+          className={`absolute inset-y-0 rounded-full from-emerald-500 to-teal-400 shadow-[0_0_10px_rgba(16,185,129,0.18)] ${rightward ? "bg-gradient-to-r" : "bg-gradient-to-l"}`}
+          style={{
+            left: `${Math.min(50, position)}%`,
+            width: `${Math.abs(position - 50)}%`,
+          }}
+        />
+        <span
+          className={`absolute inset-y-0 left-1/2 w-0.5 -translate-x-1/2 bg-white/30 ${shareable ? "" : "light:bg-slate-400/60"}`}
+        />
+      </div>
+      {hasScore(goalsScore) && (
+        <GoalsMarker score={goalsScore} shareable={shareable} />
+      )}
     </div>
   );
 };
@@ -94,7 +117,11 @@ const PlaystyleRow = ({ scale, shareable }) => {
       >
         {scale.leftLabel}
       </span>
-      <DivergingBar score={scale.score} shareable={shareable} />
+      <DivergingBar
+        score={scale.score}
+        goalsScore={scale.goalsScore}
+        shareable={shareable}
+      />
       <span
         className={`truncate ${text} ${poleClass(side === "right", shareable)}`}
         {...exportNudge(shareable, 8)}
