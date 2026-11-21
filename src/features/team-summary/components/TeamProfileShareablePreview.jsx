@@ -1,9 +1,9 @@
 import {
-  TeamIdentityPanel,
   TeamPerformancePanel,
   TeamQualityCard,
   TeamSpecialTeamsPanel,
 } from "components/teamProfile/TeamProfileSections";
+import { TeamPlaystylePanel } from "components/teamProfile/TeamPlaystylePanel";
 import { playerUtils } from "utils/playerUtils";
 
 export const TeamProfileShareablePreview = ({
@@ -131,7 +131,9 @@ export const TeamProfileShareablePreview = ({
           <TeamQualityCard {...teamQuality} shareable />
         </div>
 
-        <TeamIdentityPanel identity={identity} shareable />
+        {identity.length > 0 && (
+          <TeamPlaystylePanel identity={identity} shareable />
+        )}
 
         <div className="grid min-h-[430px] grid-cols-3 items-stretch gap-3.5">
           <TeamPerformancePanel

@@ -1,4 +1,4 @@
-import { Contact, Shield, Target, Trophy } from "lucide-react";
+import { Shield, Target, Trophy } from "lucide-react";
 
 const BicepsFlexedIcon = ({ className }) => (
   <svg
@@ -56,15 +56,6 @@ const ordinal = (rank) => {
   if (lastTwo >= 11 && lastTwo <= 13) return `${number}th`;
   const suffix = { 1: "st", 2: "nd", 3: "rd" }[number % 10] || "th";
   return `${number}${suffix}`;
-};
-
-const formatIdentityValue = (scale) => {
-  const score = Math.round(clamp(scale.score));
-  if (score === 50) return { percentage: "50-50", label: "" };
-  if (score > 50) {
-    return { percentage: `${score}%`, label: scale.rightLabel };
-  }
-  return { percentage: `${100 - score}%`, label: scale.leftLabel };
 };
 
 const ScoreRing = ({ value, label, color, shareable = false }) => {
@@ -143,154 +134,26 @@ export const TeamQualityCard = ({
   </section>
 );
 
-const IdentityScaleBar = ({ scale }) => {
-  const markerPosition = Math.min(97, Math.max(3, clamp(scale.score)));
-  const identityValue = formatIdentityValue(scale);
-  return (
-    <div className="border-t border-white/[0.06] px-5 py-4 first:border-t-0 light:border-slate-200">
-      <div className="flex items-baseline justify-between gap-3">
-        <h3 className="text-sm font-bold text-white light:text-gray-900">
-          {scale.label}
-        </h3>
-        <span className="shrink-0 text-sm font-extrabold tabular-nums text-green-400 light:text-green-700">
-          {identityValue.percentage}
-          {identityValue.label && (
-            <span className="ml-1">{identityValue.label}</span>
-          )}
-        </span>
-      </div>
-      <div className="relative mt-3 h-2 w-full rounded-full bg-white/[0.08] shadow-inner light:bg-slate-200">
-        <span
-          className="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-green-400 shadow-[0_4px_14px_rgba(74,222,128,0.4)] light:bg-green-600"
-          style={{ left: markerPosition + "%" }}
-        />
-      </div>
-      <div className="mt-2 flex justify-between gap-3 text-xs font-semibold text-gray-400 light:text-gray-600">
-        <span>{scale.leftLabel}</span>
-        <span>{scale.rightLabel}</span>
-      </div>
-    </div>
-  );
-};
-
-export const TeamIdentityPanel = ({ identity, shareable = false }) => (
-  <section
-    className={`liquid-glass-strong force-dark-player-card overflow-hidden ${shareable ? "rounded-[28px]" : "h-full rounded-[32px]"}`}
-    aria-labelledby="team-identity-heading"
-  >
-    <div
-      className={`flex items-center border-b border-white/[0.07] light:border-slate-200 ${shareable ? "px-6 py-3.5" : "px-5 py-5 sm:px-7 sm:py-6"}`}
-    >
-      <div className="flex items-center gap-3">
-        <Contact className="h-7 w-7 shrink-0 text-green-400 light:text-green-700" />
-        <h2
-          id="team-identity-heading"
-          className={`font-extrabold tracking-display text-white light:text-gray-900 ${shareable ? "shareable-icon-label text-[1.75rem]" : "text-2xl sm:text-3xl"}`}
-        >
-          Team Identity
-        </h2>
-      </div>
-    </div>
-
-    {!shareable && (
-      <div className="flex flex-col sm:hidden">
-        {identity.map((scale) => (
-          <IdentityScaleBar key={scale.id} scale={scale} />
-        ))}
-      </div>
-    )}
-
-    <div
-      className={
-        shareable
-          ? "grid h-[310px] grid-cols-7"
-          : "hidden flex-wrap justify-center sm:flex lg:h-[320px]"
-      }
-    >
-      {identity.map((scale) => {
-        const score = clamp(scale.score);
-        const markerPosition = Math.min(97, Math.max(3, score));
-        const identityValue = formatIdentityValue(scale);
-        if (shareable) {
-          return (
-            <div
-              key={scale.id}
-              className="grid min-w-0 grid-rows-[24px_20px_24px_20px_96px_20px] items-center justify-items-center gap-y-2.5 border-l border-white/[0.06] px-3 py-7 first:border-l-0"
-            >
-              <h3 className="text-center text-xl font-bold leading-none text-white">
-                {scale.label}
-              </h3>
-              <span className="text-center text-xl font-bold leading-none tabular-nums text-green-400">
-                {identityValue.percentage}
-              </span>
-              <span className="text-center text-xl font-bold leading-none text-green-400">
-                {identityValue.label || "Balanced"}
-              </span>
-              <span className="text-center text-base font-medium leading-none text-gray-300">
-                {scale.rightLabel}
-              </span>
-              <div className="relative h-24 w-2.5 shrink-0 rounded-full bg-white/[0.08]">
-                <span
-                  className="absolute left-1/2 h-5 w-5 -translate-x-1/2 translate-y-1/2 rounded-full bg-green-400 shadow-[0_4px_14px_rgba(74,222,128,0.4)]"
-                  style={{ bottom: markerPosition + "%" }}
-                />
-              </div>
-              <span className="text-center text-base font-medium leading-none text-gray-300">
-                {scale.leftLabel}
-              </span>
-            </div>
-          );
-        }
-        return (
-          <div
-            key={scale.id}
-            className="flex min-h-[320px] w-1/4 min-w-0 flex-col items-center border-l border-t border-white/[0.06] px-3 pb-2 pt-5 first:border-l-0 light:border-slate-200 lg:min-h-0 lg:w-[14.285714%] lg:border-t-0"
-          >
-            <h3 className="flex h-10 items-center justify-center text-center text-sm font-bold leading-tight text-white light:text-gray-900 sm:text-base">
-              {scale.label}
-            </h3>
-            <div className="mt-1 flex h-12 flex-col items-center justify-center gap-0.5 text-center text-sm font-extrabold leading-tight tabular-nums text-green-400 light:text-green-700 sm:text-base">
-              <span>{identityValue.percentage}</span>
-              {identityValue.label && <span>{identityValue.label}</span>}
-            </div>
-            <div className="mt-2 flex flex-col items-center">
-              <span className="flex h-6 items-center justify-center text-center text-xs font-semibold leading-tight text-gray-400 light:text-gray-600">
-                {scale.rightLabel}
-              </span>
-              <div className="relative my-2 h-32 w-2 shrink-0 rounded-full bg-white/[0.08] shadow-inner light:bg-slate-200">
-                <span
-                  className="absolute left-1/2 h-4 w-4 -translate-x-1/2 translate-y-1/2 rounded-full bg-green-400 shadow-[0_4px_14px_rgba(74,222,128,0.4)] light:bg-green-600"
-                  style={{ bottom: markerPosition + "%" }}
-                />
-              </div>
-              <span className="flex h-6 items-center justify-center text-center text-xs font-semibold leading-tight text-gray-400 light:text-gray-600">
-                {scale.leftLabel}
-              </span>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  </section>
-);
-
 const performanceStyles = {
   offense: {
     icon: Target,
     color: "#22d3ee",
     accent: "text-cyan-300 light:text-cyan-700",
     fill: "from-cyan-500 to-sky-400",
+    track: "bg-[rgba(8,51,68,0.85)]",
   },
   defense: {
     icon: Shield,
     color: "#fb7185",
     accent: "text-rose-400 light:text-rose-700",
     fill: "from-rose-500 to-pink-400",
+    track: "bg-[rgba(76,5,25,0.85)]",
   },
   specialTeams: {
     color: "#c084fc",
     accent: "text-purple-300 light:text-purple-700",
     fill: "from-violet-500 to-fuchsia-400",
+    track: "bg-[rgba(59,7,100,0.85)]",
   },
 };
 
@@ -327,7 +190,9 @@ const MetricRow = ({ metric, style, stretch = false, shareable = false }) => {
           </span>
         </div>
       </div>
-      <div className="h-2.5 overflow-hidden rounded-full bg-white/[0.06] light:bg-slate-200">
+      <div
+        className={`h-2.5 overflow-hidden rounded-full ${style.track} ${shareable ? "" : "light:bg-slate-200"}`}
+      >
         <div
           className={`h-full rounded-full bg-gradient-to-r ${style.fill}`}
           style={{ width: percentile + "%" }}

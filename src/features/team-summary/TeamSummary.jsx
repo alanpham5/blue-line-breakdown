@@ -10,11 +10,11 @@ import { TeamSeasonPicker } from "components/search/TeamSeasonPicker";
 import { TeamSeasonSelects } from "components/search/TeamSeasonSelects";
 import { SimilarTeamsSection } from "components/teamProfile/SimilarTeamsSection";
 import {
-  TeamIdentityPanel,
   TeamPerformancePanel,
   TeamQualityCard,
   TeamSpecialTeamsPanel,
 } from "components/teamProfile/TeamProfileSections";
+import { TeamPlaystylePanel } from "components/teamProfile/TeamPlaystylePanel";
 import { TeamImpactPlayersSection } from "components/teamProfile/TeamImpactPlayersSection";
 import { ShareableModal } from "components/ui/ShareableModal";
 import { BookmarkButton } from "components/ui/BookmarkButton";
@@ -386,7 +386,7 @@ export const TeamSummary = ({ enablePageLoadAnimations = true }) => {
               <TeamQualityCard {...teamQuality} />
             </div>
 
-            {identity.length > 0 && <TeamIdentityPanel identity={identity} />}
+            {identity.length > 0 && <TeamPlaystylePanel identity={identity} />}
 
             <div className="grid items-stretch gap-5 lg:grid-cols-3">
               <TeamPerformancePanel
