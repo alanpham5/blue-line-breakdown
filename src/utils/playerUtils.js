@@ -67,6 +67,9 @@ export const playerUtils = {
     if (playerId === 8482175 && parseInt(season) === 2026) {
       return "/peterka.png";
     }
+    if (playerId === 8485402 && parseInt(season) === 2026) {
+      return "/misa.png";
+    }
     if (playerId === 8471675 && parseInt(season) === 2009) {
       return "/crosby.png";
     }
