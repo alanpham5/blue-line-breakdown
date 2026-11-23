@@ -193,7 +193,7 @@ const offensiveQuality = [
     components: [
       {
         label:
-          "Proxied 5-on-5 entries per game: the first event in the offensive zone after play was outside it, or a takeaway that set it up",
+          "Proxied 5-on-5 entries per game: the first event in the offensive zone after play was outside it, counted only when it is the entering team's own shot attempt or takeaway, or a takeaway that set it up",
         influence: 3,
       },
     ],
@@ -230,7 +230,7 @@ const defensiveQuality = [
     components: [
       {
         label:
-          "Proxied 5-on-5 exits per game: the first event out of the defensive zone after play was in it, or a takeaway that set it up",
+          "Proxied 5-on-5 exits per game: the first event out of the defensive zone, counted only when the last event in the zone shows the opponent had the puck (its shot attempt, takeaway, faceoff win or giveaway, or the defender's takeaway)",
         influence: 3,
       },
     ],

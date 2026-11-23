@@ -955,11 +955,11 @@ export const playerUtils = {
       TAKE: "How often the player takes the puck away from opponents.",
       CH_SUP: "Share of opponent scoring chances limited by the player.",
       O_ENTRY:
-        "Proxied 5-on-5 offensive zone entries per game, inferred from NHL play-by-play (the player on the first event in the zone after play was outside it, or whose takeaway set it up) and scaled to match manually tracked entries.",
+        "Proxied 5-on-5 offensive zone entries per game, inferred from NHL play-by-play (the player on the first event in the zone after play was outside it, or whose takeaway set it up). An entry counts only when that first event is the entering team's own shot attempt or takeaway, so forechecking after a dump-in is left out. Scaled to match manually tracked entries.",
       BLK_SHARE:
         "Share of on-ice shot attempts against that the player blocks.",
       D_EXIT_P:
-        "Proxied 5-on-5 defensive zone exits per game, inferred from NHL play-by-play (the player on the first event out of the zone after play was in it, or whose takeaway set it up) and scaled to match tracked exits.",
+        "Proxied 5-on-5 defensive zone exits per game, inferred from NHL play-by-play (the player on the first event out of the zone after play was in it, or whose takeaway set it up). An exit counts only when the last event in the zone shows the opponent had the puck, so it ends a real offensive possession. Scaled to match tracked exits.",
       GOAL_PREV: "Share of scoring attempts stopped by the player.",
       OZ_START:
         "Share of the player's 5-on-5 offensive and defensive zone starts that are in the offensive zone.",
