@@ -1,4 +1,5 @@
 import { Contact } from "lucide-react";
+import { getOrdinal } from "utils/ordinal";
 
 const PHASES = [
   { id: "withPuck", label: "With the Puck" },
@@ -7,6 +8,7 @@ const PHASES = [
 const TAG_THRESHOLD = 25;
 const SLIGHT_LEAN = 12;
 const MAX_TAGS = 4;
+const TOP_RANKS = 5;
 
 const exportNudge = (shareable, pixels) =>
   shareable ? { "data-export-nudge": pixels } : {};
@@ -20,6 +22,11 @@ const leanSide = (score) => {
   if (Math.abs(distance) < SLIGHT_LEAN) return null;
   return distance > 0 ? "right" : "left";
 };
+
+const topRank = (rank, side) =>
+  rank && rank.value <= TOP_RANKS && (!side || rank.side === side)
+    ? `(${getOrdinal(rank.value)})`
+    : null;
 
 const TAG_GROUPS = {
   shotLocation: "shooting",
@@ -52,7 +59,10 @@ const poleClass = (active, shareable) =>
     ? `font-bold text-emerald-300 ${shareable ? "" : "light:text-emerald-600"}`
     : `font-medium text-gray-400 ${shareable ? "" : "light:text-gray-500"}`;
 
-const GoalsMarker = ({ score, shareable }) => (
+const rankClass = (shareable) =>
+  `shrink-0 font-bold text-emerald-200 ${shareable ? "" : "light:text-emerald-700"}`;
+
+const GoalsMarker = ({ score, rank, shareable }) => (
   <div
     className="absolute -inset-y-0.5 -ml-[1.5px] w-[3px]"
     style={{ left: `${Math.min(98.5, Math.max(1.5, clamp(score)))}%` }}
@@ -61,14 +71,41 @@ const GoalsMarker = ({ score, shareable }) => (
       className={`block h-full w-full rounded-full bg-white/75 ring-1 ring-black/25 ${shareable ? "" : "light:bg-slate-600/80 light:ring-white/60"}`}
     />
     <span
-      className={`absolute bottom-full left-1/2 -ml-6 mb-px w-12 text-center font-semibold leading-none text-gray-300 ${shareable ? "text-xs" : "text-[0.6rem] light:text-slate-600"}`}
+      className={`absolute bottom-full left-1/2 -ml-10 w-20 whitespace-nowrap text-center font-semibold leading-none text-gray-300 ${shareable ? "mb-1 text-xs" : "mb-px text-[0.6rem] light:text-slate-600"}`}
     >
-      <span {...exportNudge(shareable, 4)}>Goals</span>
+      <span {...exportNudge(shareable, 4)}>
+        Goals
+        {rank && <span className={`ml-1 ${rankClass(shareable)}`}>{rank}</span>}
+      </span>
     </span>
   </div>
 );
 
-const DivergingBar = ({ score, goalsScore, shareable }) => {
+const PoleLabel = ({
+  label,
+  active,
+  rank,
+  alignEnd,
+  shareable,
+  text,
+  cell,
+}) => (
+  <span
+    className={`flex items-baseline gap-1.5 whitespace-nowrap ${alignEnd ? "justify-end" : ""} ${text} ${cell} ${poleClass(active, shareable)}`}
+    {...exportNudge(shareable, 8)}
+  >
+    <span>{label}</span>
+    {rank && (
+      <span
+        className={`${rankClass(shareable)} ${shareable ? "text-base" : "text-[0.7rem] sm:text-xs"}`}
+      >
+        {rank}
+      </span>
+    )}
+  </span>
+);
+
+const DivergingBar = ({ score, goalsScore, goalsRank, shareable }) => {
   const position = clamp(score);
   const rightward = position >= 50;
   return (
@@ -88,46 +125,72 @@ const DivergingBar = ({ score, goalsScore, shareable }) => {
         />
       </div>
       {hasScore(goalsScore) && (
-        <GoalsMarker score={goalsScore} shareable={shareable} />
+        <GoalsMarker
+          score={goalsScore}
+          rank={goalsRank}
+          shareable={shareable}
+        />
       )}
     </div>
   );
 };
 
+const phasesGridClass = (shareable) =>
+  shareable
+    ? "grid grid-cols-[max-content_max-content_1fr_max-content_1rem_max-content_max-content_1fr_max-content] items-center gap-x-3 px-6 py-2"
+    : "px-5 py-2 sm:grid sm:grid-cols-[max-content_max-content_1fr_max-content] sm:items-center sm:gap-x-3 sm:px-6 lg:grid-cols-[max-content_max-content_1fr_max-content_1rem_max-content_max-content_1fr_max-content]";
+
+const phaseClass = (shareable, second) =>
+  shareable
+    ? `col-span-4 grid grid-cols-subgrid items-center ${second ? "col-start-6" : ""}`
+    : `sm:col-span-4 sm:grid sm:grid-cols-subgrid sm:items-center ${second ? "lg:col-start-6" : ""}`;
+
+const rowClass = (shareable) =>
+  shareable
+    ? "contents"
+    : "grid grid-cols-[auto_1fr_auto] items-center gap-x-3 gap-y-1.5 py-2 sm:contents";
+
 const PlaystyleRow = ({ scale, shareable }) => {
   const side = leanSide(scale.score);
   const text = shareable ? "text-lg" : "text-xs sm:text-sm";
+  const cell = shareable ? "py-2.5" : "sm:py-2";
   return (
-    <div
-      className={`grid items-center gap-x-3 gap-y-1.5 ${shareable ? "grid-cols-[10rem_6.75rem_1fr_8.5rem] py-2.5" : "grid-cols-[auto_1fr_auto] py-2 sm:grid-cols-[7.5rem_5.25rem_1fr_6.5rem]"}`}
-    >
+    <div className={rowClass(shareable)}>
       <div
-        className={`flex min-w-0 items-center gap-1.5 ${shareable ? "" : "col-span-3 sm:col-span-1"}`}
+        className={`flex items-center gap-1.5 ${cell} ${shareable ? "" : "col-span-3 sm:col-span-1"}`}
       >
         <span
-          className={`truncate font-semibold text-gray-100 ${shareable ? "text-xl" : "text-sm light:text-gray-700"}`}
+          className={`whitespace-nowrap font-semibold text-gray-100 ${shareable ? "text-xl" : "text-sm light:text-gray-700"}`}
           {...exportNudge(shareable, 9)}
         >
           {scale.label}
         </span>
       </div>
-      <span
-        className={`truncate text-right ${text} ${poleClass(side === "left", shareable)}`}
-        {...exportNudge(shareable, 8)}
-      >
-        {scale.leftLabel}
-      </span>
-      <DivergingBar
-        score={scale.score}
-        goalsScore={scale.goalsScore}
+      <PoleLabel
+        label={scale.leftLabel}
+        active={side === "left"}
+        rank={topRank(scale.rank, "left")}
+        alignEnd
         shareable={shareable}
+        text={text}
+        cell={cell}
       />
-      <span
-        className={`truncate ${text} ${poleClass(side === "right", shareable)}`}
-        {...exportNudge(shareable, 8)}
-      >
-        {scale.rightLabel}
-      </span>
+      <div className={cell}>
+        <DivergingBar
+          score={scale.score}
+          goalsScore={scale.goalsScore}
+          goalsRank={topRank(scale.goalsRank)}
+          shareable={shareable}
+        />
+      </div>
+      <PoleLabel
+        label={scale.rightLabel}
+        active={side === "right"}
+        rank={topRank(scale.rank, "right")}
+        shareable={shareable}
+        text={text}
+        cell={cell}
+      />
     </div>
   );
 };
@@ -164,13 +227,11 @@ export const TeamPlaystylePanel = ({ identity, shareable = false }) => {
           </ul>
         )}
       </div>
-      <div
-        className={`grid gap-x-10 ${shareable ? "grid-cols-2 px-6 py-2" : "px-5 py-2 sm:px-6 lg:grid-cols-2"}`}
-      >
-        {PHASES.map((phase) => (
-          <div key={phase.id} className="min-w-0">
+      <div className={phasesGridClass(shareable)}>
+        {PHASES.map((phase, index) => (
+          <div key={phase.id} className={phaseClass(shareable, index > 0)}>
             <h3
-              className={`border-b border-white/[0.07] pb-1.5 pt-2 font-semibold uppercase tracking-wide text-gray-400 ${shareable ? "text-base" : "text-xs light:border-slate-200 light:text-gray-500"}`}
+              className={`border-b border-white/[0.07] pb-1.5 pt-2 font-semibold uppercase tracking-wide text-gray-400 ${shareable ? "col-span-4 text-base" : "text-xs light:border-slate-200 light:text-gray-500 sm:col-span-4"}`}
             >
               {phase.label}
             </h3>
