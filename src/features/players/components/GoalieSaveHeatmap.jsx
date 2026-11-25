@@ -1,5 +1,4 @@
 import { useId } from "react";
-import { useTheme } from "providers/ThemeContext";
 import { getPercentileColor } from "utils/percentileColor";
 
 const RINK_WIDTH = 200;
@@ -8,6 +7,7 @@ const GOAL_LINE_Y = 24;
 const BLUE_LINE_Y = 152;
 const HEAT_BLUR = 8;
 const HEAT_BLEED = 4;
+const MIN_SHARE_OPACITY = 0.15;
 
 const ZONES = [
   { area: "L Corner", shape: "rect", x: 4, y: 4, width: 52, height: 42 },
@@ -41,23 +41,13 @@ const RANGE_TILES = [
   { code: "long", label: "Long" },
 ];
 
-const PALETTES = {
-  dark: {
-    ice: "#12161d",
-    boards: "rgba(255, 255, 255, 0.22)",
-    noShots: "#1f2530",
-    markings: "rgba(255, 255, 255, 0.55)",
-    label: "#0b0d12",
-    labelHalo: "rgba(255, 255, 255, 0.55)",
-  },
-  light: {
-    ice: "#f1f5f9",
-    boards: "#cbd5e1",
-    noShots: "#e2e8f0",
-    markings: "rgba(15, 23, 42, 0.45)",
-    label: "#0b0d12",
-    labelHalo: "rgba(255, 255, 255, 0.7)",
-  },
+const RINK_PALETTE = {
+  ice: "#f1f5f9",
+  boards: "#cbd5e1",
+  noShots: "#e2e8f0",
+  markings: "#94a3b8",
+  label: "#0b0d12",
+  labelHalo: "rgba(255, 255, 255, 0.7)",
 };
 
 const formatSavePct = (value) =>
@@ -72,13 +62,28 @@ const ordinal = (value) => {
 
 const hasShots = (stats) => Boolean(stats?.shotsAgainst);
 
+const shareOpacity = (sharePercentile) =>
+  MIN_SHARE_OPACITY + ((1 - MIN_SHARE_OPACITY) * (sharePercentile ?? 50)) / 100;
+
+const formatShare = (share) => `${(share * 100).toFixed(1)}%`;
+
+const formatShots = (shots) => `${shots} ${shots === 1 ? "shot" : "shots"}`;
+
 const describeZone = (zone, stats) => {
   if (!hasShots(stats)) return `${zone.area}: no shots`;
   return [
     zone.area,
-    `${stats.shotsAgainst} shots`,
+    stats.shotShare == null
+      ? formatShots(stats.shotsAgainst)
+      : `${formatShots(stats.shotsAgainst)} (${formatShare(stats.shotShare)} of total${
+          stats.sharePercentile == null
+            ? ""
+            : `, ${ordinal(stats.sharePercentile)} pctl`
+        })`,
     `${formatSavePct(stats.savePct)} SV%`,
-    stats.percentile == null ? null : `${ordinal(stats.percentile)} percentile`,
+    stats.percentile == null
+      ? null
+      : `${ordinal(stats.percentile)} SV% percentile`,
   ]
     .filter(Boolean)
     .join(" · ");
@@ -152,7 +157,7 @@ const RinkMarkings = ({ color }) => (
   </g>
 );
 
-const RinkHeatmap = ({ areasByName, palette }) => {
+const RinkHeatmap = ({ areasByName }) => {
   const id = useId().replace(/:/g, "");
   const clipId = `rink-clip-${id}`;
   const blurId = `rink-heat-${id}`;
@@ -185,22 +190,26 @@ const RinkHeatmap = ({ areasByName, palette }) => {
         width={RINK_WIDTH - 2}
         height={RINK_HEIGHT - 2}
         rx="18"
-        fill={palette.ice}
+        fill={RINK_PALETTE.ice}
       />
       <g clipPath={`url(#${clipId})`}>
         <g filter={`url(#${blurId})`}>
           {ZONES.map((zone) => {
             const stats = areasByName[zone.area];
-            return (
+            return hasShots(stats) ? (
               <ZoneShape
                 key={zone.area}
                 zone={zone}
                 grow={HEAT_BLEED}
-                fill={
-                  hasShots(stats)
-                    ? getPercentileColor(stats.percentile ?? 50)
-                    : palette.noShots
-                }
+                fill={getPercentileColor(stats.percentile ?? 50)}
+                fillOpacity={shareOpacity(stats.sharePercentile)}
+              />
+            ) : (
+              <ZoneShape
+                key={zone.area}
+                zone={zone}
+                grow={HEAT_BLEED}
+                fill={RINK_PALETTE.noShots}
               />
             );
           })}
@@ -213,9 +222,9 @@ const RinkHeatmap = ({ areasByName, palette }) => {
         height={RINK_HEIGHT - 2}
         rx="18"
         fill="none"
-        stroke={palette.boards}
+        stroke={RINK_PALETTE.boards}
       />
-      <RinkMarkings color={palette.markings} />
+      <RinkMarkings color={RINK_PALETTE.markings} />
       {ZONES.map((zone) => {
         const stats = areasByName[zone.area];
         const label = labelPosition(zone);
@@ -230,8 +239,8 @@ const RinkHeatmap = ({ areasByName, palette }) => {
                 textAnchor="middle"
                 fontSize="8"
                 fontWeight="700"
-                fill={palette.label}
-                stroke={palette.labelHalo}
+                fill={RINK_PALETTE.label}
+                stroke={RINK_PALETTE.labelHalo}
                 strokeWidth="2"
                 paintOrder="stroke"
                 pointerEvents="none"
@@ -263,17 +272,14 @@ const RangeStat = ({ label, total }) => (
   </div>
 );
 
-export const GoalieSaveHeatmap = ({ shotMap, forceDark = false }) => {
-  const { actualTheme } = useTheme();
-  const palette = forceDark
-    ? PALETTES.dark
-    : PALETTES[actualTheme] || PALETTES.dark;
+export const GoalieSaveHeatmap = ({ shotMap }) => {
   const areasByName = Object.fromEntries(
     shotMap.areas.map((area) => [area.area, area])
   );
   const totalsByCode = Object.fromEntries(
     shotMap.totals.map((total) => [total.locationCode, total])
   );
+  const neutral = getPercentileColor(50);
   return (
     <div className="flex flex-col">
       <div className="mb-1.5 flex items-baseline justify-between gap-2">
@@ -281,19 +287,32 @@ export const GoalieSaveHeatmap = ({ shotMap, forceDark = false }) => {
           Save % by location
         </h4>
         <span className="text-[0.62rem] text-gray-400 light:text-gray-500">
-          NHL EDGE · color = league pctl
+          NHL EDGE
         </span>
       </div>
       <div className="grid grid-cols-[minmax(0,1fr)_3.5rem] items-center gap-2">
         <div className="w-full">
-          <RinkHeatmap areasByName={areasByName} palette={palette} />
-          <span
-            className="mt-1.5 block h-1.5 rounded-full"
-            title="Low to high league percentile"
-            style={{
-              background: `linear-gradient(90deg, ${getPercentileColor(0)}, ${getPercentileColor(50)}, ${getPercentileColor(100)})`,
-            }}
-          />
+          <RinkHeatmap areasByName={areasByName} />
+          <div className="mt-1.5 grid grid-cols-2 gap-2 text-[0.58rem] leading-tight text-gray-400 light:text-gray-500">
+            <div title="Color: league save % percentile, low to high">
+              <span
+                className="block h-1.5 rounded-full"
+                style={{
+                  background: `linear-gradient(90deg, ${getPercentileColor(0)}, ${neutral}, ${getPercentileColor(100)})`,
+                }}
+              />
+              <span className="mt-0.5 block">Color = SV% pctl</span>
+            </div>
+            <div title="Opacity: league percentile of the zone's share of shots against, low to high">
+              <span
+                className="block h-1.5 rounded-full"
+                style={{
+                  background: `linear-gradient(90deg, transparent, ${neutral})`,
+                }}
+              />
+              <span className="mt-0.5 block">Opacity = share pctl</span>
+            </div>
+          </div>
         </div>
         <div className="flex flex-col justify-center gap-1.5">
           {RANGE_TILES.map((tile) => (

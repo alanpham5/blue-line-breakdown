@@ -226,9 +226,7 @@ export const PlayerTendenciesCard = ({
             tendencies={legendTendencies}
             shareable={shareable}
           />
-          {shotMap && (
-            <GoalieSaveHeatmap shotMap={shotMap} forceDark={forceDark} />
-          )}
+          {shotMap && <GoalieSaveHeatmap shotMap={shotMap} />}
         </div>
       ) : (
         <>

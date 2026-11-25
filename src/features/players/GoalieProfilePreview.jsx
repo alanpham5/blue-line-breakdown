@@ -40,24 +40,124 @@ const goalieTendencies = [
   { label: "Rebounds", percentage: 39, percentile: 28 },
 ];
 
+const sampleShotAreas = [
+  {
+    area: "Behind the Net",
+    shotsAgainst: 5,
+    savePct: 1.0,
+    percentile: 42,
+    sharePercentile: 30,
+  },
+  {
+    area: "L Corner",
+    shotsAgainst: 0,
+    savePct: null,
+    percentile: null,
+    sharePercentile: 5,
+  },
+  {
+    area: "R Corner",
+    shotsAgainst: 1,
+    savePct: 1.0,
+    percentile: 21,
+    sharePercentile: 20,
+  },
+  {
+    area: "L Net Side",
+    shotsAgainst: 34,
+    savePct: 0.941,
+    percentile: 73,
+    sharePercentile: 55,
+  },
+  {
+    area: "Crease",
+    shotsAgainst: 53,
+    savePct: 0.868,
+    percentile: 96,
+    sharePercentile: 60,
+  },
+  {
+    area: "R Net Side",
+    shotsAgainst: 42,
+    savePct: 0.952,
+    percentile: 65,
+    sharePercentile: 65,
+  },
+  {
+    area: "Low Slot",
+    shotsAgainst: 354,
+    savePct: 0.845,
+    percentile: 90,
+    sharePercentile: 70,
+  },
+  {
+    area: "Outside L",
+    shotsAgainst: 99,
+    savePct: 0.96,
+    percentile: 31,
+    sharePercentile: 80,
+  },
+  {
+    area: "L Circle",
+    shotsAgainst: 149,
+    savePct: 0.893,
+    percentile: 35,
+    sharePercentile: 45,
+  },
+  {
+    area: "High Slot",
+    shotsAgainst: 150,
+    savePct: 0.927,
+    percentile: 98,
+    sharePercentile: 85,
+  },
+  {
+    area: "R Circle",
+    shotsAgainst: 149,
+    savePct: 0.899,
+    percentile: 33,
+    sharePercentile: 45,
+  },
+  {
+    area: "Outside R",
+    shotsAgainst: 87,
+    savePct: 0.966,
+    percentile: 52,
+    sharePercentile: 70,
+  },
+  {
+    area: "L Point",
+    shotsAgainst: 138,
+    savePct: 0.993,
+    percentile: 83,
+    sharePercentile: 75,
+  },
+  {
+    area: "Center Point",
+    shotsAgainst: 141,
+    savePct: 0.957,
+    percentile: 50,
+    sharePercentile: 60,
+  },
+  {
+    area: "R Point",
+    shotsAgainst: 158,
+    savePct: 0.981,
+    percentile: 50,
+    sharePercentile: 80,
+  },
+];
+
+const sampleTotalShots = sampleShotAreas.reduce(
+  (total, area) => total + area.shotsAgainst,
+  0
+);
+
 const goalieShotMap = {
-  areas: [
-    { area: "Behind the Net", shotsAgainst: 5, savePct: 1.0, percentile: 42 },
-    { area: "L Corner", shotsAgainst: 0, savePct: null, percentile: null },
-    { area: "R Corner", shotsAgainst: 1, savePct: 1.0, percentile: 21 },
-    { area: "L Net Side", shotsAgainst: 34, savePct: 0.941, percentile: 73 },
-    { area: "Crease", shotsAgainst: 53, savePct: 0.868, percentile: 96 },
-    { area: "R Net Side", shotsAgainst: 42, savePct: 0.952, percentile: 65 },
-    { area: "Low Slot", shotsAgainst: 354, savePct: 0.845, percentile: 90 },
-    { area: "Outside L", shotsAgainst: 99, savePct: 0.96, percentile: 31 },
-    { area: "L Circle", shotsAgainst: 149, savePct: 0.893, percentile: 35 },
-    { area: "High Slot", shotsAgainst: 150, savePct: 0.927, percentile: 98 },
-    { area: "R Circle", shotsAgainst: 149, savePct: 0.899, percentile: 33 },
-    { area: "Outside R", shotsAgainst: 87, savePct: 0.966, percentile: 52 },
-    { area: "L Point", shotsAgainst: 138, savePct: 0.993, percentile: 83 },
-    { area: "Center Point", shotsAgainst: 141, savePct: 0.957, percentile: 50 },
-    { area: "R Point", shotsAgainst: 158, savePct: 0.981, percentile: 50 },
-  ],
+  areas: sampleShotAreas.map((area) => ({
+    ...area,
+    shotShare: area.shotsAgainst / sampleTotalShots,
+  })),
   totals: [
     { locationCode: "high", savePct: 0.848, percentile: 94 },
     { locationCode: "mid", savePct: 0.906, percentile: 82 },
