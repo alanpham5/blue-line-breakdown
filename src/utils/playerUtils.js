@@ -840,9 +840,10 @@ export const playerUtils = {
       PHYS: "Physical Pressure",
       TAKE: "Takeaways",
       CH_SUP: "Chance Suppression",
-      O_ENTRY: "pO-zone Entries",
+      O_ENTRY: "pOZ Entries Added",
       BLK_SHARE: "Block Shares",
-      D_EXIT_P: "pD-zone Exits",
+      D_ENTRY_SUP: "pDZ Entries Prevented",
+      D_EXIT_P: "pDZ Exits Added",
       GOAL_PREV: "Goal Prevention",
       OZ_START: "Offensive Zone Starts",
       DZ_START: "Defensive Zone Starts",
@@ -894,9 +895,10 @@ export const playerUtils = {
       PHYS: "Phys",
       TAKE: "Take",
       CH_SUP: "Ch Sup",
-      O_ENTRY: "pOZ Entries",
+      O_ENTRY: "pOZEn+",
       BLK_SHARE: "Block Shares",
-      D_EXIT_P: "pDZ Exits",
+      D_ENTRY_SUP: "pDZEn-",
+      D_EXIT_P: "pDZEx+",
       GOAL_PREV: "Goal Prv",
       OZ_START: "OZ St",
       DZ_START: "DZ St",
@@ -955,11 +957,13 @@ export const playerUtils = {
       TAKE: "How often the player takes the puck away from opponents.",
       CH_SUP: "Share of opponent scoring chances limited by the player.",
       O_ENTRY:
-        "Proxied 5-on-5 offensive zone entries per game, inferred from NHL play-by-play (the player on the first event in the zone after play was outside it, or whose takeaway set it up). An entry counts only when that first event is the entering team's own shot attempt or takeaway, so forechecking after a dump-in is left out. Scaled to match manually tracked entries.",
+        "Proxied 5-on-5 offensive zone entries per 60 above what a same-position player would make from the same shift starts (the zone or play a shift began in, and how long ago). Entries are inferred from NHL play-by-play (the player on the first event in the zone after play was outside it, or whose takeaway set it up), and counted only when that first event is the entering team's own shot attempt or takeaway. Shown in proxy counts, which undercount tracked entries.",
       BLK_SHARE:
         "Share of on-ice shot attempts against that the player blocks.",
+      D_ENTRY_SUP:
+        "Proxied 5-on-5 opponent entries into the player's defensive zone per 60 while the player is on the ice, compared with what a same-position player would allow from the same shift starts. Negative means fewer than expected, which ranks higher.",
       D_EXIT_P:
-        "Proxied 5-on-5 defensive zone exits per game, inferred from NHL play-by-play (the player on the first event out of the zone after play was in it, or whose takeaway set it up). An exit counts only when the last event in the zone shows the opponent had the puck, so it ends a real offensive possession. Scaled to match tracked exits.",
+        "Proxied 5-on-5 defensive zone exits per 60 above what a same-position player would make from the same shift starts. Exits are inferred from NHL play-by-play (the player on the first event out of the zone after play was in it, or whose takeaway set it up), and counted only when the last event in the zone shows the opponent had the puck. Shown in proxy counts, which undercount tracked exits.",
       GOAL_PREV: "Share of scoring attempts stopped by the player.",
       OZ_START:
         "Share of the player's 5-on-5 offensive and defensive zone starts that are in the offensive zone.",

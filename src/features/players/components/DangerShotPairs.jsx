@@ -1,4 +1,5 @@
 import { getOrdinal } from "utils/ordinal";
+import { barRowsTemplate } from "features/players/components/barRows";
 
 const clampPercent = (value) => Math.min(100, Math.max(0, Number(value) || 0));
 
@@ -57,15 +58,20 @@ const percentileText = (stat) =>
       `${series.name} ${getOrdinal(clampPercent(stat[series.key]))} percentile`
   ).join(", ");
 
-const DangerPair = ({ stat, sizes, shareable }) => {
+const DangerPair = ({ stat, sizes, shareable, compact }) => {
   const label = stat.shortLabel || stat.label;
   return (
-    <div className="grid min-w-0 grid-rows-[auto_1fr_auto] justify-items-center gap-2">
-      <div className={`grid w-full ${sizes.width} grid-cols-2`}>
+    <div
+      className="grid min-w-0 justify-items-center gap-2"
+      style={{ gridTemplateRows: barRowsTemplate(shareable, compact) }}
+    >
+      <div
+        className={`grid w-full ${sizes.width} grid-cols-2 ${shareable ? "self-end" : ""}`}
+      >
         {BAR_SERIES.map((series) => (
           <span
             key={series.key}
-            className={`${sizes.count} text-center font-bold tabular-nums ${series.text}`}
+            className={`${sizes.count} text-center font-bold tabular-nums ${shareable ? "leading-none" : ""} ${series.text}`}
             data-export-nudge={shareable ? 8 : undefined}
           >
             {clampPercent(stat[series.key]).toFixed(0)}
@@ -91,11 +97,17 @@ const DangerPair = ({ stat, sizes, shareable }) => {
           className={`grid w-full ${sizes.width} mx-auto grid-cols-2 ${sizes.tag} font-semibold uppercase tracking-wide text-gray-400 light:text-gray-500`}
         >
           {BAR_SERIES.map((series) => (
-            <span key={series.key}>{series.short}</span>
+            <span
+              key={series.key}
+              data-export-nudge={shareable ? 6 : undefined}
+            >
+              {series.short}
+            </span>
           ))}
         </div>
         <p
           className={`mt-1 flex justify-center whitespace-nowrap ${sizes.label} font-bold leading-tight text-white light:text-gray-900`}
+          data-export-nudge={shareable ? 6 : undefined}
         >
           {label}
         </p>
@@ -119,6 +131,7 @@ export const DangerShotPairs = ({
           stat={stat}
           sizes={sizes}
           shareable={shareable}
+          compact={compact}
         />
       ))}
     </div>

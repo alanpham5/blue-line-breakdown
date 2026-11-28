@@ -41,7 +41,7 @@ const offensiveQuality = [
   },
   { label: "Positioning", shortLabel: "Positioning", value: 91 },
   { label: "Finishing", shortLabel: "Finishing", value: 86 },
-  { key: "zoneEntriesProxy", label: "pO-zone Entries", value: 94 },
+  { key: "zoneEntriesProxy", label: "pOZ Entries Added", value: 94 },
 ];
 
 const defensiveQuality = [
@@ -51,8 +51,12 @@ const defensiveQuality = [
     shortLabel: "Suppression",
     value: 79,
   },
-  { key: "blockShare", label: "Block Shares", value: 41 },
-  { key: "zoneExitsProxy", label: "pD-zone Exits", value: 83 },
+  {
+    key: "entrySuppressionProxy",
+    label: "pDZ Entries Prevented",
+    value: 72,
+  },
+  { key: "zoneExitsProxy", label: "pDZ Exits Added", value: 83 },
 ];
 
 const exampleDifficulty = {

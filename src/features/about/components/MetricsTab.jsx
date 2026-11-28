@@ -75,6 +75,7 @@ const impactFactors = [
       "Shooting and Finishing",
       "Dangerous Chances",
       "Penalties Drawn",
+      "Zone Entries",
       "On-Ice Attack",
     ],
   },
@@ -189,11 +190,16 @@ const offensiveQuality = [
     ],
   },
   {
-    label: "pO-zone Entries",
+    label: "pOZ Entries Added",
     components: [
       {
         label:
-          "Proxied 5-on-5 entries per game: the first event in the offensive zone after play was outside it, counted only when it is the entering team's own shot attempt or takeaway, or a takeaway that set it up",
+          "Proxied 5-on-5 entries per 60: the first event in the offensive zone after play was outside it, counted only when it is the entering team's own shot attempt or takeaway, or a takeaway that set it up",
+        influence: 3,
+      },
+      {
+        label:
+          "Minus the entries a same-position player would make from the same shift starts: the faceoff zone, or where play was and who had it when the player jumped on, and the time since",
         influence: 3,
       },
     ],
@@ -220,17 +226,31 @@ const defensiveQuality = [
     ],
   },
   {
-    label: "Block Shares",
-    components: [
-      { label: "Blocks per on-ice shot attempt against", influence: 3 },
-    ],
-  },
-  {
-    label: "pD-zone Exits",
+    label: "pDZ Entries Prevented",
     components: [
       {
         label:
-          "Proxied 5-on-5 exits per game: the first event out of the defensive zone, counted only when the last event in the zone shows the opponent had the puck (its shot attempt, takeaway, faceoff win or giveaway, or the defender's takeaway)",
+          "Fewer proxied 5-on-5 opponent entries into the defensive zone per 60 while on the ice",
+        influence: 3,
+      },
+      {
+        label:
+          "Compared with what a same-position player would allow from the same shift starts",
+        influence: 3,
+      },
+    ],
+  },
+  {
+    label: "pDZ Exits Added",
+    components: [
+      {
+        label:
+          "Proxied 5-on-5 exits per 60: the first event out of the defensive zone, counted only when the last event in the zone shows the opponent had the puck (its shot attempt, takeaway, faceoff win or giveaway, or the defender's takeaway)",
+        influence: 3,
+      },
+      {
+        label:
+          "Minus the exits a same-position player would make from the same shift starts",
         influence: 3,
       },
     ],
@@ -275,7 +295,10 @@ const shiftValueSteps = [
 
 const similarityFacts = [
   ["Score", "0–100 match in style and calibre"],
-  ["Compared on", "Scoring, physical play, usage, and impact"],
+  [
+    "Compared on",
+    "Style, scoring, shot types, physical play, defense, zone entries and exits, usage, and impact",
+  ],
   ["Season filter", "Limits matches to one year"],
 ];
 
@@ -758,6 +781,17 @@ export const MetricsTab = () => {
         accent="cyan"
         title="Offensive & Defensive Quality"
       >
+        <p className="text-sm leading-relaxed text-gray-300 light:text-gray-700 sm:text-base">
+          A leading p means proxied: the NHL does not record zone entries,
+          exits or who carries the puck, so they are read from the order of
+          play-by-play events at 5-on-5, back to 2008-09. Added and Prevented
+          compare a player per 60 with what a player at the same position
+          would get from the same shift starts, so being sent out for
+          offensive-zone faceoffs or after the other team is already set up
+          does not count for or against them. On the leaderboard they appear as
+          pOZEn+, pDZEx+ and pDZEn-, in proxied events per 60 above or below
+          expected; fewer than expected is better for pDZEn-.
+        </p>
         <QualityGroup
           title="Offensive Quality"
           items={offensiveQuality}

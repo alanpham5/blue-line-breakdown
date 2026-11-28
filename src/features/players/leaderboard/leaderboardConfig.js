@@ -19,7 +19,7 @@ const SKATER_METRIC_GROUPS = [
   },
   {
     type: "defensive",
-    keys: ["POS_CTRL", "TAKE", "CH_SUP", "BLK_SHARE", "D_EXIT_P"],
+    keys: ["POS_CTRL", "TAKE", "CH_SUP", "D_ENTRY_SUP", "D_EXIT_P"],
   },
   {
     type: "deployment",
@@ -104,6 +104,9 @@ export const formatMetricCell = (player, key) => {
   if (countValue != null) return countValue.toLocaleString();
   const shareValue = player.shareValues?.[key];
   if (shareValue != null) return `${shareValue.toFixed(1)}%`;
+  const aboveExpected = player.aboveExpectedValues?.[key];
+  if (aboveExpected != null)
+    return `${aboveExpected > 0 ? "+" : ""}${aboveExpected.toFixed(2)}`;
   const perGameValue = player.perGameValues?.[key];
   if (perGameValue != null) return perGameValue.toFixed(2);
   const secondsPerGame = player.timePerGameValues?.[key];

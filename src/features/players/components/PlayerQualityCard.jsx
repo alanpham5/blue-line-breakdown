@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { Info } from "lucide-react";
 import { Tooltip } from "components/ui/Tooltip";
 import { getOrdinal } from "utils/ordinal";
@@ -5,13 +6,15 @@ import {
   DangerShotPairs,
   hasDangerShotPercentiles,
 } from "features/players/components/DangerShotPairs";
+import { displayedQualityBars } from "features/players/qualityBars";
+import { barRowsTemplate } from "features/players/components/barRows";
 
 const clampPercent = (value) => Math.min(100, Math.max(0, Number(value) || 0));
 
 const PROXIED_KEYS = new Set([
   "zoneEntriesProxy",
   "zoneExitsProxy",
-  "blockShare",
+  "entrySuppressionProxy",
 ]);
 
 const hasProxiedBars = (stats) =>
@@ -26,7 +29,7 @@ const labelSize = (shareable, compact, crowded) => {
 export const PlayerQualityCard = ({
   title,
   icon: Icon,
-  stats,
+  stats: rawStats,
   type = "offensive",
   subtitle = "percentile vs. league",
   showInfo = true,
@@ -34,6 +37,7 @@ export const PlayerQualityCard = ({
   shareable = false,
   compact = false,
 }) => {
+  const stats = displayedQualityBars(rawStats);
   const showsDangerPairs =
     type === "workload" && hasDangerShotPercentiles(stats);
   const isCool = type === "offensive" || type === "shotStopping";
@@ -104,8 +108,11 @@ export const PlayerQualityCard = ({
                     <div>
                       A leading p means proxied: entries and exits are inferred
                       from NHL play-by-play, which never records who carries the
-                      puck, and ranked per game. Block Shares is the share of
-                      on-ice shot attempts against that the player blocks.
+                      puck. Each is compared per 60 with what a same-position
+                      player would get from the same shift starts. pDZ Entries
+                      Prevented counts opponent entries into the player's
+                      defensive zone while on the ice, so fewer than expected
+                      ranks higher.
                     </div>
                   )}
                 </div>
@@ -130,26 +137,27 @@ export const PlayerQualityCard = ({
         />
       ) : (
         <div
-          className={`grid flex-1 ${stats.length > 4 ? "gap-2 sm:gap-3" : "gap-3 sm:gap-4"}`}
+          className={`grid flex-1 gap-y-2 ${stats.length > 4 ? "gap-x-2 sm:gap-x-3" : "gap-x-3 sm:gap-x-4"}`}
           style={{
             gridTemplateColumns: `repeat(${stats.length}, minmax(0, 1fr))`,
+            gridTemplateRows: barRowsTemplate(shareable, compact),
           }}
         >
-          {stats.map((stat) => {
+          {stats.map((stat, index) => {
             const value = clampPercent(stat.value);
+            const gridColumn = index + 1;
             return (
-              <div
-                key={stat.label}
-                className="grid min-w-0 grid-rows-[auto_1fr_auto] justify-items-center gap-2"
-              >
+              <Fragment key={stat.label}>
                 <span
-                  className={`${shareable ? (compact ? "text-xl" : "text-2xl") : "text-base"} font-bold tabular-nums ${accentText}`}
+                  className={`justify-self-center ${shareable ? "self-end leading-none" : ""} ${shareable ? (compact ? "text-xl" : "text-2xl") : "text-base"} font-bold tabular-nums ${accentText}`}
+                  style={{ gridColumn, gridRow: 1 }}
                   data-export-nudge={shareable ? 8 : undefined}
                 >
                   {value.toFixed(0)}
                 </span>
                 <div
-                  className={`relative h-full ${shareable ? `${compact ? "min-h-[170px]" : "min-h-[304px]"} max-w-[70px]` : "min-h-[200px] max-w-[68px]"} w-full overflow-hidden rounded-2xl ${track} light:bg-slate-200`}
+                  className={`relative mx-auto h-full ${shareable ? `${compact ? "min-h-[170px]" : "min-h-[304px]"} max-w-[70px]` : "min-h-[200px] max-w-[68px]"} w-full overflow-hidden rounded-2xl ${track} light:bg-slate-200`}
+                  style={{ gridColumn, gridRow: 2 }}
                   role="img"
                   aria-label={`${stat.label}: ${getOrdinal(value)} league percentile`}
                 >
@@ -158,7 +166,10 @@ export const PlayerQualityCard = ({
                     style={{ height: `${value}%` }}
                   />
                 </div>
-                <div className="min-h-[3.25rem] text-center">
+                <div
+                  className={`${shareable ? "" : "min-h-[3.25rem]"} min-w-0 text-center`}
+                  style={{ gridColumn, gridRow: 3 }}
+                >
                   <p
                     className={`${labelSize(shareable, compact, stats.length >= 4)} font-semibold leading-tight text-gray-300 hyphens-none break-normal light:text-gray-700`}
                     data-export-nudge={shareable ? 6 : undefined}
@@ -166,7 +177,7 @@ export const PlayerQualityCard = ({
                     {stat.label}
                   </p>
                 </div>
-              </div>
+              </Fragment>
             );
           })}
         </div>

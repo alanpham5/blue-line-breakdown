@@ -1,3 +1,4 @@
+import { displayedQualityBars } from "features/players/qualityBars";
 import { getImpact, leaderIndex, toNumber } from "./shared";
 
 const SHORT_LABELS = {
@@ -12,9 +13,9 @@ const SHORT_LABELS = {
   Finishing: "Finishing",
   Takeaways: "Takeaways",
   "Chance Suppression": "Suppression",
-  "pO-zone Entries": "pEntries",
-  "Block Shares": "Block Shares",
-  "pD-zone Exits": "pExits",
+  "pOZ Entries Added": "pOZEn+",
+  "pDZ Entries Prevented": "pDZEn-",
+  "pDZ Exits Added": "pDZEx+",
   "Save Percentage": "SV%",
   "Goals Against / 60": "GA/60",
   "Goals Save Above Expected": "GSAx",
@@ -42,6 +43,9 @@ export const qualityGroupsFor = (isGoalie) =>
         { key: "defensive", title: "Defensive Quality", radarGroup: "Defense" },
       ];
 
+export const qualityItems = (subject, groupKey) =>
+  displayedQualityBars(subject.quality?.[groupKey]);
+
 export const mergeByLabel = (leftItems, rightItems, readValue) => {
   const leftMap = new Map((leftItems || []).map((item) => [item.label, item]));
   const rightMap = new Map((rightItems || []).map((item) => [item.label, item]));
@@ -67,8 +71,8 @@ export const buildRadarAxes = (left, right, isGoalie) => {
 
   const quality = qualityGroupsFor(isGoalie).flatMap((group) =>
     mergeByLabel(
-      left.quality?.[group.key],
-      right.quality?.[group.key],
+      qualityItems(left, group.key),
+      qualityItems(right, group.key),
       (item) => item?.value
     ).map((row) => ({ ...row, group: group.radarGroup, competitive: true }))
   );

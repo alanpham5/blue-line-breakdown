@@ -8,7 +8,12 @@ import {
   polarPoint,
   layoutWedges,
 } from "features/players/components/tendencyChart";
-import { mergeByLabel, qualityGroupsFor, shortLabel } from "./metrics";
+import {
+  mergeByLabel,
+  qualityGroupsFor,
+  qualityItems,
+  shortLabel,
+} from "./metrics";
 import {
   ComparisonSection,
   SubjectTag,
@@ -594,8 +599,8 @@ export const QualityComparison = ({ left, right, labels, isGoalie }) => (
         >
           <QualityBars
             rows={mergeByLabel(
-              left.quality?.[group.key],
-              right.quality?.[group.key],
+              qualityItems(left, group.key),
+              qualityItems(right, group.key),
               (item) => item?.value
             )}
           />
